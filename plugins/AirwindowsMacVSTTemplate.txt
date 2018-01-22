@@ -1,0 +1,42 @@
+	The Airwindows VST templates are made to work with XCode 3.2.6, running on MacOSX 10.6.8.
+	VST SDK goes in /Developer/SDKs, or just at the root level of the hard drive. Not sure which it's using.
+
+	The target info for Airwindows builds is as follows:
+	architectures: ppc i386 x86_64
+	base SDK 10.5
+	Deployment Target 10.4
+	Strip debug symbols
+	Strip linked product
+	do not generate debug symbols
+
+	To produce a new VST project, since the templates are made of fail and suck, here’s the procedure step by step:
+
+	Optiondrag the ‘VSTMaster' folder to create a copy of it. Rename it to the name of your plugin.
+
+	Fire up TextWrangler and go to Multi-File Search. Click ‘other’ and select your new folder. Options are ‘all file types’ and ‘nested folders’, and Case Sensitive should be ON.
+
+	Search for ‘Gain’ and replace it with the name of your plugin using Replace All. That should affect Info.plist, Gain.cpp, Gain.h and GainProc.cpp: 2, 30, 8 and 9 occurrences.
+
+	Quit TextWrangler and change Gain.xcodeproj to your plugin’s name.
+
+	Change Gain.cpp, Gain.h and GainProc.cpp to your plugin’s name (or nameProc, as it were)
+
+	Open up the XCode project file. Select Target and click the Info button.
+
+	In General, make Name the name of your plugin.
+
+	In Build, scroll down and make Product Name the name of your plugin (will update some other places)
+
+	Go to Source and find the ‘Gain’ source files. For each, click the Info button and go to General.
+
+	Click Choose… for each, and select the corresponding real source file (cpp, h, Proc.cpp)
+
+	Copy the subtype from nameVersion.h to the vst.h file const unsigned long kUniqueId.
+
+	Copying the header files and code over, firstly be sure to include the code twice, once for each ProcessReplacing. Then, change all Float64 to double, and all Float32 to float. If you find logical ‘not’, change it to bang (!).
+
+	Copy the Reset() initialization to the top of vst.cpp where you'll find the other template variables.
+
+	In getParameterName, change it to your parameter label. Below that, getParameterDisplay can be db2string, int2string, float2string as desired. Then, getParameterLabel can be whatever you like.
+
+	Code the port in both the float-replacing and double-replacing sections of the Mac VST. This part means making it stereo like a typical VST plugin (they don't do N to N, but have to spell out channel count explicitly) and may involve adding L and R to the ends of variable names. Whatever's necessary. "It a work in progress" - Krog

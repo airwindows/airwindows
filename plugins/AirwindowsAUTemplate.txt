@@ -1,0 +1,33 @@
+	The Airwindows Audio Unit templates are made to work with XCode 3.2.6, running on MacOSX 10.6.8.
+
+	This is because subsequent XCodes continually leave out libraries and support code meant to target older MacOSes, perhaps as planned obsolescence, perhaps 'tidying up unused and superfluous stuff' with the result of planned obsolescence. Since I have no intention of making plugins that cease to work on equipment that still works just fine, Airwindows plugins use this build system which will produce plugins that work across a very wide range of Macs. The VSTs are made with similar goals, whether on Mac or PC: not being a PC guy I can't swear to how widely they work over older machines, but that's the intention.
+
+	To install the templates (assuming you've got CoreAudio installed with XCode 3.2.6), place the Audio Unit Effect folder here:
+
+	/Developer/Library/XCode/Project Templates/System Plug-in/Audio Unit Effect
+
+	(Original AU templates are in /Library/Application Support/Apple/Developer Tools/Project Templates/Audio Units, so it might work for older XCodes to put 'em there. Newer XCodes, who even knows. This is part of why I abandoned newer XCodes)
+
+	The target info for Airwindows builds (part of the template) is as follows:
+	architectures: ppc i386 x86_64
+	base SDK 10.5
+	Deployment Target 10.4
+	Strip debug symbols
+	Strip linked product
+	do not generate debug symbols
+
+	When you select a template in XCode (using File/NewProject…) select System Plug-in and the first thing you see should be Audio Unit Effect. There's also 'Options' and it'll say 'With Cocoa View'. That's really the mono/stereo switch: the templates in XCode are a bear to cope with, so I've simply used them as is but put new code behind them. Pick mono/stereo, hit the Choose… button, then fill in the name you want. Here's what you'll get.
+
+	If you leave With Cocoa View unchecked, you will get a mono plugin with ten sliders. The first is gain, the last is dry/wet.
+
+	If you check With Cocoa View, you will get a stereo plugin with ten sliders. The first is gain, the last is dry/wet. It switches to mid/side and then back again inside its code, but doesn't do anything with it.
+
+	Both of these will build with a variation on the the Airwindows manufacturer ID, 'DthX' (you'll find that in "YOURNAMEVersion.h"). You should have a manufacturer ID from Apple, but if you don't you might be able to use this one.
+
+	You'll also need to set up your Organisation Name because that's the folder your stuff will be in, in the DAW. The way to do that is in Address Book: find yourself in Address Book and then under your name, in the spot marked 'Company', that's where it'll grab the name that will become your folder inside the DAW. Sounds crazy, but there you go.
+
+	Lastly, in info.plist, there's a place that says 'airwindowstemplates' and you should be changing that to your own identity as well.
+
+	Both of these will also build with the subtype, "TEST". This is what you'll be using both here and in VST-land to specify what your plugin is. If you don't change this to something associated with your plugin's name, Logic for one will refuse to see your plugin as individual! You can't overlap here. The fix for overlapping is to have your 'company' (or 'organization') unique, and to have the subtype unique from anything else you make.
+
+	You'll find the built plugin in build/Release because the templates are set up to just go straight ahead and make a final product. If you know how to do debug versions and all that, feel free. The release version's set up to build a triple binary for PPC, 32 and 64 bit Intel.

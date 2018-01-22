@@ -1,0 +1,41 @@
+	The Windows VST plugins are compiled on a Parallels 8.0 virtual machine that never sees the internet, running Windows 7.
+
+	Therefore, these instructions are nonsense to any proper Windows dev, but this is what I'm working from. The zip file included will make a folder called VSTProject, which has the guts of what's in the Windows build, excepting the plugin source files that make up the VST. I'm starting from the Mac build, so this process is just how to build cross-compilations from what's already a VST plugin. Here's what I do to make that happen.
+
+	Disconnect the laptop from Ethernet and switch off AirPort so Windows can’t do anything evil to itself. Fire up Parallels and launch Windows 7 in a window on the desktop. Go to the Windows "Documents" folder so it's shown on the virtual desktop, and launch Visual Studio. At this point you can execute the following real fast.
+
+	Drag in a copy of VSTProject from the Mac environment, and open the folder.
+
+	Drag in the .c, .h and Proc.c files for the plugin.
+
+	Open the project in Visual Studio (Control-Shift O)
+
+	Go to Solution Explorer and rename VSTProject32 to your-desired-plugin32.
+
+	Click on Header Files, and hit Shift-Alt A. Add the .h file to the project.
+
+	Click on Source Files, and hit Shift-Alt A. Add the .c file and control-click the Proc.c file, and add both to the project.
+
+	Once you have these: Build the 32 project.
+
+	Rename plugin32 to plugin64. Click another folder in Solution Explorer, NOT the menu.
+
+	Then click the menu to set the project to 64. Glance to see both 64s are present. Build the 64 project.
+
+	Close the solution (Solution Explorer will close as you head for the menu)
+
+	Switch over to the project folder, minimizing Visual Studio.
+
+	Go to Release folder. Controlclick the 32 and 64 bit DLLs.
+
+	Click and hold, drag to the Mac environment. These are your built plugins.
+
+	Also drag them to the Windows VST folder.
+
+	Go Back to the root plugin folder. Delete the Release folder. Delete the DB file.
+
+	Go Back once more. Rename the plugin folder from VSTProject to the name of the plugin.
+
+	Drag it to the Mac environment, in the WinVST folder. This is what gets posted to GitHub.
+
+	Delete the plugin folder, and start again if you have more DLLs to make.
