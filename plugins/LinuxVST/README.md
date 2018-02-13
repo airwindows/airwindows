@@ -1,4 +1,4 @@
-# from LinuxVST/README.md
+# Airwindows open-source VST plugins for Linux
 
 This repository contains a CMake project that builds Airwindows plugins for
 Linux. Thanks to the Patreon supporters, Chris now publishes some of his plugins
