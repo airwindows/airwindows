@@ -8,6 +8,7 @@ include(Helpers.cmake)
 
 add_subdirectory(include/vstsdk)
 add_airwindows_plugin(Acceleration)
+add_airwindows_plugin(Aura)
 add_airwindows_plugin(BitShiftGain)
 add_airwindows_plugin(C5RawBuss)
 add_airwindows_plugin(C5RawChannel)
