@@ -57,8 +57,8 @@
 static const float kDefaultValue_ParamOne = 1.0;
 static const float kDefaultValue_ParamTwo = 1.0;
 
-static CFStringRef kParameterOneName = CFSTR("Frequency");
-static CFStringRef kParameterTwoName = CFSTR("Resolution");
+static CFStringRef kParameterOneName = CFSTR("Rate");
+static CFStringRef kParameterTwoName = CFSTR("Rez");
 //Alter the name if desired, but using the plugin name is a start
 
 enum {

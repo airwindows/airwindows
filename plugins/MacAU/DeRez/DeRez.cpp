@@ -207,7 +207,7 @@ void		DeRez::DeRezKernel::Process(	const Float32 	*inSourceP,
 
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
+		if (inputSample<1.2e-38 && -inputSample<1.2e-38 && (targetB == 0)) {
 			static int noisesource = 0;
 			//this declares a variable before anything else is compiled. It won't keep assigning
 			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,

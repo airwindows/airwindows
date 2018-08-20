@@ -30,7 +30,7 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38 && (targetB == 0)) {
 			static int noisesource = 0;
 			//this declares a variable before anything else is compiled. It won't keep assigning
 			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
@@ -49,7 +49,7 @@ void DeRez::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			applyresidue *= 0.00000001;
 			inputSampleL = applyresidue;
 		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38 && (targetB == 0)) {
 			static int noisesource = 0;
 			noisesource = noisesource % 1700021; noisesource++;
 			int residue = noisesource * noisesource;
@@ -186,7 +186,7 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38 && (targetB == 0)) {
 			static int noisesource = 0;
 			//this declares a variable before anything else is compiled. It won't keep assigning
 			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
@@ -205,7 +205,7 @@ void DeRez::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			applyresidue *= 0.00000001;
 			inputSampleL = applyresidue;
 		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38 && (targetB == 0)) {
 			static int noisesource = 0;
 			noisesource = noisesource % 1700021; noisesource++;
 			int residue = noisesource * noisesource;

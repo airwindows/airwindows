@@ -99,8 +99,8 @@ float DeRez::getParameter(VstInt32 index) {
 
 void DeRez::getParameterName(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: vst_strncpy (text, "Freq", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Reso", kVstMaxParamStrLen); break;
+        case kParamA: vst_strncpy (text, "Rate", kVstMaxParamStrLen); break;
+		case kParamB: vst_strncpy (text, "Rez", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
