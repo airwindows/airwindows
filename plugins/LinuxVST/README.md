@@ -1,5 +1,11 @@
 # Airwindows open-source VST plugins for Linux
 
+
+> **NB!** There are official Linux builds of airwindows plugins available
+> ([read more](http://www.airwindows.com/airwindows-linux/)). The purpose of
+> this repository now is to experiment with build configuration and, probably,
+> cross-compilation. I’d suggest to use official website to download Linux VSTs.
+
 This repository contains a CMake project that builds Airwindows plugins for
 Linux. Thanks to the Patreon supporters, Chris now publishes some of his plugins
 under the MIT license on his GitHub, thus making this possible. Please, consider
