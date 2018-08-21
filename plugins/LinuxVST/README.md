@@ -21,7 +21,6 @@ allowed for Linux as a platform to be targeted from now on. Thank you, ech2!
 1. <https://github.com/ech2>
 2. <http://oscii.ru>
 
-[[Download build](https://github.com/ech2/airwindows-ports/releases)]
 
 ## Building
 
@@ -31,12 +30,19 @@ Install CMake from your package manager:
 - Fedora / CentOS: `dnf install cmake`
 - Arch / Manjaro: `pacman -S cmake`
 
-To build the plugins you would need to grab the VST SDK and copy it to the
-`include/vstsdk` directory. You need to do it yourself, because the Steinberg’s
-license doesn’t allow to distribute their SDK with licenses other than GPL. You
-can get it from the following page:
-<https://www.steinberg.net/en/company/developers.html>. The structure of the
-`include/vsdsdk` directory should be as follows:
+You need to grab the VST SDK yourself, because the Steinberg’s license doesn’t
+allow to distribute their SDK with licenses other than GPL.
+You can get it at:[https://www.steinberg.net/en/company/developers.html](https://www.steinberg.net/en/company/developers.html).
+
+Unzip the VST SDK into a directory called vstsdk3610_11_06_2018_build_37, then:
+```
+git clone https://github.com/airwindows/airwindows.git
+unzip vstsdk3610_11_06_2018_build_37.zip
+cp -r vstsdk3610_11_06_2018_build_37/VST2_SDK/pluginterfaces airwindows/plugins/LinuxVST/include/vstsdk/pluginterfaces
+cp -r vstsdk3610_11_06_2018_build_37/VST2_SDK/public.sdk/source/vst2.x/* airwindows/plugins/LinuxVST/include/vstsdk/
+```
+
+Afterwards, the structure of the `include/vsdsdk` directory should be as follows:
 
 ```
 include/vstsdk/
@@ -54,9 +60,15 @@ include/vstsdk/
 └── vstplugmain.cpp
 ```
 
-Then, navigate to the `build` directory and run `cmake .. && make`. A number of
-`.so` files should appear — these are your plugins. Copy them wherever you
-would like or wherever your DAW can find them.
+
+Then, build and install:
+```
+cd airwindows/plugins/LinuxVST/
+cmake
+make
+mkdir -p /usr/local/lib/lxvst
+cp *.so /usr/local/lib/lxvst
+```
 
 ## Adding new plugins
 
