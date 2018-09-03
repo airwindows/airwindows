@@ -58,6 +58,8 @@ private:
 	long double noiseShapingR;
 	double contingentErrL;
 	double contingentErrR;
+	double currentDitherL;
+	double currentDitherR;
 	int Position;
 	bool flip;
 	double NSOddL;

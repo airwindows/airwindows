@@ -12,11 +12,13 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new D
 Ditherbox::Ditherbox(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.825;
+	A = 0.86;
 
 	Position = 99999999;
 	contingentErrL = 0.0;
 	contingentErrR = 0.0;
+	currentDitherL = 0.0;
+	currentDitherR = 0.0;
 	bynL[0] = 1000;
 	bynL[1] = 301;
 	bynL[2] = 176;
@@ -211,27 +213,33 @@ void Ditherbox::getParameterName(VstInt32 index, char *text) {
 
 void Ditherbox::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: switch((VstInt32)( A * 19.999 )) //0 to almost edge of # of params
+        case kParamA: switch((VstInt32)( A * 24.999 )) //0 to almost edge of # of params
 		{
 			case 0: vst_strncpy (text, "Trunc", kVstMaxParamStrLen); break;
 			case 1: vst_strncpy (text, "Flat", kVstMaxParamStrLen); break;
 			case 2: vst_strncpy (text, "TPDF", kVstMaxParamStrLen); break;
-			case 4: vst_strncpy (text, "HiGloss", kVstMaxParamStrLen); break;
-			case 5: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
-			case 6: vst_strncpy (text, "Spatial", kVstMaxParamStrLen); break;
-			case 7: vst_strncpy (text, "Natural", kVstMaxParamStrLen); break;
-			case 8: vst_strncpy (text, "NJAD", kVstMaxParamStrLen); break;
-			case 9: vst_strncpy (text, "Trunc", kVstMaxParamStrLen); break;
-			case 10: vst_strncpy (text, "Flat", kVstMaxParamStrLen); break;
-			case 11: vst_strncpy (text, "TPDF", kVstMaxParamStrLen); break;
-			case 12: vst_strncpy (text, "HiGloss", kVstMaxParamStrLen); break;
-			case 13: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
-			case 14: vst_strncpy (text, "Spatial", kVstMaxParamStrLen); break;
-			case 15: vst_strncpy (text, "Natural", kVstMaxParamStrLen); break;
-			case 16: vst_strncpy (text, "NJAD", kVstMaxParamStrLen); break;
-			case 17: vst_strncpy (text, "SlewOnl", kVstMaxParamStrLen); break;
-			case 18: vst_strncpy (text, "SubsOnl", kVstMaxParamStrLen); break;
-			case 19: vst_strncpy (text, "Silhoue", kVstMaxParamStrLen); break;
+			case 3: vst_strncpy (text, "Paul", kVstMaxParamStrLen); break;
+			case 4: vst_strncpy (text, "DbPaul", kVstMaxParamStrLen); break;
+			case 5: vst_strncpy (text, "Tape", kVstMaxParamStrLen); break;
+			case 6: vst_strncpy (text, "HiGloss", kVstMaxParamStrLen); break;
+			case 7: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
+			case 8: vst_strncpy (text, "Spatial", kVstMaxParamStrLen); break;
+			case 9: vst_strncpy (text, "Natural", kVstMaxParamStrLen); break;
+			case 10: vst_strncpy (text, "NJAD", kVstMaxParamStrLen); break;
+			case 11: vst_strncpy (text, "Trunc", kVstMaxParamStrLen); break;
+			case 12: vst_strncpy (text, "Flat", kVstMaxParamStrLen); break;
+			case 13: vst_strncpy (text, "TPDF", kVstMaxParamStrLen); break;
+			case 14: vst_strncpy (text, "Paul", kVstMaxParamStrLen); break;
+			case 15: vst_strncpy (text, "DbPaul", kVstMaxParamStrLen); break;
+			case 16: vst_strncpy (text, "Tape", kVstMaxParamStrLen); break;
+			case 17: vst_strncpy (text, "HiGloss", kVstMaxParamStrLen); break;
+			case 18: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
+			case 19: vst_strncpy (text, "Spatial", kVstMaxParamStrLen); break;
+			case 20: vst_strncpy (text, "Natural", kVstMaxParamStrLen); break;
+			case 21: vst_strncpy (text, "NJAD", kVstMaxParamStrLen); break;
+			case 22: vst_strncpy (text, "SlewOnl", kVstMaxParamStrLen); break;
+			case 23: vst_strncpy (text, "SubsOnl", kVstMaxParamStrLen); break;
+			case 24: vst_strncpy (text, "Silhoue", kVstMaxParamStrLen); break;
 			default: break; // unknown parameter, shouldn't happen!
 		} break;			
         default: break; // unknown parameter, shouldn't happen!
@@ -240,27 +248,33 @@ void Ditherbox::getParameterDisplay(VstInt32 index, char *text) {
 
 void Ditherbox::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: switch((VstInt32)( A * 19.999 )) //0 to almost edge of # of params
+        case kParamA: switch((VstInt32)( A * 24.999 )) //0 to almost edge of # of params
 		{
 			case 0: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 1: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 2: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
+			case 3: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 4: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 5: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 6: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 7: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 8: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
-			case 9: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
-			case 10: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
+			case 9: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
+			case 10: vst_strncpy (text, "16", kVstMaxParamStrLen); break;
 			case 11: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
 			case 12: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
 			case 13: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
 			case 14: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
 			case 15: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
 			case 16: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
-			case 17: vst_strncpy (text, "y", kVstMaxParamStrLen); break;
-			case 18: vst_strncpy (text, "y", kVstMaxParamStrLen); break;
-			case 19: vst_strncpy (text, "tte", kVstMaxParamStrLen); break;
+			case 17: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
+			case 18: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
+			case 19: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
+			case 20: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
+			case 21: vst_strncpy (text, "24", kVstMaxParamStrLen); break;
+			case 22: vst_strncpy (text, "y", kVstMaxParamStrLen); break;
+			case 23: vst_strncpy (text, "y", kVstMaxParamStrLen); break;
+			case 24: vst_strncpy (text, "tte", kVstMaxParamStrLen); break;
 			default: break; // unknown parameter, shouldn't happen!
 		} break;			
         default: break; // unknown parameter, shouldn't happen!

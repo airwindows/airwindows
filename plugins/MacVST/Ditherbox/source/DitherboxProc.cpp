@@ -14,7 +14,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 	
-	int dtype = (int)(A * 19.999); // +1 for Reaper bug workaround
+	int dtype = (int)(A * 24.999)+1; // +1 for Reaper bug workaround
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
@@ -42,14 +42,52 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	long double trim = 2.302585092994045684017991; //natural logarithm of 10
 	bool highRes = false;
 	bool dithering = true;
-	if (dtype > 8){highRes = true; dtype -= 8;}
-	if (dtype > 8){dithering = false; highRes = false;}
+	if (dtype > 11){highRes = true; dtype -= 11;}
+	if (dtype > 11){dithering = false; highRes = false;}
 	//follow up by switching high res back off for the monitoring	
 	
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
+		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+			static int noisesource = 0;
+			//this declares a variable before anything else is compiled. It won't keep assigning
+			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+			//but it lets me add this denormalization fix in a single place rather than updating
+			//it in three different locations. The variable isn't thread-safe but this is only
+			//a random seed and we can share it with whatever.
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSampleL = applyresidue;
+		}
+		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+			static int noisesource = 0;
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSampleR = applyresidue;
+			//this denormalization routine produces a white noise at -300 dB which the noise
+			//shaping will interact with to produce a bipolar output, but the noise is actually
+			//all positive. That should stop any variables from going denormal, and the routine
+			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
+			//the silence will return to being digital black again.
+		}
 		float drySampleL = inputSampleL;
 		float drySampleR = inputSampleR;
 				
@@ -89,7 +127,95 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//TPDF dither
 				break;
 				
-			case 4: 
+			case 4:
+				currentDitherL = (rand()/(double)RAND_MAX);
+				inputSampleL += currentDitherL;
+				inputSampleL -= lastSampleL;
+				inputSampleL = floor(inputSampleL);
+				lastSampleL = currentDitherL;
+				currentDitherR = (rand()/(double)RAND_MAX);
+				inputSampleR += currentDitherR;
+				inputSampleR -= lastSampleR;
+				inputSampleR = floor(inputSampleR);
+				lastSampleR = currentDitherR;
+				//Paul dither
+				break;
+				
+			case 5:				
+				nsL[9] = nsL[8]; nsL[8] = nsL[7]; nsL[7] = nsL[6]; nsL[6] = nsL[5];
+				nsL[5] = nsL[4]; nsL[4] = nsL[3]; nsL[3] = nsL[2]; nsL[2] = nsL[1];
+				nsL[1] = nsL[0]; nsL[0] = (rand()/(double)RAND_MAX);
+				
+				currentDitherL  = (nsL[0] * 0.061);
+				currentDitherL -= (nsL[1] * 0.11);
+				currentDitherL += (nsL[8] * 0.126);
+				currentDitherL -= (nsL[7] * 0.23);
+				currentDitherL += (nsL[2] * 0.25);
+				currentDitherL -= (nsL[3] * 0.43);
+				currentDitherL += (nsL[6] * 0.5);
+				currentDitherL -= nsL[5];
+				currentDitherL += nsL[4];
+				//this sounds different from doing it in order of sample position
+				//cumulative tiny errors seem to build up even at this buss depth
+				//considerably more pronounced at 32 bit float.
+				//Therefore we add the most significant components LAST.
+				//trying to keep values on like exponents of the floating point value.
+				inputSampleL += currentDitherL;
+				
+				inputSampleL = floor(inputSampleL);
+				//done with L
+				
+				nsR[9] = nsR[8]; nsR[8] = nsR[7]; nsR[7] = nsR[6]; nsR[6] = nsR[5];
+				nsR[5] = nsR[4]; nsR[4] = nsR[3]; nsR[3] = nsR[2]; nsR[2] = nsR[1];
+				nsR[1] = nsR[0]; nsR[0] = (rand()/(double)RAND_MAX);
+				
+				currentDitherR  = (nsR[0] * 0.061);
+				currentDitherR -= (nsR[1] * 0.11);
+				currentDitherR += (nsR[8] * 0.126);
+				currentDitherR -= (nsR[7] * 0.23);
+				currentDitherR += (nsR[2] * 0.25);
+				currentDitherR -= (nsR[3] * 0.43);
+				currentDitherR += (nsR[6] * 0.5);
+				currentDitherR -= nsR[5];
+				currentDitherR += nsR[4];
+				//this sounds different from doing it in order of sample position
+				//cumulative tiny errors seem to build up even at this buss depth
+				//considerably more pronounced at 32 bit float.
+				//Therefore we add the most significant components LAST.
+				//trying to keep values on like exponents of the floating point value.
+				inputSampleR += currentDitherR;
+				
+				inputSampleR = floor(inputSampleR);
+				//done with R
+				
+				//DoublePaul dither
+				break;
+				
+			case 6:
+				currentDitherL = (rand()/(double)RAND_MAX);
+				currentDitherR = (rand()/(double)RAND_MAX);
+				
+				inputSampleL += currentDitherL;
+				inputSampleR += currentDitherR;
+				inputSampleL -= nsL[4];
+				inputSampleR -= nsR[4];
+				
+				inputSampleL = floor(inputSampleL);
+				inputSampleR = floor(inputSampleR);
+				
+				nsL[4] = nsL[3];
+				nsL[3] = nsL[2];
+				nsL[2] = nsL[1];
+				nsL[1] = currentDitherL;
+				
+				nsR[4] = nsR[3];
+				nsR[3] = nsR[2];
+				nsR[2] = nsR[1];
+				nsR[1] = currentDitherR;				
+				//Tape dither
+				break;
+				
+			case 7: 
 				Position += 1;
 				//Note- uses integer overflow as a 'mod' operator
 				hotbinA = Position * Position;
@@ -111,7 +237,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//Quadratic dither
 				break;
 				
-			case 5:
+			case 8:
 				absSample = ((rand()/(double)RAND_MAX) - 0.5);
 				nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
 				absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -206,7 +332,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//TenNines dither R
 				break;
 				
-			case 6: 
+			case 9: 
 				if (inputSampleL > 0) inputSampleL += 0.383;
 				if (inputSampleL < 0) inputSampleL -= 0.383;
 				if (inputSampleR > 0) inputSampleR += 0.383;
@@ -246,7 +372,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//and does a teeny parallel-compression thing when almost at digital black.
 				break;
 				
-			case 7: //this one is the original Naturalize
+			case 10: //this one is the original Naturalize
 				if (inputSampleL > 0) inputSampleL += (0.3333333333);
 				if (inputSampleL < 0) inputSampleL -= (0.3333333333);
 				inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
@@ -406,7 +532,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//end R
 				break;
 				
-			case 8: //this one is the Not Just Another Dither
+			case 11: //this one is the Not Just Another Dither
 				
 				//begin L
 				benfordize = floor(inputSampleL);
@@ -571,7 +697,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//end R
 				break;
 				
-			case 9: 
+			case 12: 
 				//slew only
 				outputSampleL = (inputSampleL - lastSampleL)*trim;
 				outputSampleR = (inputSampleR - lastSampleR)*trim;
@@ -585,7 +711,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				inputSampleR = outputSampleR;
 				break;
 				
-			case 10: 
+			case 13: 
 				//subs only
 				gain = gaintarget;
 				
@@ -801,7 +927,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				if (inputSampleR < -1.0) inputSampleR = -1.0;		
 				break;
 				
-			case 11: 
+			case 14: 
 				//silhouette
 				//begin L
 				bridgerectifier = fabs(inputSampleL)*1.57079633;
@@ -893,7 +1019,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 	
-	int dtype = (int)(A * 19.999); // +1 for Reaper bug workaround
+	int dtype = (int)(A * 24.999)+1; // +1 for Reaper bug workaround
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
@@ -921,14 +1047,52 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	long double trim = 2.302585092994045684017991; //natural logarithm of 10
 	bool highRes = false;
 	bool dithering = true;
-	if (dtype > 8){highRes = true; dtype -= 8;}
-	if (dtype > 8){dithering = false; highRes = false;}
+	if (dtype > 11){highRes = true; dtype -= 11;}
+	if (dtype > 11){dithering = false; highRes = false;}
 	//follow up by switching high res back off for the monitoring	
 	
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
+		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
+			static int noisesource = 0;
+			//this declares a variable before anything else is compiled. It won't keep assigning
+			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+			//but it lets me add this denormalization fix in a single place rather than updating
+			//it in three different locations. The variable isn't thread-safe but this is only
+			//a random seed and we can share it with whatever.
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSampleL = applyresidue;
+		}
+		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
+			static int noisesource = 0;
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSampleR = applyresidue;
+			//this denormalization routine produces a white noise at -300 dB which the noise
+			//shaping will interact with to produce a bipolar output, but the noise is actually
+			//all positive. That should stop any variables from going denormal, and the routine
+			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
+			//the silence will return to being digital black again.
+		}
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
@@ -968,7 +1132,94 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//TPDF dither
 				break;
 				
-			case 4: 
+			case 4:
+				currentDitherL = (rand()/(double)RAND_MAX);
+				inputSampleL += currentDitherL;
+				inputSampleL -= lastSampleL;
+				inputSampleL = floor(inputSampleL);
+				lastSampleL = currentDitherL;
+				currentDitherR = (rand()/(double)RAND_MAX);
+				inputSampleR += currentDitherR;
+				inputSampleR -= lastSampleR;
+				inputSampleR = floor(inputSampleR);
+				lastSampleR = currentDitherR;
+				//Paul dither
+				break;
+				
+			case 5:
+				nsL[9] = nsL[8]; nsL[8] = nsL[7]; nsL[7] = nsL[6]; nsL[6] = nsL[5];
+				nsL[5] = nsL[4]; nsL[4] = nsL[3]; nsL[3] = nsL[2]; nsL[2] = nsL[1];
+				nsL[1] = nsL[0]; nsL[0] = (rand()/(double)RAND_MAX);
+				
+				currentDitherL  = (nsL[0] * 0.061);
+				currentDitherL -= (nsL[1] * 0.11);
+				currentDitherL += (nsL[8] * 0.126);
+				currentDitherL -= (nsL[7] * 0.23);
+				currentDitherL += (nsL[2] * 0.25);
+				currentDitherL -= (nsL[3] * 0.43);
+				currentDitherL += (nsL[6] * 0.5);
+				currentDitherL -= nsL[5];
+				currentDitherL += nsL[4];
+				//this sounds different from doing it in order of sample position
+				//cumulative tiny errors seem to build up even at this buss depth
+				//considerably more pronounced at 32 bit float.
+				//Therefore we add the most significant components LAST.
+				//trying to keep values on like exponents of the floating point value.
+				inputSampleL += currentDitherL;
+				
+				inputSampleL = floor(inputSampleL);
+				//done with L
+				
+				nsR[9] = nsR[8]; nsR[8] = nsR[7]; nsR[7] = nsR[6]; nsR[6] = nsR[5];
+				nsR[5] = nsR[4]; nsR[4] = nsR[3]; nsR[3] = nsR[2]; nsR[2] = nsR[1];
+				nsR[1] = nsR[0]; nsR[0] = (rand()/(double)RAND_MAX);
+				
+				currentDitherR  = (nsR[0] * 0.061);
+				currentDitherR -= (nsR[1] * 0.11);
+				currentDitherR += (nsR[8] * 0.126);
+				currentDitherR -= (nsR[7] * 0.23);
+				currentDitherR += (nsR[2] * 0.25);
+				currentDitherR -= (nsR[3] * 0.43);
+				currentDitherR += (nsR[6] * 0.5);
+				currentDitherR -= nsR[5];
+				currentDitherR += nsR[4];
+				//this sounds different from doing it in order of sample position
+				//cumulative tiny errors seem to build up even at this buss depth
+				//considerably more pronounced at 32 bit float.
+				//Therefore we add the most significant components LAST.
+				//trying to keep values on like exponents of the floating point value.
+				inputSampleR += currentDitherR;
+				
+				inputSampleR = floor(inputSampleR);
+				//done with R
+				//DoublePaul dither
+				break;
+				
+			case 6:
+				currentDitherL = (rand()/(double)RAND_MAX);
+				currentDitherR = (rand()/(double)RAND_MAX);
+				
+				inputSampleL += currentDitherL;
+				inputSampleR += currentDitherR;
+				inputSampleL -= nsL[4];
+				inputSampleR -= nsR[4];
+				
+				inputSampleL = floor(inputSampleL);
+				inputSampleR = floor(inputSampleR);
+				
+				nsL[4] = nsL[3];
+				nsL[3] = nsL[2];
+				nsL[2] = nsL[1];
+				nsL[1] = currentDitherL;
+				
+				nsR[4] = nsR[3];
+				nsR[3] = nsR[2];
+				nsR[2] = nsR[1];
+				nsR[1] = currentDitherR;				
+				//Tape dither
+				break;
+				
+			case 7: 
 				Position += 1;
 				//Note- uses integer overflow as a 'mod' operator
 				hotbinA = Position * Position;
@@ -990,7 +1241,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//Quadratic dither
 				break;
 				
-			case 5:
+			case 8:
 				absSample = ((rand()/(double)RAND_MAX) - 0.5);
 				nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
 				absSample += ((rand()/(double)RAND_MAX) - 0.5);
@@ -1085,7 +1336,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//TenNines dither R
 				break;
 				
-			case 6: 
+			case 9: 
 				if (inputSampleL > 0) inputSampleL += 0.383;
 				if (inputSampleL < 0) inputSampleL -= 0.383;
 				if (inputSampleR > 0) inputSampleR += 0.383;
@@ -1125,7 +1376,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//and does a teeny parallel-compression thing when almost at digital black.
 				break;
 				
-			case 7: //this one is the original Naturalize
+			case 10: //this one is the original Naturalize
 				if (inputSampleL > 0) inputSampleL += (0.3333333333);
 				if (inputSampleL < 0) inputSampleL -= (0.3333333333);
 				inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
@@ -1285,7 +1536,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//end R
 				break;
 				
-			case 8: //this one is the Not Just Another Dither
+			case 11: //this one is the Not Just Another Dither
 				
 				//begin L
 				benfordize = floor(inputSampleL);
@@ -1450,7 +1701,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//end R
 				break;
 				
-			case 9: 
+			case 12: 
 				//slew only
 				outputSampleL = (inputSampleL - lastSampleL)*trim;
 				outputSampleR = (inputSampleR - lastSampleR)*trim;
@@ -1464,7 +1715,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				inputSampleR = outputSampleR;
 				break;
 				
-			case 10: 
+			case 13: 
 				//subs only
 				gain = gaintarget;
 				
@@ -1680,7 +1931,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				if (inputSampleR < -1.0) inputSampleR = -1.0;		
 				break;
 				
-			case 11: 
+			case 14: 
 				//silhouette
 				//begin L
 				bridgerectifier = fabs(inputSampleL)*1.57079633;
