@@ -1,6 +1,15 @@
 	The Windows VST plugins are compiled on a Parallels 8.0 virtual machine that never sees the internet, running Windows 7.
 
-	Therefore, these instructions are nonsense to any proper Windows dev, but this is what I'm working from. The zip file included will make a folder called VSTProject, which has the guts of what's in the Windows build, excepting the plugin source files that make up the VST. I'm starting from the Mac build, so this process is just how to build cross-compilations from what's already a VST plugin. Here's what I do to make that happen.
+	Therefore, these instructions are nonsense to any proper Windows dev, but this is what I'm working from. The zip file included will make a folder called VSTProject, which has the guts of what's in the Windows build, excepting the plugin source files that make up the VST. I'm starting from the Mac build, so this process is just how to build cross-compilations from what's already a VST plugin. Here's what I do to make that happen. Also note that the builds have been intentionally broken because Steinberg doesn't want you to develop VST2s, so you're on your own: originally these plugins contained a folder called vst2.x that contained the following files:
+
+	aeffeditor.h
+	audioeffect.cpp
+	audioeffect.h
+	audioeffectx.cpp
+	audioeffectx.h
+	vstplugmain.cpp
+
+	So you'll probably need those, and I can't give them to you :P
 
 	Disconnect the laptop from Ethernet and switch off AirPort so Windows can’t do anything evil to itself. Fire up Parallels and launch Windows 7 in a window on the desktop. Go to the Windows "Documents" folder so it's shown on the virtual desktop, and launch Visual Studio. At this point you can execute the following real fast.
 
@@ -32,7 +41,7 @@
 
 	Also drag them to the Windows VST folder.
 
-	Go Back to the root plugin folder. Delete the Release folder. Delete the DB file.
+	Go Back to the root plugin folder. Delete the Release folder. Delete the DB file. Delete the vst2.x folder.
 
 	Go Back once more. Rename the plugin folder from VSTProject to the name of the plugin.
 
