@@ -94,7 +94,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			if (highestSample > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -121,6 +121,8 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				iirLowpassAR = (iirLowpassAR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
 			
+			if (bassfreq > 1.0) bassfreq = 1.0;
+			
 			if (bassfreq > 0.0) {
 				iirHighpassAL = (iirHighpassAL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassAR = (iirHighpassAR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -142,7 +144,7 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			if (highestSample > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -168,6 +170,8 @@ void Gatelope::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				iirLowpassBL = (iirLowpassBL * (1.0 - treblefreq)) + (inputSampleL * treblefreq);
 				iirLowpassBR = (iirLowpassBR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
+			
+			if (bassfreq > 1.0) bassfreq = 1.0;
 			
 			if (bassfreq > 0.0) {
 				iirHighpassBL = (iirHighpassBL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
@@ -308,7 +312,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			if (highestSample > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -335,6 +339,8 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				iirLowpassAR = (iirLowpassAR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
 			
+			if (bassfreq > 1.0) bassfreq = 1.0;
+			
 			if (bassfreq > 0.0) {
 				iirHighpassAL = (iirHighpassAL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassAR = (iirHighpassAR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -356,7 +362,7 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			if (highestSample > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -382,6 +388,8 @@ void Gatelope::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				iirLowpassBL = (iirLowpassBL * (1.0 - treblefreq)) + (inputSampleL * treblefreq);
 				iirLowpassBR = (iirLowpassBR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
+			
+			if (bassfreq > 1.0) bassfreq = 1.0;
 			
 			if (bassfreq > 0.0) {
 				iirHighpassBL = (iirHighpassBL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);

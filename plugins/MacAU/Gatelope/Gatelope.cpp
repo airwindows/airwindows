@@ -263,7 +263,7 @@ void		Gatelope::GatelopeKernel::Process(	const Float32 	*inSourceP,
 			if (fabs(inputSample) > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -285,6 +285,7 @@ void		Gatelope::GatelopeKernel::Process(	const Float32 	*inSourceP,
 			if (treblefreq >= 1.0) iirLowpassA = inputSample;
 			else iirLowpassA = (iirLowpassA * (1.0 - treblefreq)) + (inputSample * treblefreq);
 			
+			if (bassfreq > 1.0) bassfreq = 1.0;
 			
 			if (bassfreq > 0.0) iirHighpassA = (iirHighpassA * (1.0 - bassfreq)) + (inputSample * bassfreq);
 			else iirHighpassA = 0.0;
@@ -297,7 +298,7 @@ void		Gatelope::GatelopeKernel::Process(	const Float32 	*inSourceP,
 			if (fabs(inputSample) > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -319,6 +320,8 @@ void		Gatelope::GatelopeKernel::Process(	const Float32 	*inSourceP,
 			if (treblefreq >= 1.0) iirLowpassB = inputSample;
 			else iirLowpassB = (iirLowpassB * (1.0 - treblefreq)) + (inputSample * treblefreq);
 			
+			if (bassfreq > 1.0) bassfreq = 1.0;
+
 			if (bassfreq > 0.0) iirHighpassB = (iirHighpassB * (1.0 - bassfreq)) + (inputSample * bassfreq);
 			else iirHighpassB = 0.0;
 			
