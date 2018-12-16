@@ -42,6 +42,23 @@ void DitherMeDiskers::processReplacing(float **inputs, float **outputs, VstInt32
 		noiseShapingR += outputSampleR;
 		noiseShapingR -= lastSampleR;
 		
+		if (outputSampleL > 32760.0) {
+			outputSampleL = 32760.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR > 32760.0) {
+			outputSampleR = 32760.0;
+			noiseShapingR *= 0.5;
+		}
+		if (outputSampleL < -32760.0) {
+			outputSampleL = -32760.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR < -32760.0) {
+			outputSampleR = -32760.0;
+			noiseShapingR *= 0.5;
+		}		
+		
 		*out1 = outputSampleL / 32768.0;
 		*out2 = outputSampleR / 32768.0;
 		
@@ -86,6 +103,23 @@ void DitherMeDiskers::processDoubleReplacing(double **inputs, double **outputs, 
 		
 		noiseShapingR += outputSampleR;
 		noiseShapingR -= lastSampleR;
+		
+		if (outputSampleL > 32760.0) {
+			outputSampleL = 32760.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR > 32760.0) {
+			outputSampleR = 32760.0;
+			noiseShapingR *= 0.5;
+		}
+		if (outputSampleL < -32760.0) {
+			outputSampleL = -32760.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR < -32760.0) {
+			outputSampleR = -32760.0;
+			noiseShapingR *= 0.5;
+		}		
 		
 		*out1 = outputSampleL / 32768.0;
 		*out2 = outputSampleR / 32768.0;

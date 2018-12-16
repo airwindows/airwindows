@@ -184,6 +184,15 @@ void		DitherMeDiskers::DitherMeDiskersKernel::Process(	const Float32 	*inSourceP
 		noiseShaping += outputSample;
 		noiseShaping -= lastSample;
 		
+		if (outputSample > 32760.0) {
+			outputSample = 32760.0;
+			noiseShaping *= 0.5;
+		}
+		if (outputSample < -32760.0) {
+			outputSample = -32760.0;
+			noiseShaping *= 0.5;
+		}
+
 		*destP = outputSample / 32768.0; //scale it back down to 16 bit resolution
 		
 		sourceP += inNumChannels;

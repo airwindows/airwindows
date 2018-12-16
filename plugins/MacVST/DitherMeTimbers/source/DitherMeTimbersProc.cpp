@@ -41,7 +41,24 @@ void DitherMeTimbers::processReplacing(float **inputs, float **outputs, VstInt32
 		
 		noiseShapingR += outputSampleR;
 		noiseShapingR -= lastSampleR;
-
+		
+		if (outputSampleL > 8388600.0) {
+			outputSampleL = 8388600.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR > 8388600.0) {
+			outputSampleR = 8388600.0;
+			noiseShapingR *= 0.5;
+		}
+		if (outputSampleL < -8388600.0) {
+			outputSampleL = -8388600.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR < -8388600.0) {
+			outputSampleR = -8388600.0;
+			noiseShapingR *= 0.5;
+		}
+		
 		*out1 = outputSampleL / 8388608.0;
 		*out2 = outputSampleR / 8388608.0;
 
@@ -86,6 +103,23 @@ void DitherMeTimbers::processDoubleReplacing(double **inputs, double **outputs, 
 		
 		noiseShapingR += outputSampleR;
 		noiseShapingR -= lastSampleR;
+		
+		if (outputSampleL > 8388600.0) {
+			outputSampleL = 8388600.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR > 8388600.0) {
+			outputSampleR = 8388600.0;
+			noiseShapingR *= 0.5;
+		}
+		if (outputSampleL < -8388600.0) {
+			outputSampleL = -8388600.0;
+			noiseShapingL *= 0.5;
+		}
+		if (outputSampleR < -8388600.0) {
+			outputSampleR = -8388600.0;
+			noiseShapingR *= 0.5;
+		}		
 		
 		*out1 = outputSampleL / 8388608.0;
 		*out2 = outputSampleR / 8388608.0;

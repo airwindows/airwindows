@@ -184,6 +184,15 @@ void		DitherMeTimbers::DitherMeTimbersKernel::Process(	const Float32 	*inSourceP
 		noiseShaping += outputSample;
 		noiseShaping -= lastSample;
 		
+		if (outputSample > 8388600.0) {
+			outputSample = 8388600.0;
+			noiseShaping *= 0.5;
+		}
+		if (outputSample < -8388600.0) {
+			outputSample = -8388600.0;
+			noiseShaping *= 0.5;
+		}
+		
 		*destP = outputSample / 8388608.0; //scale it back down to 24 bit resolution
 		
 		sourceP += inNumChannels;
