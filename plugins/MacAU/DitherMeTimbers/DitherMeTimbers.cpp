@@ -177,10 +177,10 @@ void		DitherMeTimbers::DitherMeTimbersKernel::Process(	const Float32 	*inSourceP
 		
 		if ((lastSample+lastSample) >= (inputSample+lastSample2)) outputSample = floor(lastSample);
 		else outputSample = floor(lastSample+1.0); //round down or up based on whether it softens treble angles
-
+		
 		lastSample2 = lastSample;
 		lastSample = inputSample; //we retain three samples in a row
-
+		
 		noiseShaping += outputSample;
 		noiseShaping -= lastSample;
 		
@@ -199,6 +199,3 @@ void		DitherMeTimbers::DitherMeTimbersKernel::Process(	const Float32 	*inSourceP
 		destP += inNumChannels;
 	}
 }
-
-
-

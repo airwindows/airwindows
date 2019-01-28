@@ -116,11 +116,8 @@ public:
 	
 private: 
 
-	long double fpNShapeAL;
-	long double fpNShapeBL;
-	long double fpNShapeAR;
-	long double fpNShapeBR;
-	bool fpFlip;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	Float64 chase;
 	Float64 lastrectifierL;
 	Float64 lastrectifierR;

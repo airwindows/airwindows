@@ -205,9 +205,7 @@ void		ADClip7::ADClip7Kernel::Reset()
 	refclip = 0.99;
 	iirLowsA = 0.0;
 	iirLowsB = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,7 +223,6 @@ void		ADClip7::ADClip7Kernel::Process(	const Float32 	*inSourceP,
 	Float64 overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	Float32 fpTemp;
 	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
 	Float64 fpNew = 1.0 - fpOld;
 	
@@ -479,19 +476,11 @@ void		ADClip7::ADClip7Kernel::Process(	const Float32 	*inSourceP,
 		if (inputSample < -refclip) inputSample = -refclip;
 		//final iron bar
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = not fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 				
 		*destP = inputSample;
 		

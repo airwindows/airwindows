@@ -310,7 +310,7 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 			if (highestSample > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -337,6 +337,8 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				iirLowpassAR = (iirLowpassAR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
 			
+			if (bassfreq > 1.0) bassfreq = 1.0;
+			
 			if (bassfreq > 0.0) {
 				iirHighpassAL = (iirHighpassAL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassAR = (iirHighpassAR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -358,7 +360,7 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 			if (highestSample > threshold)
 			{
 				treblefreq += attackSpeed;
-				if (treblefreq > 1.0) treblefreq = 1.0;
+				if (treblefreq > 2.0) treblefreq = 2.0;
 				bassfreq -= attackSpeed;
 				bassfreq -= attackSpeed;
 				if (bassfreq < 0.0) bassfreq = 0.0;
@@ -385,6 +387,8 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				iirLowpassBR = (iirLowpassBR * (1.0 - treblefreq)) + (inputSampleR * treblefreq);
 			}
 			
+			if (bassfreq > 1.0) bassfreq = 1.0;
+
 			if (bassfreq > 0.0) {
 				iirHighpassBL = (iirHighpassBL * (1.0 - bassfreq)) + (inputSampleL * bassfreq);
 				iirHighpassBR = (iirHighpassBR * (1.0 - bassfreq)) + (inputSampleR * bassfreq);
@@ -408,18 +412,14 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		
 		flip = !flip;
 				
-		//noise shaping to 32-bit floating point
-		Float32 fpTemp = inputSampleL;
-		fpNShapeL += (inputSampleL-fpTemp);
-		inputSampleL += fpNShapeL;
-		//if this confuses you look at the wordlength for fpTemp :)
-		fpTemp = inputSampleR;
-		fpNShapeR += (inputSampleR-fpTemp);
-		inputSampleR += fpNShapeR;
-		//for deeper space and warmth, we try a non-oscillating noise shaping
-		//that is kind of ruthless: it will forever retain the rounding errors
-		//except we'll dial it back a hair at the end of every buffer processed
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
@@ -430,12 +430,6 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		outputL += 1;
 		outputR += 1;
 	}
-	fpNShapeL *= 0.999999;
-	fpNShapeR *= 0.999999;
-	//we will just delicately dial back the FP noise shaping, not even every sample
-	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
-	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
 	return noErr;
 }
 

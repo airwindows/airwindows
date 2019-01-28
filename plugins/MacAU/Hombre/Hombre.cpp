@@ -169,9 +169,7 @@ void		Hombre::HombreKernel::Reset()
 	for(int count = 0; count < 4000; count++) {p[count] = 0.0;}
 	gcount = 0;
 	slide = 0.421;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -196,15 +194,10 @@ void		Hombre::HombreKernel::Process(	const Float32 	*inSourceP,
 	int widthB = (int)(7.0*overallscale); //max 364 at 44.1, 792 at 96K
 	Float64 wet = GetParameter( kParam_Two );
 	Float64 dry = 1.0 - wet;
-
 	long double inputSample;
 	Float64 drySample;
 	Float64 total;
-	int count;
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	int count;	
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
@@ -273,23 +266,13 @@ void		Hombre::HombreKernel::Process(	const Float32 	*inSourceP,
 			inputSample = (inputSample * wet) + (drySample * dry);
 		}
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
-		//built in output trim and dry/wet if desired
-		//*destP = inputSample;
 		
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

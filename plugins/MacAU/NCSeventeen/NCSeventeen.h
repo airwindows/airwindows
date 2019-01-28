@@ -133,9 +133,7 @@ public:
 		Float64 basslev;
 		Float64 treblev;
 		Float64 cheblev;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 		//default stuff
 		
 	};

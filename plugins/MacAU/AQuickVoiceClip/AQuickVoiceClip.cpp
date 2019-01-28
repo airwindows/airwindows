@@ -181,10 +181,7 @@ void		AQuickVoiceClip::AQuickVoiceClipKernel::Reset()
 	iirSampleC = 0.0;
 	iirSampleD = 0.0;
 	flip = false;
-	demotimer = 0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -227,9 +224,6 @@ void		AQuickVoiceClip::AQuickVoiceClipKernel::Process(	const Float32 	*inSourceP
 	Float64 outputSample;
 	bool clipOnset;
 	Float64 drySample;
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
@@ -430,21 +424,7 @@ void		AQuickVoiceClip::AQuickVoiceClipKernel::Process(	const Float32 	*inSourceP
 			inputSample += (((lastOutSample + lastOut2Sample + lastOut3Sample) / 3.6)*lpDepth);
 		}
 		if (lpDepth < 0.0) lpDepth = 0.0;
-		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = not fpFlip;
-		//end noise shaping on 32 bit output, hasn't been applied yet
-		
+				
 		inputSample *= (1.0-maxRecent);
 		inputSample += (passThrough * maxRecent);
 		//there's our raw signal, without antialiasing. Brings up low level stuff and softens more when hot
@@ -453,6 +433,11 @@ void		AQuickVoiceClip::AQuickVoiceClipKernel::Process(	const Float32 	*inSourceP
 		if (inputSample < -cliplevel) inputSample = -cliplevel;
 		//final iron bar
 		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

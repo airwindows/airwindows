@@ -16,11 +16,8 @@ PhaseNudge::PhaseNudge(audioMasterCallback audioMaster) :
 	B = 1.0;
 	for(int count = 0; count < 1502; count++) {dL[count] = 0.0; dR[count] = 0.0;}
 	one = 1; maxdelay = 9001;
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

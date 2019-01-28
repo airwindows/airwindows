@@ -57,11 +57,8 @@ AQuickVoiceClip::AQuickVoiceClip(audioMasterCallback audioMaster) :
 	ataK4 = 0.886; //remainder of interpolated dry, adds up to 1.0
 	ataK5 = 0.431; //subtract this much prev. diff sample, brightens.  0.431 becomes flat
 	
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

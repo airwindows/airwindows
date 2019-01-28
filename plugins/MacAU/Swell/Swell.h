@@ -134,10 +134,7 @@ public:
 		
 		long double swell;
 		bool louder;
-		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

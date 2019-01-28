@@ -140,6 +140,7 @@ public:
 		Float64 iirSampleB;
 		Float64 iirSampleC;
 		Float64 iirSampleD;
+		long double fpNShape;
 	};
 };
 

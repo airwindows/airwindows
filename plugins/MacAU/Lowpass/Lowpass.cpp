@@ -176,8 +176,7 @@ void		Lowpass::LowpassKernel::Reset()
 {
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
+	fpNShape = 0.0;
 	fpFlip = true;
 }
 
@@ -205,9 +204,6 @@ void		Lowpass::LowpassKernel::Process(	const Float32 	*inSourceP,
 	Float64 offset;
 	Float64 inputSample;
 	Float64 outputSample;
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
 
 	iirAmount += (iirAmount * tight * tight);
 	if (tight > 0) tight /= 1.5;
@@ -262,20 +258,13 @@ void		Lowpass::LowpassKernel::Process(	const Float32 	*inSourceP,
 			}
 		
 		if (wet < 1.0) outputSample = (outputSample * wet) + (inputSample * dry);
-		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = outputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((outputSample-fpTemp)*fpNew);
-			outputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = outputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((outputSample-fpTemp)*fpNew);
-			outputSample += fpNShapeB;
-		}
 		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = outputSample;
 		sourceP += inNumChannels;

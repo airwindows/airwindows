@@ -173,9 +173,7 @@ ComponentResult PurestWarm::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		PurestWarm::PurestWarmKernel::Reset()
 {
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,9 +188,6 @@ void		PurestWarm::PurestWarmKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;	
 	int polarity = (int) GetParameter( kParam_One );
 	long double inputSample;
 	
@@ -229,55 +224,25 @@ void		PurestWarm::PurestWarmKernel::Process(	const Float32 	*inSourceP,
 			if (inputSample < 0) 
 			{
 				inputSample = -(sin(-inputSample*1.57079634)/1.57079634);
-				//noise shaping to 32-bit floating point
-				if (fpFlip) {
-					fpTemp = inputSample;
-					fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-					inputSample += fpNShapeA;
-				} else {
-					fpTemp = inputSample;
-					fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-					inputSample += fpNShapeB;
-				}
-				//end noise shaping on 32 bit output
-			} else {			
-				if (fpFlip) {
-					fpTemp = inputSample;
-					fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-				} else {
-					fpTemp = inputSample;
-					fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-				}				
+				//32 bit dither, made small and tidy.
+				int expon; frexpf((Float32)inputSample, &expon);
+				long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+				inputSample += (dither-fpNShape); fpNShape = dither;
+				//end 32 bit dither
 			}
 		} else {
-
 			if (inputSample > 0)
 			{
 				inputSample = sin(inputSample*1.57079634)/1.57079634;			
-				//noise shaping to 32-bit floating point
-				if (fpFlip) {
-					fpTemp = inputSample;
-					fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-					inputSample += fpNShapeA;
-				} else {
-					fpTemp = inputSample;
-					fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-					inputSample += fpNShapeB;
-				}
-				//end noise shaping on 32 bit output
-			} else {
-				if (fpFlip) {
-					fpTemp = inputSample;
-					fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-				} else {
-					fpTemp = inputSample;
-					fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-				}
+				//32 bit dither, made small and tidy.
+				int expon; frexpf((Float32)inputSample, &expon);
+				long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+				inputSample += (dither-fpNShape); fpNShape = dither;
+				//end 32 bit dither
 			}
 		}
 		//that's it. Only applies on one half of the waveform, other half is passthrough untouched.
-		//even the floating point noise shaping to the 32 bit buss is only applied as needed.
-		fpFlip = not fpFlip;
+		//even the dither to the 32 bit buss is only applied as needed.
 		
 		*destP = inputSample;
 		

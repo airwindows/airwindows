@@ -140,9 +140,7 @@ public:
 		Float64 lastSample;
 		Float64 limitPos;
 		Float64 limitNeg;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

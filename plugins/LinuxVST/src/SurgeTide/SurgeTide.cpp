@@ -15,10 +15,8 @@ SurgeTide::SurgeTide(audioMasterCallback audioMaster) :
 	A = 0.5;
 	B = 0.3;
 	C = 1.0;
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	flip = true;
 	chaseA = 0.0;
 	chaseB = 0.0;

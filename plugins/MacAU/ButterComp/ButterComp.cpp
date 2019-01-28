@@ -188,9 +188,6 @@ void		ButterComp::ButterCompKernel::Process(	const Float32 	*inSourceP,
 	Float64 overallscale = 2.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
 	Float64 inputpos;
 	Float64 inputneg;
 	Float64 calcpos;
@@ -286,11 +283,11 @@ void		ButterComp::ButterCompKernel::Process(	const Float32 	*inSourceP,
 		inputSample /= outputgain;
 		if (wet < 1.0) inputSample = (drySample * dry)+(inputSample*wet);
 
-		//noise shaping to 32-bit floating point
-		fpTemp = inputSample;
-		fpNShape = (fpNShape*fpOld)+((inputSample-fpTemp)*fpNew);
-		inputSample += fpNShape;
-		//end noise shaping on 32 bit output		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

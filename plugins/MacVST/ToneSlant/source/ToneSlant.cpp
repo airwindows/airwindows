@@ -15,11 +15,8 @@ ToneSlant::ToneSlant(audioMasterCallback audioMaster) :
 	A = 0.0;
 	B = 0.0;
 	for(int count = 0; count < 102; count++) {bL[count] = 0.0; bR[count] = 0.0; f[count] = 0.0;}
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

@@ -135,8 +135,7 @@ public:
 		Float64 nobA;
 		Float64 nibB;
 		Float64 nobB;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
+		Float64 fpNShape;
 		bool fpFlip;
 	};
 };

@@ -131,9 +131,7 @@ public:
 		Float64 previousVelocity;
 		Float64 b[21];
 		Float64 f[21];		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

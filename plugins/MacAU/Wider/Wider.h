@@ -118,11 +118,8 @@ public:
 	
 private: 
 	Float64 p[4099];
-	long double fpNShapeAL;
-	long double fpNShapeBL;
-	long double fpNShapeAR;
-	long double fpNShapeBR;
-	bool flip;	
+	long double fpNShapeL;
+	long double fpNShapeR;
 	int count;
 };
 

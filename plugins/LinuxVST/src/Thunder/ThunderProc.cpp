@@ -40,9 +40,6 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double resultML;
 	double resultMR;
 	
-	float fpTemp;
-	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	    
@@ -225,27 +222,14 @@ void Thunder::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			inputSampleR *= outputGain;
 		}
 		
-		//noise shaping to 32-bit floating point
-		if (flip) {
-			fpTemp = inputSampleL;
-			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeAL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeAR;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeBL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeBR;
-		}
-		flip = !flip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((float)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((float)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		
 		*out1 = inputSampleL;
@@ -291,9 +275,6 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double resultML;
 	double resultMR;
 	
-	double fpTemp;
-	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 		
@@ -476,27 +457,16 @@ void Thunder::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR *= outputGain;
 		}
 		
-		//noise shaping to 32-bit floating point
-		if (flip) {
-			fpTemp = inputSampleL;
-			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeAL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeAR;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeBL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeBR;
-		}
-		flip = !flip;
-		//end noise shaping on 32 bit output
+		//stereo 64 bit dither, made small and tidy.
+		int expon; frexp((double)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexp((double)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 64 bit dither
 		
 		
 		*out1 = inputSampleL;

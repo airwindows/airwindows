@@ -16,11 +16,8 @@ Distance::Distance(audioMasterCallback audioMaster) :
 	B = 1.0;
 	thirdresultL = prevresultL = lastclampL = clampL = changeL = lastL = 0.0;
 	thirdresultR = prevresultR = lastclampR = clampR = changeR = lastR = 0.0;
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

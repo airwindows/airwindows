@@ -131,10 +131,7 @@ public:
 	private: 
 		Float64 b[11];
 		Float64 f[11];		
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
-		
+		Float64 fpNShape;
 	};
 };
 

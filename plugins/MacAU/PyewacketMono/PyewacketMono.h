@@ -130,9 +130,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 		Float64 chase;
 		Float64 lastrectifier;
 	};

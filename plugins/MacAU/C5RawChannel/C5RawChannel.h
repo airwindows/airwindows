@@ -127,9 +127,7 @@ public:
 		private: 
 		Float64 lastSampleChannel;
 		Float64 lastFXChannel;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

@@ -203,11 +203,8 @@ ComponentResult HermeTrim::Initialize()
 // this is called the reset the DSP state (clear buffers, reset counters, etc.)
 ComponentResult		HermeTrim::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	return noErr;
 }
 
@@ -226,11 +223,7 @@ OSStatus		HermeTrim::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+		
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
@@ -296,25 +289,14 @@ OSStatus		HermeTrim::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		inputSampleR = (mid-side) * rightgain;
 		//contains mastergain and the gain trim fixing the mid/side
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;

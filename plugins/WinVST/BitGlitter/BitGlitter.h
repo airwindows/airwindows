@@ -55,6 +55,9 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
+	long double fpNShapeL;
+	long double fpNShapeR;
+	
 	double ataLastSampleL;
 	double ataHalfwaySampleL;
 	double ataDrySampleL;

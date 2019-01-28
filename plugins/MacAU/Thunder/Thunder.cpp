@@ -179,10 +179,8 @@ ComponentResult Thunder::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ComponentResult		Thunder::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	muSpeedA = 10000;
 	muSpeedB = 10000;
 	muCoefficientA = 1;
@@ -240,9 +238,6 @@ OSStatus		Thunder::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 	Float64 resultML;
 	Float64 resultMR;
 	
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
 	long double inputSampleL;
 	long double inputSampleR;
 	
@@ -423,28 +418,16 @@ OSStatus		Thunder::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 			inputSampleL *= outputGain;
 			inputSampleR *= outputGain;
 		}
-				
-		//noise shaping to 32-bit floating point
-		if (flip) {
-			fpTemp = inputSampleL;
-			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeAL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeAR;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeBL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeBR;
-		}
 		flip = !flip;
-		//end noise shaping on 32 bit output
+				
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;

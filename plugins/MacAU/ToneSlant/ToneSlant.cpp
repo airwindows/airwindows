@@ -168,9 +168,7 @@ ComponentResult ToneSlant::Initialize()
 void		ToneSlant::ToneSlantKernel::Reset()
 {
 	for(int count = 0; count < 102; count++) {b[count] = 0.0; f[count] = 0.0;}
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -192,9 +190,6 @@ void		ToneSlant::ToneSlantKernel::Process(	const Float32 	*inSourceP,
 	Float64 overallscale = GetParameter( kParam_One );
 	if (overallscale < 1.0) overallscale = 1.0;
 	Float64 applySlant = GetParameter( kParam_Two );
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
 	
 	f[0] = 1.0 / overallscale;
 	//count to f(gain) which will be 0. f(0) is x1
@@ -236,7 +231,6 @@ void		ToneSlant::ToneSlantKernel::Process(	const Float32 	*inSourceP,
 			//the silence will return to being digital black again.
 		}
 		
-		
 		b[0] = accumulatorSample = drySample = inputSample;
 		
 		accumulatorSample *= f[0];
@@ -248,19 +242,11 @@ void		ToneSlant::ToneSlantKernel::Process(	const Float32 	*inSourceP,
 		inputSample += (correctionSample * applySlant);
 		//our one math operation on the input data coming in
 				
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

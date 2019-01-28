@@ -27,9 +27,6 @@ void Lowpass::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double inputSampleR;
 	double outputSampleL;
 	double outputSampleR;
-	float fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
 	
 	iirAmount += (iirAmount * tight * tight);
 	if (tight > 0) tight /= 1.5;
@@ -116,33 +113,21 @@ void Lowpass::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			iirSampleBR = (iirSampleBR * (1 - (offset * iirAmount))) + (inputSampleR * (offset * iirAmount));
 			outputSampleR = iirSampleBR;
 		}
+		fpFlip = !fpFlip;
 
 		
 		
 		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
 		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
 
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = outputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((outputSampleL-fpTemp)*fpNew);
-			outputSampleL += fpNShapeLA;
-			
-			fpTemp = outputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((outputSampleR-fpTemp)*fpNew);
-			outputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = outputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((outputSampleL-fpTemp)*fpNew);
-			outputSampleL += fpNShapeLB;
-			
-			fpTemp = outputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((outputSampleR-fpTemp)*fpNew);
-			outputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((float)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((float)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
@@ -174,9 +159,6 @@ void Lowpass::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double inputSampleR;
 	double outputSampleL;
 	double outputSampleR;
-	double fpTemp;
-	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;
 	
 	iirAmount += (iirAmount * tight * tight);
 	if (tight > 0) tight /= 1.5;
@@ -263,33 +245,23 @@ void Lowpass::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			iirSampleBR = (iirSampleBR * (1 - (offset * iirAmount))) + (inputSampleR * (offset * iirAmount));
 			outputSampleR = iirSampleBR;
 		}
+		fpFlip = !fpFlip;
 		
 		
 		
 		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
 		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
 		
-		//noise shaping to 64-bit floating point
-		if (fpFlip) {
-			fpTemp = outputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((outputSampleL-fpTemp)*fpNew);
-			outputSampleL += fpNShapeLA;
-			
-			fpTemp = outputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((outputSampleR-fpTemp)*fpNew);
-			outputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = outputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((outputSampleL-fpTemp)*fpNew);
-			outputSampleL += fpNShapeLB;
-			
-			fpTemp = outputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((outputSampleR-fpTemp)*fpNew);
-			outputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//stereo 64 bit dither, made small and tidy.
+		int expon; frexp((double)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexp((double)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 64 bit dither
 		
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;

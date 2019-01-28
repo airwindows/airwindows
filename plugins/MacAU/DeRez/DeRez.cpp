@@ -171,9 +171,7 @@ void		DeRez::DeRezKernel::Reset()
 	position = 0.0;
 	incrementA = 0.0;
 	incrementB = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,10 +198,7 @@ void		DeRez::DeRezKernel::Process(	const Float32 	*inSourceP,
 	Float64 overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	targetA /= overallscale;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	targetA /= overallscale;	
 
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
@@ -265,18 +260,11 @@ void		DeRez::DeRezKernel::Process(	const Float32 	*inSourceP,
 				inputSample *= (1.0 - incrementB);
 			}
 		
-		//noise shaping to 32-bit floating point
-		Float32 fpTemp = inputSample;
-		if (fpFlip) {
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 
 		*destP = inputSample;
 		lastSample = drySample;

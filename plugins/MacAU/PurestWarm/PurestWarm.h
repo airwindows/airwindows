@@ -129,9 +129,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		Float64 fpNShape;
 	};
 };
 

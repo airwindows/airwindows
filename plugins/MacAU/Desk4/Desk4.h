@@ -146,9 +146,7 @@ public:
 		Float64 lastSample;
 		Float64 lastOutSample;
 		Float64 lastSlew;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

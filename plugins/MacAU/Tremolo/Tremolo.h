@@ -136,10 +136,7 @@ public:
 		Float64 lastSpeed;
 		Float64 lastDepth;
 		Float64 sweep;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
-		
+		Float64 fpNShape;		
 	};
 };
 

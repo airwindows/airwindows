@@ -17,10 +17,8 @@ Golem::Golem(audioMasterCallback audioMaster) :
 	C = 0.0;
 	for(count = 0; count < 4098; count++) {p[count] = 0.0;}
 	count = 0;
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	flip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	

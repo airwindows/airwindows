@@ -112,11 +112,8 @@ private:
 	Float64 iirSampleA;
 	Float64 iirSampleB;
 	bool flip;
-	long double fpNShapeAL;
-	long double fpNShapeBL;
-	long double fpNShapeAR;
-	long double fpNShapeBR;
-	
+	long double fpNShapeL;
+	long double fpNShapeR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

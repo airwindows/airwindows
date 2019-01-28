@@ -175,9 +175,7 @@ ComponentResult Loud::Initialize()
 void		Loud::LoudKernel::Reset()
 {
 	lastSample = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -196,9 +194,6 @@ void		Loud::LoudKernel::Process(	const Float32 	*inSourceP,
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	Float64 boost = pow(GetParameter( kParam_One )+1.0,5);
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
-	Float32 fpTemp;
 	
 	Float64 output = GetParameter( kParam_Two );
 	Float64 wet = GetParameter( kParam_Three );
@@ -267,19 +262,11 @@ void		Loud::LoudKernel::Process(	const Float32 	*inSourceP,
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
 		
-		
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

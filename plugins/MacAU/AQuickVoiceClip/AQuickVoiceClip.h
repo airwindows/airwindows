@@ -158,11 +158,7 @@ public:
 		Float64 iirSampleC;
 		Float64 iirSampleD;
 		bool flip;
-		int demotimer;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
-		
+		Float64 fpNShape;
 	};
 };
 

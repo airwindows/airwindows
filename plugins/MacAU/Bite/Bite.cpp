@@ -175,10 +175,7 @@ void		Bite::BiteKernel::Reset()
 	sampleG = 0.0;
 	sampleH = 0.0;
 	sampleI = 0.0;
-	
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -203,10 +200,7 @@ void		Bite::BiteKernel::Process(	const Float32 	*inSourceP,
 	Float64 midC;
 	Float64 midD;
 	Float64 trigger;
-	Float64 result;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
-	Float32 fpTemp;
+	long double result;
 	
 	while (nSampleFrames-- > 0) {
 		sampleI = sampleH;
@@ -273,18 +267,11 @@ void		Bite::BiteKernel::Process(	const Float32 	*inSourceP,
 		
 		if (outputgain != 1.0) result *= outputgain;
 
-		if (fpFlip) {
-			fpTemp = result;
-			fpNShapeA = (fpNShapeA*fpOld)+((result-fpTemp)*fpNew);
-			result += fpNShapeA;
-		}
-		else {
-			fpTemp = result;
-			fpNShapeB = (fpNShapeB*fpOld)+((result-fpTemp)*fpNew);
-			result += fpNShapeB;
-		}
-		fpFlip = not fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)result, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		result += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = result;
 		//output.

@@ -138,10 +138,7 @@ public:
 		Float64 sampleG;
 		Float64 sampleH;
 		Float64 sampleI;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
-		
+		Float64 fpNShape;		
 	};
 };
 

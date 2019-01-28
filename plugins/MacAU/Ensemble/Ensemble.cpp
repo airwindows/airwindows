@@ -190,8 +190,7 @@ void		Ensemble::EnsembleKernel::Reset()
 	airEven = 0.0;
 	airOdd = 0.0;
 	airFactor = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
+	fpNShape = 0.0;
 	fpFlip = true;
 }
 
@@ -229,11 +228,6 @@ void		Ensemble::EnsembleKernel::Process(	const Float32 	*inSourceP,
 	int count;
 	int ensemble;
 	Float64 temp;
-	
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
 	long double inputSample;
 	Float64 drySample;
 	//now we'll precalculate some stuff that needn't be in every sample
@@ -308,20 +302,13 @@ void		Ensemble::EnsembleKernel::Process(	const Float32 	*inSourceP,
 		if (wet !=1.0) {
 			inputSample = (inputSample * wet) + (drySample * dry);
 		}
-		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
 		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output		
+		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		destP += inNumChannels;

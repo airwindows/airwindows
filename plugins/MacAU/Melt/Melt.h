@@ -145,9 +145,7 @@ public:
 		Float32 scalefactor;
 		int gcount;
 		//we're using 32 bit because we want to build some truncation into the tails to noise them.		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

@@ -53,11 +53,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	//default stuff
 	double iirAL;
 	double iirBL; //first stage is the flipping one, for lowest slope. It is always engaged, and is the highest one
@@ -76,7 +73,7 @@ private:
 	double iirFR; //our slope control will have a pow() on it so that the high orders are way to the right side
 	double iirGR;
 	double iirHR; //seven poles max, and the final pole is always at 20hz directly.
-	
+	bool fpFlip;
 	
 
     float A;

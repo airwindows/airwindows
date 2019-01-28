@@ -158,9 +158,7 @@ public:
 		Float64 lastHighpass;
 		Float64 lastWet;
 		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

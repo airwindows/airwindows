@@ -139,9 +139,8 @@ public:
 		Float64 airEven;
 		Float64 airOdd;
 		Float64 airFactor;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;		
+		long double fpNShape;
+		bool fpFlip;
 	};
 };
 

@@ -202,6 +202,14 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			outputSampleL = (drySampleL * (1.0-wet)) + (outputSampleL * wet);
 			outputSampleR = (drySampleR * (1.0-wet)) + (outputSampleR * wet);
 		}
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((float)outputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		outputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((float)outputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		outputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;
@@ -407,6 +415,17 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			outputSampleL = (drySampleL * (1.0-wet)) + (outputSampleL * wet);
 			outputSampleR = (drySampleR * (1.0-wet)) + (outputSampleR * wet);
 		}
+		
+		//stereo 64 bit dither, made small and tidy.
+		int expon; frexp((double)outputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		outputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexp((double)outputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		outputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 64 bit dither
 		
 		*out1 = outputSampleL;
 		*out2 = outputSampleR;

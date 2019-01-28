@@ -189,10 +189,7 @@ void		Melt::MeltKernel::Reset()
 	stepCount = 0;
 	slowCount = 0;
 	gcount = 0;
-	
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,10 +242,6 @@ void		Melt::MeltKernel::Process(	const Float32 	*inSourceP,
 	minTap[28] = floor(109 * depthA); maxTap[28] = floor(109 * depthB);
 	minTap[29] = floor(113 * depthA); maxTap[29] = floor(113 * depthB);
 	minTap[30] = floor(117 * depthA); maxTap[30] = floor(117 * depthB);	
-	
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
 	long double drySample;
 	long double inputSample;
 	
@@ -370,20 +363,11 @@ void		Melt::MeltKernel::Process(	const Float32 	*inSourceP,
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
 		
-		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

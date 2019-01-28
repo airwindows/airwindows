@@ -12,10 +12,8 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new S
 Surge::Surge(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	flip = true;
 	chaseA = 0.0;
 	chaseB = 0.0;

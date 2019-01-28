@@ -100,16 +100,6 @@ void FathomFive::setParameter(VstInt32 index, float value) {
 	//variables can also be set in the processreplacing loop, and there they'll be set every buffersize
 	//here they're set when a parameter's actually changed, which should be less frequent, but
 	//you must use global variables in the FathomFive.h file to do it.
-//	switch((VstInt32)( D * 3.999 ))
-//	{  
-//		case 0: fpFlip = true; break; //choice A
-//		case 1: fpFlip = false; break; //choice B
-//		case 2: break; //choice C
-//		case 3: break; //choice D
-//		default: break; //should not happen
-//	}
-	//this relates to using D as a 'popup' and changing things based on that switch.
-	//we are using fpFlip just because it's already there globally, as an example.
 }
 
 float FathomFive::getParameter(VstInt32 index) {

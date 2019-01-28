@@ -23,11 +23,8 @@ Acceleration::Acceleration(audioMasterCallback audioMaster) :
 	o1R = o2R = o3R = 0.0;
 	m1R = m2R = desR = 0.0;
 	
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

@@ -270,11 +270,8 @@ ComponentResult		ToVinyl4::Reset(AudioUnitScope inScope, AudioUnitElement inElem
 	s1R = s2R = s3R = 0.0;
 	o1R = o2R = o3R = 0.0;
 	m1R = m2R = desR = 0.0;
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	
 	return noErr;
 	
@@ -295,11 +292,7 @@ OSStatus		ToVinyl4::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 	UInt32 nSampleFrames = inFramesToProcess;
 	Float64 overallscale = 1.0;
 	overallscale /= 44100.0;
-	overallscale *= GetSampleRate();
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
-	
+	overallscale *= GetSampleRate();	
 	Float64 fusswithscale = 50000; //corrected
 	Float64 cutofffreq = GetParameter( kParam_One );
 	Float64 resonance = 0.992;
@@ -741,25 +734,14 @@ OSStatus		ToVinyl4::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		inputSampleR = accumulatorSample;
 		//we just re-use accumulatorSample to do this little shuffle
 				
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeAL;
-			fpTemp = inputSampleR;
-			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeAR;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeBL;
-			fpTemp = inputSampleR;
-			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeBR;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;

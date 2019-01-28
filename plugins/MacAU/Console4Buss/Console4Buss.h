@@ -131,10 +131,7 @@ public:
 		Float64 gainchase;
 		Float64 settingchase;
 		Float64 chasespeed;
-		int demotimer;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

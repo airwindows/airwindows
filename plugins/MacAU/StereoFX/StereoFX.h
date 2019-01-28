@@ -119,10 +119,8 @@ public:
 	private: 
 	Float64 iirSampleA;
 	Float64 iirSampleB;
-	long double fpNShapeAL;
-	long double fpNShapeBL;
-	long double fpNShapeAR;
-	long double fpNShapeBR;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	bool flip;
 	
 };

@@ -148,9 +148,7 @@ public:
 		Float64 iirLowsA;
 		Float64 iirLowsB;
 		long double refclip;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

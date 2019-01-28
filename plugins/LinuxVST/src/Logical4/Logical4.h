@@ -143,10 +143,8 @@ private:
 	int gcount;
 	
     
-	double fpNShapeLA;
-	double fpNShapeLB;
-	double fpNShapeRA;
-	double fpNShapeRB;
+	double fpNShapeL;
+	double fpNShapeR;
 	bool fpFlip;
 	//default stuff
 

@@ -76,11 +76,8 @@ private:
 	double settingchase;
 	double chasespeed;
 
-	double fpNShapeLA;
-	double fpNShapeLB;
-	double fpNShapeRA;
-	double fpNShapeRB;
-	bool fpFlip;
+	double fpNShapeL;
+	double fpNShapeR;
 	//default stuff
 	float gain;
 };

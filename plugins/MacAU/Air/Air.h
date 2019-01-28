@@ -164,12 +164,7 @@ public:
 		Float64 tripletC;
 		Float64 tripletFactor;
 		int count;
-		
-		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
-		
+		long double fpNShape;
 	};
 };
 

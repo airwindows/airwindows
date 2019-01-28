@@ -293,12 +293,8 @@ private:
 	
 	Float64 nonlin;
 	
-	
-	Float64 fpNShapeAL;
-	Float64 fpNShapeAR;
-	Float64 fpNShapeBL;
-	Float64 fpNShapeBR;	
-	bool fpFlip;
+	Float64 fpNShapeR;
+	Float64 fpNShapeL;
 	
 };
 

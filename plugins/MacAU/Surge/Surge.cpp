@@ -181,11 +181,8 @@ ComponentResult Surge::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ComponentResult		Surge::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
-	flip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	chaseA = 0.0;
 	chaseB = 0.0;
 	chaseC = 0.0;	
@@ -210,9 +207,6 @@ OSStatus		Surge::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	Float64 overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
 	
 	long double inputSampleL;
 	long double inputSampleR;
@@ -226,7 +220,6 @@ OSStatus		Surge::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	Float64 wet = GetParameter( kParam_Two );
 	Float64 dry = 1.0 - wet;
 	Float64 inputSense;
-	
 	
 	while (nSampleFrames-- > 0) {
 		inputSampleL = *inputL;
@@ -312,27 +305,14 @@ OSStatus		Surge::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 		inputSampleR = drySampleR - (inputSampleR * intensity);
 		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
 		
-		//noise shaping to 32-bit floating point
-		if (flip) {
-			fpTemp = inputSampleL;
-			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeAL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeAR;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeBL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeBR;
-		}
-		flip = !flip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;

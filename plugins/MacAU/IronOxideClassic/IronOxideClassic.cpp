@@ -180,8 +180,7 @@ void		IronOxideClassic::IronOxideClassicKernel::Reset()
 	gcount = 0;
 	fastIIRA = fastIIRB = slowIIRA = slowIIRB = 0.0;
 	iirSampleA = iirSampleB = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
+	fpNShape = 0.0;
 	fpFlip = true;
 }
 
@@ -223,11 +222,6 @@ void		IronOxideClassic::IronOxideClassicKernel::Process(	const Float32 	*inSourc
 		fastTaper = 1.0 + (fastTaper / overallscale);
 		slowTaper = 1.0 + (slowTaper / overallscale);
 	}
-		
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
-	
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
@@ -385,20 +379,13 @@ void		IronOxideClassic::IronOxideClassicKernel::Process(	const Float32 	*inSourc
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
 		
 		if (outputgain != 1.0) inputSample *= outputgain;
+		fpFlip = !fpFlip;
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = not fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 

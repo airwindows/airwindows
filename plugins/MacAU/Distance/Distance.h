@@ -137,10 +137,7 @@ public:
 		Float64 thirdresult;
 		Float64 prevresult;
 		Float64 last;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
-		
+		long double fpNShape;		
 	};
 };
 

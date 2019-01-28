@@ -119,8 +119,8 @@ public:
 		
 		private: 
 		long double noiseShaping;
-		Float64 lastSample;
-		Float64 lastSample2;
+		long double lastSample;
+		long double lastSample2;
 	};
 };
 

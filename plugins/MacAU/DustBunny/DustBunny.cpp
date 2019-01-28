@@ -164,7 +164,7 @@ void		DustBunny::DustBunnyKernel::Reset()
 	ataUpsampleHighTweak = 0.0414213562373095048801688; //more adds treble to upsampling
 	ataDecay = 0.915965594177219015; //Catalan's constant, more adds focus and clarity
 	ataFlip = false; //end reset of antialias parameters
-	demotimer = 0;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -242,6 +242,12 @@ void		DustBunny::DustBunnyKernel::Process(	const Float32 	*inSourceP,
 		ataPrevDiffSample = ataDiffSample / 2.0;
 		//apply processing as difference to non-oversampled raw input
 
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
+		
 		*destP = inputSample;
 		//built in output trim and dry/wet by default
 		

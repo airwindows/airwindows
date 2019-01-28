@@ -176,6 +176,7 @@ void		SubsOnly::SubsOnlyKernel::Reset()
 	iirSampleX = 0.0;
 	iirSampleY = 0.0;
 	iirSampleZ = 0.0;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -332,6 +333,14 @@ void		SubsOnly::SubsOnlyKernel::Process(	const Float32 	*inSourceP,
 		iirSampleZ = (iirSampleZ * altAmount) + (inputSample * iirAmount); inputSample = iirSampleZ;
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;
+		
+		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
+		
 		*destP = inputSample;		
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

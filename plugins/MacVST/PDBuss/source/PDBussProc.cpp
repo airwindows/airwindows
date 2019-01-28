@@ -13,9 +13,6 @@ void PDBuss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	float fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
 	
 	double inputgain = A;
 	double intensity = B;
@@ -122,25 +119,14 @@ void PDBuss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		previousSampleR = sin(drySampleR);
 		//apply the sine while storing previous sample
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((float)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((float)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -158,9 +144,6 @@ void PDBuss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	double fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
 	
 	double inputgain = A;
 	double intensity = B;
@@ -267,25 +250,16 @@ void PDBuss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		previousSampleR = sin(drySampleR);
 		//apply the sine while storing previous sample
 		
-		//noise shaping to 64-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 64 bit output
+		//stereo 64 bit dither, made small and tidy.
+		int expon; frexp((double)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexp((double)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 64 bit dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

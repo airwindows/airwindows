@@ -113,19 +113,18 @@ public:
 		: AUKernelBase(inAudioUnit)
 	{
 	}
-		
-		// *Required* overides for the process method for this effect
-		// processes one channel of interleaved samples
-        virtual void 		Process(	const Float32 	*inSourceP,
-										Float32		 	*inDestP,
-										UInt32 			inFramesToProcess,
-										UInt32			inNumChannels,
-										bool			&ioSilence);
-		
-        virtual void		Reset();
-		
-		private:
-			Float64 lastSample;
+	// *Required* overides for the process method for this effect
+	// processes one channel of interleaved samples
+	virtual void 		Process(	const Float32 	*inSourceP,
+									Float32		 	*inDestP,
+									UInt32 			inFramesToProcess,
+									UInt32			inNumChannels,
+									bool			&ioSilence);
+	virtual void		Reset();
+	
+	private:
+		Float64 lastSample;
+		long double fpNShape;
 	};
 };
 

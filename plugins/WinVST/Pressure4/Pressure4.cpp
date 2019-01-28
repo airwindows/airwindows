@@ -16,10 +16,8 @@ Pressure4::Pressure4(audioMasterCallback audioMaster) :
 	B = 0.2;
 	C = 1.0;
 	D = 1.0;
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	muSpeedA = 10000;
 	muSpeedB = 10000;
 	muCoefficientA = 1;

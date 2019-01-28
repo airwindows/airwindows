@@ -170,9 +170,7 @@ void		Average::AverageKernel::Reset()
 {
 	register UInt32 count;
 	for(count = 0; count < 11; count++) {b[count] = 0.0; f[count] = 0.0;}
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -221,10 +219,6 @@ void		Average::AverageKernel::Process(	const Float32 	*inSourceP,
 	f[9] /= overallscale;
 	//and now it's neatly scaled, too
 
-	Float32 fpTemp;
-	Float64 fpOld = 0.618033988749894848204586; //golden ratio!
-	Float64 fpNew = 1.0 - fpOld;
-	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
 		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
@@ -285,19 +279,11 @@ void		Average::AverageKernel::Process(	const Float32 	*inSourceP,
 		//if it 'won't change anything' but our sample might be at a very different scaling
 		//in the floating point system.
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 
 		*destP = inputSample;
 		

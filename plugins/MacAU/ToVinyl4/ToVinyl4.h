@@ -209,13 +209,8 @@ private:
 	Float64 aSidePrev;
 	Float64 bMidPrev;
 	Float64 bSidePrev;
-	
-	Float64 fpNShapeAL;
-	Float64 fpNShapeAR;
-	Float64 fpNShapeBL;
-	Float64 fpNShapeBR;
-	bool fpFlip;
-	
+	Float64 fpNShapeR;
+	Float64 fpNShapeL;	
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

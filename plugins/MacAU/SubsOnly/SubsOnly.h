@@ -147,6 +147,7 @@ public:
 		Float64 iirSampleX;
 		Float64 iirSampleY;
 		Float64 iirSampleZ;
+		long double fpNShape;
 	};
 };
 

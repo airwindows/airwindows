@@ -167,13 +167,8 @@ public:
 		Float64 rateof;
 		Float64 sweep;
 		Float64 nextmax;
-		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
-		
+		long double fpNShape;
 		bool flip;
-		int demotimer;
 	};
 };
 

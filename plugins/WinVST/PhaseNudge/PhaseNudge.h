@@ -57,11 +57,8 @@ private:
 	double dR[1503];
 	int one, maxdelay;
 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	//default stuff
 
     float A;

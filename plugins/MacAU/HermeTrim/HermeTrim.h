@@ -121,11 +121,8 @@ public:
 	virtual ComponentResult	Version() { return kHermeTrimVersion; }
 	
 	private: 
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	//default stuff
 	
 };

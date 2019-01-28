@@ -151,6 +151,7 @@ ComponentResult SlewOnly::Initialize()
 void		SlewOnly::SlewOnlyKernel::Reset()
 {
 	lastSample = 0.0;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -201,6 +202,13 @@ void		SlewOnly::SlewOnlyKernel::Process(	const Float32 	*inSourceP,
 		lastSample = inputSample;
 		if (outputSample > 1.0) outputSample = 1.0;
 		if (outputSample < -1.0) outputSample = -1.0;
+		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)outputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		outputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
+		
 		*destP = outputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

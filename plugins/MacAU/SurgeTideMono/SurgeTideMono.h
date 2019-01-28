@@ -131,9 +131,7 @@ public:
         virtual void		Reset();
 		
 	private: 
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 		long double chaseA;
 		long double chaseB;
 		long double chaseC;

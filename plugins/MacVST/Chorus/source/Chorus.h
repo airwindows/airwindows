@@ -54,11 +54,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
-	bool fpFlip;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	//default stuff
 	const static int totalsamples = 16386;
 	float dL[totalsamples];
@@ -73,6 +70,7 @@ private:
 	double airEvenR;
 	double airOddR;
 	double airFactorR;
+	bool fpFlip;
 	
     float A;
     float B;

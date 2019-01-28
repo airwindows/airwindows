@@ -138,9 +138,7 @@ public:
 		Float64 m1L;
 		Float64 m2L;
 		Float64 desL;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

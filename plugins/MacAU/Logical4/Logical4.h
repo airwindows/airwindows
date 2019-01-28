@@ -210,10 +210,8 @@ private:
 	
 	int gcount;
 	
-	Float64 fpNShapeAL;
-	Float64 fpNShapeAR;
-	Float64 fpNShapeBL;
-	Float64 fpNShapeBR;
+	long double fpNShapeR;
+	long double fpNShapeL;
 	bool fpFlip;
 	
 };

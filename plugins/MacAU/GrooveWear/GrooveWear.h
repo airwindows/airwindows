@@ -138,9 +138,7 @@ public:
 		Float64 cMidPrev;
 		Float64 dMidPrev;
 		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

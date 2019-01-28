@@ -152,9 +152,7 @@ public:
 		bool filterflip;
 		Float64 b[11];
 		Float64 f[11];		
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

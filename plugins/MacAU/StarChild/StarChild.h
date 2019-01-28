@@ -116,9 +116,6 @@ public:
 	virtual ComponentResult		Version() { return kStarChildVersion; }
 	
 private:
-	
-	int demotimer;
-	
 	Float32 d[45102];
 	UInt32 dCount;
 	
@@ -136,14 +133,8 @@ private:
 	Float64 wearLPrev;
 	Float64 wearRPrev;
 		
-	Float64 fpNShapeAL;
-	Float64 fpNShapeAR;
-	Float64 fpNShapeBL;
-	Float64 fpNShapeBR;
-	//	Float64 fpNShapeA;
-	//	Float64 fpNShapeB;	
-	bool fpFlip;
-	
+	long double fpNShapeR;
+	long double fpNShapeL;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

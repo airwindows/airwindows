@@ -133,9 +133,7 @@ public:
 		Float64 position;
 		Float64 incrementA;
 		Float64 incrementB;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

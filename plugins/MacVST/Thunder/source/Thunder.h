@@ -69,10 +69,8 @@ private:
 	double iirSampleAM;
 	double iirSampleBM;
 	double iirSampleCM;
-	long double fpNShapeAL;
-	long double fpNShapeBL;
-	long double fpNShapeAR;
-	long double fpNShapeBR;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	bool flip;
 	
     float A;

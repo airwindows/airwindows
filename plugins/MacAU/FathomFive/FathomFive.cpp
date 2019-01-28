@@ -188,6 +188,7 @@ void		FathomFive::FathomFiveKernel::Reset()
 	iirSampleB = 0.0;
 	iirSampleC = 0.0;
 	iirSampleD = 0.0;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -274,6 +275,11 @@ void		FathomFive::FathomFiveKernel::Process(	const Float32 	*inSourceP,
 		//to make it easier to understand for when these are open sourced.
 		//FathomFive is the original Airwindows deep bass booster algorithm:
 		//further ones work to rein in that DC offset issue.
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)outputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		outputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		sourceP += inNumChannels;
 		*destP = outputSample;

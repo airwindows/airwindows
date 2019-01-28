@@ -204,9 +204,7 @@ void		Desk4::Desk4Kernel::Reset()
 	lastSample = 0.0;
 	lastOutSample = 0.0;
 	lastSlew = 0.0;
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -224,9 +222,6 @@ void		Desk4::Desk4Kernel::Process(	const Float32 	*inSourceP,
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
 	
 	Float64 gain = (pow(GetParameter( kParam_One ),2)*10)+0.0001;
 	Float64 gaintrim = (pow(GetParameter( kParam_One ),2)*2)+1.0;
@@ -354,20 +349,11 @@ void		Desk4::Desk4Kernel::Process(	const Float32 	*inSourceP,
 			inputSample = (inputSample * wet) + (drySample * dry);
 		}
 		
-		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

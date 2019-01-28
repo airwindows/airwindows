@@ -71,11 +71,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	double fpNShapeLA;
-	double fpNShapeLB;
-	double fpNShapeRA;
-	double fpNShapeRB;
-	bool fpFlip;
+	double fpNShapeL;
+	double fpNShapeR;
 	//default stuff
 	double lastSampleL;
 	double lastSampleR;

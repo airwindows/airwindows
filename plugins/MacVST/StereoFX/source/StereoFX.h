@@ -56,10 +56,8 @@ private:
     
 	double iirSampleA;
 	double iirSampleB;
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
+	long double fpNShapeL;
+	long double fpNShapeR;
 	bool flip;
 	//default stuff
 

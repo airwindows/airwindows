@@ -171,11 +171,8 @@ ComponentResult MidSide::Initialize()
 // this is called the reset the DSP state (clear buffers, reset counters, etc.)
 ComponentResult		MidSide::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	return noErr;
 }
 
@@ -194,11 +191,7 @@ OSStatus		MidSide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+		
 	long double inputSampleL;
 	long double inputSampleR;
 	long double mid;
@@ -256,25 +249,14 @@ OSStatus		MidSide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 		mid *= midgain;
 		side *= sidegain;
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = mid;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((mid-fpTemp)*fpNew);
-			mid += fpNShapeLA;
-			fpTemp = side;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((side-fpTemp)*fpNew);
-			side += fpNShapeRA;
-		}
-		else {
-			fpTemp = mid;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((mid-fpTemp)*fpNew);
-			mid += fpNShapeLB;
-			fpTemp = side;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((side-fpTemp)*fpNew);
-			side += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)mid, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		mid += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)side, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		side += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*outputL = mid;
 		*outputR = side;

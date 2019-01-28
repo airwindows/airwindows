@@ -16,10 +16,8 @@ SideDull::SideDull(audioMasterCallback audioMaster) :
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
 	flip = true;
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

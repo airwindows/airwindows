@@ -742,18 +742,14 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//we don't need a drySample because we never touched inputSample
 		//so, this provides the inv/dry/wet control all by itself
 		
-		//noise shaping to 32-bit floating point
-		float fpTemp = inputSampleL;
-		fpNShapeL += (inputSampleL-fpTemp);
-		inputSampleL += fpNShapeL;
-		//if this confuses you look at the wordlength for fpTemp :)
-		fpTemp = inputSampleR;
-		fpNShapeR += (inputSampleR-fpTemp);
-		inputSampleR += fpNShapeR;
-		//for deeper space and warmth, we try a non-oscillating noise shaping
-		//that is kind of ruthless: it will forever retain the rounding errors
-		//except we'll dial it back a hair at the end of every buffer processed
-		//end noise shaping on 32 bit output
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((float)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((float)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -763,12 +759,6 @@ void Energy::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		*out1++;
 		*out2++;
     }
-	fpNShapeL *= 0.999999;
-	fpNShapeR *= 0.999999;
-	//we will just delicately dial back the FP noise shaping, not even every sample
-	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
-	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
 }
 
 void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sampleFrames) 
@@ -1506,18 +1496,16 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//we don't need a drySample because we never touched inputSample
 		//so, this provides the inv/dry/wet control all by itself
 		
-		//noise shaping to 64-bit floating point
-		double fpTemp = inputSampleL;
-		fpNShapeL += (inputSampleL-fpTemp);
-		inputSampleL += fpNShapeL;
-		//if this confuses you look at the wordlength for fpTemp :)
-		fpTemp = inputSampleR;
-		fpNShapeR += (inputSampleR-fpTemp);
-		inputSampleR += fpNShapeR;
-		//for deeper space and warmth, we try a non-oscillating noise shaping
-		//that is kind of ruthless: it will forever retain the rounding errors
-		//except we'll dial it back a hair at the end of every buffer processed
-		//end noise shaping on 64 bit output
+		//stereo 64 bit dither, made small and tidy.
+		int expon; frexp((double)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexp((double)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		dither /= 536870912.0; //needs this to scale to 64 bit zone
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 64 bit dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -1527,10 +1515,4 @@ void Energy::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		*out1++;
 		*out2++;
     }
-	fpNShapeL *= 0.999999;
-	fpNShapeR *= 0.999999;
-	//we will just delicately dial back the FP noise shaping, not even every sample
-	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
-	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
 }

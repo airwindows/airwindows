@@ -140,7 +140,7 @@ public:
 		Float32 ataDiffSample;
 		Float32 ataPrevDiffSample;
 		bool ataFlip; //end defining of antialiasing variables
-		int demotimer;
+		long double fpNShape;
 	};
 };
 

@@ -166,9 +166,7 @@ ComponentResult SurgeMono::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		SurgeMono::SurgeMonoKernel::Reset()
 {
-	fpNShapeA = 0.0;
-	fpNShapeB = 0.0;
-	fpFlip = true;
+	fpNShape = 0.0;
 	chaseA = 0.0;
 	chaseB = 0.0;
 	chaseC = 0.0;
@@ -190,11 +188,7 @@ void		SurgeMono::SurgeMonoKernel::Process(	const Float32 	*inSourceP,
 	Float32 *destP = inDestP;
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
-	overallscale *= GetSampleRate();
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;	
-	
+	overallscale *= GetSampleRate();	
 	long double inputSample;
 	long double drySample;
 	Float64 chaseMax = 0.0;
@@ -204,7 +198,6 @@ void		SurgeMono::SurgeMonoKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Two );
 	Float64 dry = 1.0 - wet;
 	Float64 inputSense;
-	
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
@@ -265,19 +258,11 @@ void		SurgeMono::SurgeMonoKernel::Process(	const Float32 	*inSourceP,
 		inputSample = drySample - (inputSample * intensity);
 		inputSample = (drySample * dry) + (inputSample * wet);
 		
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSample;
-			fpNShapeA = (fpNShapeA*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeA;
-		}
-		else {
-			fpTemp = inputSample;
-			fpNShapeB = (fpNShapeB*fpOld)+((inputSample-fpTemp)*fpNew);
-			inputSample += fpNShapeB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

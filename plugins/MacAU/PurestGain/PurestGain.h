@@ -132,10 +132,7 @@ public:
 		Float64 settingchase;
 		Float64 gainBchase;
 		Float64 chasespeed;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
-
+		Float64 fpNShape;
 	};
 };
 

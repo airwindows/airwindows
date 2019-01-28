@@ -120,9 +120,7 @@ public:
 		long double lastSample;
 		long double lastOutSample;
 		Float64 lastSlew;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

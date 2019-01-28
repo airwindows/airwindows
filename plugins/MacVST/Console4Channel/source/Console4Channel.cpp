@@ -20,11 +20,8 @@ Console4Channel::Console4Channel(audioMasterCallback audioMaster) :
 	gainchase = -90.0;
 	settingchase = -90.0;
 	chasespeed = 350.0;
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 
     // TODO: uncomment canDo entries according to your plugin's capabilities
 //    _canDo.insert("sendVstEvents"); // plug-in will send Vst events to Host.

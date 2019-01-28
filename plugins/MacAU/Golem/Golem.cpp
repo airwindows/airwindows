@@ -210,11 +210,8 @@ ComponentResult		Golem::Reset(AudioUnitScope inScope, AudioUnitElement inElement
 {
 	for(count = 0; count < 4098; count++) {p[count] = 0.0;}
 	count = 0;
-	fpNShapeAL = 0.0;
-	fpNShapeBL = 0.0;
-	fpNShapeAR = 0.0;
-	fpNShapeBR = 0.0;
-	flip = false;	
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	
 	return noErr;
 }
@@ -233,9 +230,6 @@ OSStatus		Golem::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	Float32 fpTemp;
-	long double fpOld = 0.618033988749894848204586; //golden ratio!
-	long double fpNew = 1.0 - fpOld;
 	int phase = (int) GetParameter( kParam_Three );
 	Float64 balance = GetParameter( kParam_One ) / 2.0;
 	Float64 gainL = 0.5 - balance;
@@ -333,32 +327,15 @@ OSStatus		Golem::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 		inputSampleR = inputSampleL;
 		//the output is totally mono
 
-		//noise shaping to 32-bit floating point
-		if (flip) {
-			fpTemp = inputSampleL;
-			fpNShapeAL = (fpNShapeAL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeAL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeAR = (fpNShapeAR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeAR;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeBL = (fpNShapeBL*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeBL;
-			
-			fpTemp = inputSampleR;
-			fpNShapeBR = (fpNShapeBR*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeBR;
-		}
-		flip = !flip;
-		//end noise shaping on 32 bit output
-		
-		*outputL = inputSampleL;
-		*outputR = inputSampleR;
-		//don't know why we're getting a volume boost, cursed thing
-		
+		//stereo 32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSampleL, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		frexpf((Float32)inputSampleR, &expon);
+		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
+		//end 32 bit dither
+				
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
 		//We have pointers to increment- every actual value reference has to be to a *value

@@ -159,6 +159,7 @@ ComponentResult Slew::Initialize()
 void		Slew::SlewKernel::Reset()
 {
 	lastSample = 0.0;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,6 +224,12 @@ void		Slew::SlewKernel::Process(	const Float32 	*inSourceP,
 		if (-clamp > threshold)
 			outputSample = lastSample - threshold;
 		lastSample = outputSample;
+		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)outputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		outputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = outputSample;
 		destP += inNumChannels;

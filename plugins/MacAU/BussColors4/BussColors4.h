@@ -160,9 +160,7 @@ public:
 		Float64 control;
 		int gcount;
 		Float64 slowdyn;
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

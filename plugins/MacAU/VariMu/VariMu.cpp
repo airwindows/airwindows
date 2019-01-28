@@ -331,14 +331,11 @@ void		VariMu::VariMuKernel::Process(	const Float32 	*inSourceP,
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.
 		
-		//noise shaping to 32-bit floating point
-		Float32 fpTemp = inputSample;
-		fpNShape += (inputSample-fpTemp);
-		inputSample += fpNShape;
-		//for deeper space and warmth, we try a non-oscillating noise shaping
-		//that is kind of ruthless: it will forever retain the rounding errors
-		//except we'll dial it back a hair at the end of every buffer processed
-		//end noise shaping on 32 bit output
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
 		
 		*destP = inputSample;
 		

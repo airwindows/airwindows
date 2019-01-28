@@ -140,8 +140,8 @@ public:
 		Float64 ataDiffSample;
 		Float64 ataPrevDiffSample;
 		bool ataFlip; //end defining of antialiasing variables
-		int demotimer;
 		Float64 lastSample;
+		long double fpNShape;
 	};
 };
 

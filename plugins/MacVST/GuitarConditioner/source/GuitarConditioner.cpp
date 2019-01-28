@@ -12,12 +12,9 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new G
 GuitarConditioner::GuitarConditioner(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	fpFlip = true;
-	
 	lastSampleTL = 0.0;
 	lastSampleBL = 0.0; //for Slews. T for treble, B for bass
 	iirSampleTAL = 0.0;

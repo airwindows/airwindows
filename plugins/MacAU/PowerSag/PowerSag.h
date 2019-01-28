@@ -131,10 +131,7 @@ public:
 		Float64 d[9000];
 		Float64 control;
 		int gcount;
-		
-		long double fpNShapeA;
-		long double fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

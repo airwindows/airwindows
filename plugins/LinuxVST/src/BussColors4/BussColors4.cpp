@@ -44,11 +44,8 @@ BussColors4::BussColors4(audioMasterCallback audioMaster) :
 	slowdynR = 0;
 	gcount = 0;
 	
-	fpNShapeLA = 0.0;
-	fpNShapeLB = 0.0;
-	fpNShapeRA = 0.0;
-	fpNShapeRB = 0.0;
-	fpFlip = true;
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
@@ -114,21 +111,6 @@ void BussColors4::setParameter(VstInt32 index, float value) {
         case kParamD: D = value; break; //this is the popup, stored as a float
         default: throw; // unknown parameter, shouldn't happen!
     }
-	//we can also set other defaults here, and do calculations that only have to happen
-	//once when parameters actually change. Here is the 'popup' setting its (global) values.
-	//variables can also be set in the processreplacing loop, and there they'll be set every buffersize
-	//here they're set when a parameter's actually changed, which should be less frequent, but
-	//you must use global variables in the BussColors4.h file to do it.
-	switch((VstInt32)( D * 3.999 ))
-	{  
-		case 0: fpFlip = true; break; //choice A
-		case 1: fpFlip = false; break; //choice B
-		case 2: break; //choice C
-		case 3: break; //choice D
-		default: break; //should not happen
-	}
-	//this relates to using D as a 'popup' and changing things based on that switch.
-	//we are using fpFlip just because it's already there globally, as an example.
 }
 
 float BussColors4::getParameter(VstInt32 index) {

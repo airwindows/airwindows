@@ -139,9 +139,7 @@ public:
 		
 		private: 
 		Float64 lastSample;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		long double fpNShape;
 	};
 };
 

@@ -138,9 +138,7 @@ public:
 		Float64 b[11];
 		Float64 f[11];
 		int lastAlgorithm;
-		Float64 fpNShapeA;
-		Float64 fpNShapeB;
-		bool fpFlip;
+		Float64 fpNShape;
 	};
 };
 
