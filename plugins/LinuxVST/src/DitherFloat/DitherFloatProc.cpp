@@ -67,16 +67,15 @@ void DitherFloat::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		long double inputSampleR = *in2 + (gain-1);
 		
 		
-		
-		//stereo 32 bit dither, made small and tidy.
+
+		//begin stereo 32 bit floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62) * blend;	//remove 'blend' for real use, it's for the demo;
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
+		inputSampleL += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;	
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62) * blend;	//remove 'blend' for real use, it's for the demo;
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
-		
+		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
+		inputSampleR += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;
+		//end stereo 32 bit floating point dither
 		
 		
 		inputSampleL = (float)inputSampleL; //equivalent of 'floor' for 32 bit floating point
@@ -154,15 +153,14 @@ void DitherFloat::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		
 		
-		//stereo 32 bit dither, made small and tidy.
+		//begin stereo 32 bit floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62) * blend;	//remove 'blend' for real use, it's for the demo;
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
+		inputSampleL += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;	
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62) * blend;	//remove 'blend' for real use, it's for the demo;
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
-		
+		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
+		inputSampleR += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;
+		//end stereo 32 bit floating point dither
 		
 		
 		inputSampleL = (float)inputSampleL; //equivalent of 'floor' for 32 bit floating point

@@ -165,7 +165,7 @@ ComponentResult DitherFloat::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		DitherFloat::DitherFloatKernel::Reset()
 {
-	fpNShape = 0.0;
+	fpd = 17;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -226,26 +226,37 @@ void		DitherFloat::DitherFloatKernel::Process(	const Float32 	*inSourceP,
 		case 32: gain = 4294967296.0; break;
 	}
 	//we are directly punching in the gain values rather than calculating them
+	//gain *= gain; //for testing with double precision, 64 bit
 	
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP + (gain-1); //this offsets the float into total truncation-land.
-
-		
-		
 		
 
 		
 		//begin 32 bit floating point dither
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62) * blend;	//remove 'blend' for real use, it's for the demo	
-		inputSample += (dither-fpNShape); fpNShape = dither;
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += (fpd*3.4e-36l*pow(2,expon+62) * blend);	//remove 'blend' for real use, it's for the demo	
+		//end 32 bit floating point dither
+
+		/* copy and paste into code, fpd is a uint32_t initialized as 17 (NOT 0)
+		 
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
+		inputSample += (fpd*3.4e-36l*pow(2,expon+62));	
 		//end 32 bit floating point dither
 		
+		//begin 64 bit floating point dither
+		int expon; frexp((double)inputSample, &expon);
+		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
+		inputSample += (fpd*6.4e-45l*pow(2,expon+62));	
+		//end 64 bit floating point dither
+		 
+		*/
 		
 		
-		
-		
-		inputSample = (Float32)inputSample; //equivalent of 'floor' for 32 bit floating point
+		inputSample = (float)inputSample; //equivalent of 'floor' for 32 bit floating point
 		//We do that separately, we're truncating to floating point WHILE heavily offset.
 		
 		*destP = inputSample - (gain-1); //this de-offsets the float.
