@@ -1,11 +1,11 @@
 /*
-*	File:		BrassRider.h
+*	File:		Highpass2.h
 *	
 *	Version:	1.0
 * 
-*	Created:	5/15/10
+*	Created:	3/13/19
 *	
-*	Copyright:  Copyright © 2010 Airwindows, All Rights Reserved
+*	Copyright:  Copyright © 2019 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -40,49 +40,51 @@
 *
 */
 #include "AUEffectBase.h"
-#include "BrassRiderVersion.h"
+#include "Highpass2Version.h"
 
 #if AU_DEBUG_DISPATCHER
 	#include "AUDebugDispatcher.h"
 #endif
 
 
-#ifndef __BrassRider_h__
-#define __BrassRider_h__
+#ifndef __Highpass2_h__
+#define __Highpass2_h__
 
 
-#pragma mark ____BrassRider Parameters
+#pragma mark ____Highpass2 Parameters
 
 // parameters
 static const float kDefaultValue_ParamOne = 0.0;
 static const float kDefaultValue_ParamTwo = 0.0;
+static const float kDefaultValue_ParamThree = 1.0;
+static const float kDefaultValue_ParamFour = 1.0;
 
-static CFStringRef kParameterOneName = CFSTR("Threshold");
-static CFStringRef kParameterTwoName = CFSTR("Dry/Wet");
+static CFStringRef kParameterOneName = CFSTR("Highpass");
+static CFStringRef kParameterTwoName = CFSTR("Loose/Tight");
+static CFStringRef kParameterThreeName = CFSTR("Poles");
+static CFStringRef kParameterFourName = CFSTR("Dry/Wet");
 //Alter the name if desired, but using the plugin name is a start
 
 enum {
 	kParam_One =0,
 	kParam_Two =1,
+	kParam_Three =2,
+	kParam_Four =3,
 	//Add your parameters here...
-	kNumberOfParameters=2
+	kNumberOfParameters=4
 };
 
-#pragma mark ____BrassRider
-class BrassRider : public AUEffectBase
+#pragma mark ____Highpass2
+class Highpass2 : public AUEffectBase
 {
 public:
-	BrassRider(AudioUnit component);
+	Highpass2(AudioUnit component);
 #if AU_DEBUG_DISPATCHER
-	virtual ~BrassRider () { delete mDebugDispatcher; }
+	virtual ~Highpass2 () { delete mDebugDispatcher; }
 #endif
-	virtual ComponentResult Reset(AudioUnitScope inScope, AudioUnitElement inElement);
-
-	virtual OSStatus ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags, 
-						const AudioBufferList & inBuffer, AudioBufferList & outBuffer, 
-						UInt32 inFramesToProcess);
-	virtual UInt32 SupportedNumChannels(const AUChannelInfo ** outInfo);
-
+	
+	virtual AUKernelBase *		NewKernel() { return new Highpass2Kernel(this); }
+	
 	virtual	ComponentResult		GetParameterValueStrings(AudioUnitScope			inScope,
 														 AudioUnitParameterID		inParameterID,
 														 CFArrayRef *			outStrings);
@@ -101,38 +103,48 @@ public:
 											AudioUnitScope 		inScope,
 											AudioUnitElement 		inElement,
 											void *			outData);
-
 	
 	virtual ComponentResult    Initialize();
 	virtual bool				SupportsTail () { return true; }
-    virtual Float64				GetTailTime() {return 0.0;}
-    virtual Float64				GetLatency() {return 0.0;}	// edit these because tail time isn't 1000 samples and latency isn't 1
-
-	/*! @method Version */
-	virtual ComponentResult	Version() { return kBrassRiderVersion; }
+    virtual Float64				GetTailTime() {return (1.0/GetSampleRate())*0.0;} //in SECONDS! gsr * a number = in samples
+    virtual Float64				GetLatency() {return (1.0/GetSampleRate())*0.0;}	// in SECONDS! gsr * a number = in samples
 	
-    		
+	/*! @method Version */
+	virtual ComponentResult		Version() { return kHighpass2Version; }
+	
+    
+	
+protected:
+		class Highpass2Kernel : public AUKernelBase		// most of the real work happens here
+	{
+public:
+		Highpass2Kernel(AUEffectBase *inAudioUnit )
+		: AUKernelBase(inAudioUnit)
+	{
+	}
+		
+		// *Required* overides for the process method for this effect
+		// processes one channel of interleaved samples
+        virtual void 		Process(	const Float32 	*inSourceP,
+										Float32		 	*inDestP,
+										UInt32 			inFramesToProcess,
+										UInt32			inNumChannels,
+										bool			&ioSilence);
+		
+        virtual void		Reset();
+		
 		private: 
-
-		Float64 d[80002];
-		Float64 e[80002];
-		Float64 highIIRL;
-		Float64 slewIIRL;
-		Float64 highIIR2L;
-		Float64 slewIIR2L;
-		Float64 highIIRR;
-		Float64 slewIIRR;
-		Float64 highIIR2R;
-		Float64 slewIIR2R;
-		Float64 control;
-		Float64 clamp;
-		Float64 lastSampleL;
-		Float64 lastSlewL;
-		Float64 lastSampleR;
-		Float64 lastSlewR;
-		int gcount;
+		Float64 iirSampleA;
+		Float64 iirSampleB;
+		Float64 iirSampleC;
+		Float64 iirSampleD;
+		Float64 iirSampleE;
+		Float64 iirSampleF;
+		Float64 iirSampleG;
+		Float64 iirSampleH;
 		uint32_t fpd;
-
+		bool fpFlip;
+	};
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

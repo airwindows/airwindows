@@ -194,8 +194,8 @@ ComponentResult		BrassRider::Reset(AudioUnitScope inScope, AudioUnitElement inEl
 	lastSampleR = 0.0;
 	lastSlewR = 0.0;
 	gcount = 0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpd = 17;
+
 	return noErr;
 }
 
@@ -218,59 +218,51 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	int offsetA = 13500;
 	int offsetB = 16700;
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0-wet;
-	Float64 maxRide = wet*8;
-	Float64 inputSampleL;
-	Float64 drySampleL;
-	Float64 slewSampleL;
-	Float64 inputSampleR;
-	Float64 drySampleR;
-	Float64 slewSampleR;
-	Float64 ramp;
-	Float64 bridgerectifier;
 	
 	while (nSampleFrames-- > 0) {
-		inputSampleL = *inputL;
-		inputSampleR = *inputR;
-		
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
+		long double inputSampleL = *inputL;
+		long double inputSampleR = *inputR;
+		//assign working variables
 		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
+			static int noisesource = 0;
+			//this declares a variable before anything else is compiled. It won't keep assigning
+			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+			//but it lets me add this denormalization fix in a single place rather than updating
+			//it in three different locations. The variable isn't thread-safe but this is only
+			//a random seed and we can share it with whatever.
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSampleL = applyresidue;
 		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
 		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
+			static int noisesource = 0;
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSampleR = applyresidue;
+			//this denormalization routine produces a white noise at -300 dB which the noise
+			//shaping will interact with to produce a bipolar output, but the noise is actually
+			//all positive. That should stop any variables from going denormal, and the routine
+			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
+			//the silence will return to being digital black again.
 		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		drySampleL = inputSampleL;
-		drySampleR = inputSampleR;
+		long double drySampleL = inputSampleL;
+		long double drySampleR = inputSampleR;
 
 		inputSampleL *= limitOut;
 		highIIRL = (highIIRL*0.5);
@@ -279,7 +271,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		highIIR2L = (highIIR2L*0.5);
 		highIIR2L += (inputSampleL*0.5);
 		inputSampleL -= highIIR2L;
-		slewSampleL = fabs(inputSampleL - lastSampleL);
+		long double slewSampleL = fabs(inputSampleL - lastSampleL);
 		lastSampleL = inputSampleL;
 		slewSampleL /= fabs(inputSampleL * lastSampleL)+0.2;
 		slewIIRL = (slewIIRL*0.5);
@@ -288,7 +280,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		slewIIR2L = (slewIIR2L*0.5);
 		slewIIR2L += (slewSampleL*0.5);
 		slewSampleL = fabs(slewSampleL - slewIIR2L);
-		bridgerectifier = slewSampleL;
+		long double bridgerectifier = slewSampleL;
 		//there's the left channel, now to feed it to overall clamp
 		
 		if (bridgerectifier > 3.1415) bridgerectifier = 0.0;
@@ -297,11 +289,11 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		d[gcount+40000] = d[gcount] = bridgerectifier;
 		control += (d[gcount] / (offsetA+1));
 		control -= (d[gcount+offsetA] / offsetA);
-		ramp = (control*control) * 16.0;
+		Float64 ramp = (control*control) * 16.0;
 		e[gcount+40000] = e[gcount] = ramp;
 		clamp += (e[gcount] / (offsetB+1));
 		clamp -= (e[gcount+offsetB] / offsetB);
-		if (clamp > maxRide) clamp = maxRide;
+		if (clamp > wet*8) clamp = wet*8;
 		gcount--;
 
 		inputSampleR *= limitOut;
@@ -311,7 +303,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		highIIR2R = (highIIR2R*0.5);
 		highIIR2R += (inputSampleR*0.5);
 		inputSampleR -= highIIR2R;
-		slewSampleR = fabs(inputSampleR - lastSampleR);
+		long double slewSampleR = fabs(inputSampleR - lastSampleR);
 		lastSampleR = inputSampleR;
 		slewSampleR /= fabs(inputSampleR * lastSampleR)+0.2;
 		slewIIRR = (slewIIRR*0.5);
@@ -333,25 +325,20 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		e[gcount+40000] = e[gcount] = ramp;
 		clamp += (e[gcount] / (offsetB+1));
 		clamp -= (e[gcount+offsetB] / offsetB);
-		if (clamp > maxRide) clamp = maxRide;
+		if (clamp > wet*8) clamp = wet*8;
 		gcount--;
 
+		inputSampleL = (drySampleL * (1.0-wet)) + (drySampleL * clamp * wet * 16.0);
+		inputSampleR = (drySampleR * (1.0-wet)) + (drySampleR * clamp * wet * 16.0);
 
-		inputSampleL = (drySampleL * dry) + (drySampleL * clamp * wet * 16.0);
-		inputSampleR = (drySampleR * dry) + (drySampleR * clamp * wet * 16.0);
-		
-		//noise shaping to 32-bit floating point
-		Float32 fpTemp = inputSampleL;
-		fpNShapeL += (inputSampleL-fpTemp);
-		inputSampleL += fpNShapeL;
-		//if this confuses you look at the wordlength for fpTemp :)
-		fpTemp = inputSampleR;
-		fpNShapeR += (inputSampleR-fpTemp);
-		inputSampleR += fpNShapeR;
-		//for deeper space and warmth, we try a non-oscillating noise shaping
-		//that is kind of ruthless: it will forever retain the rounding errors
-		//except we'll dial it back a hair at the end of every buffer processed
-		//end noise shaping on 32 bit output
+		//begin 32 bit stereo floating point dither
+		int expon; frexpf((float)inputSampleL, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleL += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		frexpf((float)inputSampleR, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleR += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		//end 32 bit stereo floating point dither		
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
@@ -360,13 +347,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		inputR += 1;
 		outputL += 1;
 		outputR += 1;
-    }
-	fpNShapeL *= 0.999999;
-	fpNShapeR *= 0.999999;
-	//we will just delicately dial back the FP noise shaping, not even every sample
-	//this is a good place to put subtle 'no runaway' calculations, though bear in mind
-	//that it will be called more often when you use shorter sample buffers in the DAW.
-	//So, very low latency operation will call these calculations more often.	
-	return noErr;
+	}
+return noErr;
 }
 
