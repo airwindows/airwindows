@@ -98,7 +98,7 @@ ComponentResult			Mojo::GetParameterInfo(AudioUnitScope		inScope,
         {
            case kParam_One:
                 AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.unit = kAudioUnitParameterUnit_Decibels;
                 outParameterInfo.minValue = -12.0;
                 outParameterInfo.maxValue = 12.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;

@@ -95,7 +95,7 @@ void Mojo::getParameterDisplay(VstInt32 index, char *text) {
 
 void Mojo::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
+        case kParamA: vst_strncpy (text, "dB", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }

@@ -14,7 +14,7 @@ void Mojo::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	double gain = (A*24.0)-12.0;
+	double gain = pow(10.0,((A*24.0)-12.0)/20.0);
     
     while (--sampleFrames >= 0)
     {
@@ -61,7 +61,7 @@ void Mojo::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	double gain = (A*24.0)-12.0;
+	double gain = pow(10.0,((A*24.0)-12.0)/20.0);
 
     while (--sampleFrames >= 0)
     {
