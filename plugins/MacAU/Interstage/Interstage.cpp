@@ -179,7 +179,7 @@ void		Interstage::InterstageKernel::Process(	const Float32 	*inSourceP,
 	
 	Float64 firstStage = 0.381966011250105 / overallscale;
 	Float64 iirAmount = 0.00295 / overallscale;
-	Float64 threshold = 0.381966011250105 / overallscale;
+	Float64 threshold = 0.381966011250105;
 	
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;

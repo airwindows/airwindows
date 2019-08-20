@@ -20,7 +20,7 @@ void Interstage::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	double firstStage = 0.381966011250105 / overallscale;
 	double iirAmount = 0.00295 / overallscale;
-	double threshold = 0.381966011250105 / overallscale;
+	double threshold = 0.381966011250105;
     
     while (--sampleFrames >= 0)
     {
@@ -107,7 +107,7 @@ void Interstage::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
 	double firstStage = 0.381966011250105 / overallscale;
 	double iirAmount = 0.00295 / overallscale;
-	double threshold = 0.381966011250105 / overallscale;
+	double threshold = 0.381966011250105;
 	
     while (--sampleFrames >= 0)
     {
