@@ -135,7 +135,7 @@ void Monitoring::getParameterName(VstInt32 index, char *text) {
 
 void Monitoring::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: switch((VstInt32)( A * 11.999 )) //0 to almost edge of # of params
+        case kParamA: switch((VstInt32)( A * 15.999 )) //0 to almost edge of # of params
 		{	case 0: vst_strncpy (text, "Out24", kVstMaxParamStrLen); break;
 			case 1: vst_strncpy (text, "Out16", kVstMaxParamStrLen); break;
 			case 2: vst_strncpy (text, "Peaks", kVstMaxParamStrLen); break;
@@ -145,9 +145,13 @@ void Monitoring::getParameterDisplay(VstInt32 index, char *text) {
 			case 6: vst_strncpy (text, "Side", kVstMaxParamStrLen); break;
 			case 7: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
 			case 8: vst_strncpy (text, "Aurat", kVstMaxParamStrLen); break;
-			case 9: vst_strncpy (text, "Phone", kVstMaxParamStrLen); break;
-			case 10: vst_strncpy (text, "Cans A", kVstMaxParamStrLen); break;
-			case 11: vst_strncpy (text, "Cans B", kVstMaxParamStrLen); break;
+			case 9: vst_strncpy (text, "MonoRat", kVstMaxParamStrLen); break;
+			case 10: vst_strncpy (text, "MonoLat", kVstMaxParamStrLen); break;
+			case 11: vst_strncpy (text, "Phone", kVstMaxParamStrLen); break;
+			case 12: vst_strncpy (text, "Cans A", kVstMaxParamStrLen); break;
+			case 13: vst_strncpy (text, "Cans B", kVstMaxParamStrLen); break;
+			case 14: vst_strncpy (text, "Cans C", kVstMaxParamStrLen); break;
+			case 15: vst_strncpy (text, "Cans D", kVstMaxParamStrLen); break;
 		 default: break; // unknown parameter, shouldn't happen!
 		} break;			
         default: break; // unknown parameter, shouldn't happen!

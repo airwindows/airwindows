@@ -64,9 +64,13 @@ static const int kMONO = 5;
 static const int kSIDE = 6;
 static const int kVINYL = 7;
 static const int kAURAT = 8;
-static const int kPHONE = 9;
-static const int kCANSA = 10;
-static const int kCANSB = 11;
+static const int kMONORAT = 9;
+static const int kMONOLAT = 10;
+static const int kPHONE = 11;
+static const int kCANSA = 12;
+static const int kCANSB = 13;
+static const int kCANSC = 14;
+static const int kCANSD = 15;
 static const int kDefaultValue_ParamOne = kNJAD;
 
 static CFStringRef kMenuItem_NJAD = CFSTR ("Out24");
@@ -78,9 +82,13 @@ static CFStringRef kMenuItem_MONO = CFSTR ("Mono");
 static CFStringRef kMenuItem_SIDE = CFSTR ("Side");
 static CFStringRef kMenuItem_VINYL = CFSTR ("Vinyl");
 static CFStringRef kMenuItem_AURAT = CFSTR ("Aurat");
+static CFStringRef kMenuItem_MONORAT = CFSTR ("MonoRat");
+static CFStringRef kMenuItem_MONOLAT = CFSTR ("MonoLat");
 static CFStringRef kMenuItem_PHONE = CFSTR ("Phone");
 static CFStringRef kMenuItem_CANSA = CFSTR ("Cans A");
 static CFStringRef kMenuItem_CANSB = CFSTR ("Cans B");
+static CFStringRef kMenuItem_CANSC = CFSTR ("Cans C");
+static CFStringRef kMenuItem_CANSD = CFSTR ("Cans D");
 
 enum {
 	kParam_One =0,

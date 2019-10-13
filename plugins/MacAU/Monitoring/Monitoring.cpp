@@ -89,9 +89,13 @@ ComponentResult			Monitoring::GetParameterValueStrings(AudioUnitScope		inScope,
 			kMenuItem_SIDE,
 			kMenuItem_VINYL,
 			kMenuItem_AURAT,
+			kMenuItem_MONORAT,
+			kMenuItem_MONOLAT,
 			kMenuItem_PHONE,
 			kMenuItem_CANSA,
-			kMenuItem_CANSB
+			kMenuItem_CANSB,
+			kMenuItem_CANSC,
+			kMenuItem_CANSD
 		};
 		*outStrings = CFArrayCreate (
 									 NULL,
@@ -125,7 +129,7 @@ ComponentResult			Monitoring::GetParameterInfo(AudioUnitScope		inScope,
                 AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
 				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
                 outParameterInfo.minValue = kNJAD;
-                outParameterInfo.maxValue = kCANSB;
+                outParameterInfo.maxValue = kCANSD;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
                 break;
            default:
@@ -272,8 +276,8 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825; //define as VINYL unless overridden
-	if (processing == kAURAT) {biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575;}
+	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == kVINYL) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
 	if (processing == kPHONE) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
 	double K = tan(M_PI * biquad[0]);
 	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
@@ -535,7 +539,15 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 			case 7:
 			case 8:
 			case 9:
+			case 10:
+			case 11:
 				//Bandpass: changes in EQ are up in the variable defining, not here
+				//7 Vinyl, 8 9 10 Aurat, 11 Phone
+				
+				if (processing == 9) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
+				if (processing == 10) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
+				if (processing == 11) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
@@ -555,8 +567,10 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				inputSampleL = asin(inputSampleL); inputSampleR = asin(inputSampleR);
 				//amplitude aspect
 				break;
-			case 10:
-			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
 				long double drySampleL; drySampleL = inputSampleL;
@@ -570,8 +584,11 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				inputSampleR += (aR[ax]);
 				//a single Midiverb-style allpass
 				
-				if (processing == 10) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				else {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 12) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 14) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 15) {drySampleL *= 0.5; drySampleR *= 0.5;}
+				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -585,8 +602,10 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				inputSampleR += (dR[dx]);
 				//a single Midiverb-style allpass, which is stretching the previous one even more
 				
-				if (processing == 10) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				else {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 12) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
 				//Cans A already had crossfeeds down, bloom is louder. Cans B sits on bloom more
 
 				drySampleL += inputSampleL;

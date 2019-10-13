@@ -18,16 +18,16 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 
-	int processing = (VstInt32)( A * 11.999 );
+	int processing = (VstInt32)( A * 15.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825; //define as VINYL unless overridden
-	if (processing == 8) {biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575;}
-	if (processing == 9) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
+	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == 7) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
+	if (processing == 11) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
 	double K = tan(M_PI * biquad[0]);
 	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
 	biquad[2] = K / biquad[1] * norm;
@@ -289,7 +289,14 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			case 7:
 			case 8:
 			case 9:
+			case 10:
+			case 11:
 				//Bandpass: changes in EQ are up in the variable defining, not here
+				//7 Vinyl, 8 9 10 Aurat, 11 Phone
+				if (processing == 9) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
+				if (processing == 10) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
+				if (processing == 11) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
@@ -309,8 +316,10 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				inputSampleL = asin(inputSampleL); inputSampleR = asin(inputSampleR);
 				//amplitude aspect
 				break;
-			case 10:
-			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
 				long double drySampleL; drySampleL = inputSampleL;
@@ -324,8 +333,11 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				inputSampleR += (aR[ax]);
 				//a single Midiverb-style allpass
 				
-				if (processing == 10) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				else {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 12) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 14) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 15) {drySampleL *= 0.5; drySampleR *= 0.5;}
+				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -339,8 +351,10 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				inputSampleR += (dR[dx]);
 				//a single Midiverb-style allpass, which is stretching the previous one even more
 				
-				if (processing == 10) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				else {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 12) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
 				//Cans A already had crossfeeds down, bloom is louder. Cans B sits on bloom more
 				
 				drySampleL += inputSampleL;
@@ -488,7 +502,7 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	int processing = (VstInt32)( A * 11.999 );
+	int processing = (VstInt32)( A * 15.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
@@ -759,7 +773,14 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			case 7:
 			case 8:
 			case 9:
+			case 10:
+			case 11:
 				//Bandpass: changes in EQ are up in the variable defining, not here
+				//7 Vinyl, 8 9 10 Aurat, 11 Phone
+				if (processing == 9) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
+				if (processing == 10) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
+				if (processing == 11) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
@@ -779,8 +800,10 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				inputSampleL = asin(inputSampleL); inputSampleR = asin(inputSampleR);
 				//amplitude aspect
 				break;
-			case 10:
-			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
 				long double drySampleL; drySampleL = inputSampleL;
@@ -794,8 +817,11 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				inputSampleR += (aR[ax]);
 				//a single Midiverb-style allpass
 				
-				if (processing == 10) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				else {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 12) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 14) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 15) {drySampleL *= 0.5; drySampleR *= 0.5;}
+				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -809,8 +835,10 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				inputSampleR += (dR[dx]);
 				//a single Midiverb-style allpass, which is stretching the previous one even more
 				
-				if (processing == 10) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				else {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 12) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
 				//Cans A already had crossfeeds down, bloom is louder. Cans B sits on bloom more
 				
 				drySampleL += inputSampleL;
