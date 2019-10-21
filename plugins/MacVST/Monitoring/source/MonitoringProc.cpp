@@ -320,24 +320,37 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			case 13:
 			case 14:
 			case 15:
+				if (processing == 12) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
+				if (processing == 13) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
+				if (processing == 14) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
+				if (processing == 15) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
+				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
 				long double drySampleL; drySampleL = inputSampleL;
 				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				//we are using the iir filters from out of SubsOnly
+				
+				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
+				iirSampleAL = (iirSampleAL * (1.0 - (bass*0.618))) + (side * bass * 0.618); side = side - iirSampleAL;
+				inputSampleL = (mid+side)/2.0; inputSampleR = (mid-side)/2.0;
+				//bass narrowing filter				
 				
 				allpasstemp = ax - 1; if (allpasstemp < 0 || allpasstemp > am) allpasstemp = am;
 				inputSampleL -= aL[allpasstemp]*0.5; aL[ax] = inputSampleL; inputSampleL *= 0.5;
 				inputSampleR -= aR[allpasstemp]*0.5; aR[ax] = inputSampleR; inputSampleR *= 0.5;
+				
 				ax--; if (ax < 0 || ax > am) {ax = am;}
-				inputSampleL += (aL[ax]);
-				inputSampleR += (aR[ax]);
-				//a single Midiverb-style allpass
+				inputSampleL += (aL[ax])*0.5; inputSampleR += (aR[ax])*0.5;
+				if (ax == am) {inputSampleL += (aL[0])*0.5; inputSampleR += (aR[0])*0.5;}
+				else {inputSampleL += (aL[ax+1])*0.5; inputSampleR += (aR[ax+1])*0.5;}
+				//a darkened Midiverb-style allpass
 				
 				if (processing == 12) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
 				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 14) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				if (processing == 15) {drySampleL *= 0.5; drySampleR *= 0.5;}
-				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 14) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
+				if (processing == 15) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -346,22 +359,27 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				allpasstemp = dx - 1; if (allpasstemp < 0 || allpasstemp > dm) allpasstemp = dm;
 				inputSampleL -= dL[allpasstemp]*0.5; dL[dx] = inputSampleL; inputSampleL *= 0.5;
 				inputSampleR -= dR[allpasstemp]*0.5; dR[dx] = inputSampleR; inputSampleR *= 0.5;
+				
 				dx--; if (dx < 0 || dx > dm) {dx = dm;}
-				inputSampleL += (dL[dx]);
-				inputSampleR += (dR[dx]);
-				//a single Midiverb-style allpass, which is stretching the previous one even more
+				inputSampleL += (dL[dx])*0.5; inputSampleR += (dR[dx])*0.5;
+				if (dx == dm) {inputSampleL += (dL[0])*0.5; inputSampleR += (dR[0])*0.5;}
+				else {inputSampleL += (dL[dx+1])*0.5; inputSampleR += (dR[dx+1])*0.5;}
+				//a darkened Midiverb-style allpass, which is stretching the previous one even more
 				
-				if (processing == 12) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				//Cans A already had crossfeeds down, bloom is louder. Cans B sits on bloom more
+				inputSampleL *= 0.25; inputSampleR *= 0.25;
+				//for all versions of Cans the second level of bloom is this far down
+				//and, remains on the opposite speaker rather than crossing again to the original side
 				
-				drySampleL += inputSampleL;
-				drySampleR += inputSampleR; //add the crossfeed and very faint extra verbyness
+				drySampleL += inputSampleR;
+				drySampleR += inputSampleL; //add the crossfeed and very faint extra verbyness
 				
 				inputSampleL = drySampleL;
 				inputSampleR = drySampleR; //and output our can-opened headphone feed
+				
+				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
+				iirSampleAR = (iirSampleAR * (1.0 - bass)) + (side * bass); side = side - iirSampleAR;
+				inputSampleL = (mid+side)/2.0; inputSampleR = (mid-side)/2.0;
+				//bass narrowing filter
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
@@ -804,24 +822,37 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			case 13:
 			case 14:
 			case 15:
+				if (processing == 12) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
+				if (processing == 13) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
+				if (processing == 14) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
+				if (processing == 15) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
+				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
 				long double drySampleL; drySampleL = inputSampleL;
 				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				//we are using the iir filters from out of SubsOnly
+				
+				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
+				iirSampleAL = (iirSampleAL * (1.0 - (bass*0.618))) + (side * bass * 0.618); side = side - iirSampleAL;
+				inputSampleL = (mid+side)/2.0; inputSampleR = (mid-side)/2.0;
+				//bass narrowing filter				
 				
 				allpasstemp = ax - 1; if (allpasstemp < 0 || allpasstemp > am) allpasstemp = am;
 				inputSampleL -= aL[allpasstemp]*0.5; aL[ax] = inputSampleL; inputSampleL *= 0.5;
 				inputSampleR -= aR[allpasstemp]*0.5; aR[ax] = inputSampleR; inputSampleR *= 0.5;
+				
 				ax--; if (ax < 0 || ax > am) {ax = am;}
-				inputSampleL += (aL[ax]);
-				inputSampleR += (aR[ax]);
-				//a single Midiverb-style allpass
+				inputSampleL += (aL[ax])*0.5; inputSampleR += (aR[ax])*0.5;
+				if (ax == am) {inputSampleL += (aL[0])*0.5; inputSampleR += (aR[0])*0.5;}
+				else {inputSampleL += (aL[ax+1])*0.5; inputSampleR += (aR[ax+1])*0.5;}
+				//a darkened Midiverb-style allpass
 				
 				if (processing == 12) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
 				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 14) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				if (processing == 15) {drySampleL *= 0.5; drySampleR *= 0.5;}
-				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
+				if (processing == 14) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
+				if (processing == 15) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -830,27 +861,32 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				allpasstemp = dx - 1; if (allpasstemp < 0 || allpasstemp > dm) allpasstemp = dm;
 				inputSampleL -= dL[allpasstemp]*0.5; dL[dx] = inputSampleL; inputSampleL *= 0.5;
 				inputSampleR -= dR[allpasstemp]*0.5; dR[dx] = inputSampleR; inputSampleR *= 0.5;
+				
 				dx--; if (dx < 0 || dx > dm) {dx = dm;}
-				inputSampleL += (dL[dx]);
-				inputSampleR += (dR[dx]);
-				//a single Midiverb-style allpass, which is stretching the previous one even more
+				inputSampleL += (dL[dx])*0.5; inputSampleR += (dR[dx])*0.5;
+				if (dx == dm) {inputSampleL += (dL[0])*0.5; inputSampleR += (dR[0])*0.5;}
+				else {inputSampleL += (dL[dx+1])*0.5; inputSampleR += (dR[dx+1])*0.5;}
+				//a darkened Midiverb-style allpass, which is stretching the previous one even more
 				
-				if (processing == 12) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				if (processing == 13) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				if (processing == 15) {inputSampleL *= 0.5; inputSampleR *= 0.5;}
-				//Cans A already had crossfeeds down, bloom is louder. Cans B sits on bloom more
+				inputSampleL *= 0.25; inputSampleR *= 0.25;
+				//for all versions of Cans the second level of bloom is this far down
+				//and, remains on the opposite speaker rather than crossing again to the original side
 				
-				drySampleL += inputSampleL;
-				drySampleR += inputSampleR; //add the crossfeed and very faint extra verbyness
+				drySampleL += inputSampleR;
+				drySampleR += inputSampleL; //add the crossfeed and very faint extra verbyness
 				
 				inputSampleL = drySampleL;
 				inputSampleR = drySampleR; //and output our can-opened headphone feed
 				
+				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
+				iirSampleAR = (iirSampleAR * (1.0 - bass)) + (side * bass); side = side - iirSampleAR;
+				inputSampleL = (mid+side)/2.0; inputSampleR = (mid-side)/2.0;
+				//bass narrowing filter
+				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
-				break;
+			break;
 		}
 		
 		
