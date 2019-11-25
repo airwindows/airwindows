@@ -73,7 +73,8 @@ private:
 	double iirSampleTR, iirSampleUR, iirSampleVR;
 	double iirSampleWR, iirSampleXR, iirSampleYR, iirSampleZR; // o/`
 	//SubsOnly
-	long double biquad[11];
+	long double biquadL[11];
+	long double biquadR[11];
 	//Bandpasses
 
 	uint32_t fpd;

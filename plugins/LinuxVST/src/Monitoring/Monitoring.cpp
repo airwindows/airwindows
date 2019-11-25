@@ -57,7 +57,7 @@ Monitoring::Monitoring(audioMasterCallback audioMaster) :
 	iirSampleTR = 0.0; iirSampleUR = 0.0; iirSampleVR = 0.0;
 	iirSampleWR = 0.0; iirSampleXR = 0.0; iirSampleYR = 0.0; iirSampleZR = 0.0; // o/`	
 	//SubsOnly
-	for (int x = 0; x < 11; x++) {biquad[x] = 0.0;}
+	for (int x = 0; x < 11; x++) {biquadL[x] = 0.0; biquadR[x] = 0.0;}
 	//Bandpasses
 	A = 0.0;
 	fpd = 17;
@@ -135,7 +135,7 @@ void Monitoring::getParameterName(VstInt32 index, char *text) {
 
 void Monitoring::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: switch((VstInt32)( A * 15.999 )) //0 to almost edge of # of params
+        case kParamA: switch((VstInt32)( A * 16.999 )) //0 to almost edge of # of params
 		{	case 0: vst_strncpy (text, "Out24", kVstMaxParamStrLen); break;
 			case 1: vst_strncpy (text, "Out16", kVstMaxParamStrLen); break;
 			case 2: vst_strncpy (text, "Peaks", kVstMaxParamStrLen); break;
@@ -152,6 +152,7 @@ void Monitoring::getParameterDisplay(VstInt32 index, char *text) {
 			case 13: vst_strncpy (text, "Cans B", kVstMaxParamStrLen); break;
 			case 14: vst_strncpy (text, "Cans C", kVstMaxParamStrLen); break;
 			case 15: vst_strncpy (text, "Cans D", kVstMaxParamStrLen); break;
+			case 16: vst_strncpy (text, "V Trick", kVstMaxParamStrLen); break;
 		 default: break; // unknown parameter, shouldn't happen!
 		} break;			
         default: break; // unknown parameter, shouldn't happen!

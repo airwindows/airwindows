@@ -95,7 +95,8 @@ ComponentResult			Monitoring::GetParameterValueStrings(AudioUnitScope		inScope,
 			kMenuItem_CANSA,
 			kMenuItem_CANSB,
 			kMenuItem_CANSC,
-			kMenuItem_CANSD
+			kMenuItem_CANSD,
+			kMenuItem_TRICK
 		};
 		*outStrings = CFArrayCreate (
 									 NULL,
@@ -129,7 +130,7 @@ ComponentResult			Monitoring::GetParameterInfo(AudioUnitScope		inScope,
                 AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
 				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
                 outParameterInfo.minValue = kNJAD;
-                outParameterInfo.maxValue = kCANSD;
+                outParameterInfo.maxValue = kTRICK;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
                 break;
            default:
@@ -635,6 +636,11 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
+				break;
+			case 16:
+				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				inputSampleL = -inputSample;
+				inputSampleR = inputSample;
 				break;
 		}
 		

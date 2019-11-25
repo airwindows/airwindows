@@ -18,24 +18,34 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 
-	int processing = (VstInt32)( A * 15.999 );
+	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
-	if (processing == 7) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
-	if (processing == 11) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquadL[0] = 0.0375/overallscale; biquadL[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == 7) {biquadL[0] = 0.0385/overallscale; biquadL[1] = 0.0825;}
+	if (processing == 11) {biquadL[0] = 0.1245/overallscale; biquadL[1] = 0.46;}	
+	double K = tan(M_PI * biquadL[0]);
+	double norm = 1.0 / (1.0 + K / biquadL[1] + K * K);
+	biquadL[2] = K / biquadL[1] * norm;
+	biquadL[4] = -biquadL[2]; //for bandpass, ignore [3] = 0.0
+	biquadL[5] = 2.0 * (K * K - 1.0) * norm;
+	biquadL[6] = (1.0 - K / biquadL[1] + K * K) * norm;
 	//for Bandpasses
-		
+	biquadR[0] = 0.0375/overallscale; biquadR[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == 7) {biquadR[0] = 0.0385/overallscale; biquadR[1] = 0.0825;}
+	if (processing == 11) {biquadR[0] = 0.1245/overallscale; biquadR[1] = 0.46;}	
+	K = tan(M_PI * biquadR[0]);
+	norm = 1.0 / (1.0 + K / biquadR[1] + K * K);
+	biquadR[2] = K / biquadR[1] * norm;
+	biquadR[4] = -biquadR[2]; //for bandpass, ignore [3] = 0.0
+	biquadR[5] = 2.0 * (K * K - 1.0) * norm;
+	biquadR[6] = (1.0 - K / biquadR[1] + K * K) * norm;
+	//for Bandpasses
+	
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -300,15 +310,15 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquadL[2]) + biquadL[7];
+				biquadL[7] = (-tempSampleL * biquadL[5]) + biquadL[8];
+				biquadL[8] = (inputSampleL * biquadL[4]) - (tempSampleL * biquadL[6]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
-				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
+				long double tempSampleR; tempSampleR = (inputSampleR * biquadR[2]) + biquadR[7];
+				biquadR[7] = (-tempSampleR * biquadR[5]) + biquadR[8];
+				biquadR[8] = (inputSampleR * biquadR[4]) - (tempSampleR * biquadR[6]);
+				inputSampleR = tempSampleR; // we are using the mono configuration
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0;
@@ -384,6 +394,11 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
+				break;
+			case 16:
+				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				inputSampleL = -inputSample;
+				inputSampleR = inputSample;
 				break;
 		}
 		
@@ -520,22 +535,32 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	int processing = (VstInt32)( A * 15.999 );
+	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825; //define as VINYL unless overridden
-	if (processing == 8) {biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575;}
-	if (processing == 9) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquadL[0] = 0.0375/overallscale; biquadL[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == 7) {biquadL[0] = 0.0385/overallscale; biquadL[1] = 0.0825;}
+	if (processing == 11) {biquadL[0] = 0.1245/overallscale; biquadL[1] = 0.46;}	
+	double K = tan(M_PI * biquadL[0]);
+	double norm = 1.0 / (1.0 + K / biquadL[1] + K * K);
+	biquadL[2] = K / biquadL[1] * norm;
+	biquadL[4] = -biquadL[2]; //for bandpass, ignore [3] = 0.0
+	biquadL[5] = 2.0 * (K * K - 1.0) * norm;
+	biquadL[6] = (1.0 - K / biquadL[1] + K * K) * norm;
+	//for Bandpasses
+	biquadR[0] = 0.0375/overallscale; biquadR[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == 7) {biquadR[0] = 0.0385/overallscale; biquadR[1] = 0.0825;}
+	if (processing == 11) {biquadR[0] = 0.1245/overallscale; biquadR[1] = 0.46;}	
+	K = tan(M_PI * biquadR[0]);
+	norm = 1.0 / (1.0 + K / biquadR[1] + K * K);
+	biquadR[2] = K / biquadR[1] * norm;
+	biquadR[4] = -biquadR[2]; //for bandpass, ignore [3] = 0.0
+	biquadR[5] = 2.0 * (K * K - 1.0) * norm;
+	biquadR[6] = (1.0 - K / biquadR[1] + K * K) * norm;
 	//for Bandpasses
 	
     while (--sampleFrames >= 0)
@@ -802,15 +827,15 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquadL[2]) + biquadL[7];
+				biquadL[7] = (-tempSampleL * biquadL[5]) + biquadL[8];
+				biquadL[8] = (inputSampleL * biquadL[4]) - (tempSampleL * biquadL[6]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
-				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
+				long double tempSampleR; tempSampleR = (inputSampleR * biquadR[2]) + biquadR[7];
+				biquadR[7] = (-tempSampleR * biquadR[5]) + biquadR[8];
+				biquadR[8] = (inputSampleR * biquadR[4]) - (tempSampleR * biquadR[6]);
+				inputSampleR = tempSampleR; // we are using the mono configuration
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0;
@@ -886,7 +911,12 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
-			break;
+				break;
+			case 16:
+				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				inputSampleL = -inputSample;
+				inputSampleR = inputSample;
+				break;
 		}
 		
 		

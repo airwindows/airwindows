@@ -71,6 +71,7 @@ static const int kCANSA = 12;
 static const int kCANSB = 13;
 static const int kCANSC = 14;
 static const int kCANSD = 15;
+static const int kTRICK = 16;
 static const int kDefaultValue_ParamOne = kNJAD;
 
 static CFStringRef kMenuItem_NJAD = CFSTR ("Out24");
@@ -89,6 +90,7 @@ static CFStringRef kMenuItem_CANSA = CFSTR ("Cans A");
 static CFStringRef kMenuItem_CANSB = CFSTR ("Cans B");
 static CFStringRef kMenuItem_CANSC = CFSTR ("Cans C");
 static CFStringRef kMenuItem_CANSD = CFSTR ("Cans D");
+static CFStringRef kMenuItem_TRICK = CFSTR ("Voice Trick");
 
 enum {
 	kParam_One =0,
