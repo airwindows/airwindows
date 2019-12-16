@@ -198,6 +198,7 @@ void		Coils::CoilsKernel::Process(	const Float32 	*inSourceP,
 	figure[0] = 600.0/GetSampleRate(); //fixed frequency, 600hz
 	figure[1] = 0.023; //resonance
 	Float64 offset = GetParameter( kParam_Two );
+	Float64 sinOffset = sin(offset); //we can cache this, it's expensive
 	Float64 wet = GetParameter( kParam_Three );
 	
 	
@@ -218,7 +219,7 @@ void		Coils::CoilsKernel::Process(	const Float32 	*inSourceP,
 		//figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		//inputSample = tempSample + sin(drySample-tempSample);
 		//or
-		//inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-offset)*boost);
+		//inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-sinOffset)*boost);
 		//
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Purest case, and since
@@ -227,7 +228,7 @@ void		Coils::CoilsKernel::Process(	const Float32 	*inSourceP,
 		long double tempSample = (inputSample * figure[2]) + figure[7];
 		figure[7] = -(tempSample * figure[5]) + figure[8];
 		figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
-		inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-offset)*boost);
+		inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-sinOffset)*boost);
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Since
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.

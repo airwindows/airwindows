@@ -20,7 +20,8 @@ void Coils::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	if (boost < 0.001) boost = 0.001; //there's a divide, we can't have this be zero
 	figureL[0] = figureR[0] = 600.0/getSampleRate(); //fixed frequency, 600hz
 	figureL[1] = figureR[1] = 0.023; //resonance
-	double offset = B;
+	double offset = (B*2.0)-1.0;
+	double sinOffset = sin(offset); //we can cache this, it's expensive
 	double wet = C;
 	double K = tan(M_PI * figureR[0]);
 	double norm = 1.0 / (1.0 + K / figureR[1] + K * K);
@@ -43,7 +44,7 @@ void Coils::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		//inputSample = tempSample + sin(drySample-tempSample);
 		//or
-		//inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-offset)*boost);
+		//inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-sinOffset)*boost);
 		//
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Purest case, and since
@@ -53,7 +54,7 @@ void Coils::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 		figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 		figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
-		inputSampleL = tempSample + ((sin(((drySampleL-tempSample)/boost)+offset)-offset)*boost);
+		inputSampleL = tempSample + ((sin(((drySampleL-tempSample)/boost)+offset)-sinOffset)*boost);
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Since
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
@@ -61,7 +62,7 @@ void Coils::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		tempSample = (inputSampleR * figureR[2]) + figureR[7];
 		figureR[7] = -(tempSample * figureR[5]) + figureR[8];
 		figureR[8] = (inputSampleR * figureR[4]) - (tempSample * figureR[6]);
-		inputSampleR = tempSample + ((sin(((drySampleR-tempSample)/boost)+offset)-offset)*boost);
+		inputSampleR = tempSample + ((sin(((drySampleR-tempSample)/boost)+offset)-sinOffset)*boost);
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Since
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
@@ -103,7 +104,8 @@ void Coils::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	if (boost < 0.001) boost = 0.001; //there's a divide, we can't have this be zero
 	figureL[0] = figureR[0] = 600.0/getSampleRate(); //fixed frequency, 600hz
 	figureL[1] = figureR[1] = 0.023; //resonance
-	double offset = B;
+	double offset = (B*2.0)-1.0;
+	double sinOffset = sin(offset); //we can cache this, it's expensive
 	double wet = C;
 	double K = tan(M_PI * figureR[0]);
 	double norm = 1.0 / (1.0 + K / figureR[1] + K * K);
@@ -126,7 +128,7 @@ void Coils::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		//inputSample = tempSample + sin(drySample-tempSample);
 		//or
-		//inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-offset)*boost);
+		//inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-sinOffset)*boost);
 		//
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Purest case, and since
@@ -136,7 +138,7 @@ void Coils::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 		figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 		figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
-		inputSampleL = tempSample + ((sin(((drySampleL-tempSample)/boost)+offset)-offset)*boost);
+		inputSampleL = tempSample + ((sin(((drySampleL-tempSample)/boost)+offset)-sinOffset)*boost);
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Since
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
@@ -144,7 +146,7 @@ void Coils::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		tempSample = (inputSampleR * figureR[2]) + figureR[7];
 		figureR[7] = -(tempSample * figureR[5]) + figureR[8];
 		figureR[8] = (inputSampleR * figureR[4]) - (tempSample * figureR[6]);
-		inputSampleR = tempSample + ((sin(((drySampleR-tempSample)/boost)+offset)-offset)*boost);
+		inputSampleR = tempSample + ((sin(((drySampleR-tempSample)/boost)+offset)-sinOffset)*boost);
 		//given a bandlimited inputSample, freq 600hz and Q of 0.023, this restores a lot of
 		//the full frequencies but distorts like a real transformer. Since
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
