@@ -203,7 +203,7 @@ void		Baxandall::BaxandallKernel::Process(	const Float32 	*inSourceP,
 	trebleA[0] = trebleB[0] = trebleFreq;
 	Float64 bassGain = pow(10.0,GetParameter( kParam_Two )/20.0);
 	Float64 bassFreq = pow(10.0,-GetParameter( kParam_Two )/20.0);
-	bassFreq = (4410.0*bassFreq)/GetSampleRate();
+	bassFreq = (8820.0*bassFreq)/GetSampleRate();
 	if (bassFreq > 0.45) bassFreq = 0.45;
 	bassA[0] = bassB[0] = bassFreq;
     trebleA[1] = trebleB[1] = 0.4;

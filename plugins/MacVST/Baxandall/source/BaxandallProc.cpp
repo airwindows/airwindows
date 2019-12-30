@@ -20,7 +20,7 @@ void Baxandall::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	trebleAL[0] = trebleBL[0] = trebleAR[0] = trebleBR[0] = trebleFreq;
 	double bassGain = pow(10.0,((B*30.0)-15.0)/20.0);
 	double bassFreq = pow(10.0,-((B*30.0)-15.0)/20.0);
-	bassFreq = (4410.0*bassFreq)/getSampleRate();
+	bassFreq = (8820.0*bassFreq)/getSampleRate();
 	if (bassFreq > 0.45) bassFreq = 0.45;
 	bassAL[0] = bassBL[0] = bassAR[0] = bassBR[0] = bassFreq;
     trebleAL[1] = trebleBL[1] = trebleAR[1] = trebleBR[1] = 0.4;
@@ -157,7 +157,7 @@ void Baxandall::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	trebleAL[0] = trebleBL[0] = trebleAR[0] = trebleBR[0] = trebleFreq;
 	double bassGain = pow(10.0,((B*30.0)-15.0)/20.0);
 	double bassFreq = pow(10.0,-((B*30.0)-15.0)/20.0);
-	bassFreq = (4410.0*bassFreq)/getSampleRate();
+	bassFreq = (8820.0*bassFreq)/getSampleRate();
 	if (bassFreq > 0.45) bassFreq = 0.45;
 	bassAL[0] = bassBL[0] = bassAR[0] = bassBR[0] = bassFreq;
     trebleAL[1] = trebleBL[1] = trebleAR[1] = trebleBR[1] = 0.4;
