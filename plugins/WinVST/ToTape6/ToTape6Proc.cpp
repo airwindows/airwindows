@@ -61,6 +61,11 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
+		if (inputgain < 1.0) {
+			inputSampleL *= inputgain;
+			inputSampleR *= inputgain;
+		} //gain cut before plugin		
+		
 		double flutterrandy =  fpd / (double)UINT32_MAX;
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (gcount < 0 || gcount > 499) {gcount = 499;}
@@ -199,7 +204,7 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		long double groundSampleL = vibDrySampleL - inputSampleL; //set up UnBox on fluttered audio
 		long double groundSampleR = vibDrySampleR - inputSampleR; //set up UnBox on fluttered audio
 		
-		if (inputgain != 1.0) {
+		if (inputgain > 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
@@ -217,16 +222,20 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (HighsSampleR < 0) inputSampleR += applySoften;
 		//apply Soften depending on polarity
 		
-		if (fabs(inputSampleL) < 0.0025) {
-			iirHeadBumpAL *= 0.99;
-			iirHeadBumpBL *= 0.99;		
-		} //restrain resonant quality of head bump algorithm
+		double suppress = (1.0-fabs(inputSampleL)) * 0.00013;
+		if (iirHeadBumpAL > suppress) iirHeadBumpAL -= suppress;
+		if (iirHeadBumpAL < -suppress) iirHeadBumpAL += suppress;
+		if (iirHeadBumpBL > suppress) iirHeadBumpBL -= suppress;
+		if (iirHeadBumpBL < -suppress) iirHeadBumpBL += suppress;
+		//restrain resonant quality of head bump algorithm
+		suppress = (1.0-fabs(inputSampleR)) * 0.00013;
+		if (iirHeadBumpAR > suppress) iirHeadBumpAR -= suppress;
+		if (iirHeadBumpAR < -suppress) iirHeadBumpAR += suppress;
+		if (iirHeadBumpBR > suppress) iirHeadBumpBR -= suppress;
+		if (iirHeadBumpBR < -suppress) iirHeadBumpBR += suppress;
+		//restrain resonant quality of head bump algorithm
+		
 		inputSampleL += ((iirHeadBumpAL + iirHeadBumpBL) * HeadBumpControl);
-		//apply Fatten.
-		if (fabs(inputSampleR) < 0.0025) {
-			iirHeadBumpAR *= 0.99;
-			iirHeadBumpBR *= 0.99;		
-		} //restrain resonant quality of head bump algorithm
 		inputSampleR += ((iirHeadBumpAR + iirHeadBumpBR) * HeadBumpControl);
 		//apply Fatten.
 		
@@ -386,6 +395,11 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
+		if (inputgain < 1.0) {
+			inputSampleL *= inputgain;
+			inputSampleR *= inputgain;
+		} //gain cut before plugin		
+		
 		double flutterrandy =  fpd / (double)UINT32_MAX;
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (gcount < 0 || gcount > 499) {gcount = 499;}
@@ -524,7 +538,7 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		long double groundSampleL = vibDrySampleL - inputSampleL; //set up UnBox on fluttered audio
 		long double groundSampleR = vibDrySampleR - inputSampleR; //set up UnBox on fluttered audio
 		
-		if (inputgain != 1.0) {
+		if (inputgain > 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
@@ -542,16 +556,20 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (HighsSampleR < 0) inputSampleR += applySoften;
 		//apply Soften depending on polarity
 		
-		if (fabs(inputSampleL) < 0.0025) {
-			iirHeadBumpAL *= 0.99;
-			iirHeadBumpBL *= 0.99;		
-		} //restrain resonant quality of head bump algorithm
+		double suppress = (1.0-fabs(inputSampleL)) * 0.00013;
+		if (iirHeadBumpAL > suppress) iirHeadBumpAL -= suppress;
+		if (iirHeadBumpAL < -suppress) iirHeadBumpAL += suppress;
+		if (iirHeadBumpBL > suppress) iirHeadBumpBL -= suppress;
+		if (iirHeadBumpBL < -suppress) iirHeadBumpBL += suppress;
+		//restrain resonant quality of head bump algorithm
+		suppress = (1.0-fabs(inputSampleR)) * 0.00013;
+		if (iirHeadBumpAR > suppress) iirHeadBumpAR -= suppress;
+		if (iirHeadBumpAR < -suppress) iirHeadBumpAR += suppress;
+		if (iirHeadBumpBR > suppress) iirHeadBumpBR -= suppress;
+		if (iirHeadBumpBR < -suppress) iirHeadBumpBR += suppress;
+		//restrain resonant quality of head bump algorithm
+		
 		inputSampleL += ((iirHeadBumpAL + iirHeadBumpBL) * HeadBumpControl);
-		//apply Fatten.
-		if (fabs(inputSampleR) < 0.0025) {
-			iirHeadBumpAR *= 0.99;
-			iirHeadBumpBR *= 0.99;		
-		} //restrain resonant quality of head bump algorithm
 		inputSampleR += ((iirHeadBumpAR + iirHeadBumpBR) * HeadBumpControl);
 		//apply Fatten.
 		

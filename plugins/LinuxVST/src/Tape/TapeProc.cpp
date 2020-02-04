@@ -326,6 +326,12 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		long double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		
+		if (inputgain < 1.0) {
+			inputSampleL *= inputgain;
+			inputSampleR *= inputgain;
+		} //gain cut before anything, even dry
+		
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -438,7 +444,7 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		long double groundSampleL = drySampleL - inputSampleL; //set up UnBox
 		long double groundSampleR = drySampleR - inputSampleR; //set up UnBox
 		
-		if (inputgain != 1.0) {
+		if (inputgain > 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		} //gain boost inside UnBox: do not boost fringe audio

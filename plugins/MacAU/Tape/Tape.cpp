@@ -212,6 +212,11 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		
+		if (inputgain < 1.0) {
+			inputSample *= inputgain;
+		} //gain cut before anything, even dry
+		
 		long double drySample = inputSample;
 		
 		long double HighsSample = 0.0;
@@ -271,7 +276,7 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 		flip = !flip;
 		
 		long double groundSample = drySample - inputSample; //set up UnBox
-		if (inputgain != 1.0) {
+		if (inputgain > 1.0) {
 			inputSample *= inputgain;
 		} //gain boost inside UnBox: do not boost fringe audio
 		

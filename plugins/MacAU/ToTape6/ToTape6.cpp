@@ -267,6 +267,11 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 		long double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
 		long double drySample = inputSample;
+		
+		if (inputgain < 1.0) {
+			inputSample *= inputgain;
+		} //gain cut before plugin
+		
 
 		Float64 flutterrandy = fpd / (double)UINT32_MAX;
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
@@ -351,7 +356,7 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 
 		long double groundSample = vibDrySample - inputSample; //set up UnBox on fluttered audio
 		
-		if (inputgain != 1.0) {
+		if (inputgain > 1.0) {
 			inputSample *= inputgain;
 		} //gain boost inside UnBox/Mojo
 		
@@ -362,10 +367,13 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 		if (HighsSample < 0) inputSample += applySoften;
 		//apply Soften depending on polarity
 		
-		if (fabs(inputSample) < 0.0025) {
-			iirHeadBumpA *= 0.99;
-			iirHeadBumpB *= 0.99;		
-		} //restrain resonant quality of head bump algorithm
+		Float64 suppress = (1.0-fabs(inputSample)) * 0.00013;
+		if (iirHeadBumpA > suppress) iirHeadBumpA -= suppress;
+		if (iirHeadBumpA < -suppress) iirHeadBumpA += suppress;
+		if (iirHeadBumpB > suppress) iirHeadBumpB -= suppress;
+		if (iirHeadBumpB < -suppress) iirHeadBumpB += suppress;
+		//restrain resonant quality of head bump algorithm
+		
 		inputSample += ((iirHeadBumpA + iirHeadBumpB) * HeadBumpControl);
 		//apply Fatten.
 		
