@@ -19,6 +19,7 @@ void Tape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	overallscale *= getSampleRate();
 
 	double inputgain = pow(10.0,((A-0.5)*24.0)/20.0);
+	double bumpgain = B*0.1;
 	double HeadBumpFreq = 0.12/overallscale;
 	double softness = 0.618033988749894848204586;
 	double RollAmount = (1.0 - softness) / overallscale;
@@ -205,8 +206,8 @@ void Tape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		inputSampleL += groundSampleL; //apply UnBox processing
 		inputSampleR += groundSampleR; //apply UnBox processing
 		
-		inputSampleL += ((iirHeadBumpAL + iirHeadBumpBL) * 0.1);//and head bump
-		inputSampleR += ((iirHeadBumpAR + iirHeadBumpBR) * 0.1);//and head bump
+		inputSampleL += ((iirHeadBumpAL + iirHeadBumpBL) * bumpgain);//and head bump
+		inputSampleR += ((iirHeadBumpAR + iirHeadBumpBR) * bumpgain);//and head bump
 		
 		if (lastSampleL >= 0.99)
 		{
@@ -297,6 +298,7 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	overallscale *= getSampleRate();
 	
 	double inputgain = pow(10.0,((A-0.5)*24.0)/20.0);
+	double bumpgain = B*0.1;
 	double HeadBumpFreq = 0.12/overallscale;
 	double softness = 0.618033988749894848204586;
 	double RollAmount = (1.0 - softness) / overallscale;
@@ -489,8 +491,8 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		inputSampleL += groundSampleL; //apply UnBox processing
 		inputSampleR += groundSampleR; //apply UnBox processing
 		
-		inputSampleL += ((iirHeadBumpAL + iirHeadBumpBL) * 0.1);//and head bump
-		inputSampleR += ((iirHeadBumpAR + iirHeadBumpBR) * 0.1);//and head bump
+		inputSampleL += ((iirHeadBumpAL + iirHeadBumpBL) * bumpgain);//and head bump
+		inputSampleR += ((iirHeadBumpAR + iirHeadBumpBR) * bumpgain);//and head bump
 		
 		if (lastSampleL >= 0.99)
 		{

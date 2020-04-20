@@ -13,6 +13,7 @@ Tape::Tape(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.5;
+	B = 0.5;
 	iirMidRollerAL = 0.0;
 	iirMidRollerBL = 0.0;
 	iirHeadBumpAL = 0.0;
@@ -61,6 +62,7 @@ VstInt32 Tape::getChunk (void** data, bool isPreset)
 {
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
+	chunkData[1] = B;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -73,6 +75,7 @@ VstInt32 Tape::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {	
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
+	B = pinParameter(chunkData[1]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -83,6 +86,7 @@ VstInt32 Tape::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 void Tape::setParameter(VstInt32 index, float value) {
     switch (index) {
         case kParamA: A = value; break;
+        case kParamB: B = value; break;
         default: throw; // unknown parameter, shouldn't happen!
     }
 }
@@ -90,6 +94,7 @@ void Tape::setParameter(VstInt32 index, float value) {
 float Tape::getParameter(VstInt32 index) {
     switch (index) {
         case kParamA: return A; break;
+        case kParamB: return B; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
@@ -97,6 +102,7 @@ float Tape::getParameter(VstInt32 index) {
 void Tape::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Slam", kVstMaxParamStrLen); break;
+        case kParamB: vst_strncpy (text, "Bump", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -104,6 +110,7 @@ void Tape::getParameterName(VstInt32 index, char *text) {
 void Tape::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: float2string ((A-0.5)*24.0, text, kVstMaxParamStrLen); break;
+        case kParamB: float2string (B, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -111,6 +118,7 @@ void Tape::getParameterDisplay(VstInt32 index, char *text) {
 void Tape::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "dB", kVstMaxParamStrLen); break;
+        case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }

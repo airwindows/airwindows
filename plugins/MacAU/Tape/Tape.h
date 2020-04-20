@@ -55,13 +55,16 @@
 
 // parameters
 static const float kDefaultValue_ParamOne = 0.0;
+static const float kDefaultValue_ParamTwo = 0.5;
 
 static CFStringRef kParameterOneName = CFSTR("Slam");
+static CFStringRef kParameterTwoName = CFSTR("Bump");
 
 enum {
 	kParam_One =0,
+	kParam_Two =1,
 	//Add your parameters here...
-	kNumberOfParameters=1
+	kNumberOfParameters=2
 };
 
 #pragma mark ____Tape

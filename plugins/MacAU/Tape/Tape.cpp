@@ -60,6 +60,7 @@ Tape::Tape(AudioUnit component)
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
 	SetParameter(kParam_One, kDefaultValue_ParamOne );
+	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -102,6 +103,13 @@ ComponentResult			Tape::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.minValue = -12.0;
                 outParameterInfo.maxValue = 12.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
+                break;
+			case kParam_Two:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTwoName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
                 break;
 			default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -185,6 +193,7 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 	overallscale *= GetSampleRate();
 	
 	Float64 inputgain = pow(10.0,GetParameter( kParam_One )/20.0);
+	Float64 bumpgain = GetParameter( kParam_Two ) * 0.1;
 	Float64 HeadBumpFreq = 0.12/overallscale;
 	Float64 softness = 0.618033988749894848204586;
 	Float64 RollAmount = (1.0 - softness) / overallscale;
@@ -303,7 +312,7 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 		
 		inputSample += groundSample; //apply UnBox processing
 		
-		inputSample += ((iirHeadBumpA + iirHeadBumpB) * 0.1);//and head bump
+		inputSample += ((iirHeadBumpA + iirHeadBumpB) * bumpgain);//and head bump
 				
 		if (lastSample >= 0.99)
 		{
