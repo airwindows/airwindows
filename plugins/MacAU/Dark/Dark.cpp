@@ -60,6 +60,7 @@ Dark::Dark(AudioUnit component)
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
 	SetParameter(kParam_One, kDefaultValue_ParamOne );
+	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -117,6 +118,13 @@ ComponentResult			Dark::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.minValue = kCD;
                 outParameterInfo.maxValue = kHD;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
+                break;
+            case kParam_Two:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTwoName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
                 break;
 			default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -197,14 +205,19 @@ void		Dark::DarkKernel::Process(	const Float32 	*inSourceP,
 	if (depth > 98) depth = 98;
 	bool highres = false;
 	if (GetParameter( kParam_One ) == 1) highres = true;
+	Float32 scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	Float32 derez = GetParameter( kParam_Two );
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 1.0) scaleFactor = 1.0;
 		
 	while (nSampleFrames-- > 0) {
 		Float32 inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 
-		if (highres) inputSample *= 8388608.0;
-		else inputSample *= 32768.0;
+		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
 		int quantA = floor(inputSample);
@@ -221,8 +234,8 @@ void		Dark::DarkKernel::Process(	const Float32 	*inSourceP,
 		//we are doing that to voice the thing down into the upper mids a bit
 		//it mustn't just soften the brightest treble, it must smooth high mids too
 		
-		float testA = fabs((lastSample[0] - quantA) - expectedSlew);
-		float testB = fabs((lastSample[0] - quantB) - expectedSlew);
+		Float32 testA = fabs((lastSample[0] - quantA) - expectedSlew);
+		Float32 testB = fabs((lastSample[0] - quantB) - expectedSlew);
 		
 		if (testA < testB) inputSample = quantA;
 		else inputSample = quantB;
@@ -235,8 +248,7 @@ void		Dark::DarkKernel::Process(	const Float32 	*inSourceP,
 		}
 		lastSample[0] = inputSample;
 				
-		if (highres) inputSample /= 8388608.0;
-		else inputSample /= 32768.0;
+		inputSample /= scaleFactor;
 		
 		*destP = inputSample;
 		

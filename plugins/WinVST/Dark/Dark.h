@@ -17,7 +17,8 @@
 
 enum {
 	kParamA = 0,
-  kNumParameters = 1
+	kParamB = 1,
+ 	kNumParameters = 2
 }; //
 
 const int kNumPrograms = 0;
@@ -58,6 +59,7 @@ private:
 	//default stuff
 
     float A;
+    float B;
 };
 
 #endif

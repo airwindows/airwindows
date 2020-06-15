@@ -22,6 +22,12 @@ void Dark::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	if (depth > 98) depth = 98;
 	bool highres = false;
 	if (processing == 1) highres = true;
+	float scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	float derez = B;
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
     
     while (--sampleFrames >= 0)
     {
@@ -32,14 +38,10 @@ void Dark::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
-		if (highres) {
-			inputSampleL *= 8388608.0;
-			inputSampleR *= 8388608.0;
-		} else {
-			inputSampleL *= 32768.0;
-			inputSampleR *= 32768.0;
-		}
+		inputSampleL *= scaleFactor;
+		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
+		
 		//We are doing it first Left, then Right, because the loops may run faster if
 		//they aren't too jammed full of variables. This means re-running code.
 		
@@ -103,13 +105,8 @@ void Dark::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		lastSampleR[0] = inputSampleR;
 		//end right
 		
-		if (highres) {
-			inputSampleL /= 8388608.0;
-			inputSampleR /= 8388608.0;
-		} else {
-			inputSampleL /= 32768.0;
-			inputSampleR /= 32768.0;
-		}
+		inputSampleL /= scaleFactor;
+		inputSampleR /= scaleFactor;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -137,6 +134,12 @@ void Dark::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	if (depth > 98) depth = 98;
 	bool highres = false;
 	if (processing == 1) highres = true;
+	float scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	float derez = B;
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 1.0) scaleFactor = 1.0;
 	
     while (--sampleFrames >= 0)
     {
@@ -147,14 +150,10 @@ void Dark::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
-		if (highres) {
-			inputSampleL *= 8388608.0;
-			inputSampleR *= 8388608.0;
-		} else {
-			inputSampleL *= 32768.0;
-			inputSampleR *= 32768.0;
-		}
+		inputSampleL *= scaleFactor;
+		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
+
 		//We are doing it first Left, then Right, because the loops may run faster if
 		//they aren't too jammed full of variables. This means re-running code.
 		
@@ -218,13 +217,8 @@ void Dark::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		lastSampleR[0] = inputSampleR;
 		//end right
 		
-		if (highres) {
-			inputSampleL /= 8388608.0;
-			inputSampleR /= 8388608.0;
-		} else {
-			inputSampleL /= 32768.0;
-			inputSampleR /= 32768.0;
-		}
+		inputSampleL /= scaleFactor;
+		inputSampleR /= scaleFactor;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
