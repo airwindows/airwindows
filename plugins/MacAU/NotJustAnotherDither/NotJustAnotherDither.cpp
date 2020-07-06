@@ -59,6 +59,8 @@ NotJustAnotherDither::NotJustAnotherDither(AudioUnit component)
 {
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
+	SetParameter(kParam_One, kDefaultValue_ParamOne );
+	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -74,7 +76,22 @@ ComponentResult			NotJustAnotherDither::GetParameterValueStrings(AudioUnitScope	
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
-        
+	if ((inScope == kAudioUnitScope_Global) && (inParameterID == kParam_One)) //ID must be actual name of parameter identifier, not number
+	{
+		if (outStrings == NULL) return noErr;
+		CFStringRef strings [] =
+		{
+			kMenuItem_CD,
+			kMenuItem_HD,
+		};
+		*outStrings = CFArrayCreate (
+									 NULL,
+									 (const void **) strings,
+									 (sizeof (strings) / sizeof (strings [0])),
+									 NULL
+									 );
+		return noErr;
+	}
     return kAudioUnitErr_InvalidProperty;
 }
 
@@ -95,10 +112,24 @@ ComponentResult			NotJustAnotherDither::GetParameterInfo(AudioUnitScope		inScope
     if (inScope == kAudioUnitScope_Global) {
         switch(inParameterID)
         {
-           default:
+            case kParam_One:
+                AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
+				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
+                outParameterInfo.minValue = kCD;
+                outParameterInfo.maxValue = kHD;
+                outParameterInfo.defaultValue = kDefaultValue_ParamOne;
+                break;
+            case kParam_Two:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTwoName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
-            }
+		}
 	} else {
         result = kAudioUnitErr_InvalidParameter;
     }
@@ -150,18 +181,19 @@ ComponentResult NotJustAnotherDither::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		NotJustAnotherDither::NotJustAnotherDitherKernel::Reset()
 {
-	byn[0] = 1000;
-	byn[1] = 301;
-	byn[2] = 176;
-	byn[3] = 125;
-	byn[4] = 97;
-	byn[5] = 79;
-	byn[6] = 67;
-	byn[7] = 58;
-	byn[8] = 51;
-	byn[9] = 46;
-	byn[10] = 1000;
+	byn[0] = 1000.0;
+	byn[1] = 301.0;
+	byn[2] = 176.0;
+	byn[3] = 125.0;
+	byn[4] = 97.0;
+	byn[5] = 79.0;
+	byn[6] = 67.0;
+	byn[7] = 58.0;
+	byn[8] = 51.0;
+	byn[9] = 46.0;
+	byn[10] = 1000.0;
 	noiseShaping = 0.0;
+	fpd = 17;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -175,133 +207,82 @@ void		NotJustAnotherDither::NotJustAnotherDitherKernel::Process(	const Float32 	
 {
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
-	Float32 *destP = inDestP;
+	Float32 *destP = inDestP;	
 	
-	long double inputSample;
-	Float64 benfordize;
-	int hotbinA;
-	int hotbinB;
-	Float64 totalA;
-	Float64 totalB;
-	Float32 drySample;
+	bool highres = false;
+	if (GetParameter( kParam_One ) == 1) highres = true;
+	Float32 scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	Float32 derez = GetParameter( kParam_Two );
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	Float32 outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
 	
 	
 	while (nSampleFrames-- > 0) {
-		inputSample = *sourceP;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSample = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
-		drySample = inputSample;
+		long double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
-		
-		inputSample -= noiseShaping;
-		inputSample *= 8388608.0;
+		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
-		benfordize = floor(inputSample);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		hotbinA = floor(benfordize);
+		bool cutbins; cutbins = false;
+		long double drySample = inputSample;
+		inputSample -= noiseShaping;
+		
+		long double benfordize; benfordize = floor(inputSample);
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		totalA = 0;
+		long double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
-			byn[hotbinA] += 1;
-			totalA += (301-byn[1]);
-			totalA += (176-byn[2]);
-			totalA += (125-byn[3]);
-			totalA += (97-byn[4]);
-			totalA += (79-byn[5]);
-			totalA += (67-byn[6]);
-			totalA += (58-byn[7]);
-			totalA += (51-byn[8]);
-			totalA += (46-byn[9]);
+			byn[hotbinA] += 1; if (byn[hotbinA] > 982) cutbins = true;
+			totalA += (301-byn[1]); totalA += (176-byn[2]); totalA += (125-byn[3]);
+			totalA += (97-byn[4]); totalA += (79-byn[5]); totalA += (67-byn[6]);
+			totalA += (58-byn[7]); totalA += (51-byn[8]); totalA += (46-byn[9]);
 			byn[hotbinA] -= 1;
-		} else {hotbinA = 10;}
+		} else hotbinA = 10;
 		//produce total number- smaller is closer to Benford real
 		
 		benfordize = ceil(inputSample);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		hotbinB = floor(benfordize);
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		totalB = 0;
+		long double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
-			byn[hotbinB] += 1;
-			totalB += (301-byn[1]);
-			totalB += (176-byn[2]);
-			totalB += (125-byn[3]);
-			totalB += (97-byn[4]);
-			totalB += (79-byn[5]);
-			totalB += (67-byn[6]);
-			totalB += (58-byn[7]);
-			totalB += (51-byn[8]);
-			totalB += (46-byn[9]);
+			byn[hotbinB] += 1; if (byn[hotbinB] > 982) cutbins = true;
+			totalB += (301-byn[1]); totalB += (176-byn[2]); totalB += (125-byn[3]);
+			totalB += (97-byn[4]); totalB += (79-byn[5]); totalB += (67-byn[6]);
+			totalB += (58-byn[7]); totalB += (51-byn[8]); totalB += (46-byn[9]);
 			byn[hotbinB] -= 1;
-		} else {hotbinB = 10;}
+		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		if (totalA < totalB)
-		{
-			byn[hotbinA] += 1;
-			inputSample = floor(inputSample);
-		}
-		else
-		{
-			byn[hotbinB] += 1;
-			inputSample = ceil(inputSample);
-		}
+		long double outputSample;
+		if (totalA < totalB) {byn[hotbinA] += 1; outputSample = floor(inputSample);}
+		else {byn[hotbinB] += 1; outputSample = floor(inputSample+1);}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
+		if (cutbins) {
+			byn[1] *= 0.99; byn[2] *= 0.99; byn[3] *= 0.99; byn[4] *= 0.99; byn[5] *= 0.99; 
+			byn[6] *= 0.99; byn[7] *= 0.99; byn[8] *= 0.99; byn[9] *= 0.99; byn[10] *= 0.99; 
+		}
+		noiseShaping += outputSample - drySample;
+		if (noiseShaping > fabs(inputSample)) noiseShaping = fabs(inputSample);
+		if (noiseShaping < -fabs(inputSample)) noiseShaping = -fabs(inputSample);		
 		
-		totalA = byn[1] + byn[2] + byn[3] + byn[4] + byn[5] + byn[6] + byn[7] + byn[8] + byn[9];
-		totalA /= 1000;
-		if (totalA = 0) totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
-		byn[1] /= totalA;
-		byn[2] /= totalA;
-		byn[3] /= totalA;
-		byn[4] /= totalA;
-		byn[5] /= totalA;
-		byn[6] /= totalA;
-		byn[7] /= totalA;
-		byn[8] /= totalA;
-		byn[9] /= totalA;
-		byn[10] /= 2; //catchall for garbage data
+		inputSample = outputSample / outScale;
 		
-		inputSample /= 8388608.0;
-		
-		noiseShaping += inputSample - drySample;
-		
+		if (inputSample > 1.0) inputSample = 1.0;
+		if (inputSample < -1.0) inputSample = -1.0;
+				
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

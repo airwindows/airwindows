@@ -1,11 +1,11 @@
 /* ========================================
- *  NotJustAnotherDither - NotJustAnotherDither.h
+ *  Beam - Beam.h
  *  Created 8/12/11 by SPIAdmin 
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
-#ifndef __NotJustAnotherDither_H
-#define __NotJustAnotherDither_H
+#ifndef __Beam_H
+#define __Beam_H
 
 #ifndef __audioeffect__
 #include "audioeffectx.h"
@@ -18,20 +18,21 @@
 enum {
 	kParamA = 0,
 	kParamB = 1,
- 	kNumParameters = 2
+	kParamC = 2,
+  kNumParameters = 3
 }; //
 
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
-const unsigned long kUniqueId = 'njad';    //Change this to what the AU identity is!
+const unsigned long kUniqueId = 'beam';    //Change this to what the AU identity is!
 
-class NotJustAnotherDither : 
+class Beam : 
     public AudioEffectX 
 {
 public:
-    NotJustAnotherDither(audioMasterCallback audioMaster);
-    ~NotJustAnotherDither();
+    Beam(audioMasterCallback audioMaster);
+    ~Beam();
     virtual bool getEffectName(char* name);                       // The plug-in name
     virtual VstPlugCategory getPlugCategory();                    // The general category for the plug-in
     virtual bool getProductString(char* text);                    // This is a unique plug-in string provided by Steinberg
@@ -53,15 +54,14 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	double bynL[13];
-	double bynR[13];
-	long double noiseShapingL;
-	long double noiseShapingR;
+	float lastSampleL[100];
+	float lastSampleR[100];
 	uint32_t fpd;
 	//default stuff
-	
+
     float A;
     float B;
+    float C;
 };
 
 #endif

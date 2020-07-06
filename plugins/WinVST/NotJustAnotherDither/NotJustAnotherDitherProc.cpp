@@ -14,237 +14,143 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 	
-	long double inputSampleL;
-	long double inputSampleR;
-	
-	double benfordize;
-	int hotbinA;
-	int hotbinB;
-	double totalA;
-	double totalB;
-	float drySampleL;
-	float drySampleR;
+	int processing = (VstInt32)( A * 1.999 );
+	bool highres = false;
+	if (processing == 1) highres = true;
+	float scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	float derez = B;
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
+    
     
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
-		drySampleL = inputSampleL;
-		drySampleR = inputSampleR;
+		long double inputSampleL = *in1;
+		long double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		
+		inputSampleL *= scaleFactor;
+		inputSampleR *= scaleFactor;
+		//0-1 is now one bit, now we dither
 
+		//begin Not Just Another Dither		
+		bool cutbinsL; cutbinsL = false;
+		bool cutbinsR; cutbinsR = false;
+		long double drySampleL; drySampleL = inputSampleL;
+		long double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
-
-		inputSampleL *= 8388608.0;
-		inputSampleR *= 8388608.0;
-		//0-1 is now one bit, now we dither
-				
-		//begin L
-		benfordize = floor(inputSampleL);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		hotbinA = floor(benfordize);
+		
+		//NJAD L
+		long double benfordize; benfordize = floor(inputSampleL);
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		totalA = 0;
+		long double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
-			bynL[hotbinA] += 1;
-			totalA += (301-bynL[1]);
-			totalA += (176-bynL[2]);
-			totalA += (125-bynL[3]);
-			totalA += (97-bynL[4]);
-			totalA += (79-bynL[5]);
-			totalA += (67-bynL[6]);
-			totalA += (58-bynL[7]);
-			totalA += (51-bynL[8]);
-			totalA += (46-bynL[9]);
+			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
+			totalA += (301-bynL[1]); totalA += (176-bynL[2]); totalA += (125-bynL[3]);
+			totalA += (97-bynL[4]); totalA += (79-bynL[5]); totalA += (67-bynL[6]);
+			totalA += (58-bynL[7]); totalA += (51-bynL[8]); totalA += (46-bynL[9]);
 			bynL[hotbinA] -= 1;
-		} else {hotbinA = 10;}
+		} else hotbinA = 10;
 		//produce total number- smaller is closer to Benford real
 		
 		benfordize = ceil(inputSampleL);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		hotbinB = floor(benfordize);
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		totalB = 0;
+		long double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
-			bynL[hotbinB] += 1;
-			totalB += (301-bynL[1]);
-			totalB += (176-bynL[2]);
-			totalB += (125-bynL[3]);
-			totalB += (97-bynL[4]);
-			totalB += (79-bynL[5]);
-			totalB += (67-bynL[6]);
-			totalB += (58-bynL[7]);
-			totalB += (51-bynL[8]);
-			totalB += (46-bynL[9]);
+			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
+			totalB += (301-bynL[1]); totalB += (176-bynL[2]); totalB += (125-bynL[3]);
+			totalB += (97-bynL[4]); totalB += (79-bynL[5]); totalB += (67-bynL[6]);
+			totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]);
 			bynL[hotbinB] -= 1;
-		} else {hotbinB = 10;}
+		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		if (totalA < totalB)
-		{
-			bynL[hotbinA] += 1;
-			inputSampleL = floor(inputSampleL);
-		}
-		else
-		{
-			bynL[hotbinB] += 1;
-			inputSampleL = ceil(inputSampleL);
-		}
+		long double outputSample;
+		if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
+		else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
+		if (cutbinsL) {
+			bynL[1] *= 0.99; bynL[2] *= 0.99; bynL[3] *= 0.99; bynL[4] *= 0.99; bynL[5] *= 0.99; 
+			bynL[6] *= 0.99; bynL[7] *= 0.99; bynL[8] *= 0.99; bynL[9] *= 0.99; bynL[10] *= 0.99; 
+		}
+		noiseShapingL += outputSample - drySampleL;			
+		if (noiseShapingL > fabs(inputSampleL)) noiseShapingL = fabs(inputSampleL);
+		if (noiseShapingL < -fabs(inputSampleL)) noiseShapingL = -fabs(inputSampleL);		
+		//finished NJAD L
 		
-		totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
-		totalA /= 1000;
-		if (totalA = 0) totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
-		bynL[1] /= totalA;
-		bynL[2] /= totalA;
-		bynL[3] /= totalA;
-		bynL[4] /= totalA;
-		bynL[5] /= totalA;
-		bynL[6] /= totalA;
-		bynL[7] /= totalA;
-		bynL[8] /= totalA;
-		bynL[9] /= totalA;
-		bynL[10] /= 2; //catchall for garbage data
-		//end L
-		
-		//begin R
+		//NJAD R
 		benfordize = floor(inputSampleR);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
 		hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
 		totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
-			bynR[hotbinA] += 1;
-			totalA += (301-bynR[1]);
-			totalA += (176-bynR[2]);
-			totalA += (125-bynR[3]);
-			totalA += (97-bynR[4]);
-			totalA += (79-bynR[5]);
-			totalA += (67-bynR[6]);
-			totalA += (58-bynR[7]);
-			totalA += (51-bynR[8]);
-			totalA += (46-bynR[9]);
+			bynR[hotbinA] += 1; if (bynR[hotbinA] > 982) cutbinsR = true;
+			totalA += (301-bynR[1]); totalA += (176-bynR[2]); totalA += (125-bynR[3]);
+			totalA += (97-bynR[4]); totalA += (79-bynR[5]); totalA += (67-bynR[6]);
+			totalA += (58-bynR[7]); totalA += (51-bynR[8]); totalA += (46-bynR[9]);
 			bynR[hotbinA] -= 1;
-		} else {hotbinA = 10;}
+		} else hotbinA = 10;
 		//produce total number- smaller is closer to Benford real
 		
 		benfordize = ceil(inputSampleR);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
 		hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
 		totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
-			bynR[hotbinB] += 1;
-			totalB += (301-bynR[1]);
-			totalB += (176-bynR[2]);
-			totalB += (125-bynR[3]);
-			totalB += (97-bynR[4]);
-			totalB += (79-bynR[5]);
-			totalB += (67-bynR[6]);
-			totalB += (58-bynR[7]);
-			totalB += (51-bynR[8]);
-			totalB += (46-bynR[9]);
+			bynR[hotbinB] += 1; if (bynR[hotbinB] > 982) cutbinsR = true;
+			totalB += (301-bynR[1]); totalB += (176-bynR[2]); totalB += (125-bynR[3]);
+			totalB += (97-bynR[4]); totalB += (79-bynR[5]); totalB += (67-bynR[6]);
+			totalB += (58-bynR[7]); totalB += (51-bynR[8]); totalB += (46-bynR[9]);
 			bynR[hotbinB] -= 1;
-		} else {hotbinB = 10;}
+		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		if (totalA < totalB)
-		{
-			bynR[hotbinA] += 1;
-			inputSampleR = floor(inputSampleR);
-		}
-		else
-		{
-			bynR[hotbinB] += 1;
-			inputSampleR = ceil(inputSampleR);
-		}
+		if (totalA < totalB) {bynR[hotbinA] += 1; outputSample = floor(inputSampleR);}
+		else {bynR[hotbinB] += 1; outputSample = floor(inputSampleR+1);}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
 		
-		totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
-		totalA /= 1000;
-		if (totalA = 0) totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
-		bynR[1] /= totalA;
-		bynR[2] /= totalA;
-		bynR[3] /= totalA;
-		bynR[4] /= totalA;
-		bynR[5] /= totalA;
-		bynR[6] /= totalA;
-		bynR[7] /= totalA;
-		bynR[8] /= totalA;
-		bynR[9] /= totalA;
-		bynR[10] /= 2; //catchall for garbage data
-		//end R
+		if (cutbinsR) {
+			bynR[1] *= 0.99; bynR[2] *= 0.99; bynR[3] *= 0.99; bynR[4] *= 0.99; bynR[5] *= 0.99; 
+			bynR[6] *= 0.99; bynR[7] *= 0.99; bynR[8] *= 0.99; bynR[9] *= 0.99; bynR[10] *= 0.99; 
+		}
+		noiseShapingR += outputSample - drySampleR;			
+		if (noiseShapingR > fabs(inputSampleR)) noiseShapingR = fabs(inputSampleR);
+		if (noiseShapingR < -fabs(inputSampleR)) noiseShapingR = -fabs(inputSampleR);
+		//finished NJAD R
 		
-		inputSampleL /= 8388608.0;
-		inputSampleR /= 8388608.0;
+		
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 
-		noiseShapingL += inputSampleL - drySampleL;
-		noiseShapingR += inputSampleR - drySampleR;
-
+		if (inputSampleL > 1.0) inputSampleL = 1.0;
+		if (inputSampleL < -1.0) inputSampleL = -1.0;
+		if (inputSampleR > 1.0) inputSampleR = 1.0;
+		if (inputSampleR < -1.0) inputSampleR = -1.0;
+		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 		
@@ -262,237 +168,143 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 	
-	
-	long double inputSampleL;
-	long double inputSampleR;
-	
-	double benfordize;
-	int hotbinA;
-	int hotbinB;
-	double totalA;
-	double totalB;
-	double drySampleL;
-	double drySampleR;
+	int processing = (VstInt32)( A * 1.999 );
+	bool highres = false;
+	if (processing == 1) highres = true;
+	float scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	float derez = B;
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
+    
     
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
-		drySampleL = inputSampleL;
-		drySampleR = inputSampleR;
-
+		long double inputSampleL = *in1;
+		long double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		
+		inputSampleL *= scaleFactor;
+		inputSampleR *= scaleFactor;
+		//0-1 is now one bit, now we dither
+		
+		//begin Not Just Another Dither		
+		bool cutbinsL; cutbinsL = false;
+		bool cutbinsR; cutbinsR = false;
+		long double drySampleL; drySampleL = inputSampleL;
+		long double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
 		
-		inputSampleL *= 8388608.0;
-		inputSampleR *= 8388608.0;
-		//0-1 is now one bit, now we dither
-		
-		//begin L
-		benfordize = floor(inputSampleL);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		hotbinA = floor(benfordize);
+		//NJAD L
+		long double benfordize; benfordize = floor(inputSampleL);
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		totalA = 0;
+		long double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
-			bynL[hotbinA] += 1;
-			totalA += (301-bynL[1]);
-			totalA += (176-bynL[2]);
-			totalA += (125-bynL[3]);
-			totalA += (97-bynL[4]);
-			totalA += (79-bynL[5]);
-			totalA += (67-bynL[6]);
-			totalA += (58-bynL[7]);
-			totalA += (51-bynL[8]);
-			totalA += (46-bynL[9]);
+			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
+			totalA += (301-bynL[1]); totalA += (176-bynL[2]); totalA += (125-bynL[3]);
+			totalA += (97-bynL[4]); totalA += (79-bynL[5]); totalA += (67-bynL[6]);
+			totalA += (58-bynL[7]); totalA += (51-bynL[8]); totalA += (46-bynL[9]);
 			bynL[hotbinA] -= 1;
-		} else {hotbinA = 10;}
+		} else hotbinA = 10;
 		//produce total number- smaller is closer to Benford real
 		
 		benfordize = ceil(inputSampleL);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		hotbinB = floor(benfordize);
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		totalB = 0;
+		long double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
-			bynL[hotbinB] += 1;
-			totalB += (301-bynL[1]);
-			totalB += (176-bynL[2]);
-			totalB += (125-bynL[3]);
-			totalB += (97-bynL[4]);
-			totalB += (79-bynL[5]);
-			totalB += (67-bynL[6]);
-			totalB += (58-bynL[7]);
-			totalB += (51-bynL[8]);
-			totalB += (46-bynL[9]);
+			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
+			totalB += (301-bynL[1]); totalB += (176-bynL[2]); totalB += (125-bynL[3]);
+			totalB += (97-bynL[4]); totalB += (79-bynL[5]); totalB += (67-bynL[6]);
+			totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]);
 			bynL[hotbinB] -= 1;
-		} else {hotbinB = 10;}
+		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		if (totalA < totalB)
-		{
-			bynL[hotbinA] += 1;
-			inputSampleL = floor(inputSampleL);
-		}
-		else
-		{
-			bynL[hotbinB] += 1;
-			inputSampleL = ceil(inputSampleL);
-		}
+		long double outputSampleL;
+		if (totalA < totalB) {bynL[hotbinA] += 1; outputSampleL = floor(inputSampleL);}
+		else {bynL[hotbinB] += 1; outputSampleL = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
+		if (cutbinsL) {
+			bynL[1] *= 0.99; bynL[2] *= 0.99; bynL[3] *= 0.99; bynL[4] *= 0.99; bynL[5] *= 0.99; 
+			bynL[6] *= 0.99; bynL[7] *= 0.99; bynL[8] *= 0.99; bynL[9] *= 0.99; bynL[10] *= 0.99; 
+		}
+		noiseShapingL += outputSampleL - drySampleL;			
+		if (noiseShapingL > fabs(inputSampleL)) noiseShapingL = fabs(inputSampleL);
+		if (noiseShapingL < -fabs(inputSampleL)) noiseShapingL = -fabs(inputSampleL);		
+		//finished NJAD L
 		
-		totalA = bynL[1] + bynL[2] + bynL[3] + bynL[4] + bynL[5] + bynL[6] + bynL[7] + bynL[8] + bynL[9];
-		totalA /= 1000;
-		if (totalA = 0) totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
-		bynL[1] /= totalA;
-		bynL[2] /= totalA;
-		bynL[3] /= totalA;
-		bynL[4] /= totalA;
-		bynL[5] /= totalA;
-		bynL[6] /= totalA;
-		bynL[7] /= totalA;
-		bynL[8] /= totalA;
-		bynL[9] /= totalA;
-		bynL[10] /= 2; //catchall for garbage data
-		//end L
-		
-		//begin R
+		//NJAD R
 		benfordize = floor(inputSampleR);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
 		hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
 		totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
-			bynR[hotbinA] += 1;
-			totalA += (301-bynR[1]);
-			totalA += (176-bynR[2]);
-			totalA += (125-bynR[3]);
-			totalA += (97-bynR[4]);
-			totalA += (79-bynR[5]);
-			totalA += (67-bynR[6]);
-			totalA += (58-bynR[7]);
-			totalA += (51-bynR[8]);
-			totalA += (46-bynR[9]);
+			bynR[hotbinA] += 1; if (bynR[hotbinA] > 982) cutbinsR = true;
+			totalA += (301-bynR[1]); totalA += (176-bynR[2]); totalA += (125-bynR[3]);
+			totalA += (97-bynR[4]); totalA += (79-bynR[5]); totalA += (67-bynR[6]);
+			totalA += (58-bynR[7]); totalA += (51-bynR[8]); totalA += (46-bynR[9]);
 			bynR[hotbinA] -= 1;
-		} else {hotbinA = 10;}
+		} else hotbinA = 10;
 		//produce total number- smaller is closer to Benford real
 		
 		benfordize = ceil(inputSampleR);
-		while (benfordize >= 1.0) {benfordize /= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
-		if (benfordize < 1.0) {benfordize *= 10;}
+		while (benfordize >= 1.0) benfordize /= 10;
+		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
 		hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
 		totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
-			bynR[hotbinB] += 1;
-			totalB += (301-bynR[1]);
-			totalB += (176-bynR[2]);
-			totalB += (125-bynR[3]);
-			totalB += (97-bynR[4]);
-			totalB += (79-bynR[5]);
-			totalB += (67-bynR[6]);
-			totalB += (58-bynR[7]);
-			totalB += (51-bynR[8]);
-			totalB += (46-bynR[9]);
+			bynR[hotbinB] += 1; if (bynR[hotbinB] > 982) cutbinsR = true;
+			totalB += (301-bynR[1]); totalB += (176-bynR[2]); totalB += (125-bynR[3]);
+			totalB += (97-bynR[4]); totalB += (79-bynR[5]); totalB += (67-bynR[6]);
+			totalB += (58-bynR[7]); totalB += (51-bynR[8]); totalB += (46-bynR[9]);
 			bynR[hotbinB] -= 1;
-		} else {hotbinB = 10;}
+		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		if (totalA < totalB)
-		{
-			bynR[hotbinA] += 1;
-			inputSampleR = floor(inputSampleR);
-		}
-		else
-		{
-			bynR[hotbinB] += 1;
-			inputSampleR = ceil(inputSampleR);
-		}
+		long double outputSampleR;
+		if (totalA < totalB) {bynR[hotbinA] += 1; outputSampleR = floor(inputSampleR);}
+		else {bynR[hotbinB] += 1; outputSampleR = floor(inputSampleR+1);}
 		//assign the relevant one to the delay line
 		//and floor/ceil signal accordingly
 		
-		totalA = bynR[1] + bynR[2] + bynR[3] + bynR[4] + bynR[5] + bynR[6] + bynR[7] + bynR[8] + bynR[9];
-		totalA /= 1000;
-		if (totalA = 0) totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
-		bynR[1] /= totalA;
-		bynR[2] /= totalA;
-		bynR[3] /= totalA;
-		bynR[4] /= totalA;
-		bynR[5] /= totalA;
-		bynR[6] /= totalA;
-		bynR[7] /= totalA;
-		bynR[8] /= totalA;
-		bynR[9] /= totalA;
-		bynR[10] /= 2; //catchall for garbage data
-		//end R
+		if (cutbinsR) {
+			bynR[1] *= 0.99; bynR[2] *= 0.99; bynR[3] *= 0.99; bynR[4] *= 0.99; bynR[5] *= 0.99; 
+			bynR[6] *= 0.99; bynR[7] *= 0.99; bynR[8] *= 0.99; bynR[9] *= 0.99; bynR[10] *= 0.99; 
+		}
+		noiseShapingR += outputSampleR - drySampleR;			
+		if (noiseShapingR > fabs(inputSampleR)) noiseShapingR = fabs(inputSampleR);
+		if (noiseShapingR < -fabs(inputSampleR)) noiseShapingR = -fabs(inputSampleR);
+		//finished NJAD R
 		
-		inputSampleL /= 8388608.0;
-		inputSampleR /= 8388608.0;
 		
-		noiseShapingL += inputSampleL - drySampleL;
-		noiseShapingR += inputSampleR - drySampleR;
+		inputSampleL = outputSampleL / outScale;
+		inputSampleR = outputSampleR / outScale;
+		
+		if (inputSampleL > 1.0) inputSampleL = 1.0;
+		if (inputSampleL < -1.0) inputSampleL = -1.0;
+		if (inputSampleR > 1.0) inputSampleR = 1.0;
+		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

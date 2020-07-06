@@ -54,11 +54,21 @@
 #pragma mark ____NotJustAnotherDither Parameters
 
 // parameters
-//Alter the name if desired, but using the plugin name is a start
+static CFStringRef kParameterOneName = CFSTR("Quantizer");
+static const int kCD = 0;
+static const int kHD = 1;
+static const int kDefaultValue_ParamOne = kHD;
+static CFStringRef kMenuItem_CD = CFSTR ("CD 16 bit");
+static CFStringRef kMenuItem_HD = CFSTR ("HD 24 bit");
+
+static CFStringRef kParameterTwoName = CFSTR("DeRez");
+static const float kDefaultValue_ParamTwo = 0.0;
 
 enum {
+	kParam_One = 0,
+	kParam_Two = 1,
 	//Add your parameters here...
-	kNumberOfParameters=0
+	kNumberOfParameters=2
 };
 
 #pragma mark ____NotJustAnotherDither
@@ -123,6 +133,7 @@ public:
 		private: 
 		Float64 byn[13];
 		long double noiseShaping;
+		uint32_t fpd;
 	};
 };
 

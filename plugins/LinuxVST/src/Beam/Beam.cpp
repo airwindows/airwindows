@@ -1,45 +1,25 @@
 /* ========================================
- *  NotJustAnotherDither - NotJustAnotherDither.h
+ *  Beam - Beam.h
  *  Copyright (c) 2016 airwindows, All rights reserved
  * ======================================== */
 
-#ifndef __NotJustAnotherDither_H
-#include "NotJustAnotherDither.h"
+#ifndef __Beam_H
+#include "Beam.h"
 #endif
 
-AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new NotJustAnotherDither(audioMaster);}
+AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new Beam(audioMaster);}
 
-NotJustAnotherDither::NotJustAnotherDither(audioMasterCallback audioMaster) :
+Beam::Beam(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 1.0;
-	B = 0.0;
+	B = 0.5;
+	C = 0.0;
+	for(int count = 0; count < 99; count++) {
+		lastSampleL[count] = 0;
+		lastSampleR[count] = 0;
+	}
 	fpd = 17;
-	bynL[0] = 1000;
-	bynL[1] = 301;
-	bynL[2] = 176;
-	bynL[3] = 125;
-	bynL[4] = 97;
-	bynL[5] = 79;
-	bynL[6] = 67;
-	bynL[7] = 58;
-	bynL[8] = 51;
-	bynL[9] = 46;
-	bynL[10] = 1000;
-	noiseShapingL = 0.0;
-	
-	bynR[0] = 1000;
-	bynR[1] = 301;
-	bynR[2] = 176;
-	bynR[3] = 125;
-	bynR[4] = 97;
-	bynR[5] = 79;
-	bynR[6] = 67;
-	bynR[7] = 58;
-	bynR[8] = 51;
-	bynR[9] = 46;
-	bynR[10] = 1000;
-	noiseShapingR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
@@ -54,10 +34,10 @@ NotJustAnotherDither::NotJustAnotherDither(audioMasterCallback audioMaster) :
     vst_strncpy (_programName, "Default", kVstMaxProgNameLen); // default program name
 }
 
-NotJustAnotherDither::~NotJustAnotherDither() {}
-VstInt32 NotJustAnotherDither::getVendorVersion () {return 1000;}
-void NotJustAnotherDither::setProgramName(char *name) {vst_strncpy (_programName, name, kVstMaxProgNameLen);}
-void NotJustAnotherDither::getProgramName(char *name) {vst_strncpy (name, _programName, kVstMaxProgNameLen);}
+Beam::~Beam() {}
+VstInt32 Beam::getVendorVersion () {return 1000;}
+void Beam::setProgramName(char *name) {vst_strncpy (_programName, name, kVstMaxProgNameLen);}
+void Beam::getProgramName(char *name) {vst_strncpy (name, _programName, kVstMaxProgNameLen);}
 //airwindows likes to ignore this stuff. Make your own programs, and make a different plugin rather than
 //trying to do versioning and preventing people from using older versions. Maybe they like the old one!
 
@@ -68,11 +48,12 @@ static float pinParameter(float data)
 	return data;
 }
 
-VstInt32 NotJustAnotherDither::getChunk (void** data, bool isPreset)
+VstInt32 Beam::getChunk (void** data, bool isPreset)
 {
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
 	chunkData[1] = B;
+	chunkData[2] = C;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -81,11 +62,12 @@ VstInt32 NotJustAnotherDither::getChunk (void** data, bool isPreset)
 	return kNumParameters * sizeof(float);
 }
 
-VstInt32 NotJustAnotherDither::setChunk (void* data, VstInt32 byteSize, bool isPreset)
+VstInt32 Beam::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {	
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
+	C = pinParameter(chunkData[2]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -93,31 +75,34 @@ VstInt32 NotJustAnotherDither::setChunk (void* data, VstInt32 byteSize, bool isP
 	return 0;
 }
 
-void NotJustAnotherDither::setParameter(VstInt32 index, float value) {
+void Beam::setParameter(VstInt32 index, float value) {
     switch (index) {
         case kParamA: A = value; break;
         case kParamB: B = value; break;
-		default: throw; // unknown parameter, shouldn't happen!
+        case kParamC: C = value; break;
+        default: throw; // unknown parameter, shouldn't happen!
     }
 }
 
-float NotJustAnotherDither::getParameter(VstInt32 index) {
+float Beam::getParameter(VstInt32 index) {
     switch (index) {
         case kParamA: return A; break;
         case kParamB: return B; break;
+        case kParamC: return C; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
-void NotJustAnotherDither::getParameterName(VstInt32 index, char *text) {
+void Beam::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Quant", kVstMaxParamStrLen); break;
-        case kParamB: vst_strncpy (text, "DeRez", kVstMaxParamStrLen); break;
+		case kParamB: vst_strncpy (text, "Focus", kVstMaxParamStrLen); break;
+		case kParamC: vst_strncpy (text, "DeRez", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
 
-void NotJustAnotherDither::getParameterDisplay(VstInt32 index, char *text) {
+void Beam::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: switch((VstInt32)( A * 1.999 )) //0 to almost edge of # of params
 		{	case 0: vst_strncpy (text, "CD 16", kVstMaxParamStrLen); break;
@@ -125,31 +110,33 @@ void NotJustAnotherDither::getParameterDisplay(VstInt32 index, char *text) {
 			default: break; // unknown parameter, shouldn't happen!
 		} break; //completed consoletype 'popup' parameter, exit
         case kParamB: float2string (B, text, kVstMaxParamStrLen); break;
-        default: break; // unknown parameter, shouldn't happen!
+        case kParamC: float2string (C, text, kVstMaxParamStrLen); break;
+		default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
 
-void NotJustAnotherDither::getParameterLabel(VstInt32 index, char *text) {
+void Beam::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
+        case kParamC: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }
 
-VstInt32 NotJustAnotherDither::canDo(char *text) 
+VstInt32 Beam::canDo(char *text) 
 { return (_canDo.find(text) == _canDo.end()) ? -1: 1; } // 1 = yes, -1 = no, 0 = don't know
 
-bool NotJustAnotherDither::getEffectName(char* name) {
-    vst_strncpy(name, "NotJustAnotherDither", kVstMaxProductStrLen); return true;
+bool Beam::getEffectName(char* name) {
+    vst_strncpy(name, "Beam", kVstMaxProductStrLen); return true;
 }
 
-VstPlugCategory NotJustAnotherDither::getPlugCategory() {return kPlugCategEffect;}
+VstPlugCategory Beam::getPlugCategory() {return kPlugCategEffect;}
 
-bool NotJustAnotherDither::getProductString(char* text) {
-  	vst_strncpy (text, "airwindows NotJustAnotherDither", kVstMaxProductStrLen); return true;
+bool Beam::getProductString(char* text) {
+  	vst_strncpy (text, "airwindows Beam", kVstMaxProductStrLen); return true;
 }
 
-bool NotJustAnotherDither::getVendorString(char* text) {
+bool Beam::getVendorString(char* text) {
   	vst_strncpy (text, "airwindows", kVstMaxVendorStrLen); return true;
 }

@@ -219,7 +219,9 @@ void		Beam::BeamKernel::Process(	const Float32 	*inSourceP,
 	else scaleFactor = 32768.0;
 	Float32 derez = GetParameter( kParam_Three );
 	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
-	if (scaleFactor < 1.0) scaleFactor = 1.0;
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	Float32 outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
 	
 	while (nSampleFrames-- > 0) {
 		Float32 inputSample = *sourceP;
@@ -260,7 +262,7 @@ void		Beam::BeamKernel::Process(	const Float32 	*inSourceP,
 		}
 		lastSample[0] = inputSample;
 		
-		inputSample /= scaleFactor;
+		inputSample /= outScale;
 		
 		*destP = inputSample;
 		

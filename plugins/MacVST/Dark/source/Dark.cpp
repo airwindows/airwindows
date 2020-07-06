@@ -14,11 +14,11 @@ Dark::Dark(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
+	fpd = 17;
 	for(int count = 0; count < 99; count++) {
 		lastSampleL[count] = 0;
 		lastSampleR[count] = 0;
 	}
-	fpd = 17;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

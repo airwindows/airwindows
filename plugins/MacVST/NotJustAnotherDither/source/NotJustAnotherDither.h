@@ -16,7 +16,9 @@
 #include <math.h>
 
 enum {
-  kNumParameters = 0
+	kParamA = 0,
+	kParamB = 1,
+ 	kNumParameters = 2
 }; //
 
 const int kNumPrograms = 0;
@@ -55,7 +57,11 @@ private:
 	double bynR[13];
 	long double noiseShapingL;
 	long double noiseShapingR;
-
+	uint32_t fpd;
+	//default stuff
+	
+    float A;
+    float B;
 };
 
 #endif

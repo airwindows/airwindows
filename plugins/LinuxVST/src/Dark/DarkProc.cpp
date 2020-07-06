@@ -13,13 +13,14 @@ void Dark::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];	
-	int processing = (VstInt32)( A * 1.999 );
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	int depth = (int)(17.0*overallscale);
 	if (depth < 3) depth = 3;
 	if (depth > 98) depth = 98;
+	
+	int processing = (VstInt32)( A * 1.999 );
 	bool highres = false;
 	if (processing == 1) highres = true;
 	float scaleFactor;
@@ -28,6 +29,8 @@ void Dark::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	float derez = B;
 	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
 	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
     
     while (--sampleFrames >= 0)
     {
@@ -105,8 +108,8 @@ void Dark::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		lastSampleR[0] = inputSampleR;
 		//end right
 		
-		inputSampleL /= scaleFactor;
-		inputSampleR /= scaleFactor;
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -125,13 +128,14 @@ void Dark::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 	
-	int processing = (VstInt32)( A * 1.999 );
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	int depth = (int)(17.0*overallscale);
 	if (depth < 3) depth = 3;
 	if (depth > 98) depth = 98;
+	
+	int processing = (VstInt32)( A * 1.999 );
 	bool highres = false;
 	if (processing == 1) highres = true;
 	float scaleFactor;
@@ -139,7 +143,9 @@ void Dark::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	else scaleFactor = 32768.0;
 	float derez = B;
 	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
-	if (scaleFactor < 1.0) scaleFactor = 1.0;
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
 	
     while (--sampleFrames >= 0)
     {
@@ -217,8 +223,8 @@ void Dark::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		lastSampleR[0] = inputSampleR;
 		//end right
 		
-		inputSampleL /= scaleFactor;
-		inputSampleR /= scaleFactor;
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

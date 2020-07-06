@@ -30,6 +30,8 @@ void Beam::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	float derez = C;
 	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
 	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
 	
     while (--sampleFrames >= 0)
     {
@@ -121,8 +123,8 @@ void Beam::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		lastSampleR[0] = inputSampleR;
 		//end right
 		
-		inputSampleL /= scaleFactor;
-		inputSampleR /= scaleFactor;
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -156,8 +158,10 @@ void Beam::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	else scaleFactor = 32768.0;
 	float derez = C;
 	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
-	if (scaleFactor < 1.0) scaleFactor = 1.0;
-
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
+	
     while (--sampleFrames >= 0)
     {
 		long double inputSampleL = *in1;
@@ -248,8 +252,8 @@ void Beam::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		lastSampleR[0] = inputSampleR;
 		//end right
 		
-		inputSampleL /= scaleFactor;
-		inputSampleR /= scaleFactor;
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
