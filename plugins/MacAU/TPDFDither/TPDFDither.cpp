@@ -59,6 +59,8 @@ TPDFDither::TPDFDither(AudioUnit component)
 {
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
+	SetParameter(kParam_One, kDefaultValue_ParamOne );
+	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -74,7 +76,22 @@ ComponentResult			TPDFDither::GetParameterValueStrings(AudioUnitScope		inScope,
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
-        
+	if ((inScope == kAudioUnitScope_Global) && (inParameterID == kParam_One)) //ID must be actual name of parameter identifier, not number
+	{
+		if (outStrings == NULL) return noErr;
+		CFStringRef strings [] =
+		{
+			kMenuItem_CD,
+			kMenuItem_HD,
+		};
+		*outStrings = CFArrayCreate (
+									 NULL,
+									 (const void **) strings,
+									 (sizeof (strings) / sizeof (strings [0])),
+									 NULL
+									 );
+		return noErr;
+	}
     return kAudioUnitErr_InvalidProperty;
 }
 
@@ -95,10 +112,24 @@ ComponentResult			TPDFDither::GetParameterInfo(AudioUnitScope		inScope,
     if (inScope == kAudioUnitScope_Global) {
         switch(inParameterID)
         {
-            default:
+            case kParam_One:
+                AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
+				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
+                outParameterInfo.minValue = kCD;
+                outParameterInfo.maxValue = kHD;
+                outParameterInfo.defaultValue = kDefaultValue_ParamOne;
+                break;
+            case kParam_Two:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTwoName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
-            }
+		}
 	} else {
         result = kAudioUnitErr_InvalidParameter;
     }
@@ -150,6 +181,7 @@ ComponentResult TPDFDither::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		TPDFDither::TPDFDitherKernel::Reset()
 {
+	fpd = 17;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -167,35 +199,24 @@ void		TPDFDither::TPDFDitherKernel::Process(	const Float32 	*inSourceP,
 
 	long double inputSample;
 	
+	bool highres = false;
+	if (GetParameter( kParam_One ) == 1) highres = true;
+	Float32 scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	Float32 derez = GetParameter( kParam_Two );
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	Float32 outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
+	
+	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSample = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
-		
-		inputSample *= 8388608.0;
+		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither
 
 		inputSample -= 1.0;
@@ -204,7 +225,7 @@ void		TPDFDither::TPDFDitherKernel::Process(	const Float32 	*inSourceP,
 		inputSample = floor(inputSample);
 		//TPDF: two 0-1 random noises
 		
-		inputSample /= 8388608.0;
+		inputSample /= outScale;
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}
