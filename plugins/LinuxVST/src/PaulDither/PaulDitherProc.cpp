@@ -17,54 +17,29 @@ void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double currentDitherL;
 	double currentDitherR;
 
-	long double inputSampleL;
-	long double inputSampleR;
+	int processing = (VstInt32)( A * 1.999 );
+	bool highres = false;
+	if (processing == 1) highres = true;
+	float scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	float derez = B;
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
     
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
-
-		inputSampleL *= 8388608.0;
-		inputSampleR *= 8388608.0;
+		long double inputSampleL = *in1;
+		long double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		
+		inputSampleL *= scaleFactor;
+		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
 		currentDitherL = (rand()/(double)RAND_MAX);
@@ -91,8 +66,8 @@ void PaulDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//filtering in one go :-)
 		
 		
-		inputSampleL /= 8388608.0;
-		inputSampleR /= 8388608.0;
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 				
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -114,54 +89,29 @@ void PaulDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double currentDitherL;
 	double currentDitherR;
 
-	long double inputSampleL;
-	long double inputSampleR;
-
+	int processing = (VstInt32)( A * 1.999 );
+	bool highres = false;
+	if (processing == 1) highres = true;
+	float scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	float derez = B;
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	float outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
+	
     while (--sampleFrames >= 0)
     {
-		inputSampleL = *in1;
-		inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+		long double inputSampleL = *in1;
+		long double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
-		inputSampleL *= 8388608.0;
-		inputSampleR *= 8388608.0;
+		inputSampleL *= scaleFactor;
+		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
 		currentDitherL = (rand()/(double)RAND_MAX);
@@ -188,8 +138,8 @@ void PaulDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//filtering in one go :-)
 		
 		
-		inputSampleL /= 8388608.0;
-		inputSampleR /= 8388608.0;
+		inputSampleL /= outScale;
+		inputSampleR /= outScale;
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
