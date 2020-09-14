@@ -53,8 +53,22 @@
 
 #pragma mark ____RawGlitters Parameters
 
+// parameters
+static CFStringRef kParameterOneName = CFSTR("Quantizer");
+static const int kCD = 0;
+static const int kHD = 1;
+static const int kDefaultValue_ParamOne = kHD;
+static CFStringRef kMenuItem_CD = CFSTR ("CD 16 bit");
+static CFStringRef kMenuItem_HD = CFSTR ("HD 24 bit");
+
+static CFStringRef kParameterTwoName = CFSTR("DeRez");
+static const float kDefaultValue_ParamTwo = 0.0;
+
 enum {
-	kNumberOfParameters=0
+	kParam_One = 0,
+	kParam_Two = 1,
+	//Add your parameters here...
+	kNumberOfParameters=2
 };
 
 #pragma mark ____RawGlitters
@@ -119,6 +133,7 @@ public:
 		private: 
 		Float64 lastSample;
 		Float64 lastSample2;
+		uint32_t fpd;
 	};
 };
 
