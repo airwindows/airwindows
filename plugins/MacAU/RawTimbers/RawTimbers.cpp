@@ -59,6 +59,8 @@ RawTimbers::RawTimbers(AudioUnit component)
 {
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
+	SetParameter(kParam_One, kDefaultValue_ParamOne );
+	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -74,7 +76,22 @@ ComponentResult			RawTimbers::GetParameterValueStrings(AudioUnitScope		inScope,
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
-        
+	if ((inScope == kAudioUnitScope_Global) && (inParameterID == kParam_One)) //ID must be actual name of parameter identifier, not number
+	{
+		if (outStrings == NULL) return noErr;
+		CFStringRef strings [] =
+		{
+			kMenuItem_CD,
+			kMenuItem_HD,
+		};
+		*outStrings = CFArrayCreate (
+									 NULL,
+									 (const void **) strings,
+									 (sizeof (strings) / sizeof (strings [0])),
+									 NULL
+									 );
+		return noErr;
+	}
     return kAudioUnitErr_InvalidProperty;
 }
 
@@ -95,10 +112,24 @@ ComponentResult			RawTimbers::GetParameterInfo(AudioUnitScope		inScope,
     if (inScope == kAudioUnitScope_Global) {
         switch(inParameterID)
         {
-           default:
+            case kParam_One:
+                AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
+				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
+                outParameterInfo.minValue = kCD;
+                outParameterInfo.maxValue = kHD;
+                outParameterInfo.defaultValue = kDefaultValue_ParamOne;
+                break;
+            case kParam_Two:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTwoName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
-            }
+		}
 	} else {
         result = kAudioUnitErr_InvalidParameter;
     }
@@ -152,6 +183,7 @@ void		RawTimbers::RawTimbersKernel::Reset()
 {
 	lastSample = 0.0;
 	lastSample2 = 0.0;
+	fpd = 17;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -167,10 +199,29 @@ void		RawTimbers::RawTimbersKernel::Process(	const Float32 	*inSourceP,
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
 	
+	bool highres = false;
+	if (GetParameter( kParam_One ) == 1) highres = true;
+	Float32 scaleFactor;
+	if (highres) scaleFactor = 8388608.0;
+	else scaleFactor = 32768.0;
+	Float32 derez = GetParameter( kParam_Two );
+	if (derez > 0.0) scaleFactor *= pow(1.0-derez,6);
+	if (scaleFactor < 0.0001) scaleFactor = 0.0001;
+	Float32 outScale = scaleFactor;
+	if (outScale < 8.0) outScale = 8.0;
+	
+	
 	while (nSampleFrames-- > 0) {
 		
-		Float64 inputSample = *sourceP * 8388608.0; //0-1 is now one bit
+		Float64 inputSample = *sourceP;
+
+		
+		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		
 		Float64 outputSample;
+		
+		inputSample *= scaleFactor; //0-1 is now one bit
 		
 		inputSample += 0.381966011250105;
 		
@@ -180,7 +231,9 @@ void		RawTimbers::RawTimbersKernel::Process(	const Float32 	*inSourceP,
 		lastSample2 = lastSample;
 		lastSample = inputSample; //we retain three samples in a row
 		
-		*destP = outputSample / 8388608.0; //scale it back down to 24 bit resolution
+		outputSample /= outScale;
+		
+		*destP = outputSample; //scale it back down to 24 bit resolution
 		
 		sourceP += inNumChannels;
 		destP += inNumChannels;
