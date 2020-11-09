@@ -56,8 +56,7 @@ private:
     
 	double lastSampleL;
 	double lastSampleR;
-	long double fpNShapeL;
-	long double fpNShapeR;
+		uint32_t fpd;
 	//default stuff
 
     float A;

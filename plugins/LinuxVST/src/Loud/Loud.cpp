@@ -15,8 +15,9 @@ Loud::Loud(audioMasterCallback audioMaster) :
 	A = 0.0;
 	B = 1.0;
 	C = 1.0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	lastSampleL = 0.0;
+	lastSampleR = 0.0;
+	fpd = 17;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
