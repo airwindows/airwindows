@@ -195,16 +195,6 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		if (LataLowpass > 0)
-		{if (LWasNegative){LSubOctave = !LSubOctave;} LWasNegative = false;}
-		else {LWasNegative = true;}
-		//set up polarities for sub-bass version
-		if (RataLowpass > 0)
-		{if (RWasNegative){RSubOctave = !RSubOctave;} RWasNegative = false;}
-		else {RWasNegative = true;}
-		//set up polarities for sub-bass version
-		
-		
 		double randy = (rand()/(double)RAND_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
@@ -242,6 +232,16 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		
 		double LSubBump = fabs(LHeadBump);
 		double RSubBump = fabs(RHeadBump);
+		
+		if (LHeadBump > 0)
+		{if (LWasNegative){LSubOctave = !LSubOctave;} LWasNegative = false;}
+		else {LWasNegative = true;}
+		//set up polarities for sub-bass version
+		if (RHeadBump > 0)
+		{if (RWasNegative){RSubOctave = !RSubOctave;} RWasNegative = false;}
+		else {RWasNegative = true;}
+		//set up polarities for sub-bass version
+		
 		if (LSubOctave == false) {LSubBump = -LSubBump;}
 		if (RSubOctave == false) {RSubBump = -RSubBump;}
 		
@@ -567,16 +567,6 @@ void BassAmp::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		if (LataLowpass > 0)
-		{if (LWasNegative){LSubOctave = !LSubOctave;} LWasNegative = false;}
-		else {LWasNegative = true;}
-		//set up polarities for sub-bass version
-		if (RataLowpass > 0)
-		{if (RWasNegative){RSubOctave = !RSubOctave;} RWasNegative = false;}
-		else {RWasNegative = true;}
-		//set up polarities for sub-bass version
-		
-		
 		double randy = (rand()/(double)RAND_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
@@ -614,6 +604,16 @@ void BassAmp::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		
 		double LSubBump = fabs(LHeadBump);
 		double RSubBump = fabs(RHeadBump);
+		
+		if (LHeadBump > 0)
+		{if (LWasNegative){LSubOctave = !LSubOctave;} LWasNegative = false;}
+		else {LWasNegative = true;}
+		//set up polarities for sub-bass version
+		if (RHeadBump > 0)
+		{if (RWasNegative){RSubOctave = !RSubOctave;} RWasNegative = false;}
+		else {RWasNegative = true;}
+		//set up polarities for sub-bass version
+		
 		if (LSubOctave == false) {LSubBump = -LSubBump;}
 		if (RSubOctave == false) {RSubBump = -RSubBump;}
 		

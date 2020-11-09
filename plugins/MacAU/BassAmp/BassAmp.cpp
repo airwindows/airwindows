@@ -378,9 +378,7 @@ void		BassAmp::BassAmpKernel::Process(	const Float32 	*inSourceP,
 		//now we've got inputSample as the Drive top-end output, and we have ataLowpass and ataHalfwayLowpass
 		ataLowpass += ataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		if (ataLowpass > 0)
-		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
-		else {WasNegative = true;}
+		
 		//set up polarities for sub-bass version
 		Float64 randy = (rand()/(double)RAND_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
@@ -405,7 +403,12 @@ void		BassAmp::BassAmpKernel::Process(	const Float32 	*inSourceP,
 		Float64 HeadBump = iirHeadBumpA + iirHeadBumpB + iirHeadBumpC;
 		
 		Float64 SubBump = fabs(HeadBump);
-		if (SubOctave == false) {SubBump = -SubBump;}
+		
+		if (HeadBump > 0.0) {
+			if (WasNegative) SubOctave = !SubOctave;
+			WasNegative = false;
+		} else WasNegative = true;
+		if (SubOctave == false) SubBump = -SubBump;
 		
 		switch (bflip)
 		{
