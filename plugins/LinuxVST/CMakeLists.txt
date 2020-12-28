@@ -8,6 +8,7 @@ include(Helpers.cmake)
 
 add_subdirectory(include/vstsdk)
 add_airwindows_plugin(Acceleration)
+add_airwindows_plugin(Acceleration2)
 add_airwindows_plugin(ADClip7)
 add_airwindows_plugin(ADT)
 add_airwindows_plugin(Air)
