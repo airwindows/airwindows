@@ -182,12 +182,12 @@ void Tape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		if (inputSampleL > 1.2533141373155) inputSampleL = 1.2533141373155;
 		if (inputSampleL < -1.2533141373155) inputSampleL = -1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
+		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
 		//Spiral, for cleanest most optimal tape effect
 		if (inputSampleR > 1.2533141373155) inputSampleR = 1.2533141373155;
 		if (inputSampleR < -1.2533141373155) inputSampleR = -1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
+		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 		//Spiral, for cleanest most optimal tape effect
 		
 		double suppress = (1.0-fabs(inputSampleL)) * 0.00013;
@@ -467,12 +467,12 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		if (inputSampleL > 1.2533141373155) inputSampleL = 1.2533141373155;
 		if (inputSampleL < -1.2533141373155) inputSampleL = -1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
+		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
 		//Spiral, for cleanest most optimal tape effect
 		if (inputSampleR > 1.2533141373155) inputSampleR = 1.2533141373155;
 		if (inputSampleR < -1.2533141373155) inputSampleR = -1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
+		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 		//Spiral, for cleanest most optimal tape effect
 		
 		double suppress = (1.0-fabs(inputSampleL)) * 0.00013;

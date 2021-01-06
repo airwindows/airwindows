@@ -146,7 +146,7 @@ public:
 		int gcount;
 		Float64 offsetA;
 		Float64 offsetB;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

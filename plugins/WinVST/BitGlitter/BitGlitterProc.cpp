@@ -34,6 +34,8 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
+		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -46,13 +48,13 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		inputSampleL *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
+		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
 
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		inputSampleR *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
+		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 		
 		ataDrySampleL = inputSampleL;
 		ataHalfwaySampleL = (inputSampleL + ataLastSampleL ) / 2.0;
@@ -202,17 +204,21 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			outputSampleL = (drySampleL * (1.0-wet)) + (outputSampleL * wet);
 			outputSampleR = (drySampleR * (1.0-wet)) + (outputSampleR * wet);
 		}
-		//stereo 32 bit dither, made small and tidy.
-		int expon; frexpf((float)outputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		outputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexpf((float)outputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		outputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
 		
-		*out1 = outputSampleL;
-		*out2 = outputSampleR;
+		inputSampleL = outputSampleL;
+		inputSampleR = outputSampleR;
+		
+		//begin 32 bit stereo floating point dither
+		int expon; frexpf((float)inputSampleL, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleL += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		frexpf((float)inputSampleR, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleR += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		//end 32 bit stereo floating point dither
+		
+		*out1 = inputSampleL;
+		*out2 = inputSampleR;
 
 		*in1++;
 		*in2++;
@@ -248,6 +254,8 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
+		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -259,13 +267,13 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		inputSampleL *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
+		inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
 		
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
 		inputSampleR *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
+		inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 		
 		ataDrySampleL = inputSampleL;
 		ataHalfwaySampleL = (inputSampleL + ataLastSampleL ) / 2.0;
@@ -416,19 +424,20 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			outputSampleR = (drySampleR * (1.0-wet)) + (outputSampleR * wet);
 		}
 		
-		//stereo 64 bit dither, made small and tidy.
-		int expon; frexp((double)outputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		outputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexp((double)outputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		outputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 64 bit dither
+		inputSampleL = outputSampleL;
+		inputSampleR = outputSampleR;
 		
-		*out1 = outputSampleL;
-		*out2 = outputSampleR;
+		//begin 64 bit stereo floating point dither
+		int expon; frexp((double)inputSampleL, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleL += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		frexp((double)inputSampleR, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleR += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		//end 64 bit stereo floating point dither
+		
+		*out1 = inputSampleL;
+		*out2 = inputSampleR;
 		
 		*in1++;
 		*in2++;

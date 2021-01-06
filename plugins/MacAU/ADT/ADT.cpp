@@ -202,7 +202,7 @@ void		ADT::ADTKernel::Reset()
 	offsetA = 9001;
 	offsetB = 9001;  //  :D
 	gcount = 0;
-	fpNShape = 0.0;
+	fpd = 17;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -236,25 +236,7 @@ void		ADT::ADTKernel::Process(	const Float32 	*inSourceP,
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
 		
-		static int noisesource = 0;
-		int residue;
-		double applyresidue;
-		noisesource = noisesource % 1700021; noisesource++;
-		residue = noisesource * noisesource;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSample += applyresidue;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			inputSample -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
 		
 		
 		if (fabs(offsetA - targetA) > 1000) offsetA = targetA;
@@ -272,7 +254,7 @@ void		ADT::ADTKernel::Process(	const Float32 	*inSourceP,
 		
 		if (inputSample > 1.2533141373155) inputSample = 1.2533141373155;
 		if (inputSample < -1.2533141373155) inputSample = -1.2533141373155;
-		inputSample = sin(inputSample * fabs(inputSample)) / ((inputSample == 0.0) ?1:fabs(inputSample));
+		inputSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 		//Spiral: lean out the sound a little when decoded by ConsoleBuss
 		
 		if (gcount < 1 || gcount > 4800) {gcount = 4800;}
@@ -317,11 +299,11 @@ void		ADT::ADTKernel::Process(	const Float32 	*inSourceP,
 		
 		if (output < 1.0) inputSample *= output;
 		
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		//end 32 bit floating point dither
 		
 		*destP = inputSample;
 		

@@ -24,8 +24,7 @@ ADT::ADT(audioMasterCallback audioMaster) :
 	offsetB = 9001;  //  :D
 	gcount = 0;	
 	
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+		fpd = 17;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

@@ -37,42 +37,9 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
 
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
-		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it aPop. We want a 'air' hiss
+		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
+		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -246,7 +213,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		
 		long double bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
-		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
+		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*coefficientL)+(bridgerectifier*(1-coefficientL));
 		else inputSampleL = (inputSampleL*coefficientL)-(bridgerectifier*(1-coefficientL));
@@ -254,7 +221,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
-		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
+		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*coefficientR)+(bridgerectifier*(1-coefficientR));
 		else inputSampleR = (inputSampleR*coefficientR)-(bridgerectifier*(1-coefficientR));
@@ -268,14 +235,14 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 			inputSampleR = (drySampleR*(1.0-wet))+(inputSampleR*wet);
 		}
 				
-		//stereo 32 bit dither, made small and tidy.
+		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleL += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleR += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -317,42 +284,9 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
 
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
-		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it aPop. We want a 'air' hiss
+		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
+		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -526,7 +460,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		
 		long double bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
-		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
+		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*coefficientL)+(bridgerectifier*(1-coefficientL));
 		else inputSampleL = (inputSampleL*coefficientL)-(bridgerectifier*(1-coefficientL));
@@ -534,7 +468,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		
 		bridgerectifier = fabs(inputSampleR);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
-		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((bridgerectifier == 0.0) ?1:fabs(bridgerectifier));
+		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm
 		if (inputSampleR > 0) inputSampleR = (inputSampleR*coefficientR)+(bridgerectifier*(1-coefficientR));
 		else inputSampleR = (inputSampleR*coefficientR)-(bridgerectifier*(1-coefficientR));
@@ -548,16 +482,14 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 			inputSampleR = (drySampleR*(1.0-wet))+(inputSampleR*wet);
 		}
 		
-		//stereo 64 bit dither, made small and tidy.
+		//begin 64 bit stereo floating point dither
 		int expon; frexp((double)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleL += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
 		frexp((double)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 64 bit dither
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSampleR += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

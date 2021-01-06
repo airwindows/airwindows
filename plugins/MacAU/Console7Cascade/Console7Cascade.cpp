@@ -249,7 +249,7 @@ void		Console7Cascade::Console7CascadeKernel::Process(	const Float32 	*inSourceP
 		if (1.0 != cascade) inputSample *= cascade;
 		if (inputSample > 1.097) inputSample = 1.097;
 		if (inputSample < -1.097) inputSample = -1.097;
-		inputSample = ((sin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
+		inputSample = ((sin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
@@ -259,7 +259,7 @@ void		Console7Cascade::Console7CascadeKernel::Process(	const Float32 	*inSourceP
 		if (1.0 != cascade) inputSample *= cascade;
 		if (inputSample > 1.097) inputSample = 1.097;
 		if (inputSample < -1.097) inputSample = -1.097;
-		inputSample = ((sin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
+		inputSample = ((sin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		tempSample = biquadC[2]*inputSample+biquadC[3]*biquadC[7]+biquadC[4]*biquadC[8]-biquadC[5]*biquadC[9]-biquadC[6]*biquadC[10];
@@ -269,7 +269,7 @@ void		Console7Cascade::Console7CascadeKernel::Process(	const Float32 	*inSourceP
 		if (1.0 != cascade) inputSample *= cascade;
 		if (inputSample > 1.097) inputSample = 1.097;
 		if (inputSample < -1.097) inputSample = -1.097;
-		inputSample = ((sin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
+		inputSample = ((sin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		tempSample = biquadD[2]*inputSample+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
@@ -279,7 +279,7 @@ void		Console7Cascade::Console7CascadeKernel::Process(	const Float32 	*inSourceP
 		if (1.0 != cascade) inputSample *= cascade;
 		if (inputSample > 1.097) inputSample = 1.097;
 		if (inputSample < -1.097) inputSample = -1.097;
-		inputSample = ((sin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
+		inputSample = ((sin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		tempSample = biquadE[2]*inputSample+biquadE[3]*biquadE[7]+biquadE[4]*biquadE[8]-biquadE[5]*biquadE[9]-biquadE[6]*biquadE[10];
@@ -289,7 +289,7 @@ void		Console7Cascade::Console7CascadeKernel::Process(	const Float32 	*inSourceP
 		if (1.0 != cascade) inputSample *= cascade;
 		if (inputSample > 1.097) inputSample = 1.097;
 		if (inputSample < -1.097) inputSample = -1.097;
-		inputSample = ((sin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
+		inputSample = ((sin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 				
 		if (cascade > 1.0) inputSample /= cascade;

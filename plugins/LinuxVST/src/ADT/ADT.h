@@ -64,8 +64,7 @@ private:
 	double offsetB;
 	
 	
-	long double fpNShapeL;
-	long double fpNShapeR;
+		uint32_t fpd;
 	//default stuff
 
     float A;

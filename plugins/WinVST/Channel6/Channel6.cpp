@@ -15,8 +15,7 @@ Channel6::Channel6(audioMasterCallback audioMaster) :
 	consoletype = 0.0;
 	drive = 0.0;
 	output = 1.0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+		fpd = 17;
 	iirSampleLA = 0.0;
 	iirSampleRA = 0.0;
 	iirSampleLB = 0.0;

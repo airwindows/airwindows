@@ -146,7 +146,7 @@ public:
 		Float64 d[10001];
 		int delay;
 		bool flip;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

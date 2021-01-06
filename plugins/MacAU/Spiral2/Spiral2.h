@@ -141,7 +141,7 @@ public:
 		long double iirSampleA;
 		long double iirSampleB;
 		long double prevSample;
-		long double fpNShape;
+		uint32_t fpd;
 		bool flip;
 	};
 };

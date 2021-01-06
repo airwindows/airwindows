@@ -59,12 +59,11 @@ private:
 	long double iirSampleAL;
 	long double iirSampleBL;
 	long double prevSampleL;
-	long double fpNShapeL;
+		uint32_t fpd;
 
 	long double iirSampleAR;
 	long double iirSampleBR;
 	long double prevSampleR;
-	long double fpNShapeR;
 	bool flip;
 	//default stuff
 

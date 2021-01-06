@@ -252,7 +252,7 @@ void		Channel7::Channel7Kernel::Process(	const Float32 	*inSourceP,
 		long double phatSample = sin(inputSample * 1.57079633);
 		inputSample *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
-		long double distSample = sin(inputSample * fabs(inputSample)) / ((inputSample == 0.0) ?1:fabs(inputSample));
+		long double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 		
 		inputSample = distSample; //purest form is full Spiral
 		if (density < 1.0) inputSample = (drySample*(1-density))+(distSample*density); //fade Spiral aspect

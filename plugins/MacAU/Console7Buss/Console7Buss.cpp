@@ -219,7 +219,7 @@ void		Console7Buss::Console7BussKernel::Process(	const Float32 	*inSourceP,
 		
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;
-		inputSample = ((asin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.618033988749894848204586)+(asin(inputSample)*0.381966011250105);
+		inputSample = ((asin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.618033988749894848204586)+(asin(inputSample)*0.381966011250105);
 		//this is an asin version of Spiral blended with regular asin ConsoleBuss.
 		//It's blending between two different harmonics in the overtones of the algorithm
 		

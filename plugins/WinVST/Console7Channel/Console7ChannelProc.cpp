@@ -58,10 +58,10 @@ void Console7Channel::processReplacing(float **inputs, float **outputs, VstInt32
 		
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//this is a version of Spiral blended 80/20 with regular Density ConsoleChannel.
 		//It's blending between two different harmonics in the overtones of the algorithm
 				
@@ -138,10 +138,10 @@ void Console7Channel::processDoubleReplacing(double **inputs, double **outputs, 
 		
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//this is a version of Spiral blended 80/20 with regular Density ConsoleChannel.
 		//It's blending between two different harmonics in the overtones of the algorithm
 				

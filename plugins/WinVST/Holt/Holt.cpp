@@ -36,8 +36,7 @@ Holt::Holt(audioMasterCallback audioMaster) :
 	previousSampleDR = 0.0;
 	previousTrendDR = 0.0;
 	
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+		fpd = 17;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

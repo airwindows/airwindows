@@ -145,7 +145,7 @@ public:
 		long double previousTrendC;
 		long double previousSampleD;
 		long double previousTrendD;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

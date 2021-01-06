@@ -94,8 +94,8 @@ void Focus::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 				if (inputSampleR > 1.2533141373155) inputSampleR = 1.2533141373155;
 				if (inputSampleR < -1.2533141373155) inputSampleR = -1.2533141373155;
 				//clip to 1.2533141373155 to reach maximum output
-				inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
-				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
+				inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
+				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 				break;
 			case 3: //Mojo
 				long double mojo; mojo = pow(fabs(inputSampleL),0.25);
@@ -232,8 +232,8 @@ void Focus::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 				if (inputSampleR > 1.2533141373155) inputSampleR = 1.2533141373155;
 				if (inputSampleR < -1.2533141373155) inputSampleR = -1.2533141373155;
 				//clip to 1.2533141373155 to reach maximum output
-				inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((inputSampleL == 0.0) ?1:fabs(inputSampleL));
-				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((inputSampleR == 0.0) ?1:fabs(inputSampleR));
+				inputSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
+				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 				break;
 			case 3: //Mojo
 				long double mojo; mojo = pow(fabs(inputSampleL),0.25);

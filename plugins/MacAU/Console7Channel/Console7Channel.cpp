@@ -215,7 +215,7 @@ void		Console7Channel::Console7ChannelKernel::Process(	const Float32 	*inSourceP
 		
 		if (inputSample > 1.097) inputSample = 1.097;
 		if (inputSample < -1.097) inputSample = -1.097;
-		inputSample = ((sin(inputSample*fabs(inputSample))/((inputSample == 0.0)?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
+		inputSample = ((sin(inputSample*fabs(inputSample))/((fabs(inputSample) == 0.0) ?1:fabs(inputSample)))*0.8)+(sin(inputSample)*0.2);
 		//this is a version of Spiral blended 80/20 with regular Density ConsoleChannel.
 		//It's blending between two different harmonics in the overtones of the algorithm
 				

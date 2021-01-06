@@ -20,12 +20,11 @@ Spiral2::Spiral2(audioMasterCallback audioMaster) :
 	iirSampleAL = 0.0;
 	iirSampleBL = 0.0;
 	prevSampleL = 0.0;
-	fpNShapeL = 0.0;
+	fpd = 17;
 
 	iirSampleAR = 0.0;
 	iirSampleBR = 0.0;
 	prevSampleR = 0.0;
-	fpNShapeR = 0.0;
 	flip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	

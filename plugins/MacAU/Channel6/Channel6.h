@@ -141,7 +141,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double fpNShape;
+		uint32_t fpd;
 		long double iirSampleA;
 		long double iirSampleB;
 		bool flip;

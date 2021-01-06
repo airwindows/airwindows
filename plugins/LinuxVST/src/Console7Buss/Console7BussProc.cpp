@@ -62,10 +62,10 @@ void Console7Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		inputSampleL = ((asin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.618033988749894848204586)+(asin(inputSampleL)*0.381966011250105);
+		inputSampleL = ((asin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.618033988749894848204586)+(asin(inputSampleL)*0.381966011250105);
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		inputSampleR = ((asin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.618033988749894848204586)+(asin(inputSampleR)*0.381966011250105);
+		inputSampleR = ((asin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.618033988749894848204586)+(asin(inputSampleR)*0.381966011250105);
 		//this is an asin version of Spiral blended with regular asin ConsoleBuss.
 		//It's blending between two different harmonics in the overtones of the algorithm
 		
@@ -152,10 +152,10 @@ void Console7Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		inputSampleL = ((asin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.618033988749894848204586)+(asin(inputSampleL)*0.381966011250105);
+		inputSampleL = ((asin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.618033988749894848204586)+(asin(inputSampleL)*0.381966011250105);
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		inputSampleR = ((asin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.618033988749894848204586)+(asin(inputSampleR)*0.381966011250105);
+		inputSampleR = ((asin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.618033988749894848204586)+(asin(inputSampleR)*0.381966011250105);
 		//this is an asin version of Spiral blended with regular asin ConsoleBuss.
 		//It's blending between two different harmonics in the overtones of the algorithm
 		

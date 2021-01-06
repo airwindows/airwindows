@@ -230,7 +230,7 @@ void		BitGlitter::BitGlitterKernel::Process(	const Float32 	*inSourceP,
 		if (inputSample < -1.0) inputSample = -1.0;
 		inputSample *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
-		inputSample = sin(inputSample * fabs(inputSample)) / ((inputSample == 0.0) ?1:fabs(inputSample));
+		inputSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 		
 		ataDrySample = inputSample;
 		ataHalfwaySample = (inputSample + ataLastSample ) / 2.0;

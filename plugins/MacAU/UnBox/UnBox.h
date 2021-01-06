@@ -137,7 +137,7 @@ public:
 		long double f[11];
 		long double iirSampleA;
 		long double iirSampleB;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

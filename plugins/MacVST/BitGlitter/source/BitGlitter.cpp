@@ -17,8 +17,7 @@ BitGlitter::BitGlitter(audioMasterCallback audioMaster) :
 	C = 0.5;
 	D = 1.0;
 
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+		fpd = 17;
 
 	ataLastSampleL = 0.0;
 	ataHalfwaySampleL = 0.0;

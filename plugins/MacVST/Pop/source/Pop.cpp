@@ -15,8 +15,7 @@ Pop::Pop(audioMasterCallback audioMaster) :
 	A = 0.3;
 	B = 1.0;
 	C = 1.0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+		fpd = 17;
 	
 	for(int count = 0; count < 10000; count++) {dL[count] = 0; dR[count] = 0;}
 	delay = 0;

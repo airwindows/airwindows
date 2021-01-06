@@ -87,10 +87,10 @@ void Console7Cascade::processReplacing(float **inputs, float **outputs, VstInt32
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 				
 		outSampleL = biquadB[2]*inputSampleL+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
@@ -101,10 +101,10 @@ void Console7Cascade::processReplacing(float **inputs, float **outputs, VstInt32
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadC[2]*inputSampleL+biquadC[3]*biquadC[7]+biquadC[4]*biquadC[8]-biquadC[5]*biquadC[9]-biquadC[6]*biquadC[10];
@@ -115,10 +115,10 @@ void Console7Cascade::processReplacing(float **inputs, float **outputs, VstInt32
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadD[2]*inputSampleL+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
@@ -129,10 +129,10 @@ void Console7Cascade::processReplacing(float **inputs, float **outputs, VstInt32
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadE[2]*inputSampleL+biquadE[3]*biquadE[7]+biquadE[4]*biquadE[8]-biquadE[5]*biquadE[9]-biquadE[6]*biquadE[10];
@@ -143,10 +143,10 @@ void Console7Cascade::processReplacing(float **inputs, float **outputs, VstInt32
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		if (cascade > 1.0) {inputSampleL /= cascade; inputSampleR /= cascade;}
@@ -251,10 +251,10 @@ void Console7Cascade::processDoubleReplacing(double **inputs, double **outputs, 
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadB[2]*inputSampleL+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
@@ -265,10 +265,10 @@ void Console7Cascade::processDoubleReplacing(double **inputs, double **outputs, 
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadC[2]*inputSampleL+biquadC[3]*biquadC[7]+biquadC[4]*biquadC[8]-biquadC[5]*biquadC[9]-biquadC[6]*biquadC[10];
@@ -279,10 +279,10 @@ void Console7Cascade::processDoubleReplacing(double **inputs, double **outputs, 
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadD[2]*inputSampleL+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
@@ -293,10 +293,10 @@ void Console7Cascade::processDoubleReplacing(double **inputs, double **outputs, 
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		outSampleL = biquadE[2]*inputSampleL+biquadE[3]*biquadE[7]+biquadE[4]*biquadE[8]-biquadE[5]*biquadE[9]-biquadE[6]*biquadE[10];
@@ -307,10 +307,10 @@ void Console7Cascade::processDoubleReplacing(double **inputs, double **outputs, 
 		if (1.0 != cascade) {inputSampleL *= cascade; inputSampleR *= cascade;}
 		if (inputSampleL > 1.097) inputSampleL = 1.097;
 		if (inputSampleL < -1.097) inputSampleL = -1.097;
-		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((inputSampleL == 0.0)?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
+		inputSampleL = ((sin(inputSampleL*fabs(inputSampleL))/((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL)))*0.8)+(sin(inputSampleL)*0.2);
 		if (inputSampleR > 1.097) inputSampleR = 1.097;
 		if (inputSampleR < -1.097) inputSampleR = -1.097;
-		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((inputSampleR == 0.0)?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
+		inputSampleR = ((sin(inputSampleR*fabs(inputSampleR))/((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR)))*0.8)+(sin(inputSampleR)*0.2);
 		//Console7Channel distortion stage, with a simpler form of the gain boost: no extra accentuation, because it's repeated 5x
 		
 		if (cascade > 1.0) {inputSampleL /= cascade; inputSampleR /= cascade;}
