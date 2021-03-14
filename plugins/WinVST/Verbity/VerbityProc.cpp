@@ -19,7 +19,8 @@ void Verbity::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	overallscale *= getSampleRate();
 	
 	int cycleEnd = floor(overallscale);
-	if (cycleEnd < 1.0) cycleEnd = 1.0;
+	if (cycleEnd < 1) cycleEnd = 1;
+	if (cycleEnd > 4) cycleEnd = 4;
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
 	
@@ -248,7 +249,8 @@ void Verbity::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	overallscale *= getSampleRate();
 	
 	int cycleEnd = floor(overallscale);
-	if (cycleEnd < 1.0) cycleEnd = 1.0;
+	if (cycleEnd < 1) cycleEnd = 1;
+	if (cycleEnd > 4) cycleEnd = 4;
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
 	

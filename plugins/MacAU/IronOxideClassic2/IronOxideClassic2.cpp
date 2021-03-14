@@ -1,9 +1,9 @@
 /*
-*	File:		Verbity.cpp
+*	File:		IronOxideClassic2.cpp
 *	
 *	Version:	1.0
 * 
-*	Created:	2/26/21
+*	Created:	3/10/21
 *	
 *	Copyright:  Copyright © 2021 Airwindows, All Rights Reserved
 * 
@@ -40,21 +40,21 @@
 *
 */
 /*=============================================================================
-	Verbity.cpp
+	IronOxideClassic2.cpp
 	
 =============================================================================*/
-#include "Verbity.h"
+#include "IronOxideClassic2.h"
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-COMPONENT_ENTRY(Verbity)
+COMPONENT_ENTRY(IronOxideClassic2)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::Verbity
+//	IronOxideClassic2::IronOxideClassic2
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Verbity::Verbity(AudioUnit component)
+IronOxideClassic2::IronOxideClassic2(AudioUnit component)
 	: AUEffectBase(component)
 {
 	CreateElements();
@@ -62,7 +62,6 @@ Verbity::Verbity(AudioUnit component)
 	SetParameter(kParam_One, kDefaultValue_ParamOne );
 	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
 	SetParameter(kParam_Three, kDefaultValue_ParamThree );
-	SetParameter(kParam_Four, kDefaultValue_ParamFour );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -72,9 +71,9 @@ Verbity::Verbity(AudioUnit component)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetParameterValueStrings
+//	IronOxideClassic2::GetParameterValueStrings
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetParameterValueStrings(AudioUnitScope		inScope,
+ComponentResult			IronOxideClassic2::GetParameterValueStrings(AudioUnitScope		inScope,
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
@@ -85,9 +84,9 @@ ComponentResult			Verbity::GetParameterValueStrings(AudioUnitScope		inScope,
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetParameterInfo
+//	IronOxideClassic2::GetParameterInfo
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetParameterInfo(AudioUnitScope		inScope,
+ComponentResult			IronOxideClassic2::GetParameterInfo(AudioUnitScope		inScope,
                                                         AudioUnitParameterID	inParameterID,
                                                         AudioUnitParameterInfo	&outParameterInfo )
 {
@@ -99,33 +98,28 @@ ComponentResult			Verbity::GetParameterInfo(AudioUnitScope		inScope,
     if (inScope == kAudioUnitScope_Global) {
         switch(inParameterID)
         {
-           case kParam_One:
+			case kParam_One:
                 AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.unit = kAudioUnitParameterUnit_Decibels;
+                outParameterInfo.minValue = -18.0;
+                outParameterInfo.maxValue = 18.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
                 break;
             case kParam_Two:
                 AUBase::FillInParameterName (outParameterInfo, kParameterTwoName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
+				outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
+				outParameterInfo.flags |= kAudioUnitParameterFlag_DisplayLogarithmic;
+				outParameterInfo.unitName = kParameterTwoUnit;
+				outParameterInfo.minValue = 1.5;
+                outParameterInfo.maxValue = 150.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
                 break;
             case kParam_Three:
                 AUBase::FillInParameterName (outParameterInfo, kParameterThreeName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.unit = kAudioUnitParameterUnit_Decibels;
+                outParameterInfo.minValue = -18.0;
+                outParameterInfo.maxValue = 18.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamThree;
-                break;
-            case kParam_Four:
-                AUBase::FillInParameterName (outParameterInfo, kParameterFourName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamFour;
                 break;
 			default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -141,9 +135,9 @@ ComponentResult			Verbity::GetParameterInfo(AudioUnitScope		inScope,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetPropertyInfo
+//	IronOxideClassic2::GetPropertyInfo
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetPropertyInfo (AudioUnitPropertyID	inID,
+ComponentResult			IronOxideClassic2::GetPropertyInfo (AudioUnitPropertyID	inID,
                                                         AudioUnitScope		inScope,
                                                         AudioUnitElement	inElement,
                                                         UInt32 &		outDataSize,
@@ -153,9 +147,9 @@ ComponentResult			Verbity::GetPropertyInfo (AudioUnitPropertyID	inID,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetProperty
+//	IronOxideClassic2::GetProperty
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetProperty(	AudioUnitPropertyID inID,
+ComponentResult			IronOxideClassic2::GetProperty(	AudioUnitPropertyID inID,
                                                         AudioUnitScope 		inScope,
                                                         AudioUnitElement 	inElement,
                                                         void *			outData )
@@ -163,9 +157,9 @@ ComponentResult			Verbity::GetProperty(	AudioUnitPropertyID inID,
 	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
 }
 
-//	Verbity::Initialize
+//	IronOxideClassic2::Initialize
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult Verbity::Initialize()
+ComponentResult IronOxideClassic2::Initialize()
 {
     ComponentResult result = AUEffectBase::Initialize();
     if (result == noErr)
@@ -173,70 +167,30 @@ ComponentResult Verbity::Initialize()
     return result;
 }
 
-#pragma mark ____VerbityEffectKernel
+#pragma mark ____IronOxideClassic2EffectKernel
 
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::VerbityKernel::Reset()
+//	IronOxideClassic2::IronOxideClassic2Kernel::Reset()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		Verbity::VerbityKernel::Reset()
-{	
-	iirA = 0.0;
-	iirB = 0.0;
-	
-	for(int count = 0; count < 6479; count++) {aI[count] = 0.0;}
-	for(int count = 0; count < 3659; count++) {aJ[count] = 0.0;}
-	for(int count = 0; count < 1719; count++) {aK[count] = 0.0;}
-	for(int count = 0; count < 679; count++) {aL[count] = 0.0;}
-	
-	for(int count = 0; count < 9699; count++) {aA[count] = 0.0;}
-	for(int count = 0; count < 5999; count++) {aB[count] = 0.0;}
-	for(int count = 0; count < 2319; count++) {aC[count] = 0.0;}
-	for(int count = 0; count < 939; count++) {aD[count] = 0.0;}
-	
-	for(int count = 0; count < 15219; count++) {aE[count] = 0.0;}
-	for(int count = 0; count < 8459; count++) {aF[count] = 0.0;}
-	for(int count = 0; count < 4539; count++) {aG[count] = 0.0;}
-	for(int count = 0; count < 3199; count++) {aH[count] = 0.0;}
-	
-	feedbackA = 0.0;
-	feedbackB = 0.0;
-	feedbackC = 0.0;
-	feedbackD = 0.0;
-	previousA = 0.0;
-	previousB = 0.0;
-	previousC = 0.0;
-	previousD = 0.0;
-	
+void		IronOxideClassic2::IronOxideClassic2Kernel::Reset()
+{
+	for (int x = 0; x < 11; x++) {biquadA[x] = 0.0;biquadB[x] = 0.0;}
+	for (int temp = 0; temp < 263; temp++) {d[temp] = 0.0;}
 	for(int count = 0; count < 6; count++) {lastRef[count] = 0.0;}
-	
-	thunder = 0;
-	
-	countI = 1;
-	countJ = 1;
-	countK = 1;
-	countL = 1;
-	
-	countA = 1;
-	countB = 1;
-	countC = 1;
-	countD = 1;	
-	
-	countE = 1;
-	countF = 1;
-	countG = 1;
-	countH = 1;
-	
 	cycle = 0;
-		
+	gcount = 0;
+	fastIIRA = fastIIRB = slowIIRA = slowIIRB = 0.0;
+	iirSampleA = iirSampleB = 0.0;
+	flip = true;
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::VerbityKernel::Process
+//	IronOxideClassic2::IronOxideClassic2Kernel::Process
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
+void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSourceP,
                                                     Float32		 	*inDestP,
                                                     UInt32 			inFramesToProcess,
                                                     UInt32			inNumChannels, 
@@ -245,7 +199,6 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
@@ -255,110 +208,186 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
 	
-	Float64 size = (GetParameter( kParam_One )*1.77)+0.1;
-	Float64 regen = 0.0625+(GetParameter( kParam_Two )*0.03125); //0.09375 max;
-	Float64 lowpass = (1.0-pow(GetParameter( kParam_Three ),2.0))/sqrt(overallscale);
-	Float64 interpolate = pow(GetParameter( kParam_Three ),2.0)*0.618033988749894848204586; //has IIRlike qualities
-	Float64 thunderAmount = (0.3-(GetParameter( kParam_Two )*0.22))*GetParameter( kParam_Three )*0.1;
-	Float64 wet = GetParameter( kParam_Four )*2.0;
-	Float64 dry = 2.0 - wet;
-	if (wet > 1.0) wet = 1.0;
-	if (wet < 0.0) wet = 0.0;
-	if (dry > 1.0) dry = 1.0;
-	if (dry < 0.0) dry = 0.0;
-	//this reverb makes 50% full dry AND full wet, not crossfaded.
-	//that's so it can be on submixes without cutting back dry channel when adjusted:
-	//unless you go super heavy, you are only adjusting the added verb loudness.
+	Float64 inputgain = pow(10.0,GetParameter( kParam_One )/20.0);
+	Float64 outputgain = pow(10.0,GetParameter( kParam_Three )/20.0);
+	Float64 ips = GetParameter( kParam_Two ) * 1.1;
+	//slight correction to dial in convincing ips settings
+	if (ips < 1 || ips > 200) ips=33.0;
+	//sanity checks are always key
+	Float64 iirAmount = ips/430.0; //for low leaning
+	Float64 fastTaper = ips/15.0;
+	Float64 slowTaper = 2.0/(ips*ips);
 	
-	delayI = 3407.0*size;
-	delayJ = 1823.0*size;
-	delayK = 859.0*size;
-	delayL = 331.0*size;
+	iirAmount /= overallscale;
+	fastTaper /= overallscale;
+	slowTaper /= overallscale;
+	//now that we have this, we must multiply it back up
+	fastTaper *= cycleEnd;
+	slowTaper *= cycleEnd;
+	//because we're only running that part one sample in two, or three, or four
+	fastTaper += 1.0;
+	slowTaper += 1.0;
 	
-	delayA = 4801.0*size;
-	delayB = 2909.0*size;
-	delayC = 1153.0*size;
-	delayD = 461.0*size;
+	biquadA[0] = 24000.0 / GetSampleRate();
+    biquadA[1] = 1.618033988749894848204586;
+	biquadB[0] = 24000.0 / GetSampleRate();
+    biquadB[1] = 0.618033988749894848204586;
 	
-	delayE = 7607.0*size;
-	delayF = 4217.0*size;
-	delayG = 2269.0*size;
-	delayH = 1597.0*size;
+	double K = tan(M_PI * biquadA[0]); //lowpass
+	double norm = 1.0 / (1.0 + K / biquadA[1] + K * K);
+	biquadA[2] = K * K * norm;
+	biquadA[3] = 2.0 * biquadA[2];
+	biquadA[4] = biquadA[2];
+	biquadA[5] = 2.0 * (K * K - 1.0) * norm;
+	biquadA[6] = (1.0 - K / biquadA[1] + K * K) * norm;
+	
+	K = tan(M_PI * biquadB[0]); //lowpass
+	norm = 1.0 / (1.0 + K / biquadB[1] + K * K);
+	biquadB[2] = K * K * norm;
+	biquadB[3] = 2.0 * biquadB[2];
+	biquadB[4] = biquadB[2];
+	biquadB[5] = 2.0 * (K * K - 1.0) * norm;
+	biquadB[6] = (1.0 - K / biquadB[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		double drySample = inputSample;
 		
-		if (fabs(iirA)<1.18e-37) iirA = 0.0;
-		iirA = (iirA*(1.0-lowpass))+(inputSample*lowpass); inputSample = iirA;
-		//initial filter
+		if (flip)
+		{
+			if (fabs(iirSampleA)<1.18e-37) iirSampleA = 0.0;
+			iirSampleA = (iirSampleA * (1 - iirAmount)) + (inputSample * iirAmount);
+			inputSample -= iirSampleA;
+		}
+		else
+		{
+			if (fabs(iirSampleB)<1.18e-37) iirSampleB = 0.0;
+			iirSampleB = (iirSampleB * (1 - iirAmount)) + (inputSample * iirAmount);
+			inputSample -= iirSampleB;
+		}
+		//do IIR highpass for leaning out
+		
+		if (biquadA[0] < 0.49999) {
+			long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+			biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
+			biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
+		}		
+		
+		if (inputgain != 1.0) inputSample *= inputgain;
+		
+		long double bridgerectifier = fabs(inputSample);
+		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
+		bridgerectifier = sin(bridgerectifier);
+		if (inputSample > 0.0) inputSample = bridgerectifier;
+		else inputSample = -bridgerectifier;		
 		
 		cycle++;
-		if (cycle == cycleEnd) { //hit the end point and we do a reverb sample
-			feedbackA = (feedbackA*(1.0-interpolate))+(previousA*interpolate); previousA = feedbackA;
-			feedbackB = (feedbackB*(1.0-interpolate))+(previousB*interpolate); previousB = feedbackB;
-			feedbackC = (feedbackC*(1.0-interpolate))+(previousC*interpolate); previousC = feedbackC;
-			feedbackD = (feedbackD*(1.0-interpolate))+(previousD*interpolate); previousD = feedbackD;
+		if (cycle == cycleEnd) { //hit the end point and we do a tape sample
+		
+		if (gcount < 0 || gcount > 131) gcount = 131;
+		int count = gcount;
+		//increment the counter
+		
+		long double temp;
+		d[count+131] = d[count] = inputSample;
 			
-			thunder = (thunder*0.99)-(feedbackA*thunderAmount);
-
-			aI[countI] = inputSample + ((feedbackA+thunder) * regen);
-			aJ[countJ] = inputSample + (feedbackB * regen);
-			aK[countK] = inputSample + (feedbackC * regen);
-			aL[countL] = inputSample + (feedbackD * regen);
+		if (flip)
+		{
+			if (fabs(fastIIRA)<1.18e-37) fastIIRA = 0.0;
+			if (fabs(slowIIRA)<1.18e-37) slowIIRA = 0.0;
+			fastIIRA = fastIIRA/fastTaper;
+			slowIIRA = slowIIRA/slowTaper;
+			//scale stuff down
+			fastIIRA += d[count];
+			count += 3;
+			temp = d[count+127];
+			temp += d[count+113];
+			temp += d[count+109];
+			temp += d[count+107];
+			temp += d[count+103];
+			temp += d[count+101];
+			temp += d[count+97];
+			temp += d[count+89];
+			temp += d[count+83];
+			temp /= 2;
+			temp += d[count+79];
+			temp += d[count+73];
+			temp += d[count+71];
+			temp += d[count+67];
+			temp += d[count+61];
+			temp += d[count+59];
+			temp += d[count+53];
+			temp += d[count+47];
+			temp += d[count+43];
+			temp += d[count+41];
+			temp += d[count+37];
+			temp += d[count+31];
+			temp += d[count+29];
+			temp /= 2;
+			temp += d[count+23];
+			temp += d[count+19];
+			temp += d[count+17];
+			temp += d[count+13];
+			temp += d[count+11];
+			temp /= 2;
+			temp += d[count+7];
+			temp += d[count+5];
+			temp += d[count+3];
+			temp /= 2;
+			temp += d[count+2];
+			temp += d[count+1];
+			slowIIRA += (temp/128);
+			inputSample = fastIIRA - (slowIIRA / slowTaper);
+		}
+		else
+		{
+			if (fabs(fastIIRB)<1.18e-37) fastIIRB = 0.0;
+			if (fabs(slowIIRB)<1.18e-37) slowIIRB = 0.0;
+			fastIIRB = fastIIRB/fastTaper;
+			slowIIRB = slowIIRB/slowTaper;
+			//scale stuff down
+			fastIIRB += d[count];
+			count += 3;
+			temp = d[count+127];
+			temp += d[count+113];
+			temp += d[count+109];
+			temp += d[count+107];
+			temp += d[count+103];
+			temp += d[count+101];
+			temp += d[count+97];
+			temp += d[count+89];
+			temp += d[count+83];
+			temp /= 2;
+			temp += d[count+79];
+			temp += d[count+73];
+			temp += d[count+71];
+			temp += d[count+67];
+			temp += d[count+61];
+			temp += d[count+59];
+			temp += d[count+53];
+			temp += d[count+47];
+			temp += d[count+43];
+			temp += d[count+41];
+			temp += d[count+37];
+			temp += d[count+31];
+			temp += d[count+29];
+			temp /= 2;
+			temp += d[count+23];
+			temp += d[count+19];
+			temp += d[count+17];
+			temp += d[count+13];
+			temp += d[count+11];
+			temp /= 2;
+			temp += d[count+7];
+			temp += d[count+5];
+			temp += d[count+3];
+			temp /= 2;
+			temp += d[count+2];
+			temp += d[count+1];
+			slowIIRB += (temp/128);
+			inputSample = fastIIRB - (slowIIRB / slowTaper);
+		}
 			
-			countI++; if (countI < 0 || countI > delayI) countI = 0;
-			countJ++; if (countJ < 0 || countJ > delayJ) countJ = 0;
-			countK++; if (countK < 0 || countK > delayK) countK = 0;
-			countL++; if (countL < 0 || countL > delayL) countL = 0;
-			
-			Float64 outI = aI[countI-((countI > delayI)?delayI+1:0)];
-			Float64 outJ = aJ[countJ-((countJ > delayJ)?delayJ+1:0)];
-			Float64 outK = aK[countK-((countK > delayK)?delayK+1:0)];
-			Float64 outL = aL[countL-((countL > delayL)?delayL+1:0)];
-			//first block: now we have four outputs
-			
-			aA[countA] = (outI - (outJ + outK + outL));
-			aB[countB] = (outJ - (outI + outK + outL));
-			aC[countC] = (outK - (outI + outJ + outL));
-			aD[countD] = (outL - (outI + outJ + outK));
-			
-			countA++; if (countA < 0 || countA > delayA) countA = 0;
-			countB++; if (countB < 0 || countB > delayB) countB = 0;
-			countC++; if (countC < 0 || countC > delayC) countC = 0;
-			countD++; if (countD < 0 || countD > delayD) countD = 0;
-			
-			Float64 outA = aA[countA-((countA > delayA)?delayA+1:0)];
-			Float64 outB = aB[countB-((countB > delayB)?delayB+1:0)];
-			Float64 outC = aC[countC-((countC > delayC)?delayC+1:0)];
-			Float64 outD = aD[countD-((countD > delayD)?delayD+1:0)];
-			//second block: four more outputs
-					
-			aE[countE] = (outA - (outB + outC + outD));
-			aF[countF] = (outB - (outA + outC + outD));
-			aG[countG] = (outC - (outA + outB + outD));
-			aH[countH] = (outD - (outA + outB + outC));
-			
-			countE++; if (countE < 0 || countE > delayE) countE = 0;
-			countF++; if (countF < 0 || countF > delayF) countF = 0;
-			countG++; if (countG < 0 || countG > delayG) countG = 0;
-			countH++; if (countH < 0 || countH > delayH) countH = 0;
-			
-			Float64 outE = aE[countE-((countE > delayE)?delayE+1:0)];
-			Float64 outF = aF[countF-((countF > delayF)?delayF+1:0)];
-			Float64 outG = aG[countG-((countG > delayG)?delayG+1:0)];
-			Float64 outH = aH[countH-((countH > delayH)?delayH+1:0)];
-			//third block: final outputs
-			
-			feedbackA = (outE - (outF + outG + outH));
-			feedbackB = (outF - (outE + outG + outH));
-			feedbackC = (outG - (outE + outF + outH));
-			feedbackD = (outH - (outE + outF + outG));
-			//which we need to feed back into the input again, a bit
-			
-			inputSample = (outE + outF + outG + outH)/8.0;
-			//and take the final combined sum of outputs
 			if (cycleEnd == 4) {
 				lastRef[0] = lastRef[4]; //start from previous last
 				lastRef[2] = (lastRef[0] + inputSample)/2; //half
@@ -383,15 +412,23 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 			//we are going through our references now
 		}
 		
-		if (fabs(iirB)<1.18e-37) iirB = 0.0;
-		iirB = (iirB*(1.0-lowpass))+(inputSample*lowpass); inputSample = iirB;
-		//end filter
-						
-		if (wet < 1.0) inputSample *= wet;
-		if (dry < 1.0) drySample *= dry;
-		inputSample += drySample;
-		//this is our submix verb dry/wet: 0.5 is BOTH at FULL VOLUME
-		//purpose is that, if you're adding verb, you're not altering other balances
+		
+		bridgerectifier = fabs(inputSample);
+		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
+		bridgerectifier = sin(bridgerectifier);
+		//can use as an output limiter
+		if (inputSample > 0.0) inputSample = bridgerectifier;
+		else inputSample = -bridgerectifier;
+		//second stage of overdrive to prevent overs and allow bloody loud extremeness
+		
+		if (biquadB[0] < 0.49999) {
+			long double tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
+			biquadB[8] = biquadB[7]; biquadB[7] = inputSample; inputSample = tempSample; 
+			biquadB[10] = biquadB[9]; biquadB[9] = inputSample; //DF1
+		}
+		
+		if (outputgain != 1.0) inputSample *= outputgain;
+		flip = !flip;
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);
@@ -404,3 +441,4 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 		sourceP += inNumChannels; destP += inNumChannels;
 	}
 }
+
