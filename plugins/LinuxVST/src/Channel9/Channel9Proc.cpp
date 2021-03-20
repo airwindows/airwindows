@@ -54,10 +54,10 @@ void Channel9::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		
 		if (biquadA[0] < 0.49999) {
 			tempSample = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
-			biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = tempSample;
+			biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleL = tempSample;
 			biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 			tempSample = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
-			biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = tempSample;
+			biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleR = tempSample;
 			biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		}		
 		
@@ -66,15 +66,19 @@ void Channel9::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		
 		if (flip)
 		{
+			if (fabs(iirSampleLA)<1.18e-37) iirSampleLA = 0.0; 
 			iirSampleLA = (iirSampleLA * (1.0 - (localiirAmount * dielectricScaleL))) + (inputSampleL * localiirAmount * dielectricScaleL);
 			inputSampleL = inputSampleL - iirSampleLA;
+			if (fabs(iirSampleRA)<1.18e-37) iirSampleRA = 0.0; 
 			iirSampleRA = (iirSampleRA * (1.0 - (localiirAmount * dielectricScaleR))) + (inputSampleR * localiirAmount * dielectricScaleR);
 			inputSampleR = inputSampleR - iirSampleRA;
 		}
 		else
 		{
+			if (fabs(iirSampleLB)<1.18e-37) iirSampleLB = 0.0; 
 			iirSampleLB = (iirSampleLB * (1.0 - (localiirAmount * dielectricScaleL))) + (inputSampleL * localiirAmount * dielectricScaleL);
 			inputSampleL = inputSampleL - iirSampleLB;
+			if (fabs(iirSampleRB)<1.18e-37) iirSampleRB = 0.0; 
 			iirSampleRB = (iirSampleRB * (1.0 - (localiirAmount * dielectricScaleR))) + (inputSampleR * localiirAmount * dielectricScaleR);
 			inputSampleR = inputSampleR - iirSampleRB;
 		}
@@ -149,10 +153,10 @@ void Channel9::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		
 		if (biquadB[0] < 0.49999) {
 			tempSample = biquadB[2]*inputSampleL+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
-			biquadB[8] = biquadB[7]; biquadB[7] = inputSampleL; inputSampleL = tempSample;
+			biquadB[8] = biquadB[7]; biquadB[7] = inputSampleL; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleL = tempSample;
 			biquadB[10] = biquadB[9]; biquadB[9] = inputSampleL; //DF1 left
 			tempSample = biquadB[2]*inputSampleR+biquadB[3]*biquadB[11]+biquadB[4]*biquadB[12]-biquadB[5]*biquadB[13]-biquadB[6]*biquadB[14];
-			biquadB[12] = biquadB[11]; biquadB[11] = inputSampleR; inputSampleR = tempSample;
+			biquadB[12] = biquadB[11]; biquadB[11] = inputSampleR; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleR = tempSample;
 			biquadB[14] = biquadB[13]; biquadB[13] = inputSampleR; //DF1 right
 		}		
 		
@@ -222,10 +226,10 @@ void Channel9::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		
 		if (biquadA[0] < 0.49999) {
 			tempSample = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
-			biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = tempSample;
+			biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleL = tempSample;
 			biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 			tempSample = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
-			biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = tempSample;
+			biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleR = tempSample;
 			biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		}		
 		
@@ -234,15 +238,19 @@ void Channel9::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		
 		if (flip)
 		{
+			if (fabs(iirSampleLA)<1.18e-37) iirSampleLA = 0.0; 
 			iirSampleLA = (iirSampleLA * (1.0 - (localiirAmount * dielectricScaleL))) + (inputSampleL * localiirAmount * dielectricScaleL);
 			inputSampleL = inputSampleL - iirSampleLA;
+			if (fabs(iirSampleRA)<1.18e-37) iirSampleRA = 0.0; 
 			iirSampleRA = (iirSampleRA * (1.0 - (localiirAmount * dielectricScaleR))) + (inputSampleR * localiirAmount * dielectricScaleR);
 			inputSampleR = inputSampleR - iirSampleRA;
 		}
 		else
 		{
+			if (fabs(iirSampleLB)<1.18e-37) iirSampleLB = 0.0; 
 			iirSampleLB = (iirSampleLB * (1.0 - (localiirAmount * dielectricScaleL))) + (inputSampleL * localiirAmount * dielectricScaleL);
 			inputSampleL = inputSampleL - iirSampleLB;
+			if (fabs(iirSampleRB)<1.18e-37) iirSampleRB = 0.0; 
 			iirSampleRB = (iirSampleRB * (1.0 - (localiirAmount * dielectricScaleR))) + (inputSampleR * localiirAmount * dielectricScaleR);
 			inputSampleR = inputSampleR - iirSampleRB;
 		}
@@ -317,10 +325,10 @@ void Channel9::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		
 		if (biquadB[0] < 0.49999) {
 			tempSample = biquadB[2]*inputSampleL+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
-			biquadB[8] = biquadB[7]; biquadB[7] = inputSampleL; inputSampleL = tempSample;
+			biquadB[8] = biquadB[7]; biquadB[7] = inputSampleL; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleL = tempSample;
 			biquadB[10] = biquadB[9]; biquadB[9] = inputSampleL; //DF1 left
 			tempSample = biquadB[2]*inputSampleR+biquadB[3]*biquadB[11]+biquadB[4]*biquadB[12]-biquadB[5]*biquadB[13]-biquadB[6]*biquadB[14];
-			biquadB[12] = biquadB[11]; biquadB[11] = inputSampleR; inputSampleR = tempSample;
+			biquadB[12] = biquadB[11]; biquadB[11] = inputSampleR; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSampleR = tempSample;
 			biquadB[14] = biquadB[13]; biquadB[13] = inputSampleR; //DF1 right
 		}		
 		

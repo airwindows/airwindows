@@ -262,7 +262,7 @@ void		Channel9::Channel9Kernel::Process(	const Float32 	*inSourceP,
 		
 		if (biquadA[0] < 0.49999) {
 			long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
-			biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
+			biquadA[8] = biquadA[7]; biquadA[7] = inputSample; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSample = tempSample; 
 			biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 		}
 				
@@ -270,11 +270,13 @@ void		Channel9::Channel9Kernel::Process(	const Float32 	*inSourceP,
 		
 		if (flip)
 		{
+			if (fabs(iirSampleA)<1.18e-37) iirSampleA = 0.0;
 			iirSampleA = (iirSampleA * (1.0 - (iirAmount * dielectricScale))) + (inputSample * iirAmount * dielectricScale);
 			inputSample = inputSample - iirSampleA;
 		}
 		else
 		{
+			if (fabs(iirSampleB)<1.18e-37) iirSampleB = 0.0;
 			iirSampleB = (iirSampleB * (1.0 - (iirAmount * dielectricScale))) + (inputSample * iirAmount * dielectricScale);
 			inputSample = inputSample - iirSampleB;
 		}
@@ -317,7 +319,7 @@ void		Channel9::Channel9Kernel::Process(	const Float32 	*inSourceP,
 		
 		if (biquadB[0] < 0.49999) {
 			long double tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
-			biquadB[8] = biquadB[7]; biquadB[7] = inputSample; inputSample = tempSample; 
+			biquadB[8] = biquadB[7]; biquadB[7] = inputSample; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSample = tempSample; 
 			biquadB[10] = biquadB[9]; biquadB[9] = inputSample; //DF1
 		}
 		
