@@ -225,7 +225,6 @@ void		Acceleration::AccelerationKernel::Process(	const Float32 	*inSourceP,
 			//all positive. That should stop any variables from going denormal, and the routine
 			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
 			//the silence will return to being digital black again.
-			//This is the old denormals, for an old Acceleration
 		}
 		drySample = inputSample;
 		
