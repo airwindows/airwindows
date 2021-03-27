@@ -22,6 +22,8 @@ BuildATPDF::BuildATPDF(audioMasterCallback audioMaster) :
 	H = 0.5;
 	I = 0.5;
 	J = 0.5;
+	memset(bL, 0, sizeof(bL));
+	memset(bR, 0, sizeof(bR));
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

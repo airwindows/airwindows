@@ -33,6 +33,7 @@ PodcastDeluxe::PodcastDeluxe(audioMasterCallback audioMaster) :
 	c1R = 2.0; c2R = 2.0; c3R = 2.0; c4R = 2.0; c5R = 2.0; //startup comp gains	
 	
 	fpd = 17;
+	lastSampleL = lastOutSampleL = lastSampleR = lastOutSampleR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

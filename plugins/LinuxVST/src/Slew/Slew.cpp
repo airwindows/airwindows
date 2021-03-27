@@ -18,6 +18,7 @@ Slew::Slew(audioMasterCallback audioMaster) :
 {
 	lastSampleL = 0.0;
 	lastSampleR = 0.0;
+	gain = 0.0;
 
 // TODO: uncomment canDo entries according to your plugin's capabilities
 //    _canDo.insert("sendVstEvents"); // plug-in will send Vst events to Host.
