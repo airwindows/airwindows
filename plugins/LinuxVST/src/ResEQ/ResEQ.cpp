@@ -22,6 +22,11 @@ ResEQ::ResEQ(audioMasterCallback audioMaster) :
 	H = 0.0;
 	I = 0.0;
 	fpd = 17;
+	framenumber = 0;
+	memset(bL, 0, sizeof(bL));
+	memset(fL, 0, sizeof(fL));
+	memset(bR, 0, sizeof(bR));
+	memset(fR, 0, sizeof(fR));
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

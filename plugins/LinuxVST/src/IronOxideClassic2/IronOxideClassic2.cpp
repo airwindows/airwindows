@@ -26,6 +26,8 @@ IronOxideClassic2::IronOxideClassic2(audioMasterCallback audioMaster) :
 	flip = true;
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
+	cycle = 0;
+	memset(lastRefL, 0, sizeof(lastRefL));
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
