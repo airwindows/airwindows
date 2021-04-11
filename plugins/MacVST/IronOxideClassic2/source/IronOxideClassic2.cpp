@@ -18,6 +18,8 @@ IronOxideClassic2::IronOxideClassic2(audioMasterCallback audioMaster) :
 	
 	for (int x = 0; x < 15; x++) {biquadA[x] = 0.0; biquadB[x] = 0.0;}
 	for (int temp = 0; temp < 263; temp++) {dL[temp] = 0.0;dR[temp] = 0.0;}
+	for(int count = 0; count < 6; count++) {lastRefL[count] = 0.0;lastRefR[count] = 0.0;}
+	cycle = 0;
 	gcount = 0;
 	fastIIRAL = fastIIRBL = slowIIRAL = slowIIRBL = 0.0;
 	iirSampleAL = iirSampleBL = 0.0;

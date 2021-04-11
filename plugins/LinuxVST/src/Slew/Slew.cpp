@@ -16,6 +16,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster)
 Slew::Slew(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
+	gain = 0.0;
 	lastSampleL = 0.0;
 	lastSampleR = 0.0;
 

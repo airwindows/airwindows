@@ -27,7 +27,7 @@ PodcastDeluxe::PodcastDeluxe(audioMasterCallback audioMaster) :
 		d5R[count] = 0.0;
 	}
 	c1L = 2.0; c2L = 2.0; c3L = 2.0; c4L = 2.0; c5L = 2.0; //startup comp gains	
-
+	lastSampleL = lastOutSampleL = lastSampleR = lastOutSampleR = 0.0;
 	tap1 = 1; tap2 = 1; tap3 = 1; tap4 = 1; tap5 = 1;
 	maxdelay1 = 9001; maxdelay2 = 9001; maxdelay3 = 9001; maxdelay4 = 9001; maxdelay5 = 9001;
 	c1R = 2.0; c2R = 2.0; c3R = 2.0; c4R = 2.0; c5R = 2.0; //startup comp gains	

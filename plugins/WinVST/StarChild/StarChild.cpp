@@ -19,11 +19,12 @@ StarChild::StarChild(audioMasterCallback audioMaster) :
 	int count;
 	
 	for(count = 0; count < 44101; count++) {d[count] = 0.0;}
+	dCount = 0;
 	
 	for(count = 0; count < 11; count++) {wearL[count] = 0.0; wearR[count] = 0.0; factor[count] = 0.0;}
 	
 	wearLPrev = 0.0; wearRPrev = 0.0;
-	
+	p[0] = 1;
 	p[1] = 11; p[2] = 13; p[3] = 17; p[4] = 19; p[5] = 23; p[6] = 29; p[7] = 31; p[8] = 37; p[9] = 41;
 	p[10] = 43; p[11] = 47; p[12] = 53; p[13] = 59; p[14] = 61; p[15] = 67; p[16] = 71; p[17] = 73; p[18] = 79; p[19] = 83; p[20] = 89;
 	p[21] = 97; p[22] = 101; p[23] = 103; p[24] = 107; p[25] = 109; p[26] = 113; p[27] = 127; p[28] = 131; p[29] = 137; p[30] = 139;

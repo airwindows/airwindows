@@ -21,6 +21,11 @@ ResEQ::ResEQ(audioMasterCallback audioMaster) :
 	G = 0.0;
 	H = 0.0;
 	I = 0.0;
+	for(int count = 0; count < 60; count++) {
+		bL[count] = 0.0; fL[count] = 0.0;
+		bR[count] = 0.0; fR[count] = 0.0;
+	}
+	framenumber = 0;
 	fpd = 17;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
