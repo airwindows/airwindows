@@ -1,0 +1,275 @@
+/*
+*	File:		GuitarConditioner.cpp
+*	
+*	Version:	1.0
+* 
+*	Created:	8/18/16
+*	
+*	Copyright:  Copyright © 2016 Airwindows, All Rights Reserved
+* 
+*	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
+*				consideration of your agreement to the following terms, and your use, installation, modification 
+*				or redistribution of this Apple software constitutes acceptance of these terms.  If you do 
+*				not agree with these terms, please do not use, install, modify or redistribute this Apple 
+*				software.
+*
+*				In consideration of your agreement to abide by the following terms, and subject to these terms, 
+*				Apple grants you a personal, non-exclusive license, under Apple's copyrights in this 
+*				original Apple software (the "Apple Software"), to use, reproduce, modify and redistribute the 
+*				Apple Software, with or without modifications, in source and/or binary forms; provided that if you 
+*				redistribute the Apple Software in its entirety and without modifications, you must retain this 
+*				notice and the following text and disclaimers in all such redistributions of the Apple Software. 
+*				Neither the name, trademarks, service marks or logos of Apple Computer, Inc. may be used to 
+*				endorse or promote products derived from the Apple Software without specific prior written 
+*				permission from Apple.  Except as expressly stated in this notice, no other rights or 
+*				licenses, express or implied, are granted by Apple herein, including but not limited to any 
+*				patent rights that may be infringed by your derivative works or by other works in which the 
+*				Apple Software may be incorporated.
+*
+*				The Apple Software is provided by Apple on an "AS IS" basis.  APPLE MAKES NO WARRANTIES, EXPRESS OR 
+*				IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY 
+*				AND FITNESS FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND OPERATION ALONE 
+*				OR IN COMBINATION WITH YOUR PRODUCTS.
+*
+*				IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR CONSEQUENTIAL 
+*				DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+*				OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE, 
+*				REPRODUCTION, MODIFICATION AND/OR DISTRIBUTION OF THE APPLE SOFTWARE, HOWEVER CAUSED AND WHETHER 
+*				UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, EVEN 
+*				IF APPLE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+*/
+/*=============================================================================
+	GuitarConditioner.cpp
+	
+=============================================================================*/
+#include "GuitarConditioner.h"
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AUDIOCOMPONENT_ENTRY(AUBaseFactory, GuitarConditioner)
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GuitarConditioner
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GuitarConditioner::GuitarConditioner(AudioUnit component)
+	: AUEffectBase(component)
+{
+	CreateElements();
+	Globals()->UseIndexedParameters(kNumberOfParameters);
+         
+#if AU_DEBUG_DISPATCHER
+	mDebugDispatcher = new AUDebugDispatcher (this);
+#endif
+	
+}
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GetParameterValueStrings
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ComponentResult			GuitarConditioner::GetParameterValueStrings(AudioUnitScope		inScope,
+                                                                AudioUnitParameterID	inParameterID,
+                                                                CFArrayRef *		outStrings)
+{
+        
+    return kAudioUnitErr_InvalidProperty;
+}
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GetParameterInfo
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ComponentResult			GuitarConditioner::GetParameterInfo(AudioUnitScope		inScope,
+                                                        AudioUnitParameterID	inParameterID,
+                                                        AudioUnitParameterInfo	&outParameterInfo )
+{
+	ComponentResult result = noErr;
+
+	outParameterInfo.flags = 	kAudioUnitParameterFlag_IsWritable
+						|		kAudioUnitParameterFlag_IsReadable;
+    
+    if (inScope == kAudioUnitScope_Global) {
+        switch(inParameterID)
+        {
+            default:
+                result = kAudioUnitErr_InvalidParameter;
+                break;
+            }
+	} else {
+        result = kAudioUnitErr_InvalidParameter;
+    }
+    
+
+
+	return result;
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GetPropertyInfo
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ComponentResult			GuitarConditioner::GetPropertyInfo (AudioUnitPropertyID	inID,
+                                                        AudioUnitScope		inScope,
+                                                        AudioUnitElement	inElement,
+                                                        UInt32 &		outDataSize,
+                                                        Boolean &		outWritable)
+{
+	return AUEffectBase::GetPropertyInfo (inID, inScope, inElement, outDataSize, outWritable);
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GetProperty
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ComponentResult			GuitarConditioner::GetProperty(	AudioUnitPropertyID inID,
+                                                        AudioUnitScope 		inScope,
+                                                        AudioUnitElement 	inElement,
+                                                        void *			outData )
+{
+	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
+}
+
+//	GuitarConditioner::Initialize
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ComponentResult GuitarConditioner::Initialize()
+{
+    ComponentResult result = AUEffectBase::Initialize();
+    if (result == noErr)
+        Reset(kAudioUnitScope_Global, 0);
+    return result;
+}
+
+#pragma mark ____GuitarConditionerEffectKernel
+
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GuitarConditionerKernel::Reset()
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void		GuitarConditioner::GuitarConditionerKernel::Reset()
+{
+	fpNShape = 0.0;
+	fpFlip = true;
+	lastSampleT = 0.0;
+	lastSampleB = 0.0; //for Slews. T for treble, B for bass
+	iirSampleTA = 0.0;
+	iirSampleTB = 0.0;
+	iirSampleBA = 0.0;
+	iirSampleBB = 0.0; //for Highpasses
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//	GuitarConditioner::GuitarConditionerKernel::Process
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+void		GuitarConditioner::GuitarConditionerKernel::Process(	const Float32 	*inSourceP,
+                                                    Float32		 	*inDestP,
+                                                    UInt32 			inFramesToProcess,
+                                                    UInt32			inNumChannels, 
+                                                    bool			&ioSilence )
+{
+	UInt32 nSampleFrames = inFramesToProcess;
+	const Float32 *sourceP = inSourceP;
+	Float32 *destP = inDestP;
+	long double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= GetSampleRate();
+	long double inputSample;
+	long double treble;
+	long double bass;
+	Float64 iirTreble = 0.287496/overallscale; //tight is -1
+	Float64 iirBass = 0.085184/overallscale; //tight is 1
+	iirTreble += iirTreble;
+	iirBass += iirBass; //simple double when tight is -1 or 1
+	Float64 tightBass = 0.6666666666;
+	Float64 tightTreble = -0.3333333333;
+	Float64 offset;
+	Float64 clamp;
+	Float64 threshTreble = 0.0081/overallscale;
+	Float64 threshBass = 0.0256/overallscale;
+
+	
+	while (nSampleFrames-- > 0) {
+		inputSample = *sourceP;
+		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
+			static int noisesource = 0;
+			//this declares a variable before anything else is compiled. It won't keep assigning
+			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
+			//but it lets me add this denormalization fix in a single place rather than updating
+			//it in three different locations. The variable isn't thread-safe but this is only
+			//a random seed and we can share it with whatever.
+			noisesource = noisesource % 1700021; noisesource++;
+			int residue = noisesource * noisesource;
+			residue = residue % 170003; residue *= residue;
+			residue = residue % 17011; residue *= residue;
+			residue = residue % 1709; residue *= residue;
+			residue = residue % 173; residue *= residue;
+			residue = residue % 17;
+			double applyresidue = residue;
+			applyresidue *= 0.00000001;
+			applyresidue *= 0.00000001;
+			inputSample = applyresidue;
+			//this denormalization routine produces a white noise at -300 dB which the noise
+			//shaping will interact with to produce a bipolar output, but the noise is actually
+			//all positive. That should stop any variables from going denormal, and the routine
+			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
+			//the silence will return to being digital black again.
+		}
+		
+		
+		treble = bass = inputSample;
+		treble += treble; //+3dB on treble as the highpass is higher
+		
+		offset = (1 + tightTreble) + ((1-fabs(treble))*tightTreble); //treble HP
+		if (offset < 0) offset = 0;
+		if (offset > 1) offset = 1; //made offset for HP
+		if (fpFlip) {
+			iirSampleTA = (iirSampleTA * (1 - (offset * iirTreble))) + (treble * (offset * iirTreble));
+			treble = treble - iirSampleTA;
+		} else {
+			iirSampleTB = (iirSampleTB * (1 - (offset * iirTreble))) + (treble * (offset * iirTreble));
+			treble = treble - iirSampleTB;
+		} //done treble HP
+		
+		offset = (1 - tightBass) + (fabs(bass)*tightBass); //bass HP
+		if (offset < 0) offset = 0;
+		if (offset > 1) offset = 1;
+		if (fpFlip) {
+			iirSampleBA = (iirSampleBA * (1 - (offset * iirBass))) + (bass * (offset * iirBass));
+			bass = bass - iirSampleBA;
+		} else {
+			iirSampleBB = (iirSampleBB * (1 - (offset * iirBass))) + (bass * (offset * iirBass));
+			bass = bass - iirSampleBB;
+		} //done bass HP
+		
+		inputSample = treble;
+		clamp = inputSample - lastSampleT;
+		if (clamp > threshTreble)
+			treble = lastSampleT + threshTreble;
+		if (-clamp > threshTreble)
+			treble = lastSampleT - threshTreble;
+		lastSampleT = treble; //treble slew
+		
+		inputSample = bass;
+		clamp = inputSample - lastSampleB;
+		if (clamp > threshBass)
+			bass = lastSampleB + threshBass;
+		if (-clamp > threshBass)
+			bass = lastSampleB - threshBass;
+		lastSampleB = bass; //bass slew
+		
+		inputSample = treble + bass; //final merge
+		fpFlip = !fpFlip;
+		
+		//32 bit dither, made small and tidy.
+		int expon; frexpf((Float32)inputSample, &expon);
+		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		inputSample += (dither-fpNShape); fpNShape = dither;
+		//end 32 bit dither
+		
+		*destP = inputSample;
+		sourceP += inNumChannels; destP += inNumChannels;
+	}
+}
+
