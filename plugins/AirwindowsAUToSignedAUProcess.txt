@@ -64,8 +64,9 @@ TARGETS:
 		Architectures: Standard Architectures (Apple Silicon, Intel)
 		Base SDK: macOS
 	Build Phases: Delete Build Carbon Resources
-	Signing & Capabilities: Automatically manage signing
+	Signing & Capabilities: Manual
 		Team, Christopher Johnson
+		Signing Certificate, Developer ID Application
 	General: set Deployment Target to 11.1
 Clean Build Folder, then Build.
 in Build Warnings, under Validate Project Settings: Update to recommended
@@ -88,63 +89,3 @@ find . -name "*.component" -exec cp -r "{}" /Users/christopherjohnson/Desktop/Si
 But of course this is not enough, so we'll try to do yet another helper program to talk to Apple, this time using the resulting .dmg files we made. SD Notary from Late Night Software is what I'm going to try to use.
 
 What we do there is, we run SD Notary with my Developer ID signing identity. AppleID is mine. I make an app-specific password for SD Notary, naming it 'Airwindows Plugins' and copying the actual password into my Keychain, which SD Notary is able to use. I also tell it 'when submitting, create and staple disk image'.
-
-We submit one of the DMG files that DropDMG made (an individual plugin, as it's faster) and it dies:
-
-         Date: 2021-04-19 00:01:51 +0000
-          Hash: 8c68189fa9721280a2c4a7ac984cad383f92062a7877e2ee4f550f3757a5e695
-    LogFileURL: https://osxapps-ssl.itunes.apple.com/itunes-assets/Enigma125/v4/00/7c/37/007c3728-8efe-252f-d930-94fd0368cb7b/developer_log.json?accessKey=1618984994_5749661836017605452_u8y5i5%2BzngYIF68Xe1lHq2RNmIhJkUPj3L3pj99%2BG2gUGDXwBHAtqJINKQ6V%2FIV%2BMj%2BFB5wqRgH3LAFV%2BVSXY0GNTs%2Bdk%2F16e088GJ1sACf1UtwyDpRcasEhCAXeJdedK3rhyyLNcPgctvFuNF9ezYhi%2BP0SXDrnhdxD1SQQhyo%3D
-   RequestUUID: cc79057e-3b3e-4570-85a6-48e036786374
-        Status: invalid
-   Status Code: 2
-Status Message: Package Invalid
-
-
-{
-  "logFormatVersion": 1,
-  "jobId": "cc79057e-3b3e-4570-85a6-48e036786374",
-  "status": "Invalid",
-  "statusSummary": "Archive contains critical validation errors",
-  "statusCode": 4000,
-  "archiveFilename": "Aura.component.dmg",
-  "uploadDate": "2021-04-19T00:01:51Z",
-  "sha256": "8c68189fa9721280a2c4a7ac984cad383f92062a7877e2ee4f550f3757a5e695",
-  "ticketContents": null,
-  "issues": [
-    {
-      "severity": "error",
-      "code": null,
-      "path": "Aura.component.dmg/Aura.component/Contents/MacOS/Aura",
-      "message": "The binary is not signed with a valid Developer ID certificate.",
-      "docUrl": null,
-      "architecture": "x86_64"
-    },
-    {
-      "severity": "error",
-      "code": null,
-      "path": "Aura.component.dmg/Aura.component/Contents/MacOS/Aura",
-      "message": "The signature does not include a secure timestamp.",
-      "docUrl": null,
-      "architecture": "x86_64"
-    },
-    {
-      "severity": "error",
-      "code": null,
-      "path": "Aura.component.dmg/Aura.component/Contents/MacOS/Aura",
-      "message": "The binary is not signed with a valid Developer ID certificate.",
-      "docUrl": null,
-      "architecture": "arm64"
-    },
-    {
-      "severity": "error",
-      "code": null,
-      "path": "Aura.component.dmg/Aura.component/Contents/MacOS/Aura",
-      "message": "The signature does not include a secure timestamp.",
-      "docUrl": null,
-      "architecture": "arm64"
-    }
-  ]
-}
-
-
-And that's where we're at, for now.
