@@ -1,6 +1,6 @@
-Making ARM AUs from retro AU project: This workflow involves buying a bunch of things just to make the process bearable. The grep search is in BBEdit, you have to have an Apple Developer account for $99 a year even to be able to code sign things, and I'm using DropDMG for making signed DMGs.
+Making ARM AUs from retro AU project: This workflow involves buying a bunch of things just to make the process bearable. The grep search is in BBEdit, you have to have an Apple Developer account for $99 a year to be able to code sign things, and I'm using DropDMG for making signed DMGs and SD Notary for sending them to Apple. There are also Terminal methods for doing these things.
 
-Copy AU folder over to new location to be worked on
+To start, copy AU folder over to new location to be worked on
 
 Edit the plugin.cpp file and change the entry point right up top by adding "AUDIO" and "AUBaseFactory, " 
    find \rCOMPONENT_ENTRY(
@@ -64,9 +64,15 @@ TARGETS:
 		Architectures: Standard Architectures (Apple Silicon, Intel)
 		Base SDK: macOS
 	Build Phases: Delete Build Carbon Resources
+	
 	Signing & Capabilities: Manual
-		Team, Christopher Johnson
-		Signing Certificate, Developer ID Application
+		Team, Christopher Johnson (use your own Developer ID here, not mine)
+		Signing Certificate, Developer ID Application (it will include your ID as part of this)
+		
+Note that this is not correct for any other sort of coding! If you're coding an application, 'Automatic' will do the right thing. It's said that using 'Automatic' even for these Audio Units, and then using Terminal to replace the signing with the 'Developer ID Application' signing. The reason I'm specifying Manual here, is that this can produce a workflow that can use third-party drag and drop utilities and send a correctly signed Audio Unit in a .dmg to Apple's servers.
+
+Again, for normal development 'Automatic' will give you the best results, and it's recommended by Apple even for this case, but the true goal isn't to do it the exact way Apple would do it (with no third party utilities), it's to connect to the exact SYSTEM that Apple's put in place. Think of it like using a third party mastering engineer: all this isn't to be a burden on you, it's strictly about running all the code through Apple's security auditing and if you do that, the user experience is seamless. If you have to tell people to run things in Terminal or work around the system, then you have not truly mastered the system :)
+
 	General: set Deployment Target to 11.1
 Clean Build Folder, then Build.
 in Build Warnings, under Validate Project Settings: Update to recommended
@@ -86,6 +92,7 @@ I can also copy stuff into another folder to make a .dmg with all the contents i
 
 find . -name "*.component" -exec cp -r "{}" /Users/christopherjohnson/Desktop/SignedAUs \;
 
-But of course this is not enough, so we'll try to do yet another helper program to talk to Apple, this time using the resulting .dmg files we made. SD Notary from Late Night Software is what I'm going to try to use.
+But of course this is not enough, so we'll try to do yet another helper program to talk to Apple, this time using the resulting .dmg files we made. SD Notary from Late Night Software is what I'm using. It's basically a wrapper for the (free) Apple program, codesign (plus some other free Apple command line programs to be used)
 
 What we do there is, we run SD Notary with my Developer ID signing identity. AppleID is mine. I make an app-specific password for SD Notary, naming it 'Airwindows Plugins' and copying the actual password into my Keychain, which SD Notary is able to use. I also tell it 'when submitting, create and staple disk image'.
+
