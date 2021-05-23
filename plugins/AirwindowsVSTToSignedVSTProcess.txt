@@ -1,0 +1,61 @@
+Making ARM VSTs from retro VST project: This workflow involves buying a bunch of things just to make the process bearable. You have to have an Apple Developer account for $99 a year to be able to code sign things, and I'm using DropDMG for making signed DMGs and SD Notary for sending them to Apple. There are also Terminal methods for doing these things.
+
+To start, copy VST folder over to new location to be worked on.
+
+XCODE: Delete folders in red: vstsdk2.4, the entire External Frameworks and Libraries
+Drag in vstsdk2.4 as present on the desktop. The folders inside it are pluginterfaces/vst2.x, and public.sdk/source/vst2.x and not any of the other stuff (such as examples, HTML, other xcode projects etc)
+In choose options, don't copy items but Added folders: Create groups. This will cause the added folders to show up in yellow, and work properly.
+
+SCHEME: Autocreate Schemes: Autocreate a scheme and get rid of the one that's there for Gain.
+		Any Mac. Run section, Info: Build Configuration should be Release
+
+PROJECT:
+	Info: set MacOS Deployment Target to 11.1
+	Build Settings (All)
+		Architectures: Standard Architectures (Apple Silicon, Intel)
+			Base SDK: macOS
+			Build Active Architecture Only: Yes
+		Search Paths, Always Search User Paths: No
+TARGETS:
+	Build Settings (All)
+		Architectures: Standard Architectures (Apple Silicon, Intel)
+		Base SDK: macOS
+		Deployment: 
+			Installation Directory, $(HOME)/Library/Audio/Plug-Ins/VST
+			Strip Style, Debugging Symbols
+			macOS Deployment Target, macOS 11.1
+		Packaging: Product Name, make all versions be the plugin name
+		Search Paths, Header Search Paths: /Users/christopherjohnson/Desktop/vstsdk2.4/**
+		User-Defined: GCC_MODEL_TUNING, remove entries
+	Build Phases: Delete Build Carbon Resources
+	
+Build.
+in Build Warnings, under Validate Project Settings: Update to recommended (will override manual signing)
+Also walk through the localizations, letting XCode take care of those too	
+	
+	Signing & Capabilities: Manual
+		Team, Christopher Johnson (use your own Developer ID here, not mine)
+		Signing Certificate, Developer ID Application (it will include your ID as part of this)
+		
+Note that this is not correct for any other sort of coding! If you're coding an application, 'Automatic' will do the right thing. It's said that using 'Automatic' even for these Audio Units, and then using Terminal to replace the signing with the 'Developer ID Application' signing. The reason I'm specifying Manual here, is that this can produce a workflow that can use third-party drag and drop utilities and send a correctly signed Audio Unit in a .dmg to Apple's servers.
+
+Again, for normal development 'Automatic' will give you the best results, and it's recommended by Apple even for this case, but the true goal isn't to do it the exact way Apple would do it (with no third party utilities), it's to connect to the exact SYSTEM that Apple's put in place. Think of it like using a third party mastering engineer: all this isn't to be a burden on you, it's strictly about running all the code through Apple's security auditing and if you do that, the user experience is seamless. If you have to tell people to run things in Terminal or work around the system, then you have not truly mastered the system :)
+
+Product Menu: Archive
+	Click 'Distribute Content'
+	Export Built Products (return)
+	to Distribute folder (return)
+
+Once I've done this, I'll have a Distribute folder (on my desktop, which I selected) with HUGE stacks of folders inside it. Deep in subfolders is the signed .component files. What I'll do to get them out is use the Terminal and run DropDMG on the command line. It, too, is able to code sign stuff and I'll ask to do that using a Developer ID Application code signing thingy (it defaults to using this)
+
+cd /Users/christopherjohnson/Desktop/Distribute 
+find . -name "*.vst" -exec dropdmg --config-name "airwindows" "{}" \;
+
+I can also copy stuff into another folder to make a .dmg with all the contents in it, by dragging the resulting folder onto DropDMG:
+
+find . -name "*.vst" -exec cp -r "{}" /Users/christopherjohnson/Desktop/SignedVSTs \;
+
+But of course this is not enough, so we'll try to do yet another helper program to talk to Apple, this time using the resulting .dmg files we made. SD Notary from Late Night Software is what I'm using. It's basically a wrapper for the (free) Apple program, codesign (plus some other free Apple command line programs to be used)
+
+What we do there is, we run SD Notary with my Developer ID signing identity. AppleID is mine. I make an app-specific password for SD Notary, naming it 'Airwindows Plugins' and copying the actual password into my Keychain, which SD Notary is able to use. I also tell it 'when submitting, create and staple disk image'.
+
