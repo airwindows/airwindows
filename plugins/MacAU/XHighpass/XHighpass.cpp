@@ -1,5 +1,5 @@
 /*
-*	File:		XLowpass.cpp
+*	File:		XHighpass.cpp
 *	
 *	Version:	1.0
 * 
@@ -40,21 +40,21 @@
 *
 */
 /*=============================================================================
-	XLowpass.cpp
+	XHighpass.cpp
 	
 =============================================================================*/
-#include "XLowpass.h"
+#include "XHighpass.h"
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-COMPONENT_ENTRY(XLowpass)
+COMPONENT_ENTRY(XHighpass)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::XLowpass
+//	XHighpass::XHighpass
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XLowpass::XLowpass(AudioUnit component)
+XHighpass::XHighpass(AudioUnit component)
 	: AUEffectBase(component)
 {
 	CreateElements();
@@ -72,9 +72,9 @@ XLowpass::XLowpass(AudioUnit component)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::GetParameterValueStrings
+//	XHighpass::GetParameterValueStrings
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			XLowpass::GetParameterValueStrings(AudioUnitScope		inScope,
+ComponentResult			XHighpass::GetParameterValueStrings(AudioUnitScope		inScope,
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
@@ -85,9 +85,9 @@ ComponentResult			XLowpass::GetParameterValueStrings(AudioUnitScope		inScope,
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::GetParameterInfo
+//	XHighpass::GetParameterInfo
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			XLowpass::GetParameterInfo(AudioUnitScope		inScope,
+ComponentResult			XHighpass::GetParameterInfo(AudioUnitScope		inScope,
                                                         AudioUnitParameterID	inParameterID,
                                                         AudioUnitParameterInfo	&outParameterInfo )
 {
@@ -120,14 +120,14 @@ ComponentResult			XLowpass::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamThree;
                 break;
-            case kParam_Four:
+           case kParam_Four:
                 AUBase::FillInParameterName (outParameterInfo, kParameterFourName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamFour;
                 break;
-			default:
+           default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
             }
@@ -141,9 +141,9 @@ ComponentResult			XLowpass::GetParameterInfo(AudioUnitScope		inScope,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::GetPropertyInfo
+//	XHighpass::GetPropertyInfo
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			XLowpass::GetPropertyInfo (AudioUnitPropertyID	inID,
+ComponentResult			XHighpass::GetPropertyInfo (AudioUnitPropertyID	inID,
                                                         AudioUnitScope		inScope,
                                                         AudioUnitElement	inElement,
                                                         UInt32 &		outDataSize,
@@ -153,9 +153,9 @@ ComponentResult			XLowpass::GetPropertyInfo (AudioUnitPropertyID	inID,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::GetProperty
+//	XHighpass::GetProperty
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			XLowpass::GetProperty(	AudioUnitPropertyID inID,
+ComponentResult			XHighpass::GetProperty(	AudioUnitPropertyID inID,
                                                         AudioUnitScope 		inScope,
                                                         AudioUnitElement 	inElement,
                                                         void *			outData )
@@ -163,9 +163,9 @@ ComponentResult			XLowpass::GetProperty(	AudioUnitPropertyID inID,
 	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
 }
 
-//	XLowpass::Initialize
+//	XHighpass::Initialize
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult XLowpass::Initialize()
+ComponentResult XHighpass::Initialize()
 {
     ComponentResult result = AUEffectBase::Initialize();
     if (result == noErr)
@@ -173,23 +173,23 @@ ComponentResult XLowpass::Initialize()
     return result;
 }
 
-#pragma mark ____XLowpassEffectKernel
+#pragma mark ____XHighpassEffectKernel
 
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::XLowpassKernel::Reset()
+//	XHighpass::XHighpassKernel::Reset()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		XLowpass::XLowpassKernel::Reset()
+void		XHighpass::XHighpassKernel::Reset()
 {
 	for (int x = 0; x < 11; x++) {biquad[x] = 0.0; biquadA[x] = 0.0; biquadB[x] = 0.0; biquadC[x] = 0.0; biquadD[x] = 0.0;}
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	XLowpass::XLowpassKernel::Process
+//	XHighpass::XHighpassKernel::Process
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		XLowpass::XLowpassKernel::Process(	const Float32 	*inSourceP,
+void		XHighpass::XHighpassKernel::Process(	const Float32 	*inSourceP,
                                                     Float32		 	*inDestP,
                                                     UInt32 			inFramesToProcess,
                                                     UInt32			inNumChannels, 
@@ -198,19 +198,16 @@ void		XLowpass::XLowpassKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-
+	
 	Float64 gain = pow(GetParameter( kParam_One )+0.5,4);
-	biquadA[0] = (pow(GetParameter( kParam_Two ),2)*20000.0)/GetSampleRate();
+	biquadA[0] = (pow(GetParameter( kParam_Two ),5)*20000.0)/GetSampleRate();
 	if (biquadA[0] < 0.001) biquadA[0] = 0.001;
+	Float64 clipThreshold = 1.0-(GetParameter( kParam_Three )*sqrt(GetParameter( kParam_Two )));
 	
-	Float64 compensation = sqrt(biquadA[0])*6.4;
-	
-	Float64 clipFactor = 1.0+(biquadA[0]*biquadA[0]*GetParameter( kParam_Three )*32.0);
-
 	double K = tan(M_PI * biquadA[0]);
 	double norm = 1.0 / (1.0 + K / 0.7071 + K * K);
-	biquadA[2] = K * K * norm;
-	biquadA[3] = 2.0 * biquadA[2];
+	biquadA[2] = norm;
+	biquadA[3] = -2.0 * biquadA[2];
 	biquadA[4] = biquadA[2];
 	biquadA[5] = 2.0 * (K * K - 1.0) * norm;
 	biquadA[6] = (1.0 - K / 0.7071 + K * K) * norm;
@@ -222,7 +219,6 @@ void		XLowpass::XLowpassKernel::Process(	const Float32 	*inSourceP,
 	Float64 cWet = 1.0;
 	Float64 dWet = GetParameter( kParam_Three )*4.0;
 	Float64 wet = GetParameter( kParam_Four );
-	
 	//four-stage wet/dry control using progressive stages that bypass when not engaged
 	if (dWet < 1.0) {aWet = dWet; bWet = 0.0; cWet = 0.0; dWet = 0.0;}
 	else if (dWet < 2.0) {bWet = dWet - 1.0; cWet = 0.0; dWet = 0.0;}
@@ -247,51 +243,41 @@ void		XLowpass::XLowpassKernel::Process(	const Float32 	*inSourceP,
 		
 		outSample = biquad[2]*inputSample+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
 		biquad[8] = biquad[7]; biquad[7] = inputSample; biquad[10] = biquad[9];
-		outSample *= clipFactor;
-		if (outSample > 1.57079633) outSample = 1.57079633;
-		if (outSample < -1.57079633) outSample = -1.57079633;
-		biquad[9] = sin(outSample); //DF1
-		inputSample = outSample / compensation; nukeLevel = inputSample;
+		if (outSample > clipThreshold) outSample = clipThreshold;
+		if (outSample < -clipThreshold) outSample = -clipThreshold;
+		nukeLevel = inputSample = biquad[9] = outSample; //DF1
 		
 		if (aWet > 0.0) {
 			outSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 			biquadA[8] = biquadA[7]; biquadA[7] = inputSample; biquadA[10] = biquadA[9];
-			outSample *= clipFactor;
-			if (outSample > 1.57079633) outSample = 1.57079633;
-			if (outSample < -1.57079633) outSample = -1.57079633;
-			biquadA[9] = sin(outSample); //DF1
-			inputSample = outSample / compensation; inputSample = (inputSample * aWet) + (nukeLevel * (1.0-aWet));
-			nukeLevel = inputSample;
+			if (outSample > clipThreshold) outSample = clipThreshold;
+			if (outSample < -clipThreshold) outSample = -clipThreshold;
+			inputSample = biquadA[9] = outSample; //DF1
+			nukeLevel = inputSample = (inputSample * aWet) + (nukeLevel * (1.0-aWet));
 		}
 		if (bWet > 0.0) {
 			outSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
 			biquadB[8] = biquadB[7]; biquadB[7] = inputSample; biquadB[10] = biquadB[9]; 
-			outSample *= clipFactor;
-			if (outSample > 1.57079633) outSample = 1.57079633;
-			if (outSample < -1.57079633) outSample = -1.57079633;
-			biquadB[9] = sin(outSample); //DF1
-			inputSample = outSample / compensation; inputSample = (inputSample * bWet) + (nukeLevel * (1.0-bWet));
-			nukeLevel = inputSample;
+			if (outSample > clipThreshold) outSample = clipThreshold;
+			if (outSample < -clipThreshold) outSample = -clipThreshold;
+			inputSample = biquadB[9] = outSample; //DF1
+			nukeLevel = inputSample = (inputSample * bWet) + (nukeLevel * (1.0-bWet));
 		}
 		if (cWet > 0.0) {
 			outSample = biquadC[2]*inputSample+biquadC[3]*biquadC[7]+biquadC[4]*biquadC[8]-biquadC[5]*biquadC[9]-biquadC[6]*biquadC[10];
 			biquadC[8] = biquadC[7]; biquadC[7] = inputSample; biquadC[10] = biquadC[9]; 
-			outSample *= clipFactor;
-			if (outSample > 1.57079633) outSample = 1.57079633;
-			if (outSample < -1.57079633) outSample = -1.57079633;
-			biquadC[9] = sin(outSample); //DF1
-			inputSample = outSample / compensation; inputSample = (inputSample * cWet) + (nukeLevel * (1.0-cWet));
-			nukeLevel = inputSample;
+			if (outSample > clipThreshold) outSample = clipThreshold;
+			if (outSample < -clipThreshold) outSample = -clipThreshold;
+			inputSample = biquadC[9] = outSample; //DF1
+			nukeLevel = inputSample = (inputSample * cWet) + (nukeLevel * (1.0-cWet));
 		}
 		if (dWet > 0.0) {
 			outSample = biquadD[2]*inputSample+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
 			biquadD[8] = biquadD[7]; biquadD[7] = inputSample; biquadD[10] = biquadD[9]; 
-			outSample *= clipFactor;
-			if (outSample > 1.57079633) outSample = 1.57079633;
-			if (outSample < -1.57079633) outSample = -1.57079633;
-			biquadD[9] = sin(outSample); //DF1
-			inputSample = outSample / compensation; inputSample = (inputSample * dWet) + (nukeLevel * (1.0-dWet));
-			nukeLevel = inputSample;
+			if (outSample > clipThreshold) outSample = clipThreshold;
+			if (outSample < -clipThreshold) outSample = -clipThreshold;
+			inputSample = biquadD[9] = outSample; //DF1
+			nukeLevel = inputSample = (inputSample * dWet) + (nukeLevel * (1.0-dWet));
 		}
 		
 		if (wet < 1.0) {
