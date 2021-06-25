@@ -377,7 +377,9 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 				lastRef[1] = (lastRef[0] + inputSample)/2; //half
 				lastRef[2] = inputSample; //full
 			}
+			if (cycleEnd == 1) lastRef[0] = inputSample;
 			cycle = 0; //reset
+			inputSample = lastRef[cycle];
 		} else {
 			inputSample = lastRef[cycle];
 			//we are going through our references now

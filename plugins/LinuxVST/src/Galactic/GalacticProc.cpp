@@ -200,7 +200,13 @@ void Galactic::processReplacing(float **inputs, float **outputs, VstInt32 sample
 				lastRefR[1] = (lastRefR[0] + inputSampleR)/2; //half
 				lastRefR[2] = inputSampleR; //full
 			}
+			if (cycleEnd == 1) {
+				lastRefL[0] = inputSampleL;
+				lastRefR[0] = inputSampleR;
+			}
 			cycle = 0; //reset
+			inputSampleL = lastRefL[cycle];
+			inputSampleR = lastRefR[cycle];
 		} else {
 			inputSampleL = lastRefL[cycle];
 			inputSampleR = lastRefR[cycle];
@@ -430,7 +436,13 @@ void Galactic::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 				lastRefR[1] = (lastRefR[0] + inputSampleR)/2; //half
 				lastRefR[2] = inputSampleR; //full
 			}
+			if (cycleEnd == 1) {
+				lastRefL[0] = inputSampleL;
+				lastRefR[0] = inputSampleR;
+			}
 			cycle = 0; //reset
+			inputSampleL = lastRefL[cycle];
+			inputSampleR = lastRefR[cycle];
 		} else {
 			inputSampleL = lastRefL[cycle];
 			inputSampleR = lastRefR[cycle];

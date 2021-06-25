@@ -406,7 +406,9 @@ void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSou
 				lastRef[1] = (lastRef[0] + inputSample)/2; //half
 				lastRef[2] = inputSample; //full
 			}
+			if (cycleEnd == 1) lastRef[0] = inputSample;
 			cycle = 0; //reset
+			inputSample = lastRef[cycle];
 		} else {
 			inputSample = lastRef[cycle];
 			//we are going through our references now
