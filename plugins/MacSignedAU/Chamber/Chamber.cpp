@@ -1,9 +1,9 @@
 /*
-*	File:		Verbity.cpp
+*	File:		Chamber.cpp
 *	
 *	Version:	1.0
 * 
-*	Created:	2/26/21
+*	Created:	6/21/21
 *	
 *	Copyright:  Copyright © 2021 Airwindows, All Rights Reserved
 * 
@@ -40,21 +40,21 @@
 *
 */
 /*=============================================================================
-	Verbity.cpp
+	Chamber.cpp
 	
 =============================================================================*/
-#include "Verbity.h"
+#include "Chamber.h"
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-AUDIOCOMPONENT_ENTRY(AUBaseFactory, Verbity)
+AUDIOCOMPONENT_ENTRY(AUBaseFactory, Chamber)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::Verbity
+//	Chamber::Chamber
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Verbity::Verbity(AudioUnit component)
+Chamber::Chamber(AudioUnit component)
 	: AUEffectBase(component)
 {
 	CreateElements();
@@ -63,6 +63,7 @@ Verbity::Verbity(AudioUnit component)
 	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
 	SetParameter(kParam_Three, kDefaultValue_ParamThree );
 	SetParameter(kParam_Four, kDefaultValue_ParamFour );
+	SetParameter(kParam_Five, kDefaultValue_ParamFive );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -72,9 +73,9 @@ Verbity::Verbity(AudioUnit component)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetParameterValueStrings
+//	Chamber::GetParameterValueStrings
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetParameterValueStrings(AudioUnitScope		inScope,
+ComponentResult			Chamber::GetParameterValueStrings(AudioUnitScope		inScope,
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
@@ -85,9 +86,9 @@ ComponentResult			Verbity::GetParameterValueStrings(AudioUnitScope		inScope,
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetParameterInfo
+//	Chamber::GetParameterInfo
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetParameterInfo(AudioUnitScope		inScope,
+ComponentResult			Chamber::GetParameterInfo(AudioUnitScope		inScope,
                                                         AudioUnitParameterID	inParameterID,
                                                         AudioUnitParameterInfo	&outParameterInfo )
 {
@@ -120,12 +121,19 @@ ComponentResult			Verbity::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamThree;
                 break;
-            case kParam_Four:
+			case kParam_Four:
                 AUBase::FillInParameterName (outParameterInfo, kParameterFourName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamFour;
+                break;
+			case kParam_Five:
+                AUBase::FillInParameterName (outParameterInfo, kParameterFiveName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamFive;
                 break;
 			default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -141,9 +149,9 @@ ComponentResult			Verbity::GetParameterInfo(AudioUnitScope		inScope,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetPropertyInfo
+//	Chamber::GetPropertyInfo
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetPropertyInfo (AudioUnitPropertyID	inID,
+ComponentResult			Chamber::GetPropertyInfo (AudioUnitPropertyID	inID,
                                                         AudioUnitScope		inScope,
                                                         AudioUnitElement	inElement,
                                                         UInt32 &		outDataSize,
@@ -153,9 +161,9 @@ ComponentResult			Verbity::GetPropertyInfo (AudioUnitPropertyID	inID,
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::GetProperty
+//	Chamber::GetProperty
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult			Verbity::GetProperty(	AudioUnitPropertyID inID,
+ComponentResult			Chamber::GetProperty(	AudioUnitPropertyID inID,
                                                         AudioUnitScope 		inScope,
                                                         AudioUnitElement 	inElement,
                                                         void *			outData )
@@ -163,9 +171,9 @@ ComponentResult			Verbity::GetProperty(	AudioUnitPropertyID inID,
 	return AUEffectBase::GetProperty (inID, inScope, inElement, outData);
 }
 
-//	Verbity::Initialize
+//	Chamber::Initialize
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ComponentResult Verbity::Initialize()
+ComponentResult Chamber::Initialize()
 {
     ComponentResult result = AUEffectBase::Initialize();
     if (result == noErr)
@@ -173,32 +181,31 @@ ComponentResult Verbity::Initialize()
     return result;
 }
 
-#pragma mark ____VerbityEffectKernel
+#pragma mark ____ChamberEffectKernel
 
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::VerbityKernel::Reset()
+//	Chamber::ChamberKernel::Reset()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		Verbity::VerbityKernel::Reset()
-{	
+void		Chamber::ChamberKernel::Reset()
+{
 	iirA = 0.0;
 	iirB = 0.0;
+	iirC = 0.0;
 	
-	for(int count = 0; count < 6479; count++) {aI[count] = 0.0;}
-	for(int count = 0; count < 3659; count++) {aJ[count] = 0.0;}
-	for(int count = 0; count < 1719; count++) {aK[count] = 0.0;}
-	for(int count = 0; count < 679; count++) {aL[count] = 0.0;}
-	
-	for(int count = 0; count < 9699; count++) {aA[count] = 0.0;}
-	for(int count = 0; count < 5999; count++) {aB[count] = 0.0;}
-	for(int count = 0; count < 2319; count++) {aC[count] = 0.0;}
-	for(int count = 0; count < 939; count++) {aD[count] = 0.0;}
-	
-	for(int count = 0; count < 15219; count++) {aE[count] = 0.0;}
-	for(int count = 0; count < 8459; count++) {aF[count] = 0.0;}
-	for(int count = 0; count < 4539; count++) {aG[count] = 0.0;}
-	for(int count = 0; count < 3199; count++) {aH[count] = 0.0;}
+	for(int count = 0; count < 19999; count++) {aE[count] = 0.0;}
+	for(int count = 0; count < 12360; count++) {aF[count] = 0.0;}
+	for(int count = 0; count < 7639; count++) {aG[count] = 0.0;}
+	for(int count = 0; count < 4721; count++) {aH[count] = 0.0;}
+	for(int count = 0; count < 2915; count++) {aA[count] = 0.0;}
+	for(int count = 0; count < 1803; count++) {aB[count] = 0.0;}
+	for(int count = 0; count < 1114; count++) {aC[count] = 0.0;}
+	for(int count = 0; count < 688; count++) {aD[count] = 0.0;}
+	for(int count = 0; count < 425; count++) {aI[count] = 0.0;}
+	for(int count = 0; count < 263; count++) {aJ[count] = 0.0;}
+	for(int count = 0; count < 162; count++) {aK[count] = 0.0;}
+	for(int count = 0; count < 100; count++) {aL[count] = 0.0;}
 	
 	feedbackA = 0.0;
 	feedbackB = 0.0;
@@ -209,9 +216,7 @@ void		Verbity::VerbityKernel::Reset()
 	previousC = 0.0;
 	previousD = 0.0;
 	
-	for(int count = 0; count < 6; count++) {lastRef[count] = 0.0;}
-	
-	thunder = 0;
+	for(int count = 0; count < 9; count++) {lastRef[count] = 0.0;}
 	
 	countI = 1;
 	countJ = 1;
@@ -229,14 +234,14 @@ void		Verbity::VerbityKernel::Reset()
 	countH = 1;
 	
 	cycle = 0;
-		
+	
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//	Verbity::VerbityKernel::Process
+//	Chamber::ChamberKernel::Process
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
+void		Chamber::ChamberKernel::Process(	const Float32 	*inSourceP,
                                                     Float32		 	*inDestP,
                                                     UInt32 			inFramesToProcess,
                                                     UInt32			inNumChannels, 
@@ -245,7 +250,7 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-
+	
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
@@ -255,12 +260,12 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
 	
-	Float64 size = (GetParameter( kParam_One )*1.77)+0.1;
-	Float64 regen = 0.0625+(GetParameter( kParam_Two )*0.03125); //0.09375 max;
-	Float64 lowpass = (1.0-pow(GetParameter( kParam_Three ),2.0))/sqrt(overallscale);
-	Float64 interpolate = pow(GetParameter( kParam_Three ),2.0)*0.618033988749894848204586; //has IIRlike qualities
-	Float64 thunderAmount = (0.3-(GetParameter( kParam_Two )*0.22))*GetParameter( kParam_Three )*0.1;
-	Float64 wet = GetParameter( kParam_Four )*2.0;
+	Float64 size = (pow(GetParameter( kParam_One ),2)*0.9)+0.1;
+	Float64 regen = (1.0-(pow(1.0-GetParameter( kParam_Two ),6)))*0.123;
+	Float64 highpass = (pow(GetParameter( kParam_Three ),2.0))/sqrt(overallscale);
+	Float64 lowpass = (1.0-pow(GetParameter( kParam_Four ),2.0))/sqrt(overallscale);
+	Float64 interpolate = size*0.381966011250105;
+	Float64 wet = GetParameter( kParam_Five )*2.0;
 	Float64 dry = 2.0 - wet;
 	if (wet > 1.0) wet = 1.0;
 	if (wet < 0.0) wet = 0.0;
@@ -270,25 +275,32 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 	//that's so it can be on submixes without cutting back dry channel when adjusted:
 	//unless you go super heavy, you are only adjusting the added verb loudness.
 	
-	delayI = 3407.0*size;
-	delayJ = 1823.0*size;
-	delayK = 859.0*size;
-	delayL = 331.0*size;
-	
-	delayA = 4801.0*size;
-	delayB = 2909.0*size;
-	delayC = 1153.0*size;
-	delayD = 461.0*size;
-	
-	delayE = 7607.0*size;
-	delayF = 4217.0*size;
-	delayG = 2269.0*size;
-	delayH = 1597.0*size;
+	delayE = 19900*size;
+	delayF = delayE*0.618033988749894848204586; 
+	delayG = delayF*0.618033988749894848204586;
+	delayH = delayG*0.618033988749894848204586;
+	delayA = delayH*0.618033988749894848204586;
+	delayB = delayA*0.618033988749894848204586;
+	delayC = delayB*0.618033988749894848204586;
+	delayD = delayC*0.618033988749894848204586;
+	delayI = delayD*0.618033988749894848204586;
+	delayJ = delayI*0.618033988749894848204586;
+	delayK = delayJ*0.618033988749894848204586;
+	delayL = delayK*0.618033988749894848204586;
+	//initially designed around the Fibonnaci series, Chamber uses
+	//delay coefficients that are all related to the Golden Ratio,
+	//Turns out that as you continue to sustain them, it turns from a
+	//chunky slapback effect into a smoother reverb tail that can
+	//sustain infinitely.	
 	
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
 		double drySample = inputSample;
+		
+		if (fabs(iirC)<1.18e-37) iirC = 0.0;
+		iirC = (iirC*(1.0-highpass))+(inputSample*highpass); inputSample -= iirC;
+		//initial highpass
 		
 		if (fabs(iirA)<1.18e-37) iirA = 0.0;
 		iirA = (iirA*(1.0-lowpass))+(inputSample*lowpass); inputSample = iirA;
@@ -296,14 +308,13 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 		
 		cycle++;
 		if (cycle == cycleEnd) { //hit the end point and we do a reverb sample
+			
 			feedbackA = (feedbackA*(1.0-interpolate))+(previousA*interpolate); previousA = feedbackA;
 			feedbackB = (feedbackB*(1.0-interpolate))+(previousB*interpolate); previousB = feedbackB;
 			feedbackC = (feedbackC*(1.0-interpolate))+(previousC*interpolate); previousC = feedbackC;
 			feedbackD = (feedbackD*(1.0-interpolate))+(previousD*interpolate); previousD = feedbackD;
 			
-			thunder = (thunder*0.99)-(feedbackA*thunderAmount);
-
-			aI[countI] = inputSample + ((feedbackA+thunder) * regen);
+			aI[countI] = inputSample + (feedbackA * regen);
 			aJ[countJ] = inputSample + (feedbackB * regen);
 			aK[countK] = inputSample + (feedbackC * regen);
 			aL[countL] = inputSample + (feedbackD * regen);
@@ -334,7 +345,7 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 			Float64 outC = aC[countC-((countC > delayC)?delayC+1:0)];
 			Float64 outD = aD[countD-((countD > delayD)?delayD+1:0)];
 			//second block: four more outputs
-					
+			
 			aE[countE] = (outA - (outB + outC + outD));
 			aF[countF] = (outB - (outA + outC + outD));
 			aG[countG] = (outC - (outA + outB + outD));
@@ -384,11 +395,26 @@ void		Verbity::VerbityKernel::Process(	const Float32 	*inSourceP,
 			inputSample = lastRef[cycle];
 			//we are going through our references now
 		}
+		switch (cycleEnd) //multi-pole average using lastRef[] variables
+		{
+			case 4:
+				lastRef[8] = inputSample; inputSample = (inputSample+lastRef[7])*0.5;
+				lastRef[7] = lastRef[8]; //continue, do not break
+			case 3:
+				lastRef[8] = inputSample; inputSample = (inputSample+lastRef[6])*0.5;
+				lastRef[6] = lastRef[8]; //continue, do not break
+			case 2:
+				lastRef[8] = inputSample; inputSample = (inputSample+lastRef[5])*0.5;
+				lastRef[5] = lastRef[8]; //continue, do not break
+			case 1:
+				break; //no further averaging
+		}
+		
 		
 		if (fabs(iirB)<1.18e-37) iirB = 0.0;
 		iirB = (iirB*(1.0-lowpass))+(inputSample*lowpass); inputSample = iirB;
 		//end filter
-						
+		
 		if (wet < 1.0) inputSample *= wet;
 		if (dry < 1.0) drySample *= dry;
 		inputSample += drySample;
