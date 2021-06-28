@@ -328,9 +328,9 @@ void Chamber::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		long double drySampleR = inputSampleR;
 		
 		if (fabs(iirCL)<1.18e-37) iirCL = 0.0;
-		iirCL = (iirCL*(1.0-lowpass))+(inputSampleL*lowpass); inputSampleL -= iirCL;
+		iirCL = (iirCL*(1.0-highpass))+(inputSampleL*highpass); inputSampleL -= iirCL;
 		if (fabs(iirCR)<1.18e-37) iirCR = 0.0;
-		iirCR = (iirCR*(1.0-lowpass))+(inputSampleR*lowpass); inputSampleR -= iirCR;
+		iirCR = (iirCR*(1.0-highpass))+(inputSampleR*highpass); inputSampleR -= iirCR;
 		//initial highpass
 		
 		if (fabs(iirAL)<1.18e-37) iirAL = 0.0;
