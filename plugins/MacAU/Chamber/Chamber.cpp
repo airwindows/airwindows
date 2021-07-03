@@ -217,6 +217,7 @@ void		Chamber::ChamberKernel::Reset()
 	previousD = 0.0;
 	
 	for(int count = 0; count < 9; count++) {lastRef[count] = 0.0;}
+	cycle = 0;
 	
 	countI = 1;
 	countJ = 1;
@@ -233,7 +234,6 @@ void		Chamber::ChamberKernel::Reset()
 	countG = 1;
 	countH = 1;
 	
-	cycle = 0;
 	
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }

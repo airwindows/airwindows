@@ -1,9 +1,9 @@
 /*
-*	File:		Chamber.h
+*	File:		Energy2.h
 *	
 *	Version:	1.0
 * 
-*	Created:	6/21/21
+*	Created:	6/28/21
 *	
 *	Copyright:  Copyright © 2021 Airwindows, All Rights Reserved
 * 
@@ -40,31 +40,39 @@
 *
 */
 #include "AUEffectBase.h"
-#include "ChamberVersion.h"
+#include "Energy2Version.h"
 
 #if AU_DEBUG_DISPATCHER
 	#include "AUDebugDispatcher.h"
 #endif
 
 
-#ifndef __Chamber_h__
-#define __Chamber_h__
+#ifndef __Energy2_h__
+#define __Energy2_h__
 
 
-#pragma mark ____Chamber Parameters
+#pragma mark ____Energy2 Parameters
 
 // parameters
-static const float kDefaultValue_ParamOne = 0.35;
-static const float kDefaultValue_ParamTwo = 0.35;
-static const float kDefaultValue_ParamThree = 0.35;
-static const float kDefaultValue_ParamFour = 0.35;
-static const float kDefaultValue_ParamFive = 0.35;
+static const float kDefaultValue_ParamOne = 0.0;
+static const float kDefaultValue_ParamTwo = 0.0;
+static const float kDefaultValue_ParamThree = 0.0;
+static const float kDefaultValue_ParamFour = 0.0;
+static const float kDefaultValue_ParamFive = 0.0;
+static const float kDefaultValue_ParamSix = 0.0;
+static const float kDefaultValue_ParamSeven = 0.0;
+static const float kDefaultValue_ParamEight = 0.0;
+static const float kDefaultValue_ParamNine = 1.0;
 
-static CFStringRef kParameterOneName = CFSTR("Bigness");
-static CFStringRef kParameterTwoName = CFSTR("Longness");
-static CFStringRef kParameterThreeName = CFSTR("Liteness");
-static CFStringRef kParameterFourName = CFSTR("Darkness");
-static CFStringRef kParameterFiveName = CFSTR("Wetness");
+static CFStringRef kParameterOneName = CFSTR("Hiss");
+static CFStringRef kParameterTwoName = CFSTR("Glitter");
+static CFStringRef kParameterThreeName = CFSTR("Rat");
+static CFStringRef kParameterFourName = CFSTR("Fizz");
+static CFStringRef kParameterFiveName = CFSTR("Scrape");
+static CFStringRef kParameterSixName = CFSTR("Chug");
+static CFStringRef kParameterSevenName = CFSTR("Yowr");
+static CFStringRef kParameterEightName = CFSTR("Snarl");
+static CFStringRef kParameterNineName = CFSTR("InvDryWet");
 //Alter the name if desired, but using the plugin name is a start
 
 enum {
@@ -73,20 +81,24 @@ enum {
 	kParam_Three =2,
 	kParam_Four =3,
 	kParam_Five =4,
+	kParam_Six =5,
+	kParam_Seven =6,
+	kParam_Eight =7,
+	kParam_Nine =8,
 	//Add your parameters here...
-	kNumberOfParameters=5
+	kNumberOfParameters=9
 };
 
-#pragma mark ____Chamber
-class Chamber : public AUEffectBase
+#pragma mark ____Energy2
+class Energy2 : public AUEffectBase
 {
 public:
-	Chamber(AudioUnit component);
+	Energy2(AudioUnit component);
 #if AU_DEBUG_DISPATCHER
-	virtual ~Chamber () { delete mDebugDispatcher; }
+	virtual ~Energy2 () { delete mDebugDispatcher; }
 #endif
 	
-	virtual AUKernelBase *		NewKernel() { return new ChamberKernel(this); }
+	virtual AUKernelBase *		NewKernel() { return new Energy2Kernel(this); }
 	
 	virtual	ComponentResult		GetParameterValueStrings(AudioUnitScope			inScope,
 														 AudioUnitParameterID		inParameterID,
@@ -113,15 +125,15 @@ public:
     virtual Float64				GetLatency() {return (1.0/GetSampleRate())*0.0;}	// in SECONDS! gsr * a number = in samples
 	
 	/*! @method Version */
-	virtual ComponentResult		Version() { return kChamberVersion; }
+	virtual ComponentResult		Version() { return kEnergy2Version; }
 	
     
 	
 protected:
-		class ChamberKernel : public AUKernelBase		// most of the real work happens here
+		class Energy2Kernel : public AUKernelBase		// most of the real work happens here
 	{
 public:
-		ChamberKernel(AUEffectBase *inAudioUnit )
+		Energy2Kernel(AUEffectBase *inAudioUnit )
 		: AUKernelBase(inAudioUnit)
 	{
 	}
@@ -137,48 +149,86 @@ public:
         virtual void		Reset();
 		
 		private: 
-		Float64 iirA;
-		Float64 iirB;
-		Float64 iirC;
+		Float64 duoEven;
+		Float64 duoOdd;
+		Float64 duoFactor;
+		bool flip;
 		
-		Float64 aE[20000];
-		Float64 aF[12361];
-		Float64 aG[7640];
-		Float64 aH[4722];
-		Float64 aA[2916];
-		Float64 aB[1804];
-		Float64 aC[1115];
-		Float64 aD[689];
-		Float64 aI[426];
-		Float64 aJ[264];
-		Float64 aK[163];
-		Float64 aL[101];
+		Float64 tripletA;
+		Float64 tripletB;
+		Float64 tripletC;
+		Float64 tripletFactor;
+		int countA;
 		
-		Float64 feedbackA;
-		Float64 feedbackB;
-		Float64 feedbackC;
-		Float64 feedbackD;
-		Float64 previousA;
-		Float64 previousB;
-		Float64 previousC;
-		Float64 previousD;
+		Float64 quadA;
+		Float64 quadB;
+		Float64 quadC;
+		Float64 quadD;
+		Float64 quadFactor;
+		int countB;
 		
+		Float64 quintA;
+		Float64 quintB;
+		Float64 quintC;
+		Float64 quintD;
+		Float64 quintE;
+		Float64 quintFactor;
+		int countC;
+		
+		Float64 sextA;
+		Float64 sextB;
+		Float64 sextC;
+		Float64 sextD;
+		Float64 sextE;
+		Float64 sextF;
+		Float64 sextFactor;
+		int countD;
+		
+		Float64 septA;
+		Float64 septB;
+		Float64 septC;
+		Float64 septD;
+		Float64 septE;
+		Float64 septF;
+		Float64 septG;
+		Float64 septFactor;
+		int countE;
+		
+		Float64 octA;
+		Float64 octB;
+		Float64 octC;
+		Float64 octD;
+		Float64 octE;
+		Float64 octF;
+		Float64 octG;
+		Float64 octH;
+		Float64 octFactor;
+		int countF;
+		
+		Float64 nintA;
+		Float64 nintB;
+		Float64 nintC;
+		Float64 nintD;
+		Float64 nintE;
+		Float64 nintF;
+		Float64 nintG;
+		Float64 nintH;
+		Float64 nintI;
+		Float64 nintFactor;
+		int countG;
+		
+		Float64 PrevH;
+		Float64 PrevG;
+		Float64 PrevF;
+		Float64 PrevE;
+		Float64 PrevD;
+		Float64 PrevC;
+		Float64 PrevB;
+		Float64 PrevA;
+
 		long double lastRef[10];
 		int cycle;
-		
-		int countA, delayA;
-		int countB, delayB;
-		int countC, delayC;
-		int countD, delayD;
-		int countE, delayE;
-		int countF, delayF;
-		int countG, delayG;
-		int countH, delayH;
-		int countI, delayI;
-		int countJ, delayJ;
-		int countK, delayK;
-		int countL, delayL;		
-		
+
 		uint32_t fpd;
 	};
 };
