@@ -282,7 +282,6 @@ void		Energy2::Energy2Kernel::Process(	const Float32 	*inSourceP,
 	long double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	
 	int cycleEnd = floor(overallscale);
 	if (cycleEnd < 1) cycleEnd = 1;
 	if (cycleEnd > 4) cycleEnd = 4;

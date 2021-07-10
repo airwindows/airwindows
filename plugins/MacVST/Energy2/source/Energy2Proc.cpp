@@ -17,7 +17,6 @@ void Energy2::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
 	int cycleEnd = floor(overallscale);
 	if (cycleEnd < 1) cycleEnd = 1;
 	if (cycleEnd > 4) cycleEnd = 4;
@@ -660,7 +659,6 @@ void Energy2::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
 	int cycleEnd = floor(overallscale);
 	if (cycleEnd < 1) cycleEnd = 1;
 	if (cycleEnd > 4) cycleEnd = 4;
