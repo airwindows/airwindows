@@ -1,11 +1,11 @@
 /* ========================================
- *  ZHighpass - ZHighpass.h
+ *  ZBandpass - ZBandpass.h
  *  Created 8/12/11 by SPIAdmin 
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
-#ifndef __ZHighpass_H
-#define __ZHighpass_H
+#ifndef __ZBandpass_H
+#define __ZBandpass_H
 
 #ifndef __audioeffect__
 #include "audioeffectx.h"
@@ -26,14 +26,14 @@ enum {
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
-const unsigned long kUniqueId = 'zhip';    //Change this to what the AU identity is!
+const unsigned long kUniqueId = 'zbap';    //Change this to what the AU identity is!
 
-class ZHighpass : 
+class ZBandpass : 
     public AudioEffectX 
 {
 public:
-    ZHighpass(audioMasterCallback audioMaster);
-    ~ZHighpass();
+    ZBandpass(audioMasterCallback audioMaster);
+    ~ZBandpass();
     virtual bool getEffectName(char* name);                       // The plug-in name
     virtual VstPlugCategory getPlugCategory();                    // The general category for the plug-in
     virtual bool getProductString(char* text);                    // This is a unique plug-in string provided by Steinberg
@@ -54,7 +54,7 @@ public:
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+	
 	long double biquadA[15];
 	long double biquadB[15];
 	long double biquadC[15];
@@ -72,10 +72,6 @@ private:
     float B;
     float C;
     float D;
-    float E; //parameters. Always 0-1, and we scale/alter them elsewhere.
-	//looks like we forgot to undeclare this unused variable! If you are reading
-	//this, congrats for attentive code-scrutinizing :)
-
-};
+ };
 
 #endif
