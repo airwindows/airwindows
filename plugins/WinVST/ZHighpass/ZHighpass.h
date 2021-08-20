@@ -72,8 +72,6 @@ private:
     float B;
     float C;
     float D;
-    float E; //parameters. Always 0-1, and we scale/alter them elsewhere.
-
 };
 
 #endif

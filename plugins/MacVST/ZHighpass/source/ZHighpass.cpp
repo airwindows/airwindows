@@ -12,7 +12,7 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new Z
 ZHighpass::ZHighpass(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.16;
+	A = 0.1;
 	B = 0.5;
 	C = 1.0;
 	D = 0.5;

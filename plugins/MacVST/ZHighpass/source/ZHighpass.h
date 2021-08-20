@@ -72,10 +72,6 @@ private:
     float B;
     float C;
     float D;
-    float E; //parameters. Always 0-1, and we scale/alter them elsewhere.
-	//looks like we forgot to undeclare this unused variable! If you are reading
-	//this, congrats for attentive code-scrutinizing :)
-
 };
 
 #endif
