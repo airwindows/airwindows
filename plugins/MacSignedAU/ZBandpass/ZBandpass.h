@@ -54,7 +54,7 @@
 #pragma mark ____ZBandpass Parameters
 
 // parameters
-static const float kDefaultValue_ParamOne = 0.16;
+static const float kDefaultValue_ParamOne = 0.1;
 static const float kDefaultValue_ParamTwo = 0.5;
 static const float kDefaultValue_ParamThree = 1.0;
 static const float kDefaultValue_ParamFour = 0.5;

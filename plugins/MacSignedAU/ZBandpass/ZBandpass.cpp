@@ -219,7 +219,7 @@ void		ZBandpass::ZBandpassKernel::Process(	const Float32 	*inSourceP,
 	//opamp stuff
 	double inTrim = GetParameter( kParam_One )*10.0;
 	inTrim *= inTrim; inTrim *= inTrim;
-	double outPad = GetParameter( kParam_Three );
+	double outPad = GetParameter( kParam_Three )*10.0;
 	double iirAmountA = 0.00069/overallscale;
 	biquadF[0] = biquadE[0] = 15500.0 / GetSampleRate();
     biquadF[1] = biquadE[1] = 0.935;

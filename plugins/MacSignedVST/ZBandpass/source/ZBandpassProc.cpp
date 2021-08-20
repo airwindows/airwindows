@@ -34,7 +34,7 @@ void ZBandpass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	//opamp stuff
 	double inTrim = A*10.0;
 	inTrim *= inTrim; inTrim *= inTrim;
-	double outPad = C;
+	double outPad = C*10.0;
 	double iirAmountA = 0.00069/overallscale;
 	biquadF[0] = biquadE[0] = 15500.0 / getSampleRate();
     biquadF[1] = biquadE[1] = 0.935;
@@ -225,7 +225,7 @@ void ZBandpass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	//opamp stuff
 	double inTrim = A*10.0;
 	inTrim *= inTrim; inTrim *= inTrim;
-	double outPad = C;
+	double outPad = C*10.0;
 	double iirAmountA = 0.00069/overallscale;
 	biquadF[0] = biquadE[0] = 15500.0 / getSampleRate();
     biquadF[1] = biquadE[1] = 0.935;
