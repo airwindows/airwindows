@@ -204,7 +204,7 @@ void		Acceleration::AccelerationKernel::Process(	const Float32 	*inSourceP,
 		inputSample = *sourceP;
 		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
 			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
+			//this antique declares a variable before anything else is compiled. It won't keep assigning
 			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
 			//but it lets me add this denormalization fix in a single place rather than updating
 			//it in three different locations. The variable isn't thread-safe but this is only
