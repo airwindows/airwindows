@@ -58,7 +58,7 @@ void Tube::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleL;
 		//this applies more and more of a 'curve' to the transfer function
 		
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleL)*fabs(inputSampleL);
+		if ((powerfactor % 2 == 1) && (inputSampleL != 0.0)) factor = (factor/inputSampleL)*fabs(inputSampleL);
 		//if we would've got an asymmetrical effect this undoes the last step, and then
 		//redoes it using an absolute value to make the effect symmetrical again
 		
@@ -71,7 +71,7 @@ void Tube::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleR;
 		//this applies more and more of a 'curve' to the transfer function
 		
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleR)*fabs(inputSampleR);
+		if ((powerfactor % 2 == 1) && (inputSampleR != 0.0)) factor = (factor/inputSampleR)*fabs(inputSampleR);
 		//if we would've got an asymmetrical effect this undoes the last step, and then
 		//redoes it using an absolute value to make the effect symmetrical again
 		
@@ -163,7 +163,7 @@ void Tube::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleL;
 		//this applies more and more of a 'curve' to the transfer function
 		
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleL)*fabs(inputSampleL);
+		if ((powerfactor % 2 == 1) && (inputSampleL != 0.0)) factor = (factor/inputSampleL)*fabs(inputSampleL);
 		//if we would've got an asymmetrical effect this undoes the last step, and then
 		//redoes it using an absolute value to make the effect symmetrical again
 		
@@ -176,7 +176,7 @@ void Tube::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleR;
 		//this applies more and more of a 'curve' to the transfer function
 		
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleR)*fabs(inputSampleR);
+		if ((powerfactor % 2 == 1) && (inputSampleR != 0.0)) factor = (factor/inputSampleR)*fabs(inputSampleR);
 		//if we would've got an asymmetrical effect this undoes the last step, and then
 		//redoes it using an absolute value to make the effect symmetrical again
 		

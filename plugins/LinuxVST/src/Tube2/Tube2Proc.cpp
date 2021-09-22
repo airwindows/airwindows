@@ -72,13 +72,13 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//original Tube algorithm: powerfactor widens the more linear region of the wave
 		double factor = inputSampleL; //Left channel
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleL;
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleL)*fabs(inputSampleL);
+		if ((powerfactor % 2 == 1) && (inputSampleL != 0.0)) factor = (factor/inputSampleL)*fabs(inputSampleL);
 		factor *= gainscaling;
 		inputSampleL -= factor;
 		inputSampleL *= outputscaling;
 		factor = inputSampleR; //Right channel
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleR;
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleR)*fabs(inputSampleR);
+		if ((powerfactor % 2 == 1) && (inputSampleR != 0.0)) factor = (factor/inputSampleR)*fabs(inputSampleR);
 		factor *= gainscaling;
 		inputSampleR -= factor;
 		inputSampleR *= outputscaling;
@@ -203,13 +203,13 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//original Tube algorithm: powerfactor widens the more linear region of the wave
 		double factor = inputSampleL; //Left channel
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleL;
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleL)*fabs(inputSampleL);
+		if ((powerfactor % 2 == 1) && (inputSampleL != 0.0)) factor = (factor/inputSampleL)*fabs(inputSampleL);
 		factor *= gainscaling;
 		inputSampleL -= factor;
 		inputSampleL *= outputscaling;
 		factor = inputSampleR; //Right channel
 		for (int x = 0; x < powerfactor; x++) factor *= inputSampleR;
-		if (powerfactor % 2 == 1) factor = (factor/inputSampleR)*fabs(inputSampleR);
+		if ((powerfactor % 2 == 1) && (inputSampleR != 0.0)) factor = (factor/inputSampleR)*fabs(inputSampleR);
 		factor *= gainscaling;
 		inputSampleR -= factor;
 		inputSampleR *= outputscaling;
