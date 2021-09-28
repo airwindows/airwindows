@@ -133,7 +133,8 @@ public:
 	long double biquadS3[11];
 	long double biquadS5[11];
 
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
