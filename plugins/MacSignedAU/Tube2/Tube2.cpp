@@ -5,7 +5,7 @@
 * 
 *	Created:	9/15/21
 *	
-*	Copyright:  Copyright © 2021 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2021 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -222,7 +222,7 @@ void		Tube2::Tube2Kernel::Process(	const Float32 	*inSourceP,
 		//original Tube algorithm: powerfactor widens the more linear region of the wave
 		double factor = inputSample;
 		for (int x = 0; x < powerfactor; x++) factor *= inputSample;
-		if (powerfactor % 2 == 1) factor = (factor/inputSample)*fabs(inputSample);		
+		if ((powerfactor % 2 == 1) && (inputSample != 0.0)) factor = (factor/inputSample)*fabs(inputSample);		
 		factor *= gainscaling;
 		inputSample -= factor;
 		inputSample *= outputscaling;

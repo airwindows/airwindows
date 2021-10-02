@@ -211,7 +211,7 @@ void		Tube::TubeKernel::Process(	const Float32 	*inSourceP,
 		for (int x = 0; x < powerfactor; x++) factor *= inputSample;
 		//this applies more and more of a 'curve' to the transfer function
 		
-		if (powerfactor % 2 == 1) factor = (factor/inputSample)*fabs(inputSample);
+		if ((powerfactor % 2 == 1) && (inputSample != 0.0)) factor = (factor/inputSample)*fabs(inputSample);
 		//if we would've got an asymmetrical effect this undoes the last step, and then
 		//redoes it using an absolute value to make the effect symmetrical again
 		

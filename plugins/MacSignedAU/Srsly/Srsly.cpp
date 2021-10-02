@@ -216,7 +216,8 @@ ComponentResult		Srsly::Reset(AudioUnitScope inScope, AudioUnitElement inElement
 		biquadS3[x] = 0.0;
 		biquadS5[x] = 0.0;
 	}
-	fpd = 17;
+    fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+    fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
 }
 
@@ -349,8 +350,8 @@ OSStatus		Srsly::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	while (nSampleFrames-- > 0) {
 		long double inputSampleL = *inputL;
 		long double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
+		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -446,15 +447,15 @@ OSStatus		Srsly::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 			inputSampleR = (inputSampleR * wet)+(drySampleR * (1.0-wet));
 		}
 		
-		//begin 32 bit stereo floating point dither
-		int expon; frexpf((float)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
-		frexpf((float)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
-		//end 32 bit stereo floating point dither
-		
+        //begin 32 bit stereo floating point dither
+        int expon; frexpf((float)inputSampleL, &expon);
+        fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+        inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+        frexpf((float)inputSampleR, &expon);
+        fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+        inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+        //end 32 bit stereo floating point dither
+
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
 		//direct stereo out

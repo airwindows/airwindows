@@ -5,7 +5,7 @@
 * 
 *	Created:	9/3/19
 *	
-*	Copyright:  Copyright © 2019 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2019 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -133,7 +133,8 @@ public:
 	long double biquadS3[11];
 	long double biquadS5[11];
 
-	uint32_t fpd;
+    uint32_t fpdL;
+    uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
