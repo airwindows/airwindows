@@ -5,7 +5,7 @@
 * 
 *	Created:	9/13/21
 *	
-*	Copyright:  Copyright © 2021 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2021 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -82,8 +82,6 @@ ComponentResult			Monitoring2::GetParameterValueStrings(AudioUnitScope		inScope,
 		{
 			kMenuItem_DKAD,
 			kMenuItem_DKCD,
-			kMenuItem_PDAD,
-			kMenuItem_PDCD,
 			kMenuItem_PEAK,
 			kMenuItem_SLEW,
 			kMenuItem_SUBS,
@@ -287,16 +285,10 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 		
 		switch (processing)
 		{
-			case 0:
-			case 1:
+			case kDKAD:
+			case kDKCD:
 				break;
-			case 2:
-			case 3:
-				inputSampleL *= 0.9549925859; // -0.2dB
-				inputSampleR *= 0.9549925859; // -0.2dB
-				//pad both 24 bit and 16 bit
-				break;
-			case 4:				
+			case kPEAK:
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//amplitude aspect
@@ -351,7 +343,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				inputSampleL *= 0.63679; inputSampleR *= 0.63679; //scale it to 0dB output at full blast
 				//PeaksOnly
 				break;
-			case 5:
+			case kSLEW:
 				Float64 trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
 				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
@@ -364,7 +356,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				inputSampleR = slewSample;
 				//SlewOnly
 				break;
-			case 6:
+			case kSUBS:
 				Float64 iirAmount; iirAmount = (2250/44100.0) / overallscale;
 				Float64 gain; gain = 1.42;
 				inputSampleL *= gain; inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
@@ -525,26 +517,26 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0;				
 				//SubsOnly
 				break;
-			case 7:
-			case 8:
+			case kMONO:
+			case kSIDE:
 				long double mid; mid = inputSampleL + inputSampleR;
 				long double side; side = inputSampleL - inputSampleR;
-				if (processing < 8) side = 0.0;
+				if (processing < 6) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
 				inputSampleR = (mid-side)/2.0; 
 				break;
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
+			case kVINYL:
+			case kAURAT:
+			case kMONORAT:
+			case kMONOLAT:
+			case kPHONE:
 				//Bandpass: changes in EQ are up in the variable defining, not here
-				//9 Vinyl, 10 11 12 Aurat, 13 Phone
+				//7 Vinyl, 8 9 10 Aurat, 11 Phone
 				
-				if (processing == 11) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
-				if (processing == 12) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == 13) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
+				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
+				if (processing == kPHONE) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
@@ -565,14 +557,14 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				inputSampleL = asin(inputSampleL); inputSampleR = asin(inputSampleR);
 				//amplitude aspect
 				break;
-			case 14:
-			case 15:
-			case 16:
-			case 17:
-				if (processing == 14) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
-				if (processing == 15) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
-				if (processing == 16) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
-				if (processing == 17) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
+			case kCANSA:
+			case kCANSB:
+			case kCANSC:
+			case kCANSD:
+				if (processing == kCANSA) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
+				if (processing == kCANSB) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
+				if (processing == kCANSC) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
+				if (processing == kCANSD) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
@@ -596,10 +588,10 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				else {inputSampleL += (aL[ax+1])*0.5; inputSampleR += (aR[ax+1])*0.5;}
 				//a darkened Midiverb-style allpass
 				
-				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				if (processing == 15) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 16) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
-				if (processing == 17) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
+				if (processing == kCANSA) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == kCANSB) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == kCANSC) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
+				if (processing == kCANSD) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -634,7 +626,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
 				break;
-			case 18:
+			case kTRICK:
 				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
@@ -642,7 +634,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 		}
 		
 		//begin Dark		
-		if (processing == 1 || processing == 3) {
+		if (processing == kDKCD) {
 			inputSampleL *= 32768.0; //or 16 bit option
 			inputSampleR *= 32768.0; //or 16 bit option
 		} else {
@@ -713,7 +705,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 		darkSampleR[0] = inputSampleR;
 		//end Dark right
 		
-		if (processing == 1 || processing == 3) {
+		if (processing == kDKCD) {
 			inputSampleL /= 32768.0;
 			inputSampleR /= 32768.0;
 		} else {

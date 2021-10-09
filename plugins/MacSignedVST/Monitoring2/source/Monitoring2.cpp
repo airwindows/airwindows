@@ -117,26 +117,24 @@ void Monitoring2::getParameterName(VstInt32 index, char *text) {
 
 void Monitoring2::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: switch((VstInt32)( A * 18.999 )) //0 to almost edge of # of params
-		{	case 0: vst_strncpy (text, "Out24", kVstMaxParamStrLen); break;
-			case 1: vst_strncpy (text, "Out16", kVstMaxParamStrLen); break;
-			case 2: vst_strncpy (text, "Pad24", kVstMaxParamStrLen); break;
-			case 3: vst_strncpy (text, "Pad16", kVstMaxParamStrLen); break;
-			case 4: vst_strncpy (text, "Peaks", kVstMaxParamStrLen); break;
-			case 5: vst_strncpy (text, "Slew", kVstMaxParamStrLen); break;
-			case 6: vst_strncpy (text, "Subs", kVstMaxParamStrLen); break;
-			case 7: vst_strncpy (text, "Mono", kVstMaxParamStrLen); break;
-			case 8: vst_strncpy (text, "Side", kVstMaxParamStrLen); break;
-			case 9: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
-			case 10: vst_strncpy (text, "Aurat", kVstMaxParamStrLen); break;
-			case 11: vst_strncpy (text, "MonoRat", kVstMaxParamStrLen); break;
-			case 12: vst_strncpy (text, "MonoLat", kVstMaxParamStrLen); break;
-			case 13: vst_strncpy (text, "Phone", kVstMaxParamStrLen); break;
-			case 14: vst_strncpy (text, "Cans A", kVstMaxParamStrLen); break;
-			case 15: vst_strncpy (text, "Cans B", kVstMaxParamStrLen); break;
-			case 16: vst_strncpy (text, "Cans C", kVstMaxParamStrLen); break;
-			case 17: vst_strncpy (text, "Cans D", kVstMaxParamStrLen); break;
-			case 18: vst_strncpy (text, "V Trick", kVstMaxParamStrLen); break;
+        case kParamA: switch((VstInt32)( A * 16.999 )) //0 to almost edge of # of params
+		{	case kDKAD: vst_strncpy (text, "Out24", kVstMaxParamStrLen); break;
+			case kDKCD: vst_strncpy (text, "Out16", kVstMaxParamStrLen); break;
+			case kPEAK: vst_strncpy (text, "Peaks", kVstMaxParamStrLen); break;
+			case kSLEW: vst_strncpy (text, "Slew", kVstMaxParamStrLen); break;
+			case kSUBS: vst_strncpy (text, "Subs", kVstMaxParamStrLen); break;
+			case kMONO: vst_strncpy (text, "Mono", kVstMaxParamStrLen); break;
+			case kSIDE: vst_strncpy (text, "Side", kVstMaxParamStrLen); break;
+			case kVINYL: vst_strncpy (text, "Vinyl", kVstMaxParamStrLen); break;
+			case kAURAT: vst_strncpy (text, "Aurat", kVstMaxParamStrLen); break;
+			case kMONORAT: vst_strncpy (text, "MonoRat", kVstMaxParamStrLen); break;
+			case kMONOLAT: vst_strncpy (text, "MonoLat", kVstMaxParamStrLen); break;
+			case kPHONE: vst_strncpy (text, "Phone", kVstMaxParamStrLen); break;
+			case kCANSA: vst_strncpy (text, "Cans A", kVstMaxParamStrLen); break;
+			case kCANSB: vst_strncpy (text, "Cans B", kVstMaxParamStrLen); break;
+			case kCANSC: vst_strncpy (text, "Cans C", kVstMaxParamStrLen); break;
+			case kCANSD: vst_strncpy (text, "Cans D", kVstMaxParamStrLen); break;
+			case kTRICK: vst_strncpy (text, "V Trick", kVstMaxParamStrLen); break;
 			default: break; // unknown parameter, shouldn't happen!
 		} break;			
         default: break; // unknown parameter, shouldn't happen!

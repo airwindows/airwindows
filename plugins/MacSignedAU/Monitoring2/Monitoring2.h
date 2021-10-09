@@ -5,7 +5,7 @@
 * 
 *	Created:	9/13/21
 *	
-*	Copyright:  Copyright © 2021 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2021 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -57,29 +57,25 @@
 static CFStringRef kParameterOneName = CFSTR("Monitor");
 static const int kDKAD = 0;
 static const int kDKCD = 1;
-static const int kPDAD = 2;
-static const int kPDCD = 3;
-static const int kPEAK = 4;
-static const int kSLEW = 5;
-static const int kSUBS = 6;
-static const int kMONO = 7;
-static const int kSIDE = 8;
-static const int kVINYL = 9;
-static const int kAURAT = 10;
-static const int kMONORAT = 11;
-static const int kMONOLAT = 12;
-static const int kPHONE = 13;
-static const int kCANSA = 14;
-static const int kCANSB = 15;
-static const int kCANSC = 16;
-static const int kCANSD = 17;
-static const int kTRICK = 18;
+static const int kPEAK = 2;
+static const int kSLEW = 3;
+static const int kSUBS = 4;
+static const int kMONO = 5;
+static const int kSIDE = 6;
+static const int kVINYL = 7;
+static const int kAURAT = 8;
+static const int kMONORAT = 9;
+static const int kMONOLAT = 10;
+static const int kPHONE = 11;
+static const int kCANSA = 12;
+static const int kCANSB = 13;
+static const int kCANSC = 14;
+static const int kCANSD = 15;
+static const int kTRICK = 16;
 static const int kDefaultValue_ParamOne = kDKAD;
 
 static CFStringRef kMenuItem_DKAD = CFSTR ("Out24");
 static CFStringRef kMenuItem_DKCD = CFSTR ("Out16");
-static CFStringRef kMenuItem_PDAD = CFSTR ("Pad24");
-static CFStringRef kMenuItem_PDCD = CFSTR ("Pad16");
 static CFStringRef kMenuItem_PEAK = CFSTR ("Peaks");
 static CFStringRef kMenuItem_SLEW = CFSTR ("Slew");
 static CFStringRef kMenuItem_SUBS = CFSTR ("Subs");

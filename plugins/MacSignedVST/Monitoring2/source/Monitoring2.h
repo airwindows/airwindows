@@ -20,6 +20,27 @@ enum {
   kNumParameters = 1
 }; //
 
+enum {
+    kDKAD,
+    kDKCD,
+    kPEAK,
+    kSLEW,
+    kSUBS,
+    kMONO,
+    kSIDE,
+    kVINYL,
+    kAURAT,
+    kMONORAT,
+    kMONOLAT,
+    kPHONE,
+    kCANSA,
+    kCANSB,
+    kCANSC,
+    kCANSD,
+    kTRICK,
+};
+
+
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
