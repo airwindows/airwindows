@@ -22,22 +22,22 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	if (depth < 3) depth = 3;
 	if (depth > 98) depth = 98; //for Dark	
 	
-	int processing = (VstInt32)( A * 18.999 );
+	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
-	if (processing == 9) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
-	if (processing == 13) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquad[fix_freq] = 0.0375/overallscale; biquad[fix_reso] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == kVINYL) {biquad[fix_freq] = 0.0385/overallscale; biquad[fix_reso] = 0.0825;}
+	if (processing == kPHONE) {biquad[fix_freq] = 0.1245/overallscale; biquad[fix_reso] = 0.46;}
+	double K = tan(M_PI * biquad[fix_freq]);
+	double norm = 1.0 / (1.0 + K / biquad[fix_reso] + K * K);
+	biquad[fix_a0] = K / biquad[fix_reso] * norm;
+	biquad[fix_a2] = -biquad[fix_a0]; //for bandpass, ignore [fix_a1] = 0.0
+	biquad[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	biquad[fix_b2] = (1.0 - K / biquad[fix_reso] + K * K) * norm;
 	//for Bandpasses
 	
     while (--sampleFrames >= 0)
@@ -52,16 +52,10 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		
 		switch (processing)
 		{
-			case 0:
-			case 1:
+			case kDKAD:
+			case kDKCD:
 				break;
-			case 2:
-			case 3:
-				inputSampleL *= 0.9549925859; // -0.2dB
-				inputSampleR *= 0.9549925859; // -0.2dB
-				//pad both 24 bit and 16 bit
-				break;
-			case 4:				
+			case kPEAK:
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//amplitude aspect
@@ -116,7 +110,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				inputSampleL *= 0.63679; inputSampleR *= 0.63679; //scale it to 0dB output at full blast
 				//PeaksOnly
 				break;
-			case 5:
+			case kSLEW:
 				double trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
 				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
@@ -129,7 +123,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				inputSampleR = slewSample;
 				//SlewOnly
 				break;
-			case 6:
+			case kSUBS:
 				double iirAmount; iirAmount = (2250/44100.0) / overallscale;
 				double gain; gain = 1.42;
 				inputSampleL *= gain; inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
@@ -290,8 +284,8 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0;				
 				//SubsOnly
 				break;
-			case 7:
-			case 8:
+			case kMONO:
+			case kSIDE:
 				long double mid; mid = inputSampleL + inputSampleR;
 				long double side; side = inputSampleL - inputSampleR;
 				if (processing < 8) side = 0.0;
@@ -299,28 +293,28 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				inputSampleL = (mid+side)/2.0;
 				inputSampleR = (mid-side)/2.0; 
 				break;
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
+			case kVINYL:
+			case kAURAT:
+			case kMONORAT:
+			case kMONOLAT:
+			case kPHONE:
 				//Bandpass: changes in EQ are up in the variable defining, not here
 				//7 Vinyl, 8 9 10 Aurat, 11 Phone
-				if (processing == 11) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
-				if (processing == 12) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == 13) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
+				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
+				if (processing == kPHONE) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
+				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
+				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
+				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;
@@ -329,14 +323,14 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				inputSampleL = asin(inputSampleL); inputSampleR = asin(inputSampleR);
 				//amplitude aspect
 				break;
-			case 14:
-			case 15:
-			case 16:
-			case 17:
-				if (processing == 14) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
-				if (processing == 15) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
-				if (processing == 16) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
-				if (processing == 17) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
+			case kCANSA:
+			case kCANSB:
+			case kCANSC:
+			case kCANSD:
+				if (processing == kCANSA) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
+				if (processing == kCANSB) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
+				if (processing == kCANSC) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
+				if (processing == kCANSD) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
@@ -360,10 +354,10 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				else {inputSampleL += (aL[ax+1])*0.5; inputSampleR += (aR[ax+1])*0.5;}
 				//a darkened Midiverb-style allpass
 				
-				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				if (processing == 15) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 16) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
-				if (processing == 17) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
+				if (processing == kCANSA) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == kCANSB) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == kCANSC) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
+				if (processing == kCANSD) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -398,7 +392,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
 				break;
-			case 18:
+			case kTRICK:
 				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
@@ -406,7 +400,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		}
 		
 		//begin Dark		
-		if (processing == 1 || processing == 3) {
+		if (processing == kDKCD) {
 			inputSampleL *= 32768.0; //or 16 bit option
 			inputSampleR *= 32768.0; //or 16 bit option
 		} else {
@@ -477,7 +471,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		darkSampleR[0] = inputSampleR;
 		//end Dark right
 		
-		if (processing == 1 || processing == 3) {
+		if (processing == kDKCD) {
 			inputSampleL /= 32768.0;
 			inputSampleR /= 32768.0;
 		} else {
@@ -518,15 +512,15 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
-	if (processing == 9) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
-	if (processing == 13) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquad[fix_freq] = 0.0375/overallscale; biquad[fix_reso] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == kVINYL) {biquad[fix_freq] = 0.0385/overallscale; biquad[fix_reso] = 0.0825;}
+	if (processing == kPHONE) {biquad[fix_freq] = 0.1245/overallscale; biquad[fix_reso] = 0.46;}
+	double K = tan(M_PI * biquad[fix_freq]);
+	double norm = 1.0 / (1.0 + K / biquad[fix_reso] + K * K);
+	biquad[fix_a0] = K / biquad[fix_reso] * norm;
+	biquad[fix_a2] = -biquad[fix_a0]; //for bandpass, ignore [fix_a1] = 0.0
+	biquad[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	biquad[fix_b2] = (1.0 - K / biquad[fix_reso] + K * K) * norm;
 	//for Bandpasses
 	
     while (--sampleFrames >= 0)
@@ -541,16 +535,10 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		switch (processing)
 		{
-			case 0:
-			case 1:
+			case kDKAD:
+			case kDKCD:
 				break;
-			case 2:
-			case 3:
-				inputSampleL *= 0.9549925859; // -0.2dB
-				inputSampleR *= 0.9549925859; // -0.2dB
-				//pad both 24 bit and 16 bit
-				break;
-			case 4:				
+			case kPEAK:
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0; inputSampleL = asin(inputSampleL);
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//amplitude aspect
@@ -605,7 +593,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				inputSampleL *= 0.63679; inputSampleR *= 0.63679; //scale it to 0dB output at full blast
 				//PeaksOnly
 				break;
-			case 5:
+			case kSLEW:
 				double trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
 				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
@@ -618,7 +606,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				inputSampleR = slewSample;
 				//SlewOnly
 				break;
-			case 6:
+			case kSUBS:
 				double iirAmount; iirAmount = (2250/44100.0) / overallscale;
 				double gain; gain = 1.42;
 				inputSampleL *= gain; inputSampleR *= gain; gain = ((gain-1)*0.75)+1;
@@ -779,37 +767,37 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0;				
 				//SubsOnly
 				break;
-			case 7:
-			case 8:
+			case kMONO:
+			case kSIDE:
 				long double mid; mid = inputSampleL + inputSampleR;
 				long double side; side = inputSampleL - inputSampleR;
-				if (processing < 8) side = 0.0;
+				if (processing < kSIDE) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
 				inputSampleR = (mid-side)/2.0; 
 				break;
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
+			case kVINYL:
+			case kAURAT:
+			case kMONORAT:
+			case kMONOLAT:
+			case kPHONE:
 				//Bandpass: changes in EQ are up in the variable defining, not here
 				//7 Vinyl, 8 9 10 Aurat, 11 Phone
-				if (processing == 11) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
-				if (processing == 12) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == 13) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
+				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
+				if (processing == kPHONE) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
+				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
+				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
+				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;
@@ -818,14 +806,14 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				inputSampleL = asin(inputSampleL); inputSampleR = asin(inputSampleR);
 				//amplitude aspect
 				break;
-			case 14:
-			case 15:
-			case 16:
-			case 17:
-				if (processing == 14) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
-				if (processing == 15) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
-				if (processing == 16) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
-				if (processing == 17) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
+			case kCANSA:
+			case kCANSB:
+			case kCANSC:
+			case kCANSD:
+				if (processing == kCANSA) {inputSampleL *= 0.855; inputSampleR *= 0.855;}
+				if (processing == kCANSB) {inputSampleL *= 0.748; inputSampleR *= 0.748;}
+				if (processing == kCANSC) {inputSampleL *= 0.713; inputSampleR *= 0.713;}
+				if (processing == kCANSD) {inputSampleL *= 0.680; inputSampleR *= 0.680;}
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
@@ -849,10 +837,10 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				else {inputSampleL += (aL[ax+1])*0.5; inputSampleR += (aR[ax+1])*0.5;}
 				//a darkened Midiverb-style allpass
 				
-				if (processing == 14) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
-				if (processing == 15) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
-				if (processing == 16) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
-				if (processing == 17) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
+				if (processing == kCANSA) {inputSampleL *= 0.125; inputSampleR *= 0.125;}
+				if (processing == kCANSB) {inputSampleL *= 0.25; inputSampleR *= 0.25;}
+				if (processing == kCANSC) {inputSampleL *= 0.30; inputSampleR *= 0.30;}
+				if (processing == kCANSD) {inputSampleL *= 0.35; inputSampleR *= 0.35;}
 				//Cans A suppresses the crossfeed more, Cans B makes it louder
 				
 				drySampleL += inputSampleR;
@@ -887,7 +875,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				if (inputSampleR > 1.0) inputSampleR = 1.0; if (inputSampleR < -1.0) inputSampleR = -1.0; inputSampleR = asin(inputSampleR);
 				//ConsoleBuss processing
 				break;
-			case 18:
+			case kTRICK:
 				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
@@ -895,7 +883,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		
 		//begin Dark		
-		if (processing == 1 || processing == 3) {
+		if (processing == kDKCD) {
 			inputSampleL *= 32768.0; //or 16 bit option
 			inputSampleR *= 32768.0; //or 16 bit option
 		} else {
@@ -966,7 +954,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		darkSampleR[0] = inputSampleR;
 		//end Dark right
 		
-		if (processing == 1 || processing == 3) {
+		if (processing == kDKCD) {
 			inputSampleL /= 32768.0;
 			inputSampleR /= 32768.0;
 		} else {

@@ -29,15 +29,15 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
-	if (processing == kVINYL) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
-	if (processing == kPHONE) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquad[fix_freq] = 0.0375/overallscale; biquad[fix_reso] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == kVINYL) {biquad[fix_freq] = 0.0385/overallscale; biquad[fix_reso] = 0.0825;}
+	if (processing == kPHONE) {biquad[fix_freq] = 0.1245/overallscale; biquad[fix_reso] = 0.46;}
+	double K = tan(M_PI * biquad[fix_freq]);
+	double norm = 1.0 / (1.0 + K / biquad[fix_reso] + K * K);
+	biquad[fix_a0] = K / biquad[fix_reso] * norm;
+	biquad[fix_a2] = -biquad[fix_a0]; //for bandpass, ignore [fix_a1] = 0.0
+	biquad[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	biquad[fix_b2] = (1.0 - K / biquad[fix_reso] + K * K) * norm;
 	//for Bandpasses
 	
     while (--sampleFrames >= 0)
@@ -307,14 +307,14 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
+				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
+				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
+				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;
@@ -512,15 +512,15 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
-	if (processing == kVINYL) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
-	if (processing == kPHONE) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquad[fix_freq] = 0.0375/overallscale; biquad[fix_reso] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == kVINYL) {biquad[fix_freq] = 0.0385/overallscale; biquad[fix_reso] = 0.0825;}
+	if (processing == kPHONE) {biquad[fix_freq] = 0.1245/overallscale; biquad[fix_reso] = 0.46;}
+	double K = tan(M_PI * biquad[fix_freq]);
+	double norm = 1.0 / (1.0 + K / biquad[fix_reso] + K * K);
+	biquad[fix_a0] = K / biquad[fix_reso] * norm;
+	biquad[fix_a2] = -biquad[fix_a0]; //for bandpass, ignore [fix_a1] = 0.0
+	biquad[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	biquad[fix_b2] = (1.0 - K / biquad[fix_reso] + K * K) * norm;
 	//for Bandpasses
 	
     while (--sampleFrames >= 0)
@@ -790,14 +790,14 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
+				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
+				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
+				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;

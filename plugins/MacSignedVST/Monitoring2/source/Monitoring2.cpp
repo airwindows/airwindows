@@ -37,7 +37,7 @@ Monitoring2::Monitoring2(audioMasterCallback audioMaster) :
 	iirSampleTR = 0.0; iirSampleUR = 0.0; iirSampleVR = 0.0;
 	iirSampleWR = 0.0; iirSampleXR = 0.0; iirSampleYR = 0.0; iirSampleZR = 0.0; // o/`	
 	//SubsOnly
-	for (int x = 0; x < 11; x++) {biquad[x] = 0.0;}
+	for (int x = 0; x < fix_total; x++) {biquad[x] = 0.0;}
 	//Bandpasses
 	A = 0.0;
 

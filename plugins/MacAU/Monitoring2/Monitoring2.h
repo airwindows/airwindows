@@ -142,6 +142,24 @@ public:
 	virtual ComponentResult		Version() { return kMonitoring2Version; }
 	
 		private:
+	
+	enum {
+		fix_freq,
+		fix_reso,
+		fix_a0,
+		fix_a1,
+		fix_a2,
+		fix_b1,
+		fix_b2,
+		fix_sL1,
+		fix_sL2,
+		fix_sR1,
+		fix_sR2,
+		fix_total
+	};
+	long double biquad[fix_total];
+	//Bandpasses
+	
 	float darkSampleL[100];
 	float darkSampleR[100];
 
@@ -163,8 +181,6 @@ public:
 	Float64 iirSampleTR, iirSampleUR, iirSampleVR;
 	Float64 iirSampleWR, iirSampleXR, iirSampleYR, iirSampleZR; // o/`
 	//SubsOnly
-	long double biquad[11];
-	//Bandpasses
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

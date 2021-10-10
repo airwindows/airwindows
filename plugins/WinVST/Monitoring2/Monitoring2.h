@@ -20,6 +20,27 @@ enum {
   kNumParameters = 1
 }; //
 
+enum {
+    kDKAD,
+    kDKCD,
+    kPEAK,
+    kSLEW,
+    kSUBS,
+    kMONO,
+    kSIDE,
+    kVINYL,
+    kAURAT,
+    kMONORAT,
+    kMONOLAT,
+    kPHONE,
+    kCANSA,
+    kCANSB,
+    kCANSC,
+    kCANSD,
+    kTRICK,
+};
+
+
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
@@ -52,6 +73,23 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
+	enum {
+		fix_freq,
+		fix_reso,
+		fix_a0,
+		fix_a1,
+		fix_a2,
+		fix_b1,
+		fix_b2,
+		fix_sL1,
+		fix_sL2,
+		fix_sR1,
+		fix_sR2,
+		fix_total
+	};
+	long double biquad[fix_total];
+	//Bandpasses
+
 	float darkSampleL[100];
 	float darkSampleR[100];
 	
@@ -73,8 +111,6 @@ private:
 	double iirSampleTR, iirSampleUR, iirSampleVR;
 	double iirSampleWR, iirSampleXR, iirSampleYR, iirSampleZR; // o/`
 	//SubsOnly
-	long double biquad[11];
-	//Bandpasses
 
 	uint32_t fpdL;
 	uint32_t fpdR;

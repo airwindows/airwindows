@@ -48,7 +48,7 @@
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-AUDIOCOMPONENT_ENTRY(AUBaseFactory, Monitoring2)
+COMPONENT_ENTRY(Monitoring2)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -228,7 +228,7 @@ ComponentResult		Monitoring2::Reset(AudioUnitScope inScope, AudioUnitElement inE
 	iirSampleTR = 0.0; iirSampleUR = 0.0; iirSampleVR = 0.0;
 	iirSampleWR = 0.0; iirSampleXR = 0.0; iirSampleYR = 0.0; iirSampleZR = 0.0; // o/`	
 	//SubsOnly
-	for (int x = 0; x < 11; x++) {biquad[x] = 0.0;}
+	for (int x = 0; x < fix_total; x++) {biquad[x] = 0.0;}
 	//Bandpasses
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
@@ -263,15 +263,15 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 	int dm = (int)223.0 * overallscale; //these are 'good' primes, spacing out the allpasses
 	int allpasstemp;
 	//for PeaksOnly
-	biquad[0] = 0.0375/overallscale; biquad[1] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
-	if (processing == kVINYL) {biquad[0] = 0.0385/overallscale; biquad[1] = 0.0825;}
-	if (processing == kPHONE) {biquad[0] = 0.1245/overallscale; biquad[1] = 0.46;}	
-	double K = tan(M_PI * biquad[0]);
-	double norm = 1.0 / (1.0 + K / biquad[1] + K * K);
-	biquad[2] = K / biquad[1] * norm;
-	biquad[4] = -biquad[2]; //for bandpass, ignore [3] = 0.0
-	biquad[5] = 2.0 * (K * K - 1.0) * norm;
-	biquad[6] = (1.0 - K / biquad[1] + K * K) * norm;
+	biquad[fix_freq] = 0.0375/overallscale; biquad[fix_reso] = 0.1575; //define as AURAT, MONORAT, MONOLAT unless overridden
+	if (processing == kVINYL) {biquad[fix_freq] = 0.0385/overallscale; biquad[fix_reso] = 0.0825;}
+	if (processing == kPHONE) {biquad[fix_freq] = 0.1245/overallscale; biquad[fix_reso] = 0.46;}	
+	double K = tan(M_PI * biquad[fix_freq]);
+	double norm = 1.0 / (1.0 + K / biquad[fix_reso] + K * K);
+	biquad[fix_a0] = K / biquad[fix_reso] * norm;
+	biquad[fix_a2] = -biquad[fix_a0]; //for bandpass, ignore [fix_a1] = 0.0
+	biquad[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	biquad[fix_b2] = (1.0 - K / biquad[fix_reso] + K * K) * norm;
 	//for Bandpasses
 	
 	while (nSampleFrames-- > 0) {
@@ -521,7 +521,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 			case kSIDE:
 				long double mid; mid = inputSampleL + inputSampleR;
 				long double side; side = inputSampleL - inputSampleR;
-				if (processing < 8) side = 0.0;
+				if (processing < 6) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
 				inputSampleR = (mid-side)/2.0; 
@@ -532,7 +532,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 			case kMONOLAT:
 			case kPHONE:
 				//Bandpass: changes in EQ are up in the variable defining, not here
-				//9 Vinyl, 10 11 12 Aurat, 13 Phone
+				//7 Vinyl, 8 9 10 Aurat, 11 Phone
 				
 				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
@@ -541,14 +541,14 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
-				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
-				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
+				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
+				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
-				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
-				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
+				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
+				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
 				
 				if (inputSampleL > 1.0) inputSampleL = 1.0; if (inputSampleL < -1.0) inputSampleL = -1.0;
