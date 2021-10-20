@@ -282,8 +282,8 @@ OSStatus		Pressure5::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	while (nSampleFrames-- > 0) {
 		long double inputSampleL = *inputL;
 		long double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		

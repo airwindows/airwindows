@@ -49,8 +49,8 @@ void Galactic::processReplacing(float **inputs, float **outputs, VstInt32 sample
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -77,9 +77,7 @@ void Galactic::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		//predelay that applies vibrato
 		//want vibrato speed AND depth like in MatrixVerb
 		
-		if (fabs(iirAL)<1.18e-37) iirAL = 0.0;
 		iirAL = (iirAL*(1.0-lowpass))+(inputSampleL*lowpass); inputSampleL = iirAL;
-		if (fabs(iirAR)<1.18e-37) iirAR = 0.0;
 		iirAR = (iirAR*(1.0-lowpass))+(inputSampleR*lowpass); inputSampleR = iirAR;
 		//initial filter
 		
@@ -213,9 +211,7 @@ void Galactic::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			//we are going through our references now
 		}
 		
-		if (fabs(iirBL)<1.18e-37) iirBL = 0.0;
 		iirBL = (iirBL*(1.0-lowpass))+(inputSampleL*lowpass); inputSampleL = iirBL;
-		if (fabs(iirBR)<1.18e-37) iirBR = 0.0;
 		iirBR = (iirBR*(1.0-lowpass))+(inputSampleR*lowpass); inputSampleR = iirBR;
 		//end filter
 		
@@ -285,8 +281,8 @@ void Galactic::processDoubleReplacing(double **inputs, double **outputs, VstInt3
     {
 		long double inputSampleL = *in1;
 		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		long double drySampleL = inputSampleL;
 		long double drySampleR = inputSampleR;
 		
@@ -313,9 +309,7 @@ void Galactic::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		//predelay that applies vibrato
 		//want vibrato speed AND depth like in MatrixVerb
 		
-		if (fabs(iirAL)<1.18e-37) iirAL = 0.0;
 		iirAL = (iirAL*(1.0-lowpass))+(inputSampleL*lowpass); inputSampleL = iirAL;
-		if (fabs(iirAR)<1.18e-37) iirAR = 0.0;
 		iirAR = (iirAR*(1.0-lowpass))+(inputSampleR*lowpass); inputSampleR = iirAR;
 		//initial filter
 		
@@ -449,9 +443,7 @@ void Galactic::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			//we are going through our references now
 		}
 		
-		if (fabs(iirBL)<1.18e-37) iirBL = 0.0;
 		iirBL = (iirBL*(1.0-lowpass))+(inputSampleL*lowpass); inputSampleL = iirBL;
-		if (fabs(iirBR)<1.18e-37) iirBR = 0.0;
 		iirBR = (iirBR*(1.0-lowpass))+(inputSampleR*lowpass); inputSampleR = iirBR;
 		//end filter
 		

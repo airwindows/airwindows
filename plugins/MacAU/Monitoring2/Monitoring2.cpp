@@ -277,9 +277,9 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 	while (nSampleFrames-- > 0) {
 		long double inputSampleL = *inputL;
 		long double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		//we need to make our dither run up here, there's no spot on the end to do it
 		

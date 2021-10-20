@@ -295,14 +295,12 @@ void		Chamber::ChamberKernel::Process(	const Float32 	*inSourceP,
 	
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 		
-		if (fabs(iirC)<1.18e-37) iirC = 0.0;
 		iirC = (iirC*(1.0-highpass))+(inputSample*highpass); inputSample -= iirC;
 		//initial highpass
 		
-		if (fabs(iirA)<1.18e-37) iirA = 0.0;
 		iirA = (iirA*(1.0-lowpass))+(inputSample*lowpass); inputSample = iirA;
 		//initial filter
 		
@@ -411,7 +409,6 @@ void		Chamber::ChamberKernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		
-		if (fabs(iirB)<1.18e-37) iirB = 0.0;
 		iirB = (iirB*(1.0-lowpass))+(inputSample*lowpass); inputSample = iirB;
 		//end filter
 		
