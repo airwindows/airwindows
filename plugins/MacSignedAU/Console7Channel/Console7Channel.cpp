@@ -198,7 +198,7 @@ void		Console7Channel::Console7ChannelKernel::Process(	const Float32 	*inSourceP
 	
 	while (nSampleFrames-- > 0) {
 		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
