@@ -186,6 +186,7 @@ void		ZLowpass2::ZLowpass2Kernel::Reset()
 	for (int x = 0; x < biq_total; x++) {biquadA[x] = 0.0; biquadB[x] = 0.0; biquadC[x] = 0.0; biquadD[x] = 0.0;}
 	inTrimA = 0.1; inTrimB = 0.1;
 	outTrimA = 1.0; outTrimB = 1.0;
+	wetA = 0.5; wetB = 0.5;
 	for (int x = 0; x < fix_total; x++) {fixA[x] = 0.0; fixB[x] = 0.0;}
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }

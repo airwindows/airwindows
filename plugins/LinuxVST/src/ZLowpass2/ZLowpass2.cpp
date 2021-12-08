@@ -22,7 +22,7 @@ ZLowpass2::ZLowpass2(audioMasterCallback audioMaster) :
 	for (int x = 0; x < biq_total; x++) {biquadA[x] = 0.0; biquadB[x] = 0.0; biquadC[x] = 0.0; biquadD[x] = 0.0;}
 	inTrimA = 0.1; inTrimB = 0.1;
 	outTrimA = 1.0; outTrimB = 1.0;
-	wetA = 1.0; wetB = 1.0;
+	wetA = 0.5; wetB = 0.5;
 	for (int x = 0; x < fix_total; x++) {fixA[x] = 0.0; fixB[x] = 0.0;}
 	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
