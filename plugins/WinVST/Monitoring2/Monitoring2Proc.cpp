@@ -505,7 +505,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	if (depth < 3) depth = 3;
 	if (depth > 98) depth = 98; //for Dark	
 	
-	int processing = (VstInt32)( A * 18.999 );
+	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
