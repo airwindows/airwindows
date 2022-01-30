@@ -288,7 +288,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			case kSIDE:
 				long double mid; mid = inputSampleL + inputSampleR;
 				long double side; side = inputSampleL - inputSampleR;
-				if (processing < 8) side = 0.0;
+				if (processing < kSIDE) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
 				inputSampleR = (mid-side)/2.0; 
