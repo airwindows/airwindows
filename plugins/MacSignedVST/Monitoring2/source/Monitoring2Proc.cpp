@@ -288,7 +288,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			case kSIDE:
 				long double mid; mid = inputSampleL + inputSampleR;
 				long double side; side = inputSampleL - inputSampleR;
-				if (processing < 8) side = 0.0;
+				if (processing < kSIDE) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
 				inputSampleR = (mid-side)/2.0; 
@@ -505,7 +505,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	if (depth < 3) depth = 3;
 	if (depth > 98) depth = 98; //for Dark	
 	
-	int processing = (VstInt32)( A * 18.999 );
+	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
 	int bm = (int)179.0 * overallscale;
 	int cm = (int)191.0 * overallscale;
