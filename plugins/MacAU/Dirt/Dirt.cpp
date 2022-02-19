@@ -300,7 +300,7 @@ void		Dirt::DirtKernel::Process(	const Float32 	*inSourceP,
 		double drySample = inputSample;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
-		if (fabs(iirSample)<1.18e-36) iirSample = 0.0;
+		if (fabs(iirSample)<1.18e-33) iirSample = 0.0;
 		iirSample = (iirSample * (1.0 - iirAmount)) + (inputSample * iirAmount);
 		inputSample = inputSample - iirSample;
 		

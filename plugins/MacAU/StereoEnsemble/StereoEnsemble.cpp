@@ -181,24 +181,23 @@ ComponentResult StereoEnsemble::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ComponentResult		StereoEnsemble::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	int count;
-	for(count = 0; count < 7490; count++) {dA[count] = 0.0;}
-	for(count = 0; count < 7532; count++) {dB[count] = 0.0;}
+	for(int count = 0; count < 7490; count++) {dA[count] = 0.0;}
+	for(int count = 0; count < 7532; count++) {dB[count] = 0.0;}
 
-	for(count = 0; count < 5788; count++) {dC[count] = 0.0;}
-	for(count = 0; count < 5746; count++) {dD[count] = 0.0;}
+	for(int count = 0; count < 5788; count++) {dC[count] = 0.0;}
+	for(int count = 0; count < 5746; count++) {dD[count] = 0.0;}
 
-	for(count = 0; count < 4840; count++) {dE[count] = 0.0;}
-	for(count = 0; count < 4870; count++) {dF[count] = 0.0;}
+	for(int count = 0; count < 4840; count++) {dE[count] = 0.0;}
+	for(int count = 0; count < 4870; count++) {dF[count] = 0.0;}
 
-	for(count = 0; count < 3118; count++) {dG[count] = 0.0;}
-	for(count = 0; count < 3088; count++) {dH[count] = 0.0;}
+	for(int count = 0; count < 3118; count++) {dG[count] = 0.0;}
+	for(int count = 0; count < 3088; count++) {dH[count] = 0.0;}
 
-	for(count = 0; count < 2212; count++) {dI[count] = 0.0;}
-	for(count = 0; count < 2222; count++) {dJ[count] = 0.0;}
+	for(int count = 0; count < 2212; count++) {dI[count] = 0.0;}
+	for(int count = 0; count < 2222; count++) {dJ[count] = 0.0;}
 
-	for(count = 0; count < 1336; count++) {dK[count] = 0.0;}
-	for(count = 0; count < 1330; count++) {dL[count] = 0.0;}
+	for(int count = 0; count < 1336; count++) {dK[count] = 0.0;}
+	for(int count = 0; count < 1330; count++) {dL[count] = 0.0;}
 	
 	oneA = 1;
 	oneB = 1;
@@ -256,6 +255,7 @@ OSStatus		StereoEnsemble::ProcessBufferLists(AudioUnitRenderActionFlags & ioActi
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
+	
 	int cycleEnd = floor(overallscale);
 	if (cycleEnd < 1) cycleEnd = 1;
 	if (cycleEnd > 4) cycleEnd = 4;
@@ -286,7 +286,6 @@ OSStatus		StereoEnsemble::ProcessBufferLists(AudioUnitRenderActionFlags & ioActi
 	
 	maxdelayK = (int)(1327.0 * delayfactor);
 	maxdelayL = (int)(1321.0 * delayfactor);
-	
 	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
@@ -396,8 +395,6 @@ OSStatus		StereoEnsemble::ProcessBufferLists(AudioUnitRenderActionFlags & ioActi
 			inputSampleR = lastRefR[cycle];
 			//we are going through our references now
 		}
-		
-		
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);

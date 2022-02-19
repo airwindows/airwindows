@@ -181,11 +181,10 @@ ComponentResult StereoDoubler::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ComponentResult		StereoDoubler::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	int count;
-	for(count = 0; count < 5000; count++) {pL[count] = 0.0; pR[count] = 0.0;}
-	for(count = 0; count < 8; count++)
+	for(int count = 0; count < 5000; count++) {pL[count] = 0.0; pR[count] = 0.0;}
+	for(int count = 0; count < 8; count++)
 	{tempL[count] = 0.0; positionL[count] = 0.0; lastpositionL[count] = 0.0; trackingL[count] = 0.0;}
-	for(count = 0; count < 8; count++)
+	for(int count = 0; count < 8; count++)
 	{tempR[count] = 0.0; positionR[count] = 0.0; lastpositionR[count] = 0.0; trackingR[count] = 0.0;}
 	gcountL = 0;
 	lastcountL = 0;
@@ -233,6 +232,7 @@ OSStatus		StereoDoubler::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
+	
 	int cycleEnd = floor(overallscale);
 	if (cycleEnd < 1) cycleEnd = 1;
 	if (cycleEnd > 4) cycleEnd = 4;

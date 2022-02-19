@@ -181,8 +181,7 @@ ComponentResult StereoChorus::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ComponentResult		StereoChorus::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	UInt32 count;
-	for(count = 0; count < 65535; count++) {pL[count] = 0;pR[count] = 0;}
+	for(int count = 0; count < 65535; count++) {pL[count] = 0;pR[count] = 0;}
 	sweepL = 3.141592653589793238 / 2.7;
 	sweepR = 3.141592653589793238;
 	gcount = 0;
@@ -221,6 +220,7 @@ OSStatus		StereoChorus::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
+	
 	int cycleEnd = floor(overallscale);
 	if (cycleEnd < 1) cycleEnd = 1;
 	if (cycleEnd > 4) cycleEnd = 4;
