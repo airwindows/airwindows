@@ -70,21 +70,21 @@ static CFStringRef kMenuItem_LargeCombo = CFSTR ("Large Combo");
 static CFStringRef kMenuItem_SmallCombo = CFSTR ("Small Combo");
 static CFStringRef kMenuItem_Bass = CFSTR ("Bass Amp");
 
-static CFStringRef kParameterTwoName = CFSTR("Color Boost");
-static const float kDefaultValue_ParamTwo = 0.5;
+static CFStringRef kParameterTwoName = CFSTR("Intensity");
+static const float kDefaultValue_ParamTwo = 0.66;
 
-static CFStringRef kParameterThreeName = CFSTR("Fizz Disrupt");
-static const float kDefaultValue_ParamThree = 0.0;
+static CFStringRef kParameterThreeName = CFSTR("Rm Loud");
+static const float kDefaultValue_ParamThree = 0.33;
 
-static CFStringRef kParameterFourName = CFSTR("Heavy Range");
-static const float kDefaultValue_ParamFour = 0.5;
+static CFStringRef kParameterFourName = CFSTR("Cab Size");
+static const float kDefaultValue_ParamFour = 0.66;
 
 
-static CFStringRef kParameterFiveName = CFSTR("Heavy Boost");
-static const float kDefaultValue_ParamFive = 0.0;
+static CFStringRef kParameterFiveName = CFSTR("Off Axis");
+static const float kDefaultValue_ParamFive = 0.33;
 
-static CFStringRef kParameterSixName = CFSTR("Output Level");
-static const float kDefaultValue_ParamSix = 1.0;
+static CFStringRef kParameterSixName = CFSTR("Output");
+static const float kDefaultValue_ParamSix = 0.5;
 
 
 
@@ -171,28 +171,26 @@ public:
 		Float64 ataA;
 		Float64 ataB;
 		Float64 ataC;
-		Float64 ataDecay;
-		Float64 ataUpsampleHighTweak;
 		Float64 ataDrySample;
 		Float64 ataDiffSample;
 		Float64 ataPrevDiffSample;
-		bool ataFlip; //end defining of antialiasing variables
 		Float64 b[90];
-		Float64 smoothA;
-		Float64 smoothB;
-		Float64 smoothAHalf;
-		Float64 smoothBHalf;
 		Float64 lastSample;
-		int gcount;
+		Float64 lastHalfSample;
+		Float64 lastPostSample;
+		Float64 lastPostHalfSample;
+		Float64 postPostSample;
 		Float64 d[21];
 		Float64 control;
 		Float64 iirHeadBumpA;
 		Float64 iirHeadBumpB;
 		Float64 iirHalfHeadBumpA;
 		Float64 iirHalfHeadBumpB;
-		bool flip;
-		
 		double lastRef[7];
+		
+		bool flip;
+		bool ataFlip;
+		int gcount;
 		int cycle;
 		
 		uint32_t fpd;

@@ -220,24 +220,25 @@ void		Cabs::CabsKernel::Reset()
 	ataLast3Sample = ataLast2Sample = ataLast1Sample = 0.0;
 	ataHalfwaySample = ataHalfDrySample = ataHalfDiffSample = 0.0;
 	ataA = ataB = ataC = ataDrySample = ataDiffSample = ataPrevDiffSample = 0.0;
-	ataUpsampleHighTweak = 0.05; //more adds treble to upsampling
-	ataDecay = 0.94; //Catalan's constant, more adds focus and clarity
-	ataFlip = false; //end reset of antialias parameters
+	
 	for(int count = 0; count < 90; count++) {b[count] = 0;}
-	smoothA = 0.0; smoothB = 0.0; lastSample = 0.0;
-	smoothAHalf = 0.0; smoothBHalf = 0.0;
+	lastSample = 0.0;
+	lastHalfSample = 0.0;
+	lastPostSample = 0.0;
+	lastPostHalfSample = 0.0;
+	postPostSample = 0.0;
 	for(int count = 0; count < 20; count++) {d[count] = 0;}
 	control = 0;
-	gcount = 0;
 	iirHeadBumpA = 0.0;
 	iirHeadBumpB = 0.0;
 	iirHalfHeadBumpA = 0.0;
 	iirHalfHeadBumpB = 0.0;
-	flip = false;
-	
 	for(int count = 0; count < 6; count++) lastRef[count] = 0.0;
+
+	flip = false;
+	ataFlip = false;
+	gcount = 0;
 	cycle = 0;
-	
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
@@ -264,29 +265,25 @@ void		Cabs::CabsKernel::Process(	const Float32 	*inSourceP,
 	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
 	
 	int speaker = (int) GetParameter( kParam_One );
-	int offsetA = 8;
-	double dynamicconv = 3.2;
 	double colorIntensity = pow(GetParameter( kParam_Two ),4);
 	double correctboost = 1.0 + (colorIntensity*4);
 	double correctdrygain = 1.0 - colorIntensity;
-	double threshold = pow((1.0-GetParameter( kParam_Three )),3); //defizz is slew
-	double HeadBumpFreq = 0.0298+(GetParameter( kParam_Four )/8.0);
+	double threshold = pow((1.0-GetParameter( kParam_Three )),5)+0.021; //room loud is slew
+	double rarefaction = cbrt(threshold);
+	double postThreshold = sqrt(rarefaction);
+	double postRarefaction = cbrt(postThreshold);
+	double postTrim = sqrt(postRarefaction);
+	double HeadBumpFreq = 0.0298+((1.0-GetParameter( kParam_Four ))/8.0);
 	double LowsPad = 0.12 + (HeadBumpFreq*12.0);
 	double dcblock = pow(HeadBumpFreq,2) / 8.0;
 	double heavy = pow(GetParameter( kParam_Five ),3); //wet of head bump
-	double output = GetParameter( kParam_Six );
-	
-	switch (speaker)
-	{
-		case 1: offsetA = 8; dynamicconv = 3.2; break;
-		case 2: offsetA = 9; dynamicconv = 3.4; break;
-		case 3: offsetA = 8; dynamicconv = 4.0; break;
-		case 4: offsetA = 9; dynamicconv = 3.6; break;
-		case 5: offsetA = 6; dynamicconv = 3.2; break;
-		case 6: offsetA = 5; dynamicconv = 3.3; break;
-	}
+	double output = pow(GetParameter( kParam_Six ),2);
+	double dynamicconv = 5.0;
+	dynamicconv *= pow(GetParameter( kParam_Two ),2);
+	dynamicconv *= pow(GetParameter( kParam_Three ),2);
 	//set constants for sag speed
-	
+	int offsetA = 4+((int)(GetParameter( kParam_Four )*5.0));
+
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
@@ -296,27 +293,23 @@ void		Cabs::CabsKernel::Process(	const Float32 	*inSourceP,
 			//everything in here is undersampled, including the dry/wet		
 			
 			double ataDrySample = inputSample;		
-			double ataHalfwaySample = (inputSample + ataLast1Sample + ((-ataLast2Sample + ataLast3Sample) * ataUpsampleHighTweak)) / 2.0;
+			double ataHalfwaySample = (inputSample + ataLast1Sample + ((-ataLast2Sample + ataLast3Sample) * 0.05)) / 2.0;
 			double ataHalfDrySample = ataHalfwaySample;
 			ataLast3Sample = ataLast2Sample; ataLast2Sample = ataLast1Sample; ataLast1Sample = inputSample;
 			//setting up oversampled special antialiasing
 			//pre-center code on inputSample and halfwaySample in parallel
 			//begin raw sample- inputSample and ataDrySample handled separately here
 			double clamp = inputSample - lastSample;
-			if (clamp > threshold)
-				inputSample = lastSample + threshold;
-			if (-clamp > threshold)
-				inputSample = lastSample - threshold;
+			if (clamp > threshold) inputSample = lastSample + threshold;
+			if (-clamp > rarefaction) inputSample = lastSample - rarefaction;
 			lastSample = inputSample;
 			//end raw sample
 			
 			//begin interpolated sample- change inputSample -> ataHalfwaySample, ataDrySample -> ataHalfDrySample
-			clamp = ataHalfwaySample - ataHalfDrySample;
-			if (clamp > threshold)
-				ataHalfwaySample = lastSample + threshold;
-			if (-clamp > threshold)
-				ataHalfwaySample = lastSample - threshold;
-			lastSample = ataHalfwaySample;
+			clamp = ataHalfwaySample - lastHalfSample;
+			if (clamp > threshold) ataHalfwaySample = lastHalfSample + threshold;
+			if (-clamp > rarefaction) ataHalfwaySample = lastHalfSample - rarefaction;
+			lastHalfSample = ataHalfwaySample;
 			//end interpolated sample
 			
 			//begin center code handling conv stuff tied to 44.1K, or stuff in time domain like delays
@@ -883,6 +876,20 @@ void		Cabs::CabsKernel::Process(	const Float32 	*inSourceP,
 			//restore interpolated signal including time domain stuff now
 			//end center code for handling timedomain/conv stuff
 			
+			//second wave of Cabs style slew clamping
+			clamp = inputSample - lastPostSample;
+			if (clamp > threshold) inputSample = lastPostSample + threshold;
+			if (-clamp > rarefaction) inputSample = lastPostSample - rarefaction;
+			lastPostSample = inputSample;
+			//end raw sample
+			
+			//begin interpolated sample- change inputSample -> ataHalfwaySample, ataDrySample -> ataHalfDrySample
+			clamp = ataHalfwaySample - lastPostHalfSample;
+			if (clamp > threshold) ataHalfwaySample = lastPostHalfSample + threshold;
+			if (-clamp > rarefaction) ataHalfwaySample = lastPostHalfSample - rarefaction;
+			lastPostHalfSample = ataHalfwaySample;
+			//end interpolated sample
+			
 			//post-center code on inputSample and halfwaySample in parallel
 			//begin raw sample- inputSample and ataDrySample handled separately here
 			double HeadBump;
@@ -934,24 +941,31 @@ void		Cabs::CabsKernel::Process(	const Float32 	*inSourceP,
 			HeadBump /= LowsPad;
 			ataHalfwaySample = (ataHalfwaySample * (1.0-heavy)) + (HeadBump * heavy);
 			//end interpolated sample
-			
+						
 			//begin antialiasing section for halfway sample
 			ataC = ataHalfwaySample - ataHalfDrySample;
-			if (ataFlip) {ataA *= ataDecay; ataB *= ataDecay; ataA += ataC; ataB -= ataC; ataC = ataA;}
-			else {ataB *= ataDecay; ataA *= ataDecay; ataB += ataC; ataA -= ataC; ataC = ataB;}
-			ataHalfDiffSample = (ataC * ataDecay);
+			if (flip) {ataA *= 0.94; ataB *= 0.94; ataA += ataC; ataB -= ataC; ataC = ataA;}
+			else {ataB *= 0.94; ataA *= 0.94; ataB += ataC; ataA -= ataC; ataC = ataB;}
+			ataHalfDiffSample = (ataC * 0.94);
 			//end antialiasing section for halfway sample
 			
 			//begin antialiasing section for raw sample
 			ataC = inputSample - ataDrySample;
-			if (ataFlip) {ataA *= ataDecay; ataB *= ataDecay; ataA += ataC; ataB -= ataC; ataC = ataA;}
-			else {ataB *= ataDecay; ataA *= ataDecay; ataB += ataC; ataA -= ataC; ataC = ataB;}
-			ataDiffSample = (ataC * ataDecay); ataFlip = !ataFlip;
+			if (flip) {ataA *= 0.94; ataB *= 0.94; ataA += ataC; ataB -= ataC; ataC = ataA;}
+			else {ataB *= 0.94; ataA *= 0.94; ataB += ataC; ataA -= ataC; ataC = ataB;}
+			ataDiffSample = (ataC * 0.94);
 			//end antialiasing section for input sample
+			flip = !flip;
 			
 			inputSample = ataDrySample; inputSample += ((ataDiffSample + ataHalfDiffSample + ataPrevDiffSample) / 1.0);
 			ataPrevDiffSample = ataDiffSample / 2.0;
 			//apply processing as difference to non-oversampled raw input
+			
+			clamp = inputSample - postPostSample;
+			if (clamp > postThreshold) inputSample = postPostSample + postThreshold;
+			if (-clamp > postRarefaction) inputSample = postPostSample - postRarefaction;
+			postPostSample = inputSample;
+			inputSample /= postTrim;
 			
 			inputSample *= output;
 			
