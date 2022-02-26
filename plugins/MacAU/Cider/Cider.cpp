@@ -222,8 +222,8 @@ void		Cider::CiderKernel::Process(	const Float32 	*inSourceP,
 	//if threshold is literally 1 then hardness is infinite, so we make it very big
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
 		inputSample *= indrive;
 		//calibrated to match gain through convolution and -0.3 correction

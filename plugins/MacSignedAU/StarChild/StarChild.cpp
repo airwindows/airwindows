@@ -238,8 +238,8 @@ ComponentResult		StarChild::Reset(AudioUnitScope inScope, AudioUnitElement inEle
 	increment = 1;
 	dutyCycle = 1;
 	
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
 }
 
@@ -320,44 +320,8 @@ OSStatus		StarChild::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		inputSampleL = *inputL;
 		inputSampleR = *inputR;
 		//assign working variables like the dry
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
 		
@@ -634,7 +598,7 @@ OSStatus		StarChild::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 				
 		//stereo 32 bit dither, made small and tidy.
 		int expon; frexpf((Float32)drySampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
 		drySampleL += (dither-fpNShapeL); fpNShapeL = dither;
 		frexpf((Float32)drySampleR, &expon);
 		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);

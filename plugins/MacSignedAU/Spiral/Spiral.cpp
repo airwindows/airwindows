@@ -167,9 +167,9 @@ void		Spiral::SpiralKernel::Process(	const Float32 	*inSourceP,
 	Float32 *destP = inDestP;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		
 		//clip to 1.2533141373155 to reach maximum output

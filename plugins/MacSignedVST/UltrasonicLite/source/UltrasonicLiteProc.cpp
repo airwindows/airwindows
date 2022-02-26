@@ -28,15 +28,15 @@ void UltrasonicLite::processReplacing(float **inputs, float **outputs, VstInt32 
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
-		long double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = outSampleL; biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 				
-		long double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
+		double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
 		biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 				
 		//begin 32 bit stereo floating point dither
@@ -79,15 +79,15 @@ void UltrasonicLite::processDoubleReplacing(double **inputs, double **outputs, V
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
-		long double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = outSampleL; biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
+		double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
 		biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		
 		//begin 64 bit stereo floating point dither

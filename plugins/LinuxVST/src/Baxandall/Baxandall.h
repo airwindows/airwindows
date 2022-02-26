@@ -56,15 +56,15 @@ private:
     
 	uint32_t fpd;
 	//default stuff
-	long double trebleAL[9];
-	long double trebleBL[9];
-	long double bassAL[9];
-	long double bassBL[9];
+	double trebleAL[9];
+	double trebleBL[9];
+	double bassAL[9];
+	double bassBL[9];
 	
-	long double trebleAR[9];
-	long double trebleBR[9];
-	long double bassAR[9];
-	long double bassBR[9];
+	double trebleAR[9];
+	double trebleBR[9];
+	double bassAR[9];
+	double bassBR[9];
 	bool flip;
 	
     float A;

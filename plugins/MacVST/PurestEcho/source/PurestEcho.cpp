@@ -19,8 +19,8 @@ PurestEcho::PurestEcho(audioMasterCallback audioMaster) :
 	E = 0.0;
 	for(int count = 0; count < totalsamples-1; count++) {dL[count] = 0;dR[count] = 0;}
 	gcount = 0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

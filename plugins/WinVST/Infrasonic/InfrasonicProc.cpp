@@ -63,12 +63,12 @@ void Infrasonic::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
-		long double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = outSampleL; biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 		
 		outSampleL = biquadB[2]*inputSampleL+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
@@ -83,7 +83,7 @@ void Infrasonic::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		outSampleL = biquadE[2]*inputSampleL+biquadE[3]*biquadE[7]+biquadE[4]*biquadE[8]-biquadE[5]*biquadE[9]-biquadE[6]*biquadE[10];
 		biquadE[8] = biquadE[7]; biquadE[7] = inputSampleL; inputSampleL = outSampleL; biquadE[10] = biquadE[9]; biquadE[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
+		double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
 		biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		
 		outSampleR = biquadB[2]*inputSampleR+biquadB[3]*biquadB[11]+biquadB[4]*biquadB[12]-biquadB[5]*biquadB[13]-biquadB[6]*biquadB[14];
@@ -173,12 +173,12 @@ void Infrasonic::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
-		long double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = outSampleL; biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 		
 		outSampleL = biquadB[2]*inputSampleL+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
@@ -193,7 +193,7 @@ void Infrasonic::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		outSampleL = biquadE[2]*inputSampleL+biquadE[3]*biquadE[7]+biquadE[4]*biquadE[8]-biquadE[5]*biquadE[9]-biquadE[6]*biquadE[10];
 		biquadE[8] = biquadE[7]; biquadE[7] = inputSampleL; inputSampleL = outSampleL; biquadE[10] = biquadE[9]; biquadE[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
+		double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
 		biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		
 		outSampleR = biquadB[2]*inputSampleR+biquadB[3]*biquadB[11]+biquadB[4]*biquadB[12]-biquadB[5]*biquadB[13]-biquadB[6]*biquadB[14];

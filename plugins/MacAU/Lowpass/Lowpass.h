@@ -133,7 +133,7 @@ public:
 		private: 
 		Float64 iirSampleA;
 		Float64 iirSampleB;
-		long double fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 	};
 };

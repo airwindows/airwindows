@@ -143,7 +143,7 @@ public:
 		Float64 treblefreq;
 		Float64 bassfreq;
 		bool flip;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

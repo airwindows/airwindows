@@ -29,8 +29,8 @@ void BlockParty::processReplacing(float **inputs, float **outputs, VstInt32 samp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -68,8 +68,8 @@ void BlockParty::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		double muMakeupGainL = 1.0 / thresholdL;
 		double outMakeupGainL = sqrt(muMakeupGainL);
@@ -590,8 +590,8 @@ void BlockParty::processDoubleReplacing(double **inputs, double **outputs, VstIn
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -629,8 +629,8 @@ void BlockParty::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 
 		double muMakeupGainL = 1.0 / thresholdL;
 		double outMakeupGainL = sqrt(muMakeupGainL);

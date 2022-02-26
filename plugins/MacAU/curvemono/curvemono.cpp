@@ -168,8 +168,8 @@ void		curvemono::curvemonoKernel::Process(	const Float32 	*inSourceP,
 	Float32 *destP = inDestP;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
 		inputSample *= 0.5;		
 		if (gain < 0.0078125) gain = 0.0078125; if (gain > 1.0) gain = 1.0;

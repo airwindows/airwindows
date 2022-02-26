@@ -257,11 +257,11 @@ void		Channel9::Channel9Kernel::Process(	const Float32 	*inSourceP,
 	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (biquadA[0] < 0.49999) {
-			long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+			double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 			biquadA[8] = biquadA[7]; biquadA[7] = inputSample; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSample = tempSample; 
 			biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 		}
@@ -281,15 +281,15 @@ void		Channel9::Channel9Kernel::Process(	const Float32 	*inSourceP,
 			inputSample = inputSample - iirSampleB;
 		}
 		//highpass section including capacitor modeling nonlinearity
-		long double drySample = inputSample;
+		double drySample = inputSample;
 		
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;
 		
-		long double phatSample = sin(inputSample * 1.57079633);
+		double phatSample = sin(inputSample * 1.57079633);
 		inputSample *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
-		long double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
+		double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 		
 		inputSample = distSample; //purest form is full Spiral
 		if (density < 1.0) inputSample = (drySample*(1-density))+(distSample*density); //fade Spiral aspect
@@ -318,7 +318,7 @@ void		Channel9::Channel9Kernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		if (biquadB[0] < 0.49999) {
-			long double tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
+			double tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
 			biquadB[8] = biquadB[7]; biquadB[7] = inputSample; if (fabs(tempSample)<1.18e-37) tempSample = 0.0; inputSample = tempSample; 
 			biquadB[10] = biquadB[9]; biquadB[9] = inputSample; //DF1
 		}

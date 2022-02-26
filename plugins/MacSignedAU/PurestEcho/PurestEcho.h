@@ -140,7 +140,7 @@ public:
 		const static int totalsamples = 65535;
 		Float32 d[totalsamples];
 		int gcount;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

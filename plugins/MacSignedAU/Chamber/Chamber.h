@@ -163,7 +163,7 @@ public:
 		Float64 previousC;
 		Float64 previousD;
 		
-		long double lastRef[10];
+		double lastRef[10];
 		
 		int countA, delayA;
 		int countB, delayB;

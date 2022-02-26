@@ -67,11 +67,11 @@ void IronOxideClassic2::processReplacing(float **inputs, float **outputs, VstInt
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double tempSample;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double tempSample;
 
 		if (flip)
 		{
@@ -107,14 +107,14 @@ void IronOxideClassic2::processReplacing(float **inputs, float **outputs, VstInt
 			inputSampleR *= inputgain;
 		}
 		
-		long double bridgerectifierL = fabs(inputSampleL);
+		double bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
 		//preliminary gain stage using antialiasing
 		
-		long double bridgerectifierR = fabs(inputSampleR);
+		double bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
@@ -129,7 +129,7 @@ void IronOxideClassic2::processReplacing(float **inputs, float **outputs, VstInt
 		int count = gcount;
 		//increment the counter
 			
-		long double temp;
+		double temp;
 		dL[count+131] = dL[count] = inputSampleL;
 		dR[count+131] = dR[count] = inputSampleR;
 		
@@ -479,11 +479,11 @@ void IronOxideClassic2::processDoubleReplacing(double **inputs, double **outputs
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
-		long double tempSample;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -519,14 +519,14 @@ void IronOxideClassic2::processDoubleReplacing(double **inputs, double **outputs
 			inputSampleR *= inputgain;
 		}
 		
-		long double bridgerectifierL = fabs(inputSampleL);
+		double bridgerectifierL = fabs(inputSampleL);
 		if (bridgerectifierL > 1.57079633) bridgerectifierL = 1.57079633;
 		bridgerectifierL = sin(bridgerectifierL);
 		if (inputSampleL > 0.0) inputSampleL = bridgerectifierL;
 		else inputSampleL = -bridgerectifierL;
 		//preliminary gain stage using antialiasing
 		
-		long double bridgerectifierR = fabs(inputSampleR);
+		double bridgerectifierR = fabs(inputSampleR);
 		if (bridgerectifierR > 1.57079633) bridgerectifierR = 1.57079633;
 		bridgerectifierR = sin(bridgerectifierR);
 		if (inputSampleR > 0.0) inputSampleR = bridgerectifierR;
@@ -541,7 +541,7 @@ void IronOxideClassic2::processDoubleReplacing(double **inputs, double **outputs
 			int count = gcount;
 			//increment the counter
 			
-			long double temp;
+			double temp;
 			dL[count+131] = dL[count] = inputSampleL;
 			dR[count+131] = dR[count] = inputSampleR;
 			
@@ -813,12 +813,12 @@ void IronOxideClassic2::processDoubleReplacing(double **inputs, double **outputs
 		flip = !flip;
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

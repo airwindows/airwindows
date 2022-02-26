@@ -201,7 +201,7 @@ void		BlockParty::BlockPartyKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -215,28 +215,10 @@ void		BlockParty::BlockPartyKernel::Process(	const Float32 	*inSourceP,
 	//some insanity checking
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		
-		static int noisesource = 0;
-		int residue;
-		double applyresidue;
-		noisesource = noisesource % 1700021; noisesource++;
-		residue = noisesource * noisesource;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSample += applyresidue;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			inputSample -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySample = inputSample;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		Float64 muMakeupGain = 1.0 / threshold;
 		Float64 outMakeupGain = sqrt(muMakeupGain);

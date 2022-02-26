@@ -190,7 +190,7 @@ ComponentResult Channel5::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Channel5::Channel5Kernel::Reset()
 {
-	fpNShape = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
 	flip = false;
@@ -227,27 +227,9 @@ void		Channel5::Channel5Kernel::Process(	const Float32 	*inSourceP,
 	threshold /= overallscale; //now with 96K AND working selector!
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		
-		static int noisesource = 0;
-		int residue;
-		double applyresidue;
-		noisesource = noisesource % 1700021; noisesource++;
-		residue = noisesource * noisesource;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSample += applyresidue;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			inputSample -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (flip)
 		{
@@ -260,7 +242,7 @@ void		Channel5::Channel5Kernel::Process(	const Float32 	*inSourceP,
 			inputSample = inputSample - iirSampleB;
 		}
 		//highpass section
-		long double bridgerectifier = fabs(inputSample)*1.57079633;
+		double bridgerectifier = fabs(inputSample)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSample > 0) inputSample = (inputSample*(1-density))+(bridgerectifier*density);

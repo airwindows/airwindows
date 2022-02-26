@@ -202,7 +202,7 @@ public:
 		Float64 iirSampleZ;		
 		Float64 oscGate;
 		
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

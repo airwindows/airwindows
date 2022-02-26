@@ -160,7 +160,7 @@ public:
 		Float64 control;
 		int gcount;
 		Float64 slowdyn;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

@@ -21,12 +21,12 @@ void TripleSpread::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	    
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		airFactorL = airPrevL - inputSampleL;
 		if (flip) {airEvenL += airFactorL; airOddL -= airFactorL; airFactorL = airEvenL;}
@@ -291,8 +291,8 @@ void TripleSpread::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		thirdtempR = lasttempR;
 		lasttempR = tempR;
 		
-		long double mid = (inputSampleL + inputSampleR)*(1-wet);
-		long double side = inputSampleL - inputSampleR;
+		double mid = (inputSampleL + inputSampleR)*(1-wet);
+		double side = inputSampleL - inputSampleR;
 		//assign mid and side.Between these sections, you can do mid/side processing
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;
@@ -340,12 +340,12 @@ void TripleSpread::processDoubleReplacing(double **inputs, double **outputs, Vst
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		airFactorL = airPrevL - inputSampleL;
 		if (flip) {airEvenL += airFactorL; airOddL -= airFactorL; airFactorL = airEvenL;}
@@ -610,8 +610,8 @@ void TripleSpread::processDoubleReplacing(double **inputs, double **outputs, Vst
 		thirdtempR = lasttempR;
 		lasttempR = tempR;
 		
-		long double mid = (inputSampleL + inputSampleR)*(1-wet);
-		long double side = inputSampleL - inputSampleR;
+		double mid = (inputSampleL + inputSampleR)*(1-wet);
+		double side = inputSampleL - inputSampleR;
 		//assign mid and side.Between these sections, you can do mid/side processing
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;

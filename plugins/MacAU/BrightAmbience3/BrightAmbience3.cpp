@@ -221,7 +221,7 @@ OSStatus		BrightAmbience3::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -249,17 +249,17 @@ OSStatus		BrightAmbience3::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 	figureL[6] = figureR[6] = (1.0 - K / figureR[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		cycle++;
 		if (cycle == cycleEnd) { //hit the end point and we do an Air sample
-			long double tempL = 0.0;
-			long double tempR = 0.0;
+			double tempL = 0.0;
+			double tempR = 0.0;
 			if (gcount < 0 || gcount > 32767) gcount = 32767; int count = gcount;
 			
 			pL[count] = inputSampleL + feedbackB;
@@ -273,7 +273,7 @@ OSStatus		BrightAmbience3::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 			inputSampleL = tempL/cbrt(length);
 			inputSampleR = tempR/cbrt(length);
 			
-			long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
+			double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 			figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 			figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
 			feedbackA = sin(tempSample) * feedbackAmount;

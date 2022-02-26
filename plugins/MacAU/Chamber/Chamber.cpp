@@ -251,7 +251,7 @@ void		Chamber::ChamberKernel::Process(	const Float32 	*inSourceP,
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
 	
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	int cycleEnd = floor(overallscale);
@@ -294,7 +294,7 @@ void		Chamber::ChamberKernel::Process(	const Float32 	*inSourceP,
 	//sustain infinitely.	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 		

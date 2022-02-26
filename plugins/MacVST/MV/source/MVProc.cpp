@@ -31,8 +31,8 @@ void MV::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 	    
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -827,8 +827,8 @@ void MV::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;

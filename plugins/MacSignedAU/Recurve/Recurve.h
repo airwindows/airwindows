@@ -105,7 +105,7 @@ public:
 	virtual ComponentResult		Version() { return kRecurveVersion; }
 	
 	private:
-	long double gain;
+	double gain;
 	uint32_t fpd;
 };
 

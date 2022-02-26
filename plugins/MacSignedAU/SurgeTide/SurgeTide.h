@@ -115,11 +115,11 @@ public:
 	virtual ComponentResult		Version() { return kSurgeTideVersion; }
 	
 	private: 
-		long double fpNShapeL;
-		long double fpNShapeR;
-		long double chaseA;
-		long double chaseB;
-		long double chaseC;
+		double fpNShapeL;
+		double fpNShapeR;
+		double chaseA;
+		double chaseB;
+		double chaseC;
 
 };
 

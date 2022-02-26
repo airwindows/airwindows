@@ -176,7 +176,7 @@ void		Console7Buss::Console7BussKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double inputgain = GetParameter( kParam_One ) * 1.03;
+	double inputgain = GetParameter( kParam_One ) * 1.03;
 	
 	if (gainchase != inputgain) chasespeed *= 2.0;
 	if (chasespeed > inFramesToProcess) chasespeed = inFramesToProcess;
@@ -203,10 +203,10 @@ void		Console7Buss::Console7BussKernel::Process(	const Float32 	*inSourceP,
 	biquadB[6] = (1.0 - K / biquadB[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
-		long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
 		biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 		

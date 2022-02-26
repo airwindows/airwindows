@@ -28,12 +28,12 @@ void DeRez2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		incrementA = ((incrementA*999.0)+targetA)/1000.0;
@@ -42,8 +42,8 @@ void DeRez2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//incrementB is the bit depth derez
 		position += incrementA;
 		
-		long double outputSampleL = heldSampleL;
-		long double outputSampleR = heldSampleR;
+		double outputSampleL = heldSampleL;
+		double outputSampleR = heldSampleR;
 		if (position > 1.0)
 		{
 			position -= 1.0;
@@ -57,8 +57,8 @@ void DeRez2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		inputSampleL = outputSampleL;
 		inputSampleR = outputSampleR;
 		
-		long double tempL = inputSampleL;
-		long double tempR = inputSampleR;
+		double tempL = inputSampleL;
+		double tempR = inputSampleR;
 		
 		if (inputSampleL != lastOutputSampleL) {
 			tempL = inputSampleL;
@@ -206,12 +206,12 @@ void DeRez2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		incrementA = ((incrementA*999.0)+targetA)/1000.0;
@@ -220,8 +220,8 @@ void DeRez2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//incrementB is the bit depth derez
 		position += incrementA;
 		
-		long double outputSampleL = heldSampleL;
-		long double outputSampleR = heldSampleR;
+		double outputSampleL = heldSampleL;
+		double outputSampleR = heldSampleR;
 		if (position > 1.0)
 		{
 			position -= 1.0;
@@ -235,8 +235,8 @@ void DeRez2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		inputSampleL = outputSampleL;
 		inputSampleR = outputSampleR;
 		
-		long double tempL = inputSampleL;
-		long double tempR = inputSampleR;
+		double tempL = inputSampleL;
+		double tempR = inputSampleR;
 		
 		if (inputSampleL != lastOutputSampleL) {
 			tempL = inputSampleL;

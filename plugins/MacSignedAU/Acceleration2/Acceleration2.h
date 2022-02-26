@@ -132,8 +132,8 @@ public:
 		Float64 s[34];
 		Float64 m1;
 		Float64 m2;
-		long double biquadA[11];
-		long double biquadB[11];
+		double biquadA[11];
+		double biquadB[11];
 		uint32_t fpd;
 	};
 };

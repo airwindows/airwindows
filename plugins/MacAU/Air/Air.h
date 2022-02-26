@@ -164,7 +164,7 @@ public:
 		Float64 tripletC;
 		Float64 tripletFactor;
 		int count;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

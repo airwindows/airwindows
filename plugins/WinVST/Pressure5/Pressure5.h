@@ -82,15 +82,15 @@ private:
 		fix_lastSampleR,
 		fix_total
 	};
-	long double fixA[fix_total];
-	long double fixB[fix_total]; //fixed frequency biquad filter for ultrasonics, stereo
+	double fixA[fix_total];
+	double fixB[fix_total]; //fixed frequency biquad filter for ultrasonics, stereo
 	
-	long double lastSampleL;
-	long double intermediateL[16];
+	double lastSampleL;
+	double intermediateL[16];
 	bool wasPosClipL;
 	bool wasNegClipL;
-	long double lastSampleR;
-	long double intermediateR[16];
+	double lastSampleR;
+	double intermediateR[16];
 	bool wasPosClipR;
 	bool wasNegClipR; //Stereo ClipOnly2
 	

@@ -131,15 +131,15 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double controlApos;
-		long double controlAneg;
-		long double controlBpos;
-		long double controlBneg;
-		long double targetpos;
-		long double targetneg;
-		long double lastOutput;
+		double controlApos;
+		double controlAneg;
+		double controlBpos;
+		double controlBneg;
+		double targetpos;
+		double targetneg;
+		double lastOutput;
 		bool flip;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

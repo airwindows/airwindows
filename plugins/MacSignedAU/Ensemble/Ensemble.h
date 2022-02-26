@@ -143,7 +143,7 @@ public:
 		Float64 airEven;
 		Float64 airOdd;
 		Float64 airFactor;
-		long double fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 	};
 };

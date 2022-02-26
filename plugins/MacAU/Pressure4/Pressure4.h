@@ -125,8 +125,8 @@ public:
 		Float64 muSpeedB;
 		Float64 muCoefficientA;
 		Float64 muCoefficientB;
-		long double fpNShapeL;
-		long double fpNShapeR;
+		double fpNShapeL;
+		double fpNShapeR;
 		bool flip;
 
 };

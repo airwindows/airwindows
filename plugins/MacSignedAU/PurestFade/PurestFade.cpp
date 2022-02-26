@@ -204,26 +204,26 @@ void		PurestFade::PurestFadeKernel::Process(	const Float32 	*inSourceP,
 		//plugin is instantiated.
 		//Otherwise it's the target, in dB.
 	}
-	long double targetgain;	
+	double targetgain;	
 	//done with top controller
 	
-	long double targetBgain = GetParameter( kParam_Two );
+	double targetBgain = GetParameter( kParam_Two );
 	if (gainBchase < 0.0) gainBchase = targetBgain;
 	//this one is not a dB value, but straight multiplication
 	//done with slow fade controller
 	
-	long double fadeSpeed = targetBgain;
+	double fadeSpeed = targetBgain;
 	if (fadeSpeed < 0.0027) fadeSpeed = 0.0027; //minimum fade speed
 	fadeSpeed = ((GetSampleRate()*0.004) / fadeSpeed);
 	//this will tend to be much slower than PurestGain, and also adapt to sample rates
 	
-	long double outputgain;
+	double outputgain;
 	
-	long double inputSample;
+	double inputSample;
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		targetgain = pow(10.0,settingchase/20.0);
 		//now we have the target in our temp variable

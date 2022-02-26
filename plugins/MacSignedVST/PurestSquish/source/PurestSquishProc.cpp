@@ -18,10 +18,10 @@ void PurestSquish::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 
-	long double highpassSampleL;
-	long double highpassSampleBL;
-	long double highpassSampleR;
-	long double highpassSampleBR;
+	double highpassSampleL;
+	double highpassSampleBL;
+	double highpassSampleR;
+	double highpassSampleBR;
 	double threshold = 1.01 - (1.0-pow(1.0-(A*0.5),4));
 	double iirAmount = pow(B,4)/overallscale;
 	double output = C;
@@ -29,8 +29,8 @@ void PurestSquish::processReplacing(float **inputs, float **outputs, VstInt32 sa
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -68,8 +68,8 @@ void PurestSquish::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 
 		double muMakeupGainL = 1.0 / threshold;
 		double outMakeupGainL = sqrt(muMakeupGainL);
@@ -522,10 +522,10 @@ void PurestSquish::processDoubleReplacing(double **inputs, double **outputs, Vst
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	long double highpassSampleL;
-	long double highpassSampleBL;
-	long double highpassSampleR;
-	long double highpassSampleBR;
+	double highpassSampleL;
+	double highpassSampleBL;
+	double highpassSampleR;
+	double highpassSampleBR;
 	double threshold = 1.01 - (1.0-pow(1.0-(A*0.5),4));
 	double iirAmount = pow(B,4)/overallscale;
 	double output = C;
@@ -533,8 +533,8 @@ void PurestSquish::processDoubleReplacing(double **inputs, double **outputs, Vst
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -572,8 +572,8 @@ void PurestSquish::processDoubleReplacing(double **inputs, double **outputs, Vst
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		double muMakeupGainL = 1.0 / threshold;
 		double outMakeupGainL = sqrt(muMakeupGainL);

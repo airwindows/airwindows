@@ -209,7 +209,7 @@ void		Preponderant::PreponderantKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -256,24 +256,24 @@ void		Preponderant::PreponderantKernel::Process(	const Float32 	*inSourceP,
 	biquadC[6] = (1.0 - K / biquadC[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = *sourceP;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = *sourceP;
 				
-		long double tempSample = (inputSample * biquadA[2]) + biquadA[7];
+		double tempSample = (inputSample * biquadA[2]) + biquadA[7];
 		biquadA[7] = -(tempSample * biquadA[5]) + biquadA[8];
 		biquadA[8] = (inputSample * biquadA[4]) - (tempSample * biquadA[6]);
-		long double bassSample = tempSample; //BANDPASS form
+		double bassSample = tempSample; //BANDPASS form
 		
 		tempSample = (inputSample * biquadB[2]) + biquadB[7];
 		biquadB[7] = -(tempSample * biquadB[5]) + biquadB[8];
 		biquadB[8] = (inputSample * biquadB[4]) - (tempSample * biquadB[6]);
-		long double midSample = tempSample; //BANDPASS form
+		double midSample = tempSample; //BANDPASS form
 		
 		tempSample = (inputSample * biquadC[2]) + biquadC[7];
 		biquadC[7] = -(tempSample * biquadC[5]) + biquadC[8];
 		biquadC[8] = (inputSample * biquadC[4]) - (tempSample * biquadC[6]);
-		long double highSample = tempSample; //BANDPASS form
+		double highSample = tempSample; //BANDPASS form
 		
 		if (bassBalance < 0.00125) bassBalance = 0.00125;
 		if (bassBalance > 1.0) bassBalance = 1.0;

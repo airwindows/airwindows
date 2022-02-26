@@ -334,9 +334,9 @@ void		ResEQ::ResEQKernel::Process(	const Float32 	*inSourceP,
 	//done updating the kernel for this go-round
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 b[59] = b[58]; b[58] = b[57]; b[57] = b[56]; b[56] = b[55]; b[55] = b[54]; b[54] = b[53]; b[53] = b[52]; b[52] = b[51]; b[51] = b[50]; b[50] = b[49]; b[49] = b[48];
 b[48] = b[47]; b[47] = b[46]; b[46] = b[45]; b[45] = b[44]; b[44] = b[43]; b[43] = b[42]; b[42] = b[41]; b[41] = b[40]; b[40] = b[39]; b[39] = b[38];

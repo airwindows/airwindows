@@ -29,8 +29,8 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
@@ -43,18 +43,18 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		//begin Not Just Another Dither		
 		bool cutbinsL; cutbinsL = false;
 		bool cutbinsR; cutbinsR = false;
-		long double drySampleL; drySampleL = inputSampleL;
-		long double drySampleR; drySampleR = inputSampleR;
+		double drySampleL; drySampleL = inputSampleL;
+		double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
 		
 		//NJAD L
-		long double benfordize; benfordize = floor(inputSampleL);
+		double benfordize; benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) benfordize /= 10;
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		long double totalA; totalA = 0;
+		double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
 			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
@@ -70,7 +70,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		long double totalB; totalB = 0;
+		double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
 			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
@@ -81,7 +81,7 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		long double outputSample;
+		double outputSample;
 		if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
 		else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line
@@ -183,8 +183,8 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
@@ -197,18 +197,18 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		//begin Not Just Another Dither		
 		bool cutbinsL; cutbinsL = false;
 		bool cutbinsR; cutbinsR = false;
-		long double drySampleL; drySampleL = inputSampleL;
-		long double drySampleR; drySampleR = inputSampleR;
+		double drySampleL; drySampleL = inputSampleL;
+		double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
 		
 		//NJAD L
-		long double benfordize; benfordize = floor(inputSampleL);
+		double benfordize; benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) benfordize /= 10;
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		long double totalA; totalA = 0;
+		double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
 			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
@@ -224,7 +224,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		long double totalB; totalB = 0;
+		double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
 			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
@@ -235,7 +235,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		long double outputSampleL;
+		double outputSampleL;
 		if (totalA < totalB) {bynL[hotbinA] += 1; outputSampleL = floor(inputSampleL);}
 		else {bynL[hotbinB] += 1; outputSampleL = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line
@@ -282,7 +282,7 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		long double outputSampleR;
+		double outputSampleR;
 		if (totalA < totalB) {bynR[hotbinA] += 1; outputSampleR = floor(inputSampleR);}
 		else {bynR[hotbinB] += 1; outputSampleR = floor(inputSampleR+1);}
 		//assign the relevant one to the delay line

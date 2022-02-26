@@ -125,7 +125,7 @@ public:
 		Float64 iirSampleD;
 		Float64 iirSampleE;
 		Float64 iirSampleF;
-		long double lastSample;
+		double lastSample;
 		uint32_t fpd;
 		bool flip;
 	};

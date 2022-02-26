@@ -62,12 +62,12 @@ void TapeDelay2::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		cycle++;
 		if (cycle == cycleEnd) {
@@ -79,7 +79,7 @@ void TapeDelay2::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			//begin left channel
 			int pos = floor(delayL);
 			double newSample = inputSampleL + dL[pos]*feedback;
-			long double tempSample = (newSample * regenFilterL[2]) + regenFilterL[7];
+			double tempSample = (newSample * regenFilterL[2]) + regenFilterL[7];
 			regenFilterL[7] = -(tempSample * regenFilterL[5]) + regenFilterL[8];
 			regenFilterL[8] = (newSample * regenFilterL[4]) - (tempSample * regenFilterL[6]);
 			newSample = tempSample;
@@ -266,12 +266,12 @@ void TapeDelay2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		cycle++;
 		if (cycle == cycleEnd) {
@@ -283,7 +283,7 @@ void TapeDelay2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//begin left channel
 			int pos = floor(delayL);
 			double newSample = inputSampleL + dL[pos]*feedback;
-			long double tempSample = (newSample * regenFilterL[2]) + regenFilterL[7];
+			double tempSample = (newSample * regenFilterL[2]) + regenFilterL[7];
 			regenFilterL[7] = -(tempSample * regenFilterL[5]) + regenFilterL[8];
 			regenFilterL[8] = (newSample * regenFilterL[4]) - (tempSample * regenFilterL[6]);
 			newSample = tempSample;
@@ -397,12 +397,12 @@ void TapeDelay2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//purpose is that, if you're adding echo, you're not altering other balances
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

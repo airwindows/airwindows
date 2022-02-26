@@ -54,12 +54,12 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
   
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (inputgain < 1.0) {
 			inputSampleL *= inputgain;
@@ -74,7 +74,7 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		int count = gcount;
 		if (depth != 0.0) {
 			
-			long double offset = depth + (depth * pow(rateof,2) * sin(sweep));
+			double offset = depth + (depth * pow(rateof,2) * sin(sweep));
 			
 			count += (int)floor(offset);
 			inputSampleL = (dL[count-((count > 499)?500:0)] * (1-(offset-floor(offset))) );
@@ -93,13 +93,13 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		gcount--;
 		
-		long double vibDrySampleL = inputSampleL;
-		long double vibDrySampleR = inputSampleR;
-		long double HighsSampleL = 0.0;
-		long double HighsSampleR = 0.0;
-		long double NonHighsSampleL = 0.0;
-		long double NonHighsSampleR = 0.0;
-		long double tempSample;
+		double vibDrySampleL = inputSampleL;
+		double vibDrySampleR = inputSampleR;
+		double HighsSampleL = 0.0;
+		double HighsSampleR = 0.0;
+		double NonHighsSampleL = 0.0;
+		double NonHighsSampleR = 0.0;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -201,15 +201,15 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		flip = !flip;
 		
-		long double groundSampleL = vibDrySampleL - inputSampleL; //set up UnBox on fluttered audio
-		long double groundSampleR = vibDrySampleR - inputSampleR; //set up UnBox on fluttered audio
+		double groundSampleL = vibDrySampleL - inputSampleL; //set up UnBox on fluttered audio
+		double groundSampleR = vibDrySampleR - inputSampleR; //set up UnBox on fluttered audio
 		
 		if (inputgain > 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
 		
-		long double applySoften = fabs(HighsSampleL)*1.57079633;
+		double applySoften = fabs(HighsSampleL)*1.57079633;
 		if (applySoften > 1.57079633) applySoften = 1.57079633;
 		applySoften = 1-cos(applySoften);
 		if (HighsSampleL > 0) inputSampleL -= applySoften;
@@ -241,7 +241,7 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		long double mojo; mojo = pow(fabs(inputSampleL),0.25);
+		double mojo; mojo = pow(fabs(inputSampleL),0.25);
 		if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo);
 		//mojo is the one that flattens WAAAAY out very softly before wavefolding		
 		
@@ -388,12 +388,12 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (inputgain < 1.0) {
 			inputSampleL *= inputgain;
@@ -408,7 +408,7 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		int count = gcount;
 		if (depth != 0.0) {
 			
-			long double offset = depth + (depth * pow(rateof,2) * sin(sweep));
+			double offset = depth + (depth * pow(rateof,2) * sin(sweep));
 			
 			count += (int)floor(offset);
 			inputSampleL = (dL[count-((count > 499)?500:0)] * (1-(offset-floor(offset))) );
@@ -427,13 +427,13 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		gcount--;
 		
-		long double vibDrySampleL = inputSampleL;
-		long double vibDrySampleR = inputSampleR;
-		long double HighsSampleL = 0.0;
-		long double HighsSampleR = 0.0;
-		long double NonHighsSampleL = 0.0;
-		long double NonHighsSampleR = 0.0;
-		long double tempSample;
+		double vibDrySampleL = inputSampleL;
+		double vibDrySampleR = inputSampleR;
+		double HighsSampleL = 0.0;
+		double HighsSampleR = 0.0;
+		double NonHighsSampleL = 0.0;
+		double NonHighsSampleR = 0.0;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -535,15 +535,15 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		flip = !flip;
 		
-		long double groundSampleL = vibDrySampleL - inputSampleL; //set up UnBox on fluttered audio
-		long double groundSampleR = vibDrySampleR - inputSampleR; //set up UnBox on fluttered audio
+		double groundSampleL = vibDrySampleL - inputSampleL; //set up UnBox on fluttered audio
+		double groundSampleR = vibDrySampleR - inputSampleR; //set up UnBox on fluttered audio
 		
 		if (inputgain > 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		}
 		
-		long double applySoften = fabs(HighsSampleL)*1.57079633;
+		double applySoften = fabs(HighsSampleL)*1.57079633;
 		if (applySoften > 1.57079633) applySoften = 1.57079633;
 		applySoften = 1-cos(applySoften);
 		if (HighsSampleL > 0) inputSampleL -= applySoften;
@@ -575,7 +575,7 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		long double mojo; mojo = pow(fabs(inputSampleL),0.25);
+		double mojo; mojo = pow(fabs(inputSampleL),0.25);
 		if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo);
 		//mojo is the one that flattens WAAAAY out very softly before wavefolding		
 		

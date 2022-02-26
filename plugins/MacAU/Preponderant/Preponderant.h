@@ -137,16 +137,16 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double biquadA[9];
-		long double biquadB[9];
-		long double biquadC[9];
-		long double bassBalance;
-		long double midBalance;
-		long double highBalance;
-		long double bassTrack;
-		long double midTrack;
-		long double highTrack;
-		long double quickness;
+		double biquadA[9];
+		double biquadB[9];
+		double biquadC[9];
+		double bassBalance;
+		double midBalance;
+		double highBalance;
+		double bassTrack;
+		double midTrack;
+		double highTrack;
+		double quickness;
 		uint32_t fpd;
 	};
 };

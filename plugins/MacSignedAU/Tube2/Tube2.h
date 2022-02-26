@@ -128,9 +128,9 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double previousSampleA;
-		long double previousSampleB;
-		long double previousSampleC;
+		double previousSampleA;
+		double previousSampleB;
+		double previousSampleC;
 		uint32_t fpd;
 	};
 };

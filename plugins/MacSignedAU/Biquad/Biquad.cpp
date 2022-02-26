@@ -200,7 +200,7 @@ void		Biquad::BiquadKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -271,15 +271,15 @@ void		Biquad::BiquadKernel::Process(	const Float32 	*inSourceP,
 	}
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = *sourceP;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = *sourceP;
 		
 		
 		inputSample = sin(inputSample);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSample * biquad[2]) + biquad[7];
+		double tempSample = (inputSample * biquad[2]) + biquad[7];
 		biquad[7] = (inputSample * biquad[3]) - (tempSample * biquad[5]) + biquad[8];
 		biquad[8] = (inputSample * biquad[4]) - (tempSample * biquad[6]);
 		inputSample = tempSample;

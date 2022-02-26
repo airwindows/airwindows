@@ -62,16 +62,16 @@ private:
 	double prevSampleL;
 	double delayL;
 	double sweepL;
-	long double regenFilterL[9];
-	long double outFilterL[9];
+	double regenFilterL[9];
+	double outFilterL[9];
 	double lastRefL[10];
 	
 	double dR[88211];
 	double prevSampleR;
 	double delayR;
 	double sweepR;
-	long double regenFilterR[9];
-	long double outFilterR[9];
+	double regenFilterR[9];
+	double outFilterR[9];
 	double lastRefR[10];
 	
 	int cycle;

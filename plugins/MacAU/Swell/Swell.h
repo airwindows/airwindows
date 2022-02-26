@@ -132,9 +132,9 @@ public:
 		
 		private:
 		
-		long double swell;
+		double swell;
 		bool louder;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

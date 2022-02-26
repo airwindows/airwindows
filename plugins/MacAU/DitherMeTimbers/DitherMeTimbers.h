@@ -118,9 +118,9 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double noiseShaping;
-		long double lastSample;
-		long double lastSample2;
+		double noiseShaping;
+		double lastSample;
+		double lastSample2;
 	};
 };
 

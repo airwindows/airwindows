@@ -132,11 +132,11 @@ public:
 		Float64 iirHeadBumpA;
 		Float64 iirHeadBumpB;
 		bool flip;
-		long double biquadA[9];
-		long double biquadB[9];
-		long double biquadC[9];
-		long double biquadD[9];
-		long double lastSample;
+		double biquadA[9];
+		double biquadB[9];
+		double biquadC[9];
+		double biquadD[9];
+		double lastSample;
 		uint32_t fpd;
 	};
 };

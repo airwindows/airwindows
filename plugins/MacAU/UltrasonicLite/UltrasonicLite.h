@@ -121,7 +121,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double biquadA[11];
+		double biquadA[11];
 		uint32_t fpd;
 	};
 };

@@ -131,12 +131,12 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double last1Sample;
-		long double halfwaySample;
-		long double halfDrySample;
-		long double halfDiffSample;
-		long double diffSample;
-		long double lastSample;
+		double last1Sample;
+		double halfwaySample;
+		double halfDrySample;
+		double halfDiffSample;
+		double diffSample;
+		double lastSample;
 		Float64 s1;
 		Float64 s2;
 		Float64 s3;

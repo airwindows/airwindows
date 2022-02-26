@@ -18,8 +18,8 @@ void Mojo::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 
@@ -28,7 +28,7 @@ void Mojo::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 			inputSampleR *= gain;
 		}		
 
-		long double mojo = pow(fabs(inputSampleL),0.25);
+		double mojo = pow(fabs(inputSampleL),0.25);
 		if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 		//mojo is the one that flattens WAAAAY out very softly before wavefolding
 		mojo = pow(fabs(inputSampleR),0.25);
@@ -65,8 +65,8 @@ void Mojo::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
@@ -75,7 +75,7 @@ void Mojo::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 			inputSampleR *= gain;
 		}		
 		
-		long double mojo = pow(fabs(inputSampleL),0.25);
+		double mojo = pow(fabs(inputSampleL),0.25);
 		if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 		//mojo is the one that flattens WAAAAY out very softly before wavefolding
 		mojo = pow(fabs(inputSampleR),0.25);

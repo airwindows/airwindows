@@ -185,31 +185,31 @@ void		Hull::HullKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 96000.0;
 	overallscale *= GetSampleRate(); //this one's scaled to 96k for the deepest bass
 	if (overallscale > 1.0) overallscale = 1.0; //and if you go for 192k, rather than crash
 	//it just cuts out the maximum (2000) depth of averaging you can get
 	Float64 hullSetting = pow(GetParameter( kParam_One ),3)*overallscale;
 	int limitA = (hullSetting*2000.0)+1.0;
-	long double divisorA = 1.0/limitA;
+	double divisorA = 1.0/limitA;
 	int limitB = (hullSetting*1000.0)+1.0;
-	long double divisorB = 1.0/limitB;
+	double divisorB = 1.0/limitB;
 	int limitC = sqrt(hullSetting*2000.0)+1.0;
-	long double divisorC = 1.0/limitC;
+	double divisorC = 1.0/limitC;
 	Float64 wet = -GetParameter( kParam_Two ); //functions as dark/bright
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		bPointer--; if (bPointer < 0) bPointer += 2000;
 		b[bPointer] = b[bPointer+2000] = inputSample;
 
 		int x = bPointer;
-		long double longAverage = 0.0;
-		long double shortAverage = 0.0;
+		double longAverage = 0.0;
+		double shortAverage = 0.0;
 		while (x < bPointer+limitB) {
 			shortAverage += b[x];
 			longAverage += b[x];
@@ -227,7 +227,7 @@ void		Hull::HullKernel::Process(	const Float32 	*inSourceP,
 		c[cPointer] = c[cPointer+50] = shortAverage+(shortAverage-longAverage);
 		
 		x = cPointer;
-		long double shortestAverage = 0.0;
+		double shortestAverage = 0.0;
 		while (x < cPointer+limitC) {
 			shortestAverage += c[x];
 			x++;

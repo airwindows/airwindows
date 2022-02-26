@@ -137,16 +137,16 @@ public:
 		
 		private:
 		
-		long double iirSampleA;
-		long double iirSampleB;
-		long double iirSampleC;
-		long double iirSampleD;
-		long double iirSampleE;
-		long double iirSampleF;
-		long double biquadA[11];
-		long double biquadB[11];
-		long double biquadC[11];
-		long double biquadD[11];
+		double iirSampleA;
+		double iirSampleB;
+		double iirSampleC;
+		double iirSampleD;
+		double iirSampleE;
+		double iirSampleF;
+		double biquadA[11];
+		double biquadB[11];
+		double biquadC[11];
+		double biquadD[11];
 		uint32_t fpd;
 	};
 };

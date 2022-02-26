@@ -118,8 +118,8 @@ public:
 	
 private: 
 	Float64 p[4099];
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	int count;
 };
 

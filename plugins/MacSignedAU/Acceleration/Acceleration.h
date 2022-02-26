@@ -138,7 +138,7 @@ public:
 		Float64 m1L;
 		Float64 m2L;
 		Float64 desL;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

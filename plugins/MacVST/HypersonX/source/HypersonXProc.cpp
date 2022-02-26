@@ -149,7 +149,7 @@ void HypersonX::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR = outSample; //fixed biquad filtering ultrasonics
 
 		//begin 64 bit stereo floating point dither
-		//only relevant if buss is long double
+		//only relevant if buss is double
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

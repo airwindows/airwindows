@@ -32,18 +32,18 @@ void Focus::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
+		double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 		figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 		figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
 		inputSampleL = tempSample;
@@ -62,8 +62,8 @@ void Focus::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR = asin(inputSampleR);
 		//decode Console5
 		
-		long double groundSampleL = drySampleL - inputSampleL; //set up UnBox
-		long double groundSampleR = drySampleR - inputSampleR; //set up UnBox
+		double groundSampleL = drySampleL - inputSampleL; //set up UnBox
+		double groundSampleR = drySampleR - inputSampleR; //set up UnBox
 		inputSampleL *= boost; //now, focussed area gets cranked before distort
 		inputSampleR *= boost; //now, focussed area gets cranked before distort
 		
@@ -98,14 +98,14 @@ void Focus::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 				break;
 			case 3: //Mojo
-				long double mojo; mojo = pow(fabs(inputSampleL),0.25);
+				double mojo; mojo = pow(fabs(inputSampleL),0.25);
 				if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				mojo = pow(fabs(inputSampleR),0.25);
 				if (mojo > 0.0) inputSampleR = (sin(inputSampleR * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				//mojo is the one that flattens WAAAAY out very softly before wavefolding				
 				break;
 			case 4: //Dyno
-				long double dyno; dyno = pow(fabs(inputSampleL),4);
+				double dyno; dyno = pow(fabs(inputSampleL),4);
 				if (dyno > 0.0) inputSampleL = (sin(inputSampleL * dyno) / dyno) * 1.1654321;
 				dyno = pow(fabs(inputSampleR),4);
 				if (dyno > 0.0) inputSampleR = (sin(inputSampleR * dyno) / dyno) * 1.1654321;
@@ -170,18 +170,18 @@ void Focus::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
+		double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 		figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 		figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
 		inputSampleL = tempSample;
@@ -200,8 +200,8 @@ void Focus::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR = asin(inputSampleR);
 		//decode Console5
 		
-		long double groundSampleL = drySampleL - inputSampleL; //set up UnBox
-		long double groundSampleR = drySampleR - inputSampleR; //set up UnBox
+		double groundSampleL = drySampleL - inputSampleL; //set up UnBox
+		double groundSampleR = drySampleR - inputSampleR; //set up UnBox
 		inputSampleL *= boost; //now, focussed area gets cranked before distort
 		inputSampleR *= boost; //now, focussed area gets cranked before distort
 		
@@ -236,14 +236,14 @@ void Focus::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 				break;
 			case 3: //Mojo
-				long double mojo; mojo = pow(fabs(inputSampleL),0.25);
+				double mojo; mojo = pow(fabs(inputSampleL),0.25);
 				if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				mojo = pow(fabs(inputSampleR),0.25);
 				if (mojo > 0.0) inputSampleR = (sin(inputSampleR * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				//mojo is the one that flattens WAAAAY out very softly before wavefolding				
 				break;
 			case 4: //Dyno
-				long double dyno; dyno = pow(fabs(inputSampleL),4);
+				double dyno; dyno = pow(fabs(inputSampleL),4);
 				if (dyno > 0.0) inputSampleL = (sin(inputSampleL * dyno) / dyno) * 1.1654321;
 				dyno = pow(fabs(inputSampleR),4);
 				if (dyno > 0.0) inputSampleR = (sin(inputSampleR * dyno) / dyno) * 1.1654321;

@@ -62,8 +62,8 @@ private:
 	double muSpeedB;
 	double muCoefficientA;
 	double muCoefficientB;
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	bool flip;
 
     float A;

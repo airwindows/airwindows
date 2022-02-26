@@ -203,8 +203,8 @@ void		PurestAir::PurestAirKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Three );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 
 		halfDrySample = halfwaySample = (inputSample + last1Sample) / 2.0;

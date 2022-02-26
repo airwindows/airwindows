@@ -180,14 +180,14 @@ void		DitherFloat::DitherFloatKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 
 	int floatOffset = GetParameter( kParam_One );
-	long double blend = GetParameter( kParam_Two );
+	double blend = GetParameter( kParam_Two );
 
-	long double gain = 0;
+	double gain = 0;
 	
 	switch (floatOffset)
 	{
@@ -229,7 +229,7 @@ void		DitherFloat::DitherFloatKernel::Process(	const Float32 	*inSourceP,
 	//gain *= gain; //for testing with double precision, 64 bit
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP + (gain-1); //this offsets the float into total truncation-land.
+		double inputSample = *sourceP + (gain-1); //this offsets the float into total truncation-land.
 		
 
 		

@@ -56,8 +56,8 @@ private:
     
 	double iirSampleA;
 	double iirSampleB;
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	bool flip;
 	//default stuff
 

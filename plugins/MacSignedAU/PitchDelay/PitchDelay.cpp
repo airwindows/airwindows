@@ -221,7 +221,7 @@ void		PitchDelay::PitchDelayKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -269,8 +269,8 @@ void		PitchDelay::PitchDelayKernel::Process(	const Float32 	*inSourceP,
 	//unless you go super heavy, you are only adjusting the added echo loudness.
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 		
 		cycle++;
@@ -279,7 +279,7 @@ void		PitchDelay::PitchDelayKernel::Process(	const Float32 	*inSourceP,
 			
 			int pos = floor(delay);
 			Float64 newSample = inputSample + (regenSample*feedback);
-			long double tempSample = (newSample * regenFilter[2]) + regenFilter[7];
+			double tempSample = (newSample * regenFilter[2]) + regenFilter[7];
 			regenFilter[7] = -(tempSample * regenFilter[5]) + regenFilter[8];
 			regenFilter[8] = (newSample * regenFilter[4]) - (tempSample * regenFilter[6]);
 			newSample = tempSample;

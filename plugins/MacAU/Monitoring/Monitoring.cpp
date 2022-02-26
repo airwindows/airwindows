@@ -267,7 +267,7 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();	
 	int processing = (int) GetParameter( kParam_One );
@@ -289,8 +289,8 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	//for Bandpasses
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
@@ -357,7 +357,7 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 			case 3:
 				Float64 trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
-				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
+				double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
 				lastSampleL = inputSampleL;
 				if (slewSample > 1.0) slewSample = 1.0; if (slewSample < -1.0) slewSample = -1.0;
 				inputSampleL = slewSample;
@@ -530,8 +530,8 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				break;
 			case 5:
 			case 6:
-				long double mid; mid = inputSampleL + inputSampleR;
-				long double side; side = inputSampleL - inputSampleR;
+				double mid; mid = inputSampleL + inputSampleR;
+				double side; side = inputSampleL - inputSampleR;
 				if (processing < 6) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
@@ -547,17 +547,17 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				
 				if (processing == 9) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == 10) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == 11) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == 11) {double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
+				double tempSampleL; tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
 				biquad[7] = (-tempSampleL * biquad[5]) + biquad[8];
 				biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
+				double tempSampleR; tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
 				biquad[9] = (-tempSampleR * biquad[5]) + biquad[10];
 				biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
@@ -579,9 +579,9 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
-				long double drySampleL; drySampleL = inputSampleL;
-				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
-				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				double drySampleL; drySampleL = inputSampleL;
+				double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				double bass; bass = (processing * processing * 0.00001) / overallscale;
 				//we are using the iir filters from out of SubsOnly
 				
 				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
@@ -638,7 +638,7 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				//ConsoleBuss processing
 				break;
 			case 16:
-				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
 				break;
@@ -657,17 +657,17 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		
 		bool cutbinsL; cutbinsL = false;
 		bool cutbinsR; cutbinsR = false;
-		long double drySampleL; drySampleL = inputSampleL;
-		long double drySampleR; drySampleR = inputSampleR;
+		double drySampleL; drySampleL = inputSampleL;
+		double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
 		//NJAD L
-		long double benfordize; benfordize = floor(inputSampleL);
+		double benfordize; benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) benfordize /= 10;
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		long double totalA; totalA = 0;
+		double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
 			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
@@ -681,7 +681,7 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		long double totalB; totalB = 0;
+		double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
 			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
@@ -690,7 +690,7 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 			totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]); bynL[hotbinB] -= 1;
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
-		long double outputSample;
+		double outputSample;
 		if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
 		else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line

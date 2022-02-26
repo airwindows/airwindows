@@ -31,24 +31,24 @@ void PurestFade::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//plugin is instantiated.
 		//Otherwise it's the target, in dB.
 	}
-	long double targetgain;	
+	double targetgain;	
 	//done with top controller
-	long double targetBgain = B;
+	double targetBgain = B;
 	if (gainBchase < 0.0) gainBchase = targetBgain;
 	//this one is not a dB value, but straight multiplication
 	//done with slow fade controller
 	
-	long double fadeSpeed = targetBgain;
+	double fadeSpeed = targetBgain;
 	if (fadeSpeed < 0.0027) fadeSpeed = 0.0027; //minimum fade speed
 	fadeSpeed = ((getSampleRate()*0.004) / fadeSpeed);
 	//this will tend to be much slower than PurestGain, and also adapt to sample rates
 		
-	long double outputgain;
+	double outputgain;
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 
@@ -119,24 +119,24 @@ void PurestFade::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//plugin is instantiated.
 		//Otherwise it's the target, in dB.
 	}
-	long double targetgain;	
+	double targetgain;	
 	//done with top controller
-	long double targetBgain = B;
+	double targetBgain = B;
 	if (gainBchase < 0.0) gainBchase = targetBgain;
 	//this one is not a dB value, but straight multiplication
 	//done with slow fade controller
 	
-	long double fadeSpeed = targetBgain;
+	double fadeSpeed = targetBgain;
 	if (fadeSpeed < 0.0027) fadeSpeed = 0.0027; //minimum fade speed
 	fadeSpeed = ((getSampleRate()*0.004) / fadeSpeed);
 	//this will tend to be much slower than PurestGain, and also adapt to sample rates
 		
-	long double outputgain;
+	double outputgain;
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		

@@ -185,7 +185,7 @@ public:
 		Float64 iirSampleY;
 		Float64 iirSampleZ;
 		int flip;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

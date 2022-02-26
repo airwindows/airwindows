@@ -48,15 +48,15 @@ void AverMatrix::processReplacing(float **inputs, float **outputs, VstInt32 samp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double previousPoleL = 0;		
-		long double previousPoleR = 0;		
+		double previousPoleL = 0;		
+		double previousPoleR = 0;		
 		for (int y = 0; y < yLimit; y++) {
 			for (int x = xLimit; x >= 0; x--) {
 				bL[x+1][y] = bL[x][y];
@@ -140,15 +140,15 @@ void AverMatrix::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 
-		long double previousPoleL = 0;		
-		long double previousPoleR = 0;		
+		double previousPoleL = 0;		
+		double previousPoleR = 0;		
 		for (int y = 0; y < yLimit; y++) {
 			for (int x = xLimit; x >= 0; x--) {
 				bL[x+1][y] = bL[x][y];

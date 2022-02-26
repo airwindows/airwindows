@@ -80,14 +80,14 @@ private:
 		biq_sR2,
 		biq_total
 	}; //coefficient interpolating biquad filter, stereo
-	long double biquad[biq_total];
+	double biquad[biq_total];
 	
-	long double powFactorA;
-	long double powFactorB;
-	long double inTrimA;
-	long double inTrimB;
-	long double outTrimA;
-	long double outTrimB;
+	double powFactorA;
+	double powFactorB;
+	double inTrimA;
+	double inTrimB;
+	double outTrimA;
+	double outTrimB;
 	
 	enum {
 		fix_freq,
@@ -103,8 +103,8 @@ private:
 		fix_sR2,
 		fix_total
 	}; //fixed frequency biquad filter for ultrasonics, stereo
-	long double fixA[fix_total];
-	long double fixB[fix_total];
+	double fixA[fix_total];
+	double fixB[fix_total];
     
 	uint32_t fpdL;
 	uint32_t fpdR;

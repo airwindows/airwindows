@@ -36,8 +36,8 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -75,8 +75,8 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		//begin left channel
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
@@ -247,14 +247,14 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
 		
-		//stereo 32 bit dither, made small and tidy.
+		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -295,8 +295,8 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -334,8 +334,8 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		//begin left channel
 		if (tight > 0) offset = (1 - tight) + (fabs(inputSampleL)*tight);
@@ -506,16 +506,14 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
 		}
 		
-		//stereo 64 bit dither, made small and tidy.
-		int expon; frexp((double)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexp((double)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 64 bit dither
+		//begin 64 bit stereo floating point dither
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

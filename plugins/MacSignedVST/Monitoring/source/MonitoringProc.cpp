@@ -48,8 +48,8 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
@@ -116,7 +116,7 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			case 3:
 				double trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
-				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
+				double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
 				lastSampleL = inputSampleL;
 				if (slewSample > 1.0) slewSample = 1.0; if (slewSample < -1.0) slewSample = -1.0;
 				inputSampleL = slewSample;
@@ -289,8 +289,8 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				break;
 			case 5:
 			case 6:
-				long double mid; mid = inputSampleL + inputSampleR;
-				long double side; side = inputSampleL - inputSampleR;
+				double mid; mid = inputSampleL + inputSampleR;
+				double side; side = inputSampleL - inputSampleR;
 				if (processing < 6) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
@@ -305,17 +305,17 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				//7 Vinyl, 8 9 10 Aurat, 11 Phone
 				if (processing == 9) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == 10) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == 11) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == 11) {double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquadL[2]) + biquadL[7];
+				double tempSampleL; tempSampleL = (inputSampleL * biquadL[2]) + biquadL[7];
 				biquadL[7] = (-tempSampleL * biquadL[5]) + biquadL[8];
 				biquadL[8] = (inputSampleL * biquadL[4]) - (tempSampleL * biquadL[6]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquadR[2]) + biquadR[7];
+				double tempSampleR; tempSampleR = (inputSampleR * biquadR[2]) + biquadR[7];
 				biquadR[7] = (-tempSampleR * biquadR[5]) + biquadR[8];
 				biquadR[8] = (inputSampleR * biquadR[4]) - (tempSampleR * biquadR[6]);
 				inputSampleR = tempSampleR; // we are using the mono configuration
@@ -337,9 +337,9 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
-				long double drySampleL; drySampleL = inputSampleL;
-				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
-				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				double drySampleL; drySampleL = inputSampleL;
+				double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				double bass; bass = (processing * processing * 0.00001) / overallscale;
 				//we are using the iir filters from out of SubsOnly
 				
 				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
@@ -396,7 +396,7 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				//ConsoleBuss processing
 				break;
 			case 16:
-				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
 				break;
@@ -415,17 +415,17 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		bool cutbinsL; cutbinsL = false;
 		bool cutbinsR; cutbinsR = false;
-		long double drySampleL; drySampleL = inputSampleL;
-		long double drySampleR; drySampleR = inputSampleR;
+		double drySampleL; drySampleL = inputSampleL;
+		double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
 		//NJAD L
-		long double benfordize; benfordize = floor(inputSampleL);
+		double benfordize; benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) benfordize /= 10;
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		long double totalA; totalA = 0;
+		double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
 			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
@@ -439,7 +439,7 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		long double totalB; totalB = 0;
+		double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
 			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
@@ -448,7 +448,7 @@ void Monitoring::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]); bynL[hotbinB] -= 1;
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
-		long double outputSample;
+		double outputSample;
 		if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
 		else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line
@@ -565,8 +565,8 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
@@ -633,7 +633,7 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			case 3:
 				double trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
-				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
+				double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
 				lastSampleL = inputSampleL;
 				if (slewSample > 1.0) slewSample = 1.0; if (slewSample < -1.0) slewSample = -1.0;
 				inputSampleL = slewSample;
@@ -806,8 +806,8 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				break;
 			case 5:
 			case 6:
-				long double mid; mid = inputSampleL + inputSampleR;
-				long double side; side = inputSampleL - inputSampleR;
+				double mid; mid = inputSampleL + inputSampleR;
+				double side; side = inputSampleL - inputSampleR;
 				if (processing < 6) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
@@ -822,17 +822,17 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				//7 Vinyl, 8 9 10 Aurat, 11 Phone
 				if (processing == 9) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == 10) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == 11) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == 11) {double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquadL[2]) + biquadL[7];
+				double tempSampleL; tempSampleL = (inputSampleL * biquadL[2]) + biquadL[7];
 				biquadL[7] = (-tempSampleL * biquadL[5]) + biquadL[8];
 				biquadL[8] = (inputSampleL * biquadL[4]) - (tempSampleL * biquadL[6]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquadR[2]) + biquadR[7];
+				double tempSampleR; tempSampleR = (inputSampleR * biquadR[2]) + biquadR[7];
 				biquadR[7] = (-tempSampleR * biquadR[5]) + biquadR[8];
 				biquadR[8] = (inputSampleR * biquadR[4]) - (tempSampleR * biquadR[6]);
 				inputSampleR = tempSampleR; // we are using the mono configuration
@@ -854,9 +854,9 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
-				long double drySampleL; drySampleL = inputSampleL;
-				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
-				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				double drySampleL; drySampleL = inputSampleL;
+				double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				double bass; bass = (processing * processing * 0.00001) / overallscale;
 				//we are using the iir filters from out of SubsOnly
 				
 				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
@@ -913,7 +913,7 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				//ConsoleBuss processing
 				break;
 			case 16:
-				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
 				break;
@@ -932,17 +932,17 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		bool cutbinsL; cutbinsL = false;
 		bool cutbinsR; cutbinsR = false;
-		long double drySampleL; drySampleL = inputSampleL;
-		long double drySampleR; drySampleR = inputSampleR;
+		double drySampleL; drySampleL = inputSampleL;
+		double drySampleR; drySampleR = inputSampleR;
 		inputSampleL -= noiseShapingL;
 		inputSampleR -= noiseShapingR;
 		//NJAD L
-		long double benfordize; benfordize = floor(inputSampleL);
+		double benfordize; benfordize = floor(inputSampleL);
 		while (benfordize >= 1.0) benfordize /= 10;
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		long double totalA; totalA = 0;
+		double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
 			bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
@@ -956,7 +956,7 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		long double totalB; totalB = 0;
+		double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
 			bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
@@ -965,7 +965,7 @@ void Monitoring::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]); bynL[hotbinB] -= 1;
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
-		long double outputSample;
+		double outputSample;
 		if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
 		else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
 		//assign the relevant one to the delay line

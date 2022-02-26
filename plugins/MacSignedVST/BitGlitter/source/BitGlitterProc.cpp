@@ -32,12 +32,12 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 
 		//first, the distortion section
@@ -68,7 +68,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		//begin raw sample L
 		positionAL += rateA;
-		long double outputSampleL = heldSampleAL;
+		double outputSampleL = heldSampleAL;
 		if (positionAL > 1.0)
 		{
 			positionAL -= 1.0;
@@ -97,7 +97,7 @@ void BitGlitter::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		//begin raw sample R
 		positionAR += rateA;
-		long double outputSampleR = heldSampleAR;
+		double outputSampleR = heldSampleAR;
 		if (positionAR > 1.0)
 		{
 			positionAR -= 1.0;
@@ -252,12 +252,12 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		//first, the distortion section
 		inputSampleL *= ingain;
@@ -287,7 +287,7 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		//begin raw sample L
 		positionAL += rateA;
-		long double outputSampleL = heldSampleAL;
+		double outputSampleL = heldSampleAL;
 		if (positionAL > 1.0)
 		{
 			positionAL -= 1.0;
@@ -316,7 +316,7 @@ void BitGlitter::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		//begin raw sample R
 		positionAR += rateA;
-		long double outputSampleR = heldSampleAR;
+		double outputSampleR = heldSampleAR;
 		if (positionAR > 1.0)
 		{
 			positionAR -= 1.0;

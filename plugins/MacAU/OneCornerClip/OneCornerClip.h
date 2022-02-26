@@ -140,7 +140,7 @@ public:
 		Float64 lastSample;
 		Float64 limitPos;
 		Float64 limitNeg;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

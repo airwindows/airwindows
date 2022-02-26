@@ -55,10 +55,10 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double previousInL[9];
-	long double previousOutL[9];
-	long double previousInR[9];
-	long double previousOutR[9];
+	double previousInL[9];
+	double previousOutL[9];
+	double previousInR[9];
+	double previousOutR[9];
 
 	uint32_t fpd;
 	//default stuff

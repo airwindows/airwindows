@@ -19,9 +19,9 @@ void DitherFloat::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	overallscale *= getSampleRate();
 
 	int floatOffset = (A * 32);
-	long double blend = B;
+	double blend = B;
 	
-	long double gain = 0;
+	double gain = 0;
 	
 	switch (floatOffset)
 	{
@@ -63,8 +63,8 @@ void DitherFloat::processReplacing(float **inputs, float **outputs, VstInt32 sam
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1 + (gain-1);
-		long double inputSampleR = *in2 + (gain-1);
+		double inputSampleL = *in1 + (gain-1);
+		double inputSampleR = *in2 + (gain-1);
 		
 		
 
@@ -104,9 +104,9 @@ void DitherFloat::processDoubleReplacing(double **inputs, double **outputs, VstI
 	overallscale *= getSampleRate();
 	
 	int floatOffset = (A * 32);
-	long double blend = B;
+	double blend = B;
 	
-	long double gain = 0;
+	double gain = 0;
 	
 	switch (floatOffset)
 	{
@@ -148,8 +148,8 @@ void DitherFloat::processDoubleReplacing(double **inputs, double **outputs, VstI
     	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1 + (gain-1);
-		long double inputSampleR = *in2 + (gain-1);
+		double inputSampleL = *in1 + (gain-1);
+		double inputSampleR = *in2 + (gain-1);
 		
 		
 		

@@ -199,7 +199,7 @@ void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSou
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	int cycleEnd = floor(overallscale);
@@ -250,8 +250,8 @@ void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSou
 	biquadB[6] = (1.0 - K / biquadB[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (flip)
 		{
@@ -268,14 +268,14 @@ void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSou
 		//do IIR highpass for leaning out
 		
 		if (biquadA[0] < 0.49999) {
-			long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+			double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 			biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
 			biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 		}		
 		
 		if (inputgain != 1.0) inputSample *= inputgain;
 		
-		long double bridgerectifier = fabs(inputSample);
+		double bridgerectifier = fabs(inputSample);
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
 		bridgerectifier = sin(bridgerectifier);
 		if (inputSample > 0.0) inputSample = bridgerectifier;
@@ -288,7 +288,7 @@ void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSou
 		int count = gcount;
 		//increment the counter
 		
-		long double temp;
+		double temp;
 		d[count+131] = d[count] = inputSample;
 			
 		if (flip)
@@ -424,7 +424,7 @@ void		IronOxideClassic2::IronOxideClassic2Kernel::Process(	const Float32 	*inSou
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness
 		
 		if (biquadB[0] < 0.49999) {
-			long double tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
+			double tempSample = biquadB[2]*inputSample+biquadB[3]*biquadB[7]+biquadB[4]*biquadB[8]-biquadB[5]*biquadB[9]-biquadB[6]*biquadB[10];
 			biquadB[8] = biquadB[7]; biquadB[7] = inputSample; inputSample = tempSample; 
 			biquadB[10] = biquadB[9]; biquadB[9] = inputSample; //DF1
 		}

@@ -56,13 +56,13 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double sL[41], mL[41], cL[41];		
+	double sL[41], mL[41], cL[41];		
 	double ratioAL;
 	double ratioBL;
 	double iirSampleAL;
 	double iirSampleBL;
 	
-	long double sR[41], mR[41], cR[41];		
+	double sR[41], mR[41], cR[41];		
 	double ratioAR;
 	double ratioBR;
 	double iirSampleAR;

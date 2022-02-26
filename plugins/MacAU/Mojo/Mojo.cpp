@@ -176,15 +176,15 @@ void		Mojo::MojoKernel::Process(	const Float32 	*inSourceP,
 	Float64 gain = pow(10.0,GetParameter( kParam_One )/20.0);
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		//long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		//double drySample = inputSample;
 		
 		if (gain != 1.0) {
 			inputSample *= gain;
 		}
 			
-		long double mojo = pow(fabs(inputSample),0.25);
+		double mojo = pow(fabs(inputSample),0.25);
 		if (mojo > 0.0) inputSample = (sin(inputSample * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 		//mojo is the one that flattens WAAAAY out very softly before wavefolding
 		

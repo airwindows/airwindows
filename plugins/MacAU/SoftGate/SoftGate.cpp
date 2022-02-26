@@ -211,7 +211,7 @@ OSStatus		SoftGate::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -222,8 +222,8 @@ OSStatus		SoftGate::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 	Float64 invrec = 1.0 - recovery;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		storedL[1] = storedL[0];

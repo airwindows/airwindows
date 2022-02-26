@@ -18,13 +18,13 @@ void MoNoam::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
-		long double mid; mid = inputSampleL + inputSampleR;
-		long double side; side = inputSampleL - inputSampleR;
+		double mid; mid = inputSampleL + inputSampleR;
+		double side; side = inputSampleL - inputSampleR;
 		
 		if (processing == kMONO || processing == kMONOR || processing == kMONOL) side = 0.0;
 		if (processing == kSIDE || processing == kSIDEM || processing == kSIDER || processing == kSIDEL) mid = 0.0;
@@ -69,13 +69,13 @@ void MoNoam::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 				
-		long double mid; mid = inputSampleL + inputSampleR;
-		long double side; side = inputSampleL - inputSampleR;
+		double mid; mid = inputSampleL + inputSampleR;
+		double side; side = inputSampleL - inputSampleR;
 		
 		if (processing == kMONO || processing == kMONOR || processing == kMONOL) side = 0.0;
 		if (processing == kSIDE || processing == kSIDEM || processing == kSIDER || processing == kSIDEL) mid = 0.0;

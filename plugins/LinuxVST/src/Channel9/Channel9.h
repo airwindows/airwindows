@@ -68,8 +68,8 @@ private:
 	double lastSampleAR;
 	double lastSampleBR;
 	double lastSampleCR;
-	long double biquadA[15];
-	long double biquadB[15];
+	double biquadA[15];
+	double biquadB[15];
 	double iirAmount;
 	double threshold;
 	double cutoff;

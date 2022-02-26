@@ -184,7 +184,7 @@ void		Tube2::Tube2Kernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -196,13 +196,13 @@ void		Tube2::Tube2Kernel::Process(	const Float32 	*inSourceP,
 	double outputscaling = 1.0 + (1.0/(double)(powerfactor));
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (inputPad < 1.0) inputSample *= inputPad;
 		
 		if (overallscale > 1.9) {
-			long double stored = inputSample;
+			double stored = inputSample;
 			inputSample += previousSampleA; previousSampleA = stored; inputSample *= 0.5;
 		} //for high sample rates on this plugin we are going to do a simple average		
 				
@@ -211,7 +211,7 @@ void		Tube2::Tube2Kernel::Process(	const Float32 	*inSourceP,
 		
 		//flatten bottom, point top of sine waveshaper
 		inputSample /= asymPad;
-		long double sharpen = -inputSample;
+		double sharpen = -inputSample;
 		if (sharpen > 0.0) sharpen = 1.0+sqrt(sharpen);
 		else sharpen = 1.0-sqrt(-sharpen);
 		inputSample -= inputSample*fabs(inputSample)*sharpen*0.25;
@@ -228,15 +228,15 @@ void		Tube2::Tube2Kernel::Process(	const Float32 	*inSourceP,
 		inputSample *= outputscaling;
 				
 		if (overallscale > 1.9) {
-			long double stored = inputSample;
+			double stored = inputSample;
 			inputSample += previousSampleB; previousSampleB = stored; inputSample *= 0.5;
 		} //for high sample rates on this plugin we are going to do a simple average
 		//end original Tube. Now we have a boosted fat sound peaking at 0dB exactly
 				
 		//hysteresis and spiky fuzz
-		long double slew = previousSampleC - inputSample;
+		double slew = previousSampleC - inputSample;
 		if (overallscale > 1.9) {
-			long double stored = inputSample;
+			double stored = inputSample;
 			inputSample += previousSampleC; previousSampleC = stored; inputSample *= 0.5;
 		} else previousSampleC = inputSample; //for this, need previousSampleC always
 		if (slew > 0.0) slew = 1.0+(sqrt(slew)*0.5);

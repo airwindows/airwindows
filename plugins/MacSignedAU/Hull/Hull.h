@@ -127,9 +127,9 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double b[4005];	
+		double b[4005];	
 		int bPointer;
-		long double c[105];
+		double c[105];
 		int cPointer;
 		uint32_t fpd;
 	};

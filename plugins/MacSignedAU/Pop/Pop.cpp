@@ -223,9 +223,9 @@ void		Pop::PopKernel::Process(	const Float32 	*inSourceP,
 	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		d[delay] = inputSample;
 		delay--;
@@ -233,7 +233,7 @@ void		Pop::PopKernel::Process(	const Float32 	*inSourceP,
 		//yes this is a second bounds check. it's cheap, check EVERY time
 		inputSample = (inputSample * thicken) + (d[delay] * (1.0-thicken));
 		
-		long double lowestSample = inputSample;
+		double lowestSample = inputSample;
 		if (fabs(inputSample) > fabs(previous)) lowestSample = previous;
 		if (fabs(lowestSample) > fabs(previous2)) lowestSample = (lowestSample + previous2) / 1.99;
 		if (fabs(lowestSample) > fabs(previous3)) lowestSample = (lowestSample + previous3) / 1.98;
@@ -304,7 +304,7 @@ void		Pop::PopKernel::Process(	const Float32 	*inSourceP,
 				muSpeedB = muNewSpeed / muSpeedB;
 			}
 		//got coefficients, adjusted speeds
-		long double coefficient = highGainOffset;
+		double coefficient = highGainOffset;
 		if (flip) coefficient += pow(muCoefficientA,2);
 		else coefficient += pow(muCoefficientB,2);
 		inputSample *= coefficient;
@@ -313,7 +313,7 @@ void		Pop::PopKernel::Process(	const Float32 	*inSourceP,
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
 		
-		long double bridgerectifier = fabs(inputSample);
+		double bridgerectifier = fabs(inputSample);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm

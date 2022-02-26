@@ -66,7 +66,7 @@ private:
 		fix_sR2,
 		fix_total
 	}; //fixed frequency biquad filter for ultrasonics, stereo
-	long double fixA[fix_total];
+	double fixA[fix_total];
 
 	uint32_t fpdL;
 	uint32_t fpdR;

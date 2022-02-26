@@ -59,23 +59,23 @@ private:
 		uint32_t fpd;
 	//default stuff
 	
-	long double previousSampleAL;
-	long double previousTrendAL;
-	long double previousSampleBL;
-	long double previousTrendBL;
-	long double previousSampleCL;
-	long double previousTrendCL;
-	long double previousSampleDL;
-	long double previousTrendDL;
+	double previousSampleAL;
+	double previousTrendAL;
+	double previousSampleBL;
+	double previousTrendBL;
+	double previousSampleCL;
+	double previousTrendCL;
+	double previousSampleDL;
+	double previousTrendDL;
 
-	long double previousSampleAR;
-	long double previousTrendAR;
-	long double previousSampleBR;
-	long double previousTrendBR;
-	long double previousSampleCR;
-	long double previousTrendCR;
-	long double previousSampleDR;
-	long double previousTrendDR;
+	double previousSampleAR;
+	double previousTrendAR;
+	double previousSampleBR;
+	double previousTrendBR;
+	double previousSampleCR;
+	double previousTrendCR;
+	double previousSampleDR;
+	double previousTrendDR;
 	
 
     float A;

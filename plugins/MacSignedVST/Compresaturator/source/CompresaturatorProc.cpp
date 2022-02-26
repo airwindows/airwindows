@@ -25,8 +25,8 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 	    
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -64,13 +64,13 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (dCount < 1 || dCount > 5000) {dCount = 5000;}
 		
 		//begin drive L
-		long double temp = inputSampleL;
+		double temp = inputSampleL;
 		double variSpeed = 1.0 + ((padFactorL/lastWidthL)*satComp);
 		if (variSpeed < 1.0) variSpeed = 1.0;
 		double totalgain = inputgain / variSpeed;
@@ -82,7 +82,7 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 			}
 		}
 		
-		long double bridgerectifier = fabs(inputSampleL);
+		double bridgerectifier = fabs(inputSampleL);
 		double overspill = 0;
 		int targetWidth = widestRange;
 		//we now have defaults and an absolute input value to work with
@@ -240,8 +240,8 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -279,13 +279,13 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (dCount < 1 || dCount > 5000) {dCount = 5000;}
 		
 		//begin L
-		long double temp = inputSampleL;
+		double temp = inputSampleL;
 		double variSpeed = 1.0 + ((padFactorL/lastWidthL)*satComp);
 		if (variSpeed < 1.0) variSpeed = 1.0;
 		double totalgain = inputgain / variSpeed;
@@ -297,7 +297,7 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 			}
 		}
 		
-		long double bridgerectifier = fabs(inputSampleL);
+		double bridgerectifier = fabs(inputSampleL);
 		double overspill = 0;
 		int targetWidth = widestRange;
 		//we now have defaults and an absolute input value to work with

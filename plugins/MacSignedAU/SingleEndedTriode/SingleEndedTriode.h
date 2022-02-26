@@ -135,7 +135,7 @@ public:
 		
 		private: 
 		Float64 postsine;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

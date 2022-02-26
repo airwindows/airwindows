@@ -282,9 +282,9 @@ void		Biquad2::Biquad2Kernel::Process(	const Float32 	*inSourceP,
 	//finished setting up average
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = *sourceP;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = *sourceP;
 		
 		Float64 chasespeed = 50000;
 		if (frequencychase < frequencytarget) chasespeed = 500000;
@@ -333,7 +333,7 @@ void		Biquad2::Biquad2Kernel::Process(	const Float32 	*inSourceP,
 		inputSample = sin(inputSample);
 		//encode Console5: good cleanness
 				
-		long double outSample = biquad[2]*inputSample+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
+		double outSample = biquad[2]*inputSample+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
 		biquad[8] = biquad[7]; biquad[7] = inputSample; inputSample = outSample; biquad[10] = biquad[9]; biquad[9] = inputSample; //DF1
 				
 		if (inputSample > 1.0) inputSample = 1.0;

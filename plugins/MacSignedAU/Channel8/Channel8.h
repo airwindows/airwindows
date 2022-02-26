@@ -142,12 +142,12 @@ public:
 		
 		private: 
 		uint32_t fpd;
-		long double iirSampleA;
-		long double iirSampleB;
+		double iirSampleA;
+		double iirSampleB;
 		bool flip;
-		long double lastSampleA;
-		long double lastSampleB;
-		long double lastSampleC;
+		double lastSampleA;
+		double lastSampleB;
+		double lastSampleC;
 	};
 };
 

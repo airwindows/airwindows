@@ -192,7 +192,7 @@ void		SoftGateMono::SoftGateMonoKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	Float64 threshold = pow(GetParameter( kParam_One ),6);
@@ -202,8 +202,8 @@ void		SoftGateMono::SoftGateMonoKernel::Process(	const Float32 	*inSourceP,
 	Float64 invrec = 1.0 - recovery;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		storedL[1] = storedL[0];
 		storedL[0] = inputSample;

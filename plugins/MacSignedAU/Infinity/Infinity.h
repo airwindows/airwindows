@@ -133,9 +133,9 @@ public:
         virtual void		Reset();
 		
 	private:
-		long double biquadA[11];
-		long double biquadB[11];
-		long double biquadC[11];
+		double biquadA[11];
+		double biquadB[11];
+		double biquadC[11];
 		
 		Float64 aA[8111];
 		Float64 aB[7511];

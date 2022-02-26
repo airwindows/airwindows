@@ -38,8 +38,8 @@ void Lowpass2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	
 	while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -77,8 +77,8 @@ void Lowpass2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (tight > 0) offsetL = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offsetL = (1 + tight) + ((1-fabs(inputSampleL))*tight);
@@ -209,8 +209,8 @@ void Lowpass2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -248,8 +248,8 @@ void Lowpass2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (tight > 0) offsetL = (1 - tight) + (fabs(inputSampleL)*tight);
 		else offsetL = (1 + tight) + ((1-fabs(inputSampleL))*tight);

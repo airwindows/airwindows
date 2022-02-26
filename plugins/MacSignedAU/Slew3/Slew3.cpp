@@ -181,8 +181,8 @@ void		Slew3::Slew3Kernel::Process(	const Float32 	*inSourceP,
 	Float64 threshold = pow((1-GetParameter( kParam_One )),4)/overallscale;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		Float64 clamp = (lastSampleB - lastSampleC) * 0.381966011250105;
 		clamp -= (lastSampleA - lastSampleB) * 0.6180339887498948482045;

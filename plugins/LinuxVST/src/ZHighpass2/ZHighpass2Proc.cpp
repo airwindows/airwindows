@@ -62,16 +62,16 @@ void ZHighpass2::processReplacing(float **inputs, float **outputs, VstInt32 samp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
-		long double overallDrySampleL = inputSampleL;
-		long double overallDrySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
+		double overallDrySampleL = inputSampleL;
+		double overallDrySampleR = inputSampleR;
 		
-		long double outSample = (long double)sampleFrames/inFramesToProcess;
+		double outSample = (double)sampleFrames/inFramesToProcess;
 		biquadA[biq_a0] = (biquadA[biq_aA0]*outSample)+(biquadA[biq_aB0]*(1.0-outSample));
 		biquadA[biq_a1] = (biquadA[biq_aA1]*outSample)+(biquadA[biq_aB1]*(1.0-outSample));
 		biquadA[biq_a2] = (biquadA[biq_aA2]*outSample)+(biquadA[biq_aB2]*(1.0-outSample));
@@ -79,13 +79,13 @@ void ZHighpass2::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		biquadA[biq_b2] = (biquadA[biq_bA2]*outSample)+(biquadA[biq_bB2]*(1.0-outSample));
 		for (int x = 0; x < 7; x++) {biquadD[x] = biquadC[x] = biquadB[x] = biquadA[x];}
 		//this is the interpolation code for the biquad
-		long double inTrim = (inTrimA*outSample)+(inTrimB*(1.0-outSample));
-		long double outTrim = (outTrimA*outSample)+(outTrimB*(1.0-outSample));
-		long double wet = (wetA*outSample)+(wetB*(1.0-outSample));
-		long double aWet = 1.0;
-		long double bWet = 1.0;
-		long double cWet = 1.0;
-		long double dWet = wet*4.0;
+		double inTrim = (inTrimA*outSample)+(inTrimB*(1.0-outSample));
+		double outTrim = (outTrimA*outSample)+(outTrimB*(1.0-outSample));
+		double wet = (wetA*outSample)+(wetB*(1.0-outSample));
+		double aWet = 1.0;
+		double bWet = 1.0;
+		double cWet = 1.0;
+		double dWet = wet*4.0;
 		//four-stage wet/dry control using progressive stages that bypass when not engaged
 		if (dWet < 1.0) {aWet = dWet; bWet = 0.0; cWet = 0.0; dWet = 0.0;}
 		else if (dWet < 2.0) {bWet = dWet - 1.0; cWet = 0.0; dWet = 0.0;}
@@ -278,16 +278,16 @@ void ZHighpass2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
-		long double overallDrySampleL = inputSampleL;
-		long double overallDrySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
+		double overallDrySampleL = inputSampleL;
+		double overallDrySampleR = inputSampleR;
 		
-		long double outSample = (long double)sampleFrames/inFramesToProcess;
+		double outSample = (double)sampleFrames/inFramesToProcess;
 		biquadA[biq_a0] = (biquadA[biq_aA0]*outSample)+(biquadA[biq_aB0]*(1.0-outSample));
 		biquadA[biq_a1] = (biquadA[biq_aA1]*outSample)+(biquadA[biq_aB1]*(1.0-outSample));
 		biquadA[biq_a2] = (biquadA[biq_aA2]*outSample)+(biquadA[biq_aB2]*(1.0-outSample));
@@ -295,13 +295,13 @@ void ZHighpass2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		biquadA[biq_b2] = (biquadA[biq_bA2]*outSample)+(biquadA[biq_bB2]*(1.0-outSample));
 		for (int x = 0; x < 7; x++) {biquadD[x] = biquadC[x] = biquadB[x] = biquadA[x];}
 		//this is the interpolation code for the biquad
-		long double inTrim = (inTrimA*outSample)+(inTrimB*(1.0-outSample));
-		long double outTrim = (outTrimA*outSample)+(outTrimB*(1.0-outSample));
-		long double wet = (wetA*outSample)+(wetB*(1.0-outSample));
-		long double aWet = 1.0;
-		long double bWet = 1.0;
-		long double cWet = 1.0;
-		long double dWet = wet*4.0;
+		double inTrim = (inTrimA*outSample)+(inTrimB*(1.0-outSample));
+		double outTrim = (outTrimA*outSample)+(outTrimB*(1.0-outSample));
+		double wet = (wetA*outSample)+(wetB*(1.0-outSample));
+		double aWet = 1.0;
+		double bWet = 1.0;
+		double cWet = 1.0;
+		double dWet = wet*4.0;
 		//four-stage wet/dry control using progressive stages that bypass when not engaged
 		if (dWet < 1.0) {aWet = dWet; bWet = 0.0; cWet = 0.0; dWet = 0.0;}
 		else if (dWet < 2.0) {bWet = dWet - 1.0; cWet = 0.0; dWet = 0.0;}
@@ -421,12 +421,12 @@ void ZHighpass2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

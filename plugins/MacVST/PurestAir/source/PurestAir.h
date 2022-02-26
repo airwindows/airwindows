@@ -56,23 +56,23 @@ private:
     
 	uint32_t fpd;
 	//default stuff
-	long double last1SampleL;
-	long double halfwaySampleL;
-	long double halfDrySampleL;
-	long double halfDiffSampleL;
-	long double diffSampleL;
-	long double lastSampleL;
+	double last1SampleL;
+	double halfwaySampleL;
+	double halfDrySampleL;
+	double halfDiffSampleL;
+	double diffSampleL;
+	double lastSampleL;
 	double s1L;
 	double s2L;
 	double s3L;
 	double applyL;
 
-	long double last1SampleR;
-	long double halfwaySampleR;
-	long double halfDrySampleR;
-	long double halfDiffSampleR;
-	long double diffSampleR;
-	long double lastSampleR;
+	double last1SampleR;
+	double halfwaySampleR;
+	double halfDrySampleR;
+	double halfDiffSampleR;
+	double diffSampleR;
+	double lastSampleR;
 	double s1R;
 	double s2R;
 	double s3R;

@@ -191,8 +191,8 @@ void		PowerSag2::PowerSag2Kernel::Process(	const Float32 	*inSourceP,
 
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		Float64 drySample = inputSample;
 
 		if (gcount < 0 || gcount > 16384) {gcount = 16384;}		

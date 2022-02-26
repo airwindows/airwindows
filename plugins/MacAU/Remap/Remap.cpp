@@ -195,12 +195,12 @@ void		Remap::RemapKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Three );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
-		long double gaintrim = fabs(inputSample);
-		long double bridgerectifier = gaintrim*gain;
+		double gaintrim = fabs(inputSample);
+		double bridgerectifier = gaintrim*gain;
 		if (gaintrim > 1.0) gaintrim = 1.0;
 		else gaintrim *= gaintrim;
 		

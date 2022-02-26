@@ -55,8 +55,8 @@ private:
     
 	double bynL[13];
 	double bynR[13];
-	long double noiseShapingL;
-	long double noiseShapingR;
+	double noiseShapingL;
+	double noiseShapingR;
 	uint32_t fpd;
 	//default stuff
 	

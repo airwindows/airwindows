@@ -175,7 +175,7 @@ void		Tube::TubeKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -193,11 +193,11 @@ void		Tube::TubeKernel::Process(	const Float32 	*inSourceP,
 	double outputscaling = 1.0 + (1.0/(double)(powerfactor));
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (overallscale > 1.9) {
-			long double stored = inputSample;
+			double stored = inputSample;
 			inputSample += previousSampleA; previousSampleA = stored; inputSample *= 0.5;
 		} //for high sample rates on this plugin we are going to do a simple average		
 		
@@ -227,7 +227,7 @@ void		Tube::TubeKernel::Process(	const Float32 	*inSourceP,
 		*/
 		
 		if (overallscale > 1.9) {
-			long double stored = inputSample;
+			double stored = inputSample;
 			inputSample += previousSampleB; previousSampleB = stored; inputSample *= 0.5;
 		} //for high sample rates on this plugin we are going to do a simple average
 		

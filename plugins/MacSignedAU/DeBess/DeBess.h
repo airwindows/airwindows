@@ -137,7 +137,7 @@ public:
         virtual void		Reset();
 		
 		private:
-		long double s[41], m[41], c[41];		
+		double s[41], m[41], c[41];		
 		Float64 ratioA;
 		Float64 ratioB;
 		Float64 iirSampleA;

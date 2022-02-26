@@ -131,7 +131,7 @@ public:
 		Float64 settingchase;
 		Float64 chasespeed;		
 
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

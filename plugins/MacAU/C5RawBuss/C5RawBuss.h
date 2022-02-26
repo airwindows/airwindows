@@ -127,7 +127,7 @@ public:
 		private: 
 		Float64 lastFXBuss;
 		Float64 lastSampleBuss;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

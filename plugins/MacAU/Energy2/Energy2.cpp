@@ -279,7 +279,7 @@ void		Energy2::Energy2Kernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	int cycleEnd = floor(overallscale);
@@ -300,13 +300,13 @@ void		Energy2::Energy2Kernel::Process(	const Float32 	*inSourceP,
 	//all types of air band are running in parallel, not series
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		cycle++;
 		if (cycle == cycleEnd) { //hit the end point and we do an Energy sample
-			long double correction = 0.0;
+			double correction = 0.0;
 			
 			if (fabs(duoIntensity) > 0.0001) {
 				duoFactor = PrevA - inputSample;

@@ -51,7 +51,7 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double biquadA[15];
+	double biquadA[15];
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

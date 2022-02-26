@@ -184,7 +184,7 @@ void		DigitalBlack::DigitalBlackKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 
@@ -193,9 +193,9 @@ void		DigitalBlack::DigitalBlackKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Two );
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 
 		if (inputSample > 0) {
 			if (WasNegative == true) ZeroCross = 0;
@@ -218,7 +218,7 @@ void		DigitalBlack::DigitalBlackKernel::Process(	const Float32 	*inSourceP,
 		Float64 gate = 1.0;
 		if (gateroller < 1.0) gate = gateroller;
 		
-		long double bridgerectifier = 1-cos(fabs(inputSample));
+		double bridgerectifier = 1-cos(fabs(inputSample));
 		
 		if (inputSample > 0) inputSample = (inputSample*gate)+(bridgerectifier*(1-gate));
 		else inputSample = (inputSample*gate)-(bridgerectifier*(1-gate));

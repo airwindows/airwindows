@@ -45,18 +45,18 @@ void Tape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	    
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double HighsSampleL = 0.0;
-		long double HighsSampleR = 0.0;
-		long double NonHighsSampleL = 0.0;
-		long double NonHighsSampleR = 0.0;
-		long double tempSample;
+		double HighsSampleL = 0.0;
+		double HighsSampleR = 0.0;
+		double NonHighsSampleL = 0.0;
+		double NonHighsSampleR = 0.0;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -158,15 +158,15 @@ void Tape::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		}
 		flip = !flip;
 		
-		long double groundSampleL = drySampleL - inputSampleL; //set up UnBox
-		long double groundSampleR = drySampleR - inputSampleR; //set up UnBox
+		double groundSampleL = drySampleL - inputSampleL; //set up UnBox
+		double groundSampleR = drySampleR - inputSampleR; //set up UnBox
 		
 		if (inputgain != 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		} //gain boost inside UnBox: do not boost fringe audio
 		
-		long double applySoften = fabs(HighsSampleL)*1.57079633;
+		double applySoften = fabs(HighsSampleL)*1.57079633;
 		if (applySoften > 1.57079633) applySoften = 1.57079633;
 		applySoften = 1-cos(applySoften);
 		if (HighsSampleL > 0) inputSampleL -= applySoften;
@@ -324,8 +324,8 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
@@ -334,14 +334,14 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 			inputSampleR *= inputgain;
 		} //gain cut before anything, even dry
 		
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double HighsSampleL = 0.0;
-		long double HighsSampleR = 0.0;
-		long double NonHighsSampleL = 0.0;
-		long double NonHighsSampleR = 0.0;
-		long double tempSample;
+		double HighsSampleL = 0.0;
+		double HighsSampleR = 0.0;
+		double NonHighsSampleL = 0.0;
+		double NonHighsSampleR = 0.0;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -443,15 +443,15 @@ void Tape::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		}
 		flip = !flip;
 		
-		long double groundSampleL = drySampleL - inputSampleL; //set up UnBox
-		long double groundSampleR = drySampleR - inputSampleR; //set up UnBox
+		double groundSampleL = drySampleL - inputSampleL; //set up UnBox
+		double groundSampleR = drySampleR - inputSampleR; //set up UnBox
 		
 		if (inputgain > 1.0) {
 			inputSampleL *= inputgain;
 			inputSampleR *= inputgain;
 		} //gain boost inside UnBox: do not boost fringe audio
 		
-		long double applySoften = fabs(HighsSampleL)*1.57079633;
+		double applySoften = fabs(HighsSampleL)*1.57079633;
 		if (applySoften > 1.57079633) applySoften = 1.57079633;
 		applySoften = 1-cos(applySoften);
 		if (HighsSampleL > 0) inputSampleL -= applySoften;

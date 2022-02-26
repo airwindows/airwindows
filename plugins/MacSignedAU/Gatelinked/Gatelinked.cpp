@@ -216,8 +216,8 @@ ComponentResult		Gatelinked::Reset(AudioUnitScope inScope, AudioUnitElement inEl
 	treblefreq = 1.0;
 	bassfreq = 0.0;
 	flip = false;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
 }
 
@@ -234,7 +234,7 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	//speed settings around release
@@ -253,8 +253,8 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	Float64 highestSample;
 
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
 		int residue;
@@ -414,7 +414,7 @@ OSStatus		Gatelinked::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 				
 		//stereo 32 bit dither, made small and tidy.
 		int expon; frexpf((Float32)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
 		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
 		frexpf((Float32)inputSampleR, &expon);
 		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);

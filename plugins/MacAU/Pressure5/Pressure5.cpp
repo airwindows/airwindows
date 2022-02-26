@@ -246,7 +246,7 @@ OSStatus		Pressure5::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	int spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
@@ -280,18 +280,18 @@ OSStatus		Pressure5::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	//make the second filter same as the first, don't use sample slots
 
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
 		
 		if (fixA[fix_freq] < 0.4999) {
-			long double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
+			double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
 			fixA[fix_sL1] = (inputSampleL * fixA[fix_a1]) - (temp * fixA[fix_b1]) + fixA[fix_sL2];
 			fixA[fix_sL2] = (inputSampleL * fixA[fix_a2]) - (temp * fixA[fix_b2]);
 			inputSampleL = temp;
@@ -391,7 +391,7 @@ OSStatus		Pressure5::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		flip = !flip;
 				
 		if (fixB[fix_freq] < 0.49999) {
-			long double temp = (inputSampleL * fixB[fix_a0]) + fixB[fix_sL1];
+			double temp = (inputSampleL * fixB[fix_a0]) + fixB[fix_sL1];
 			fixB[fix_sL1] = (inputSampleL * fixB[fix_a1]) - (temp * fixB[fix_b1]) + fixB[fix_sL2];
 			fixB[fix_sL2] = (inputSampleL * fixB[fix_a2]) - (temp * fixB[fix_b2]);
 			inputSampleL = temp;

@@ -22,8 +22,8 @@ Console4Buss::Console4Buss(audioMasterCallback audioMaster) :
 	gainchase = -90.0;
 	settingchase = -90.0;
 	chasespeed = 350.0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 
     // TODO: uncomment canDo entries according to your plugin's capabilities
 //    _canDo.insert("sendVstEvents"); // plug-in will send Vst events to Host.

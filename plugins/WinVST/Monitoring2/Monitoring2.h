@@ -87,7 +87,7 @@ private:
 		fix_sR2,
 		fix_total
 	};
-	long double biquad[fix_total];
+	double biquad[fix_total];
 	//Bandpasses
 
 	float darkSampleL[100];

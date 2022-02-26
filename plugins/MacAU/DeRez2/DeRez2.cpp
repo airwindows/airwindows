@@ -216,9 +216,9 @@ void		DeRez2::DeRez2Kernel::Process(	const Float32 	*inSourceP,
 	targetA /= overallscale;	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 
 		
 		incrementA = ((incrementA*999.0)+targetA)/1000.0;
@@ -226,7 +226,7 @@ void		DeRez2::DeRez2Kernel::Process(	const Float32 	*inSourceP,
 		//incrementA is the frequency derez
 		//incrementB is the bit depth derez
 		position += incrementA;
-		long double outputSample = heldSample;
+		double outputSample = heldSample;
 		if (position > 1.0)
 		{
 			position -= 1.0;
@@ -236,7 +236,7 @@ void		DeRez2::DeRez2Kernel::Process(	const Float32 	*inSourceP,
 		}
 		inputSample = outputSample;
 		
-		long double temp = inputSample;
+		double temp = inputSample;
 
 		if (inputSample != lastOutputSample) {
 			temp = inputSample;

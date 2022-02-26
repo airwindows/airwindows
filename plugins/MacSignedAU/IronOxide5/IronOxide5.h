@@ -167,7 +167,7 @@ public:
 		Float64 rateof;
 		Float64 sweep;
 		Float64 nextmax;
-		long double fpNShape;
+		uint32_t fpd;
 		bool flip;
 	};
 };

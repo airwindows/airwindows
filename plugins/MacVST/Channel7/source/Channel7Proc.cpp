@@ -26,8 +26,8 @@ void Channel7::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
@@ -46,16 +46,16 @@ void Channel7::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			inputSampleR = inputSampleR - iirSampleRB;
 		}
 		//highpass section
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		long double phatSampleL = sin(inputSampleL * 1.57079633);
+		double phatSampleL = sin(inputSampleL * 1.57079633);
 		inputSampleL *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
 		
-		long double distSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
+		double distSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
 
 		inputSampleL = distSampleL; //purest form is full Spiral
 		if (density < 1.0) inputSampleL = (drySampleL*(1-density))+(distSampleL*density); //fade Spiral aspect
@@ -63,11 +63,11 @@ void Channel7::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		long double phatSampleR = sin(inputSampleR * 1.57079633);
+		double phatSampleR = sin(inputSampleR * 1.57079633);
 		inputSampleR *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
 		
-		long double distSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
+		double distSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 
 		inputSampleR = distSampleR; //purest form is full Spiral
 		if (density < 1.0) inputSampleR = (drySampleR*(1-density))+(distSampleR*density); //fade Spiral aspect
@@ -132,8 +132,8 @@ void Channel7::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
@@ -152,16 +152,16 @@ void Channel7::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			inputSampleR = inputSampleR - iirSampleRB;
 		}
 		//highpass section
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		long double phatSampleL = sin(inputSampleL * 1.57079633);
+		double phatSampleL = sin(inputSampleL * 1.57079633);
 		inputSampleL *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
 		
-		long double distSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
+		double distSampleL = sin(inputSampleL * fabs(inputSampleL)) / ((fabs(inputSampleL) == 0.0) ?1:fabs(inputSampleL));
 		
 		inputSampleL = distSampleL; //purest form is full Spiral
 		if (density < 1.0) inputSampleL = (drySampleL*(1-density))+(distSampleL*density); //fade Spiral aspect
@@ -169,11 +169,11 @@ void Channel7::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		long double phatSampleR = sin(inputSampleR * 1.57079633);
+		double phatSampleR = sin(inputSampleR * 1.57079633);
 		inputSampleR *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
 		
-		long double distSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
+		double distSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 		
 		inputSampleR = distSampleR; //purest form is full Spiral
 		if (density < 1.0) inputSampleR = (drySampleR*(1-density))+(distSampleR*density); //fade Spiral aspect

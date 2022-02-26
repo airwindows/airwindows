@@ -297,8 +297,8 @@ void		Reverb::ReverbKernel::Process(	const Float32 	*inSourceP,
 	biquadC[6] = (1.0 - K / biquadC[1] + K * K) * norm;	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 		
 		aM[countM] = inputSample;
@@ -306,7 +306,7 @@ void		Reverb::ReverbKernel::Process(	const Float32 	*inSourceP,
 		inputSample = aM[countM];
 		//predelay
 		
-		long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
 		biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 		
@@ -315,10 +315,10 @@ void		Reverb::ReverbKernel::Process(	const Float32 	*inSourceP,
 		
 		inputSample = sin(inputSample);
 		
-		long double allpassI = inputSample;
-		long double allpassJ = inputSample;
-		long double allpassK = inputSample;
-		long double allpassL = inputSample;
+		double allpassI = inputSample;
+		double allpassJ = inputSample;
+		double allpassK = inputSample;
+		double allpassL = inputSample;
 		
 		
 		int allpasstemp = countI + 1;

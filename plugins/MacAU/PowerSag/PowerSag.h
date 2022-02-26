@@ -131,7 +131,7 @@ public:
 		Float64 d[9000];
 		Float64 control;
 		int gcount;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

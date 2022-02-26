@@ -138,9 +138,9 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double iirSampleA;
-		long double iirSampleB;
-		long double prevSample;
+		double iirSampleA;
+		double iirSampleB;
+		double prevSample;
 		uint32_t fpd;
 		bool flip;
 	};

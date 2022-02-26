@@ -89,24 +89,24 @@ void BiquadDouble::processReplacing(float **inputs, float **outputs, VstInt32 sa
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 				
-		long double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
+		double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
 		biquadA[7] = (inputSampleL * biquadA[3]) - (tempSampleL * biquadA[5]) + biquadA[8];
 		biquadA[8] = (inputSampleL * biquadA[4]) - (tempSampleL * biquadA[6]);
 		inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
-		long double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
+		double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
 		biquadA[9] = (inputSampleR * biquadA[3]) - (tempSampleR * biquadA[5]) + biquadA[10];
 		biquadA[10] = (inputSampleR * biquadA[4]) - (tempSampleR * biquadA[6]);
 		inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
@@ -238,24 +238,24 @@ void BiquadDouble::processDoubleReplacing(double **inputs, double **outputs, Vst
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		inputSampleL = sin(inputSampleL);
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 				
-		long double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
+		double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
 		biquadA[7] = (inputSampleL * biquadA[3]) - (tempSampleL * biquadA[5]) + biquadA[8];
 		biquadA[8] = (inputSampleL * biquadA[4]) - (tempSampleL * biquadA[6]);
 		inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
-		long double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
+		double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
 		biquadA[9] = (inputSampleR * biquadA[3]) - (tempSampleR * biquadA[5]) + biquadA[10];
 		biquadA[10] = (inputSampleR * biquadA[4]) - (tempSampleR * biquadA[6]);
 		inputSampleR = tempSampleR; //note: 9 and 10 store the R channel

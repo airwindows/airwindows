@@ -52,10 +52,10 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
  
-	long double previousSampleA;
-	long double previousSampleB;
-	long double previousSampleC;
-	long double previousSampleD;
+	double previousSampleA;
+	double previousSampleB;
+	double previousSampleC;
+	double previousSampleD;
 
 	uint32_t fpdL;
 	uint32_t fpdR;

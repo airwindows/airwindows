@@ -141,7 +141,7 @@ public:
 		Float64 muSpeedB;
 		Float64 muCoefficientA;
 		Float64 muCoefficientB;
-		long double fpNShape;
+		uint32_t fpd;
 		bool flip;
 		
 	};

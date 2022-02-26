@@ -234,8 +234,8 @@ void		BassDrive::BassDriveKernel::Process(	const Float32 	*inSourceP,
 	Float64 bridgerectifier;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
 		sum = 0.0;
 		

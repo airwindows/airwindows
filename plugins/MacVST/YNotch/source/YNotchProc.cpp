@@ -65,23 +65,23 @@ void YNotch::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double temp = (long double)sampleFrames/inFramesToProcess;
+		double temp = (double)sampleFrames/inFramesToProcess;
 		biquad[biq_a0] = (biquad[biq_aA0]*temp)+(biquad[biq_aB0]*(1.0-temp));
 		biquad[biq_a1] = (biquad[biq_aA1]*temp)+(biquad[biq_aB1]*(1.0-temp));
 		biquad[biq_a2] = (biquad[biq_aA2]*temp)+(biquad[biq_aB2]*(1.0-temp));
 		biquad[biq_b1] = (biquad[biq_bA1]*temp)+(biquad[biq_bB1]*(1.0-temp));
 		biquad[biq_b2] = (biquad[biq_bA2]*temp)+(biquad[biq_bB2]*(1.0-temp));
 		//this is the interpolation code for the biquad
-		long double powFactor = (powFactorA*temp)+(powFactorB*(1.0-temp));
-		long double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		long double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
+		double powFactor = (powFactorA*temp)+(powFactorB*(1.0-temp));
+		double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
+		double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
 		
 		inputSampleL *= inTrim;
 		inputSampleR *= inTrim;
@@ -218,23 +218,23 @@ void YNotch::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double temp = (long double)sampleFrames/inFramesToProcess;
+		double temp = (double)sampleFrames/inFramesToProcess;
 		biquad[biq_a0] = (biquad[biq_aA0]*temp)+(biquad[biq_aB0]*(1.0-temp));
 		biquad[biq_a1] = (biquad[biq_aA1]*temp)+(biquad[biq_aB1]*(1.0-temp));
 		biquad[biq_a2] = (biquad[biq_aA2]*temp)+(biquad[biq_aB2]*(1.0-temp));
 		biquad[biq_b1] = (biquad[biq_bA1]*temp)+(biquad[biq_bB1]*(1.0-temp));
 		biquad[biq_b2] = (biquad[biq_bA2]*temp)+(biquad[biq_bB2]*(1.0-temp));
 		//this is the interpolation code for the biquad
-		long double powFactor = (powFactorA*temp)+(powFactorB*(1.0-temp));
-		long double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		long double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
+		double powFactor = (powFactorA*temp)+(powFactorB*(1.0-temp));
+		double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
+		double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
 		
 		inputSampleL *= inTrim;
 		inputSampleR *= inTrim;
@@ -295,12 +295,12 @@ void YNotch::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		}
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

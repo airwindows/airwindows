@@ -199,7 +199,7 @@ void		BiquadPlus::BiquadPlusKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -288,17 +288,17 @@ void		BiquadPlus::BiquadPlusKernel::Process(	const Float32 	*inSourceP,
 	}
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = *sourceP;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = *sourceP;
 		
-		long double buf = (long double)nSampleFrames/inFramesToProcess;
+		double buf = (double)nSampleFrames/inFramesToProcess;
 		biquad[biq_a0] = (biquad[biq_aA0]*buf)+(biquad[biq_aB0]*(1.0-buf));
 		biquad[biq_a1] = (biquad[biq_aA1]*buf)+(biquad[biq_aB1]*(1.0-buf));
 		biquad[biq_a2] = (biquad[biq_aA2]*buf)+(biquad[biq_aB2]*(1.0-buf));
 		biquad[biq_b1] = (biquad[biq_bA1]*buf)+(biquad[biq_bB1]*(1.0-buf));
 		biquad[biq_b2] = (biquad[biq_bA2]*buf)+(biquad[biq_bB2]*(1.0-buf));
-		long double tempSample = (inputSample * biquad[biq_a0]) + biquad[biq_sL1];
+		double tempSample = (inputSample * biquad[biq_a0]) + biquad[biq_sL1];
 		biquad[biq_sL1] = (inputSample * biquad[biq_a1]) - (tempSample * biquad[biq_b1]) + biquad[biq_sL2];
 		biquad[biq_sL2] = (inputSample * biquad[biq_a2]) - (tempSample * biquad[biq_b2]);
 		inputSample = tempSample;

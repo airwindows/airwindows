@@ -79,12 +79,12 @@ void Biquad2::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	
 	while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		double chasespeed = 50000;
 		if (frequencychase < frequencytarget) chasespeed = 500000;
@@ -134,10 +134,10 @@ void Biquad2::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double outSampleL = biquad[2]*inputSampleL+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
+		double outSampleL = biquad[2]*inputSampleL+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
 		biquad[8] = biquad[7]; biquad[7] = inputSampleL; inputSampleL = outSampleL; biquad[10] = biquad[9]; biquad[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquad[2]*inputSampleR+biquad[3]*biquad[11]+biquad[4]*biquad[12]-biquad[5]*biquad[13]-biquad[6]*biquad[14];
+		double outSampleR = biquad[2]*inputSampleR+biquad[3]*biquad[11]+biquad[4]*biquad[12]-biquad[5]*biquad[13]-biquad[6]*biquad[14];
 		biquad[12] = biquad[11]; biquad[11] = inputSampleR; inputSampleR = outSampleR; biquad[14] = biquad[13]; biquad[13] = inputSampleR; //DF1 right
 				
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
@@ -291,12 +291,12 @@ void Biquad2::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		double chasespeed = 50000;
 		if (frequencychase < frequencytarget) chasespeed = 500000;
@@ -346,10 +346,10 @@ void Biquad2::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double outSampleL = biquad[2]*inputSampleL+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
+		double outSampleL = biquad[2]*inputSampleL+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
 		biquad[8] = biquad[7]; biquad[7] = inputSampleL; inputSampleL = outSampleL; biquad[10] = biquad[9]; biquad[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquad[2]*inputSampleR+biquad[3]*biquad[11]+biquad[4]*biquad[12]-biquad[5]*biquad[13]-biquad[6]*biquad[14];
+		double outSampleR = biquad[2]*inputSampleR+biquad[3]*biquad[11]+biquad[4]*biquad[12]-biquad[5]*biquad[13]-biquad[6]*biquad[14];
 		biquad[12] = biquad[11]; biquad[11] = inputSampleR; inputSampleR = outSampleR; biquad[14] = biquad[13]; biquad[13] = inputSampleR; //DF1 right
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;

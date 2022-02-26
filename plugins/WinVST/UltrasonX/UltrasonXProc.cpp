@@ -34,8 +34,8 @@ void UltrasonX::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			break;
 	}			
 	
-	long double K = tan(M_PI * fixA[fix_freq]);
-	long double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
+	double K = tan(M_PI * fixA[fix_freq]);
+	double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
 	fixA[fix_a0] = K * K * norm;
 	fixA[fix_a1] = 2.0 * fixA[fix_a0];
 	fixA[fix_a2] = fixA[fix_a0];
@@ -45,12 +45,12 @@ void UltrasonX::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		long double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
+		double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
 		fixA[fix_sL1] = (inputSampleL * fixA[fix_a1]) - (temp * fixA[fix_b1]) + fixA[fix_sL2];
 		fixA[fix_sL2] = (inputSampleL * fixA[fix_a2]) - (temp * fixA[fix_b2]);
 		inputSampleL = temp; //fixed biquad filtering ultrasonics
@@ -105,8 +105,8 @@ void UltrasonX::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			break;
 	}			
 	
-	long double K = tan(M_PI * fixA[fix_freq]);
-	long double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
+	double K = tan(M_PI * fixA[fix_freq]);
+	double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
 	fixA[fix_a0] = K * K * norm;
 	fixA[fix_a1] = 2.0 * fixA[fix_a0];
 	fixA[fix_a2] = fixA[fix_a0];
@@ -116,12 +116,12 @@ void UltrasonX::processDoubleReplacing(double **inputs, double **outputs, VstInt
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		long double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
+		double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
 		fixA[fix_sL1] = (inputSampleL * fixA[fix_a1]) - (temp * fixA[fix_b1]) + fixA[fix_sL2];
 		fixA[fix_sL2] = (inputSampleL * fixA[fix_a2]) - (temp * fixA[fix_b2]);
 		inputSampleL = temp; //fixed biquad filtering ultrasonics
@@ -131,12 +131,12 @@ void UltrasonX::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR = temp; //fixed biquad filtering ultrasonics
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

@@ -182,7 +182,7 @@ void		ButterComp2::ButterComp2Kernel::Reset()
 	targetneg = 1.0;
 	flip = false;
 	lastOutput = 0.0;
-	fpNShape = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -212,55 +212,37 @@ void		ButterComp2::ButterComp2Kernel::Process(	const Float32 	*inSourceP,
 	outputgain += 1.0;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 
-		static int noisesource = 0;
-		int residue;
-		double applyresidue;
-		noisesource = noisesource % 1700021; noisesource++;
-		residue = noisesource * noisesource;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSample += applyresidue;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			inputSample -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 
 		inputSample *= inputgain;
 		
-		long double divisor = compfactor / (1.0+fabs(lastOutput));
+		double divisor = compfactor / (1.0+fabs(lastOutput));
 		//this is slowing compressor recovery while output waveforms were high
 		divisor /= overallscale;
-		long double remainder = divisor;
+		double remainder = divisor;
 		divisor = 1.0 - divisor;
 		//recalculate divisor every sample
 		
-		long double inputpos = inputSample + 1.0;
+		double inputpos = inputSample + 1.0;
 		if (inputpos < 0.0) inputpos = 0.0;
-		long double outputpos = inputpos / 2.0;
+		double outputpos = inputpos / 2.0;
 		if (outputpos > 1.0) outputpos = 1.0;		
 		inputpos *= inputpos;
 		targetpos *= divisor;
 		targetpos += (inputpos * remainder);
-		long double calcpos = pow((1.0/targetpos),2);
+		double calcpos = pow((1.0/targetpos),2);
 		
-		long double inputneg = (-inputSample) + 1.0;
+		double inputneg = (-inputSample) + 1.0;
 		if (inputneg < 0.0) inputneg = 0.0;
-		long double outputneg = inputneg / 2.0;
+		double outputneg = inputneg / 2.0;
 		if (outputneg > 1.0) outputneg = 1.0;		
 		inputneg *= inputneg;
 		targetneg *= divisor;
 		targetneg += (inputneg * remainder);
-		long double calcneg = pow((1.0/targetneg),2);
+		double calcneg = pow((1.0/targetneg),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
 		
@@ -293,7 +275,7 @@ void		ButterComp2::ButterComp2Kernel::Process(	const Float32 	*inSourceP,
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
 		
-		long double totalmultiplier;
+		double totalmultiplier;
 		if (flip)
 		{totalmultiplier = (controlApos * outputpos) + (controlAneg * outputneg);}
 		else
@@ -317,11 +299,11 @@ void		ButterComp2::ButterComp2Kernel::Process(	const Float32 	*inSourceP,
 		
 		flip = !flip;
 
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 		
 		*destP = inputSample;
 		

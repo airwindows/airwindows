@@ -88,12 +88,12 @@ void Biquad::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	    
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		inputSampleL = sin(inputSampleL);
@@ -101,16 +101,16 @@ void Biquad::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//encode Console5: good cleanness
 		
 		/*
-		 long double mid = inputSampleL + inputSampleR;
-		 long double side = inputSampleL - inputSampleR;
+		 double mid = inputSampleL + inputSampleR;
+		 double side = inputSampleL - inputSampleR;
 		 //assign mid and side.Between these sections, you can do mid/side processing
 		 
-		 long double tempSampleM = (mid * biquad[2]) + biquad[7];
+		 double tempSampleM = (mid * biquad[2]) + biquad[7];
 		 biquad[7] = (mid * biquad[3]) - (tempSampleM * biquad[5]) + biquad[8];
 		 biquad[8] = (mid * biquad[4]) - (tempSampleM * biquad[6]);
 		 mid = tempSampleM; //like mono AU, 7 and 8 store mid channel
 		 
-		 long double tempSampleS = (side * biquad[2]) + biquad[9];
+		 double tempSampleS = (side * biquad[2]) + biquad[9];
 		 biquad[9] = (side * biquad[3]) - (tempSampleS * biquad[5]) + biquad[10];
 		 biquad[10] = (side * biquad[4]) - (tempSampleS * biquad[6]);
 		 inputSampleR = tempSampleS; //note: 9 and 10 store the side channel		
@@ -120,12 +120,12 @@ void Biquad::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		 //unassign mid and side
 		 */
 		
-		long double tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
+		double tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
 		biquad[7] = (inputSampleL * biquad[3]) - (tempSampleL * biquad[5]) + biquad[8];
 		biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
 		inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
-		long double tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
+		double tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
 		biquad[9] = (inputSampleR * biquad[3]) - (tempSampleR * biquad[5]) + biquad[10];
 		biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
 		inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
@@ -245,12 +245,12 @@ void Biquad::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		inputSampleL = sin(inputSampleL);
@@ -258,16 +258,16 @@ void Biquad::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//encode Console5: good cleanness
 		
 		/*
-		 long double mid = inputSampleL + inputSampleR;
-		 long double side = inputSampleL - inputSampleR;
+		 double mid = inputSampleL + inputSampleR;
+		 double side = inputSampleL - inputSampleR;
 		 //assign mid and side.Between these sections, you can do mid/side processing
 		 
-		 long double tempSampleM = (mid * biquad[2]) + biquad[7];
+		 double tempSampleM = (mid * biquad[2]) + biquad[7];
 		 biquad[7] = (mid * biquad[3]) - (tempSampleM * biquad[5]) + biquad[8];
 		 biquad[8] = (mid * biquad[4]) - (tempSampleM * biquad[6]);
 		 mid = tempSampleM; //like mono AU, 7 and 8 store mid channel
 		 
-		 long double tempSampleS = (side * biquad[2]) + biquad[9];
+		 double tempSampleS = (side * biquad[2]) + biquad[9];
 		 biquad[9] = (side * biquad[3]) - (tempSampleS * biquad[5]) + biquad[10];
 		 biquad[10] = (side * biquad[4]) - (tempSampleS * biquad[6]);
 		 inputSampleR = tempSampleS; //note: 9 and 10 store the side channel		
@@ -277,12 +277,12 @@ void Biquad::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		 //unassign mid and side
 		 */
 		
-		long double tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
+		double tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
 		biquad[7] = (inputSampleL * biquad[3]) - (tempSampleL * biquad[5]) + biquad[8];
 		biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
 		inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
-		long double tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
+		double tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
 		biquad[9] = (inputSampleR * biquad[3]) - (tempSampleR * biquad[5]) + biquad[10];
 		biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
 		inputSampleR = tempSampleR; //note: 9 and 10 store the R channel

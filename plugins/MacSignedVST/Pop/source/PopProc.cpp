@@ -34,14 +34,14 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		dL[delay] = inputSampleL;
 		dR[delay] = inputSampleR;
@@ -51,7 +51,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		inputSampleL = (inputSampleL * thickenL) + (dL[delay] * (1.0-thickenL));
 		inputSampleR = (inputSampleR * thickenR) + (dR[delay] * (1.0-thickenR));
 				
-		long double lowestSampleL = inputSampleL;
+		double lowestSampleL = inputSampleL;
 		if (fabs(inputSampleL) > fabs(previousL)) lowestSampleL = previousL;
 		if (fabs(lowestSampleL) > fabs(previous2L)) lowestSampleL = (lowestSampleL + previous2L) / 1.99;
 		if (fabs(lowestSampleL) > fabs(previous3L)) lowestSampleL = (lowestSampleL + previous3L) / 1.98;
@@ -66,7 +66,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		double punchinessL = 0.95-fabs(inputSampleL*0.08);
 		if (punchinessL < 0.65) punchinessL = 0.65;
 		
-		long double lowestSampleR = inputSampleR;
+		double lowestSampleR = inputSampleR;
 		if (fabs(inputSampleR) > fabs(previousR)) lowestSampleR = previousR;
 		if (fabs(lowestSampleR) > fabs(previous2R)) lowestSampleR = (lowestSampleR + previous2R) / 1.99;
 		if (fabs(lowestSampleR) > fabs(previous3R)) lowestSampleR = (lowestSampleR + previous3R) / 1.98;
@@ -195,14 +195,14 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		}
 		//got coefficients, adjusted speeds for R
 		
-		long double coefficientL = highGainOffset;
+		double coefficientL = highGainOffset;
 		if (flip) coefficientL += pow(muCoefficientAL,2);
 		else coefficientL += pow(muCoefficientBL,2);
 		inputSampleL *= coefficientL;
 		thickenL = (coefficientL/5)+punchinessL;//0.80;
 		thickenL = (1.0-wet)+(wet*thickenL);
 
-		long double coefficientR = highGainOffset;
+		double coefficientR = highGainOffset;
 		if (flip) coefficientR += pow(muCoefficientAR,2);
 		else coefficientR += pow(muCoefficientBR,2);
 		inputSampleR *= coefficientR;
@@ -211,7 +211,7 @@ void Pop::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
 		
-		long double bridgerectifier = fabs(inputSampleL);
+		double bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm
@@ -281,14 +281,14 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		dL[delay] = inputSampleL;
 		dR[delay] = inputSampleR;
@@ -298,7 +298,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		inputSampleL = (inputSampleL * thickenL) + (dL[delay] * (1.0-thickenL));
 		inputSampleR = (inputSampleR * thickenR) + (dR[delay] * (1.0-thickenR));
 		
-		long double lowestSampleL = inputSampleL;
+		double lowestSampleL = inputSampleL;
 		if (fabs(inputSampleL) > fabs(previousL)) lowestSampleL = previousL;
 		if (fabs(lowestSampleL) > fabs(previous2L)) lowestSampleL = (lowestSampleL + previous2L) / 1.99;
 		if (fabs(lowestSampleL) > fabs(previous3L)) lowestSampleL = (lowestSampleL + previous3L) / 1.98;
@@ -313,7 +313,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		double punchinessL = 0.95-fabs(inputSampleL*0.08);
 		if (punchinessL < 0.65) punchinessL = 0.65;
 		
-		long double lowestSampleR = inputSampleR;
+		double lowestSampleR = inputSampleR;
 		if (fabs(inputSampleR) > fabs(previousR)) lowestSampleR = previousR;
 		if (fabs(lowestSampleR) > fabs(previous2R)) lowestSampleR = (lowestSampleR + previous2R) / 1.99;
 		if (fabs(lowestSampleR) > fabs(previous3R)) lowestSampleR = (lowestSampleR + previous3R) / 1.98;
@@ -442,14 +442,14 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		}
 		//got coefficients, adjusted speeds for R
 		
-		long double coefficientL = highGainOffset;
+		double coefficientL = highGainOffset;
 		if (flip) coefficientL += pow(muCoefficientAL,2);
 		else coefficientL += pow(muCoefficientBL,2);
 		inputSampleL *= coefficientL;
 		thickenL = (coefficientL/5)+punchinessL;//0.80;
 		thickenL = (1.0-wet)+(wet*thickenL);
 		
-		long double coefficientR = highGainOffset;
+		double coefficientR = highGainOffset;
 		if (flip) coefficientR += pow(muCoefficientAR,2);
 		else coefficientR += pow(muCoefficientBR,2);
 		inputSampleR *= coefficientR;
@@ -458,7 +458,7 @@ void Pop::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		//applied compression with vari-vari-µ-µ-µ-µ-µ-µ-is-the-kitten-song o/~
 		//applied gain correction to control output level- tends to constrain sound rather than inflate it
 		
-		long double bridgerectifier = fabs(inputSampleL);
+		double bridgerectifier = fabs(inputSampleL);
 		if (bridgerectifier > 1.2533141373155) bridgerectifier = 1.2533141373155;
 		bridgerectifier = sin(bridgerectifier * fabs(bridgerectifier)) / ((fabs(bridgerectifier) == 0.0) ?1:fabs(bridgerectifier));
 		//using Spiral instead of Density algorithm

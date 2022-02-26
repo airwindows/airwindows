@@ -218,7 +218,7 @@ void		YBandpass::YBandpassKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -268,20 +268,20 @@ void		YBandpass::YBandpassKernel::Process(	const Float32 	*inSourceP,
 	//for the fixed-position biquad filter
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
-		long double drySample = *sourceP;
+		double drySample = *sourceP;
 		
-		long double temp = (long double)nSampleFrames/inFramesToProcess;
+		double temp = (double)nSampleFrames/inFramesToProcess;
 		biquad[biq_a0] = (biquad[biq_aA0]*temp)+(biquad[biq_aB0]*(1.0-temp));
 		//biquad[biq_a1] = (biquad[biq_aA1]*temp)+(biquad[biq_aB1]*(1.0-temp));
 		biquad[biq_a2] = (biquad[biq_aA2]*temp)+(biquad[biq_aB2]*(1.0-temp));
 		biquad[biq_b1] = (biquad[biq_bA1]*temp)+(biquad[biq_bB1]*(1.0-temp));
 		biquad[biq_b2] = (biquad[biq_bA2]*temp)+(biquad[biq_bB2]*(1.0-temp));
 		//this is the interpolation code for the biquad
-		long double powFactor = (powFactorA*temp)+(powFactorB*(1.0-temp));
-		long double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		long double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
+		double powFactor = (powFactorA*temp)+(powFactorB*(1.0-temp));
+		double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
+		double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
 		
 		inputSample *= inTrim;
 		

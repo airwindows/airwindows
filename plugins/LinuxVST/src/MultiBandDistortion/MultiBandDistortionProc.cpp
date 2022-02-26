@@ -51,10 +51,10 @@ void MultiBandDistortion::processReplacing(float **inputs, float **outputs, VstI
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 
 		ataDrySampleL = inputSampleL;
 		ataHalfDrySampleL = ataHalfwaySampleL = (inputSampleL + ataLast1SampleL + ((-ataLast2SampleL + ataLast3SampleL) * ataUpsampleHighTweakL)) / 2.0;
@@ -296,10 +296,10 @@ void MultiBandDistortion::processDoubleReplacing(double **inputs, double **outpu
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		ataDrySampleL = inputSampleL;
 		ataHalfDrySampleL = ataHalfwaySampleL = (inputSampleL + ataLast1SampleL + ((-ataLast2SampleL + ataLast3SampleL) * ataUpsampleHighTweakL)) / 2.0;
@@ -479,12 +479,12 @@ void MultiBandDistortion::processDoubleReplacing(double **inputs, double **outpu
 		inputSampleR *= outputGlobal;
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

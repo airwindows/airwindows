@@ -134,7 +134,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

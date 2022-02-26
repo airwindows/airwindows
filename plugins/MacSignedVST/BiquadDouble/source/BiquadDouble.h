@@ -56,8 +56,8 @@ private:
     std::set< std::string > _canDo;
     
 	
-	long double biquadA[11];
-	long double biquadB[11]; //note that this stereo form doesn't require L and R forms!
+	double biquadA[11];
+	double biquadB[11]; //note that this stereo form doesn't require L and R forms!
 	//This is because so much of it is coefficients etc. that are the same on both channels.
 	//So the stored samples are in 7-8 and 9-10, and freq/res/coefficients serve both.
 	

@@ -121,7 +121,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 		Float64 lastSampleT;
 		Float64 lastSampleB; //for Slews

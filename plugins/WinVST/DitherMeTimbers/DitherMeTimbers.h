@@ -51,8 +51,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double noiseShapingL;
-	long double noiseShapingR;
+	double noiseShapingL;
+	double noiseShapingR;
 	double lastSampleL;
 	double lastSample2L;
 	double lastSampleR;

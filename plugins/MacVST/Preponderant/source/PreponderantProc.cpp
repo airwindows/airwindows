@@ -62,43 +62,43 @@ void Preponderant::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double drySampleL = *in1;
-		long double drySampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = *in1;
+		double drySampleR = *in2;
 		
-		long double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
+		double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
 		biquadA[7] = -(tempSampleL * biquadA[5]) + biquadA[8]; //BANDPASS form
 		biquadA[8] = (inputSampleL * biquadA[4]) - (tempSampleL * biquadA[6]);
-		long double bassSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
+		double bassSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
-		long double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
+		double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
 		biquadA[9] = -(tempSampleR * biquadA[5]) + biquadA[10]; //BANDPASS form
 		biquadA[10] = (inputSampleR * biquadA[4]) - (tempSampleR * biquadA[6]);
-		long double bassSampleR = tempSampleR; //note: 9 and 10 store the R channel
+		double bassSampleR = tempSampleR; //note: 9 and 10 store the R channel
 		
 		tempSampleL = (inputSampleL * biquadB[2]) + biquadB[7];
 		biquadB[7] = -(tempSampleL * biquadB[5]) + biquadB[8]; //BANDPASS form
 		biquadB[8] = (inputSampleL * biquadB[4]) - (tempSampleL * biquadB[6]);
-		long double midSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
+		double midSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
 		tempSampleR = (inputSampleR * biquadB[2]) + biquadB[9];
 		biquadB[9] = -(tempSampleR * biquadB[5]) + biquadB[10]; //BANDPASS form
 		biquadB[10] = (inputSampleR * biquadB[4]) - (tempSampleR * biquadB[6]);
-		long double midSampleR = tempSampleR; //note: 9 and 10 store the R channel
+		double midSampleR = tempSampleR; //note: 9 and 10 store the R channel
 		
 		
 		tempSampleL = (inputSampleL * biquadC[2]) + biquadC[7];
 		biquadC[7] = -(tempSampleL * biquadC[5]) + biquadC[8]; //BANDPASS form
 		biquadC[8] = (inputSampleL * biquadC[4]) - (tempSampleL * biquadC[6]);
-		long double highSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
+		double highSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
 		tempSampleR = (inputSampleR * biquadC[2]) + biquadC[9];
 		biquadC[9] = -(tempSampleR * biquadC[5]) + biquadC[10]; //BANDPASS form
 		biquadC[10] = (inputSampleR * biquadC[4]) - (tempSampleR * biquadC[6]);
-		long double highSampleR = tempSampleR; //note: 9 and 10 store the R channel
+		double highSampleR = tempSampleR; //note: 9 and 10 store the R channel
 		
 		if (bassBalanceL < 0.00125) bassBalanceL = 0.00125;
 		if (bassBalanceL > 1.0) bassBalanceL = 1.0;
@@ -258,43 +258,43 @@ void Preponderant::processDoubleReplacing(double **inputs, double **outputs, Vst
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
-		long double drySampleL = *in1;
-		long double drySampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = *in1;
+		double drySampleR = *in2;
 		
-		long double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
+		double tempSampleL = (inputSampleL * biquadA[2]) + biquadA[7];
 		biquadA[7] = -(tempSampleL * biquadA[5]) + biquadA[8]; //BANDPASS form
 		biquadA[8] = (inputSampleL * biquadA[4]) - (tempSampleL * biquadA[6]);
-		long double bassSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
+		double bassSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
-		long double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
+		double tempSampleR = (inputSampleR * biquadA[2]) + biquadA[9];
 		biquadA[9] = -(tempSampleR * biquadA[5]) + biquadA[10]; //BANDPASS form
 		biquadA[10] = (inputSampleR * biquadA[4]) - (tempSampleR * biquadA[6]);
-		long double bassSampleR = tempSampleR; //note: 9 and 10 store the R channel
+		double bassSampleR = tempSampleR; //note: 9 and 10 store the R channel
 		
 		tempSampleL = (inputSampleL * biquadB[2]) + biquadB[7];
 		biquadB[7] = -(tempSampleL * biquadB[5]) + biquadB[8]; //BANDPASS form
 		biquadB[8] = (inputSampleL * biquadB[4]) - (tempSampleL * biquadB[6]);
-		long double midSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
+		double midSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
 		tempSampleR = (inputSampleR * biquadB[2]) + biquadB[9];
 		biquadB[9] = -(tempSampleR * biquadB[5]) + biquadB[10]; //BANDPASS form
 		biquadB[10] = (inputSampleR * biquadB[4]) - (tempSampleR * biquadB[6]);
-		long double midSampleR = tempSampleR; //note: 9 and 10 store the R channel
+		double midSampleR = tempSampleR; //note: 9 and 10 store the R channel
 		
 		
 		tempSampleL = (inputSampleL * biquadC[2]) + biquadC[7];
 		biquadC[7] = -(tempSampleL * biquadC[5]) + biquadC[8]; //BANDPASS form
 		biquadC[8] = (inputSampleL * biquadC[4]) - (tempSampleL * biquadC[6]);
-		long double highSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
+		double highSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 		
 		tempSampleR = (inputSampleR * biquadC[2]) + biquadC[9];
 		biquadC[9] = -(tempSampleR * biquadC[5]) + biquadC[10]; //BANDPASS form
 		biquadC[10] = (inputSampleR * biquadC[4]) - (tempSampleR * biquadC[6]);
-		long double highSampleR = tempSampleR; //note: 9 and 10 store the R channel
+		double highSampleR = tempSampleR; //note: 9 and 10 store the R channel
 		
 		if (bassBalanceL < 0.00125) bassBalanceL = 0.00125;
 		if (bassBalanceL > 1.0) bassBalanceL = 1.0;
@@ -381,12 +381,12 @@ void Preponderant::processDoubleReplacing(double **inputs, double **outputs, Vst
 		}
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

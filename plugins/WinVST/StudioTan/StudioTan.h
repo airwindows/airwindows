@@ -52,15 +52,15 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double bynL[13];
-	long double noiseShapingL;
-	long double lastSampleL;
-	long double lastSample2L;
+	double bynL[13];
+	double noiseShapingL;
+	double lastSampleL;
+	double lastSample2L;
 
-	long double bynR[13];
-	long double noiseShapingR;
-	long double lastSampleR;
-	long double lastSample2R;
+	double bynR[13];
+	double noiseShapingR;
+	double lastSampleR;
+	double lastSample2R;
 	
     float A;
 

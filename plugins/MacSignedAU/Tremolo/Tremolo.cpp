@@ -173,7 +173,7 @@ void		Tremolo::TremoloKernel::Reset()
 	depthAmount = 0.0;
 	lastSpeed = 1000.0;
 	lastDepth = 1000.0;
-	fpNShape = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,8 +206,8 @@ void		Tremolo::TremoloKernel::Process(	const Float32 	*inSourceP,
 	Float64 density;
 	
 	Float64 tupi = 3.141592653589793238;
-	long double inputSample;
-	long double drySample;
+	double inputSample;
+	double drySample;
 	Float64 control;
 	Float64 tempcontrol;
 	Float64 thickness;
@@ -217,30 +217,7 @@ void		Tremolo::TremoloKernel::Process(	const Float32 	*inSourceP,
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSample = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		drySample = inputSample;
 		
 		speedAmount = (((speedAmount*speedSpeed)+speedChase)/(speedSpeed + 1.0));
@@ -284,11 +261,11 @@ void		Tremolo::TremoloKernel::Process(	const Float32 	*inSourceP,
 		//apply tremolo, apply gain boost to compensate for volume loss
 		inputSample = (drySample * (1-depth)) + (inputSample*depth);
 
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 		
 		*destP = inputSample;
 		destP += inNumChannels;

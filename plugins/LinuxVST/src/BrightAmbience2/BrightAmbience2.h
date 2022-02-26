@@ -64,9 +64,9 @@ private:
 	int gcount;	
 	float pL[32768];
 	float pR[32768];
-	long double feedbackA;
-	long double feedbackB;
-	long double feedbackC;
+	double feedbackA;
+	double feedbackB;
+	double feedbackC;
 	
     float A;
     float B;

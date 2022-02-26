@@ -30,8 +30,8 @@ void ButterComp2::processReplacing(float **inputs, float **outputs, VstInt32 sam
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -75,30 +75,30 @@ void ButterComp2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		inputSampleL *= inputgain;
 		inputSampleR *= inputgain;
 		
-		long double divisor = compfactor / (1.0+fabs(lastOutputL));
+		double divisor = compfactor / (1.0+fabs(lastOutputL));
 		//this is slowing compressor recovery while output waveforms were high
 		divisor /= overallscale;
-		long double remainder = divisor;
+		double remainder = divisor;
 		divisor = 1.0 - divisor;
 		//recalculate divisor every sample		
 		
-		long double inputposL = inputSampleL + 1.0;
+		double inputposL = inputSampleL + 1.0;
 		if (inputposL < 0.0) inputposL = 0.0;
-		long double outputposL = inputposL / 2.0;
+		double outputposL = inputposL / 2.0;
 		if (outputposL > 1.0) outputposL = 1.0;		
 		inputposL *= inputposL;
 		targetposL *= divisor;
 		targetposL += (inputposL * remainder);
-		long double calcposL = pow((1.0/targetposL),2);
+		double calcposL = pow((1.0/targetposL),2);
 		
-		long double inputnegL = (-inputSampleL) + 1.0;
+		double inputnegL = (-inputSampleL) + 1.0;
 		if (inputnegL < 0.0) inputnegL = 0.0;
-		long double outputnegL = inputnegL / 2.0;
+		double outputnegL = inputnegL / 2.0;
 		if (outputnegL > 1.0) outputnegL = 1.0;		
 		inputnegL *= inputnegL;
 		targetnegL *= divisor;
 		targetnegL += (inputnegL * remainder);
-		long double calcnegL = pow((1.0/targetnegL),2);
+		double calcnegL = pow((1.0/targetnegL),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
 		
@@ -138,23 +138,23 @@ void ButterComp2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		divisor = 1.0 - divisor;
 		//recalculate divisor every sample		
 		
-		long double inputposR = inputSampleR + 1.0;
+		double inputposR = inputSampleR + 1.0;
 		if (inputposR < 0.0) inputposR = 0.0;
-		long double outputposR = inputposR / 2.0;
+		double outputposR = inputposR / 2.0;
 		if (outputposR > 1.0) outputposR = 1.0;		
 		inputposR *= inputposR;
 		targetposR *= divisor;
 		targetposR += (inputposR * remainder);
-		long double calcposR = pow((1.0/targetposR),2);
+		double calcposR = pow((1.0/targetposR),2);
 		
-		long double inputnegR = (-inputSampleR) + 1.0;
+		double inputnegR = (-inputSampleR) + 1.0;
 		if (inputnegR < 0.0) inputnegR = 0.0;
-		long double outputnegR = inputnegR / 2.0;
+		double outputnegR = inputnegR / 2.0;
 		if (outputnegR > 1.0) outputnegR = 1.0;		
 		inputnegR *= inputnegR;
 		targetnegR *= divisor;
 		targetnegR += (inputnegR * remainder);
-		long double calcnegR = pow((1.0/targetnegR),2);
+		double calcnegR = pow((1.0/targetnegR),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
 		
@@ -187,8 +187,8 @@ void ButterComp2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
 		
-		long double totalmultiplierL;
-		long double totalmultiplierR;
+		double totalmultiplierL;
+		double totalmultiplierR;
 		if (flip)
 		{
 			totalmultiplierL = (controlAposL * outputposL) + (controlAnegL * outputnegL);
@@ -223,14 +223,14 @@ void ButterComp2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		
 		flip = !flip;
 		
-		//stereo 32 bit dither, made small and tidy.
+		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -265,8 +265,8 @@ void ButterComp2::processDoubleReplacing(double **inputs, double **outputs, VstI
     	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -310,30 +310,30 @@ void ButterComp2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		inputSampleL *= inputgain;
 		inputSampleR *= inputgain;
 		
-		long double divisor = compfactor / (1.0+fabs(lastOutputL));
+		double divisor = compfactor / (1.0+fabs(lastOutputL));
 		//this is slowing compressor recovery while output waveforms were high
 		divisor /= overallscale;
-		long double remainder = divisor;
+		double remainder = divisor;
 		divisor = 1.0 - divisor;
 		//recalculate divisor every sample		
 		
-		long double inputposL = inputSampleL + 1.0;
+		double inputposL = inputSampleL + 1.0;
 		if (inputposL < 0.0) inputposL = 0.0;
-		long double outputposL = inputposL / 2.0;
+		double outputposL = inputposL / 2.0;
 		if (outputposL > 1.0) outputposL = 1.0;		
 		inputposL *= inputposL;
 		targetposL *= divisor;
 		targetposL += (inputposL * remainder);
-		long double calcposL = pow((1.0/targetposL),2);
+		double calcposL = pow((1.0/targetposL),2);
 		
-		long double inputnegL = (-inputSampleL) + 1.0;
+		double inputnegL = (-inputSampleL) + 1.0;
 		if (inputnegL < 0.0) inputnegL = 0.0;
-		long double outputnegL = inputnegL / 2.0;
+		double outputnegL = inputnegL / 2.0;
 		if (outputnegL > 1.0) outputnegL = 1.0;		
 		inputnegL *= inputnegL;
 		targetnegL *= divisor;
 		targetnegL += (inputnegL * remainder);
-		long double calcnegL = pow((1.0/targetnegL),2);
+		double calcnegL = pow((1.0/targetnegL),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
 		
@@ -373,23 +373,23 @@ void ButterComp2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		divisor = 1.0 - divisor;
 		//recalculate divisor every sample		
 		
-		long double inputposR = inputSampleR + 1.0;
+		double inputposR = inputSampleR + 1.0;
 		if (inputposR < 0.0) inputposR = 0.0;
-		long double outputposR = inputposR / 2.0;
+		double outputposR = inputposR / 2.0;
 		if (outputposR > 1.0) outputposR = 1.0;		
 		inputposR *= inputposR;
 		targetposR *= divisor;
 		targetposR += (inputposR * remainder);
-		long double calcposR = pow((1.0/targetposR),2);
+		double calcposR = pow((1.0/targetposR),2);
 		
-		long double inputnegR = (-inputSampleR) + 1.0;
+		double inputnegR = (-inputSampleR) + 1.0;
 		if (inputnegR < 0.0) inputnegR = 0.0;
-		long double outputnegR = inputnegR / 2.0;
+		double outputnegR = inputnegR / 2.0;
 		if (outputnegR > 1.0) outputnegR = 1.0;		
 		inputnegR *= inputnegR;
 		targetnegR *= divisor;
 		targetnegR += (inputnegR * remainder);
-		long double calcnegR = pow((1.0/targetnegR),2);
+		double calcnegR = pow((1.0/targetnegR),2);
 		//now we have mirrored targets for comp
 		//outputpos and outputneg go from 0 to 1
 		
@@ -422,8 +422,8 @@ void ButterComp2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		//this causes each of the four to update only when active and in the correct 'flip'
 		
-		long double totalmultiplierL;
-		long double totalmultiplierR;
+		double totalmultiplierL;
+		double totalmultiplierR;
 		if (flip)
 		{
 			totalmultiplierL = (controlAposL * outputposL) + (controlAnegL * outputnegL);
@@ -458,16 +458,14 @@ void ButterComp2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		flip = !flip;
 		
-		//stereo 64 bit dither, made small and tidy.
-		int expon; frexp((double)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexp((double)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 64 bit dither
+		//begin 64 bit stereo floating point dither
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

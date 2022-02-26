@@ -197,7 +197,7 @@ public:
 		Float64 lastSample;
 		Float64 last2Sample;
 
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

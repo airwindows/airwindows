@@ -24,8 +24,8 @@ void Cojones::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -88,17 +88,17 @@ void Cojones::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		averageL[3] /= 5.0;
 		averageL[4] /= 6.0;
 		
-		long double meanA = diffL[0];
-		long double meanB = diffL[0];
+		double meanA = diffL[0];
+		double meanB = diffL[0];
 		if (fabs(averageL[4]) < fabs(meanB)) {meanA = meanB; meanB = averageL[4];}
 		if (fabs(averageL[3]) < fabs(meanB)) {meanA = meanB; meanB = averageL[3];}
 		if (fabs(averageL[2]) < fabs(meanB)) {meanA = meanB; meanB = averageL[2];}
 		if (fabs(averageL[1]) < fabs(meanB)) {meanA = meanB; meanB = averageL[1];}
 		if (fabs(averageL[0]) < fabs(meanB)) {meanA = meanB; meanB = averageL[0];}
-		long double meanOut = ((meanA+meanB)/2.0);
+		double meanOut = ((meanA+meanB)/2.0);
 		storedL[0] = (storedL[1] + meanOut);
 		
-		long double outputSample = storedL[0]*body;
+		double outputSample = storedL[0]*body;
 		//presubtract cojones
 		outputSample += (((inputSampleL - storedL[0])-averageL[1])*cojones);
 		
@@ -158,14 +158,14 @@ void Cojones::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
-		//stereo 32 bit dither, made small and tidy.
+		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -194,8 +194,8 @@ void Cojones::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -258,17 +258,17 @@ void Cojones::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		averageL[3] /= 5.0;
 		averageL[4] /= 6.0;
 		
-		long double meanA = diffL[0];
-		long double meanB = diffL[0];
+		double meanA = diffL[0];
+		double meanB = diffL[0];
 		if (fabs(averageL[4]) < fabs(meanB)) {meanA = meanB; meanB = averageL[4];}
 		if (fabs(averageL[3]) < fabs(meanB)) {meanA = meanB; meanB = averageL[3];}
 		if (fabs(averageL[2]) < fabs(meanB)) {meanA = meanB; meanB = averageL[2];}
 		if (fabs(averageL[1]) < fabs(meanB)) {meanA = meanB; meanB = averageL[1];}
 		if (fabs(averageL[0]) < fabs(meanB)) {meanA = meanB; meanB = averageL[0];}
-		long double meanOut = ((meanA+meanB)/2.0);
+		double meanOut = ((meanA+meanB)/2.0);
 		storedL[0] = (storedL[1] + meanOut);
 		
-		long double outputSample = storedL[0]*body;
+		double outputSample = storedL[0]*body;
 		//presubtract cojones
 		outputSample += (((inputSampleL - storedL[0])-averageL[1])*cojones);
 		
@@ -328,16 +328,14 @@ void Cojones::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 
-		//stereo 64 bit dither, made small and tidy.
-		int expon; frexp((double)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexp((double)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 64 bit dither
+		//begin 64 bit stereo floating point dither
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

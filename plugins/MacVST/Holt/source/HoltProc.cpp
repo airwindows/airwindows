@@ -20,8 +20,8 @@ void Holt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	alpha += ((1.0-beta)*pow(A,3)); //correct for droop in frequency
 	if (alpha > 1.0) alpha = 1.0;
 	
-	long double trend;
-	long double forecast; //defining these here because we're copying the routine four times
+	double trend;
+	double forecast; //defining these here because we're copying the routine four times
 	
 	double aWet = 1.0;
 	double bWet = 1.0;
@@ -42,14 +42,14 @@ void Holt::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (aWet > 0.0) {
 			trend = (beta * (inputSampleL - previousSampleAL) + ((0.999-beta) * previousTrendAL));
@@ -157,8 +157,8 @@ void Holt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	alpha += ((1.0-beta)*pow(A,3)); //correct for droop in frequency
 	if (alpha > 1.0) alpha = 1.0;
 	
-	long double trend;
-	long double forecast; //defining these here because we're copying the routine four times
+	double trend;
+	double forecast; //defining these here because we're copying the routine four times
 	
 	double aWet = 1.0;
 	double bWet = 1.0;
@@ -179,14 +179,14 @@ void Holt::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 
 		if (aWet > 0.0) {
 			trend = (beta * (inputSampleL - previousSampleAL) + ((0.999-beta) * previousTrendAL));

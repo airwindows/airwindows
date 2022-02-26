@@ -87,8 +87,8 @@ ToVinyl4::ToVinyl4(audioMasterCallback audioMaster) :
 	B = 0.3424051; //44.0 hz = ((B*B)*290)+10  (B*B)*290 = 34   (B*B) = 0.1172413  sqrt() = 0.3424051
 	C = 0.32;
 	D = 0.064;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

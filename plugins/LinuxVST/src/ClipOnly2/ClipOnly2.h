@@ -51,12 +51,12 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double lastSampleL;
-	long double intermediateL[16];
+	double lastSampleL;
+	double intermediateL[16];
 	bool wasPosClipL;
 	bool wasNegClipL;
-	long double lastSampleR;
-	long double intermediateR[16];
+	double lastSampleR;
+	double intermediateR[16];
 	bool wasPosClipR;
 	bool wasNegClipR; //Stereo ClipOnly2
 	

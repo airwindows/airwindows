@@ -127,11 +127,11 @@ public:
         virtual void		Reset();
 		
 	private: 
-		long double lastSample;
+		double lastSample;
 		Float64 previousVelocity;
 		Float64 b[21];
 		Float64 f[21];		
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

@@ -54,10 +54,10 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double biquadA[15];
-	long double biquadB[15];
-	long double hysteresisL;
-	long double hysteresisR;
+	double biquadA[15];
+	double biquadB[15];
+	double hysteresisL;
+	double hysteresisR;
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

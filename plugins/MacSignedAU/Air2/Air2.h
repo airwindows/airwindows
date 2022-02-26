@@ -159,7 +159,7 @@ public:
 		Float64 tripletC;
 		Float64 tripletFactor;
 		int count;
-		long double postsine;
+		double postsine;
 		
 		double lastRef[10];
 		int cycle;

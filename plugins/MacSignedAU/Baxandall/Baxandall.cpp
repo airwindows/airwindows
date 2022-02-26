@@ -227,8 +227,8 @@ void		Baxandall::BaxandallKernel::Process(	const Float32 	*inSourceP,
 	bassB[6] = bassA[6] = (1.0 - K / bassA[1] + K * K) * norm;
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (output != 1.0) {
 			inputSample *= output;
@@ -237,8 +237,8 @@ void		Baxandall::BaxandallKernel::Process(	const Float32 	*inSourceP,
 		inputSample = sin(inputSample);
 		//encode Console5: good cleanness
 		
-		long double trebleSample;
-		long double bassSample;
+		double trebleSample;
+		double bassSample;
 
 		if (flip)
 		{

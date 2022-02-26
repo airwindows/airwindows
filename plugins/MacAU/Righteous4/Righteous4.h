@@ -165,7 +165,7 @@ public:
 		Float64 midSampleZ;
 		
 		Float64 byn[13];
-		long double noiseShaping;
+		double noiseShaping;
 		
 		Float64 lastSample;
 		Float64 IIRsample;
@@ -174,7 +174,7 @@ public:
 		Float64 gwA;
 		Float64 gwB;
 		
-		long double fpNShape;		
+		double fpNShape;		
 	};
 };
 

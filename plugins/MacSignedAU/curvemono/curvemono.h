@@ -121,7 +121,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double gain;
+		double gain;
 		uint32_t fpd;
 	};
 };

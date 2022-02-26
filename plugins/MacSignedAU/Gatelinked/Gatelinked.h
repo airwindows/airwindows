@@ -131,8 +131,8 @@ public:
 		Float64 treblefreq;
 		Float64 bassfreq;
 		bool flip;
-		long double fpNShapeL;
-		long double fpNShapeR;
+		double fpNShapeL;
+		double fpNShapeR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

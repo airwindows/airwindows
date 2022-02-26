@@ -243,15 +243,15 @@ void		Focus::FocusKernel::Process(	const Float32 	*inSourceP,
 	figure[6] = (1.0 - K / figure[1] + K * K) * norm;
 
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 
 		
 		inputSample = sin(inputSample);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSample * figure[2]) + figure[7];
+		double tempSample = (inputSample * figure[2]) + figure[7];
 		figure[7] = -(tempSample * figure[5]) + figure[8];
 		figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		inputSample = tempSample;
@@ -261,7 +261,7 @@ void		Focus::FocusKernel::Process(	const Float32 	*inSourceP,
 		inputSample = asin(inputSample);
 		//decode Console5
 		
-		long double groundSample = drySample - inputSample; //set up UnBox
+		double groundSample = drySample - inputSample; //set up UnBox
 		inputSample *= boost; //now, focussed area gets cranked before distort
 		
 		switch (mode)
@@ -285,12 +285,12 @@ void		Focus::FocusKernel::Process(	const Float32 	*inSourceP,
 				inputSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 				break;
 			case 3: //Mojo
-				long double mojo; mojo = pow(fabs(inputSample),0.25);
+				double mojo; mojo = pow(fabs(inputSample),0.25);
 				if (mojo > 0.0) inputSample = (sin(inputSample * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				//mojo is the one that flattens WAAAAY out very softly before wavefolding				
 				break;
 			case 4: //Dyno
-				long double dyno; dyno = pow(fabs(inputSample),4);
+				double dyno; dyno = pow(fabs(inputSample),4);
 				if (dyno > 0.0) inputSample = (sin(inputSample * dyno) / dyno) * 1.1654321;
 				//dyno is the one that tries to raise peak energy				
 				break;

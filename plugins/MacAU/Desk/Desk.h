@@ -117,10 +117,10 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double lastSample;
-		long double lastOutSample;
+		double lastSample;
+		double lastOutSample;
 		Float64 lastSlew;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

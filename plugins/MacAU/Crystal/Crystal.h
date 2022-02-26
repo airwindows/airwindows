@@ -137,7 +137,7 @@ public:
 		private:
 		Float64 b[35];
 		Float64 lastSample;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

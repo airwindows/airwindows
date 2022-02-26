@@ -211,21 +211,21 @@ OSStatus		MoNoam::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
 	int processing = (int) GetParameter( kParam_One );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
 		
-		long double mid; mid = inputSampleL + inputSampleR;
-		long double side; side = inputSampleL - inputSampleR;
+		double mid; mid = inputSampleL + inputSampleR;
+		double side; side = inputSampleL - inputSampleR;
 
 		if (processing == kMONO || processing == kMONOR || processing == kMONOL) side = 0.0;
 		if (processing == kSIDE || processing == kSIDEM || processing == kSIDER || processing == kSIDEL) mid = 0.0;

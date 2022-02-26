@@ -54,23 +54,23 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double controlAposL;
-	long double controlAnegL;
-	long double controlBposL;
-	long double controlBnegL;
-	long double targetposL;
-	long double targetnegL;
-	long double lastOutputL;
-	long double controlAposR;
-	long double controlAnegR;
-	long double controlBposR;
-	long double controlBnegR;
-	long double targetposR;
-	long double targetnegR;
-	long double lastOutputR;
+	double controlAposL;
+	double controlAnegL;
+	double controlBposL;
+	double controlBnegL;
+	double targetposL;
+	double targetnegL;
+	double lastOutputL;
+	double controlAposR;
+	double controlAnegR;
+	double controlBposR;
+	double controlBnegR;
+	double targetposR;
+	double targetnegR;
+	double lastOutputR;
 	bool flip;
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

@@ -21,8 +21,8 @@ void Loud::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	double output = B;
 	double wet = C;
 	double dry = 1.0-wet;
-	long double inputSampleL;
-	long double inputSampleR;
+	double inputSampleL;
+	double inputSampleR;
 	double drySampleL;
 	double drySampleR;
 	double clamp;
@@ -138,8 +138,8 @@ void Loud::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	double output = B;
 	double wet = C;
 	double dry = 1.0-wet;
-	long double inputSampleL;
-	long double inputSampleR;
+	double inputSampleL;
+	double inputSampleR;
 	double drySampleL;
 	double drySampleR;
 	double clamp;

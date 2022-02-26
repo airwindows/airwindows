@@ -217,7 +217,7 @@ OSStatus		BiquadStereo::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -290,12 +290,12 @@ OSStatus		BiquadStereo::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	}
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		inputSampleL = sin(inputSampleL);
@@ -303,16 +303,16 @@ OSStatus		BiquadStereo::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		//encode Console5: good cleanness
 		
 		/*
-		long double mid = inputSampleL + inputSampleR;
-		long double side = inputSampleL - inputSampleR;
+		double mid = inputSampleL + inputSampleR;
+		double side = inputSampleL - inputSampleR;
 		//assign mid and side.Between these sections, you can do mid/side processing
 		
-		long double tempSampleM = (mid * biquad[2]) + biquad[7];
+		double tempSampleM = (mid * biquad[2]) + biquad[7];
 		biquad[7] = (mid * biquad[3]) - (tempSampleM * biquad[5]) + biquad[8];
 		biquad[8] = (mid * biquad[4]) - (tempSampleM * biquad[6]);
 		mid = tempSampleM; //like mono AU, 7 and 8 store mid channel
 		
-		long double tempSampleS = (side * biquad[2]) + biquad[9];
+		double tempSampleS = (side * biquad[2]) + biquad[9];
 		biquad[9] = (side * biquad[3]) - (tempSampleS * biquad[5]) + biquad[10];
 		biquad[10] = (side * biquad[4]) - (tempSampleS * biquad[6]);
 		inputSampleR = tempSampleS; //note: 9 and 10 store the side channel		
@@ -322,12 +322,12 @@ OSStatus		BiquadStereo::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		//unassign mid and side
 		*/
 		
-		long double tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
+		double tempSampleL = (inputSampleL * biquad[2]) + biquad[7];
 		biquad[7] = (inputSampleL * biquad[3]) - (tempSampleL * biquad[5]) + biquad[8];
 		biquad[8] = (inputSampleL * biquad[4]) - (tempSampleL * biquad[6]);
 		inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 
-		long double tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
+		double tempSampleR = (inputSampleR * biquad[2]) + biquad[9];
 		biquad[9] = (inputSampleR * biquad[3]) - (tempSampleR * biquad[5]) + biquad[10];
 		biquad[10] = (inputSampleR * biquad[4]) - (tempSampleR * biquad[6]);
 		inputSampleR = tempSampleR; //note: 9 and 10 store the R channel

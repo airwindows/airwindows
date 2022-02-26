@@ -210,11 +210,11 @@ void		Coils::CoilsKernel::Process(	const Float32 	*inSourceP,
 	figure[6] = (1.0 - K / figure[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
-		//long double tempSample = (inputSample * figure[2]) + figure[7];
+		//double tempSample = (inputSample * figure[2]) + figure[7];
 		//figure[7] = -(tempSample * figure[5]) + figure[8];
 		//figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		//inputSample = tempSample + sin(drySample-tempSample);
@@ -225,7 +225,7 @@ void		Coils::CoilsKernel::Process(	const Float32 	*inSourceP,
 		//the full frequencies but distorts like a real transformer. Purest case, and since
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
 		
-		long double tempSample = (inputSample * figure[2]) + figure[7];
+		double tempSample = (inputSample * figure[2]) + figure[7];
 		figure[7] = -(tempSample * figure[5]) + figure[8];
 		figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		inputSample = tempSample + ((sin(((drySample-tempSample)/boost)+offset)-sinOffset)*boost);

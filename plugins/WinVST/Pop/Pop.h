@@ -64,12 +64,12 @@ private:
 	double muSpeedBL;
 	double muCoefficientAL;
 	double muCoefficientBL;
-	long double thickenL;
-	long double previousL;
-	long double previous2L;
-	long double previous3L;
-	long double previous4L;
-	long double previous5L;
+	double thickenL;
+	double previousL;
+	double previous2L;
+	double previous3L;
+	double previous4L;
+	double previous5L;
 	double dL[10001];
 	
 	double muVaryR;
@@ -79,12 +79,12 @@ private:
 	double muSpeedBR;
 	double muCoefficientAR;
 	double muCoefficientBR;
-	long double thickenR;
-	long double previousR;
-	long double previous2R;
-	long double previous3R;
-	long double previous4R;
-	long double previous5R;
+	double thickenR;
+	double previousR;
+	double previous2R;
+	double previous3R;
+	double previous4R;
+	double previous5R;
 	double dR[10001];
 	
 	int delay;

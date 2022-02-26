@@ -73,19 +73,19 @@ private:
 	double iirMidRollerBR;
 	double iirHeadBumpAR;
 	double iirHeadBumpBR;
-	long double biquadAL[9];
-	long double biquadBL[9];
-	long double biquadCL[9];
-	long double biquadDL[9];
+	double biquadAL[9];
+	double biquadBL[9];
+	double biquadCL[9];
+	double biquadDL[9];
 
-	long double biquadAR[9];
-	long double biquadBR[9];
-	long double biquadCR[9];
-	long double biquadDR[9];
+	double biquadAR[9];
+	double biquadBR[9];
+	double biquadCR[9];
+	double biquadDR[9];
 	bool flip;
 	
-	long double lastSampleL;
-	long double lastSampleR;
+	double lastSampleL;
+	double lastSampleR;
 	
 	uint32_t fpd;
 	//default stuff

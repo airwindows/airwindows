@@ -219,7 +219,7 @@ OSStatus		AutoPan::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -229,10 +229,10 @@ OSStatus		AutoPan::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 	double wet = GetParameter( kParam_Four );
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
@@ -248,8 +248,8 @@ OSStatus		AutoPan::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 		inputSampleL *= (sin(rate)+1.0);
 		inputSampleR *= (sin(rate+offset)+1.0);
 		
-		long double mid = (inputSampleL + inputSampleR)*panlaw;
-		long double side = inputSampleL - inputSampleR;
+		double mid = (inputSampleL + inputSampleR)*panlaw;
+		double side = inputSampleL - inputSampleR;
 		//assign mid and side.Between these sections, you can do mid/side processing
 		
 		inputSampleL = (mid+side)/4.0;

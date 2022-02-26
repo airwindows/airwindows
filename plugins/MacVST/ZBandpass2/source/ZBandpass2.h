@@ -55,8 +55,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double iirSampleAL;
-	long double iirSampleAR;
+	double iirSampleAL;
+	double iirSampleAR;
 	enum {
 		biq_freq,
 		biq_reso,
@@ -81,16 +81,16 @@ private:
 		biq_sR2,
 		biq_total
 	}; //coefficient interpolating biquad filter, stereo
-	long double biquadA[biq_total];
-	long double biquadB[biq_total];
-	long double biquadC[biq_total];
-	long double biquadD[biq_total];
-	long double inTrimA;
-	long double inTrimB;
-	long double outTrimA;
-	long double outTrimB;
-	long double wetA;
-	long double wetB;
+	double biquadA[biq_total];
+	double biquadB[biq_total];
+	double biquadC[biq_total];
+	double biquadD[biq_total];
+	double inTrimA;
+	double inTrimB;
+	double outTrimA;
+	double outTrimB;
+	double wetA;
+	double wetB;
 	
 	enum {
 		fix_freq,
@@ -106,8 +106,8 @@ private:
 		fix_sR2,
 		fix_total
 	}; //fixed frequency biquad filter for ultrasonics, stereo
-	long double fixA[fix_total];
-	long double fixB[fix_total];
+	double fixA[fix_total];
+	double fixB[fix_total];
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

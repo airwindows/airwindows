@@ -30,12 +30,12 @@ void StudioTan::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL;
-		long double outputSampleL;
-		long double drySampleL;
-		long double inputSampleR;
-		long double outputSampleR;
-		long double drySampleR;
+		double inputSampleL;
+		double outputSampleL;
+		double drySampleL;
+		double inputSampleR;
+		double outputSampleR;
+		double drySampleR;
 		
 		if (highres) {
 			inputSampleL = *in1 * 8388608.0;
@@ -54,7 +54,7 @@ void StudioTan::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			inputSampleR -= noiseShapingR;
 			
 			cutbins = false;
-			long double benfordize; //we get to re-use this for each channel
+			double benfordize; //we get to re-use this for each channel
 			
 			//begin left channel NJAD
 			benfordize = floor(inputSampleL);
@@ -66,7 +66,7 @@ void StudioTan::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			if (benfordize < 1.0) {benfordize *= 10;}
 			int hotbinA = floor(benfordize);
 			//hotbin becomes the Benford bin value for this number floored
-			long double totalA = 0;
+			double totalA = 0;
 			if ((hotbinA > 0) && (hotbinA < 10))
 			{
 				bynL[hotbinA] += 1;
@@ -93,7 +93,7 @@ void StudioTan::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			if (benfordize < 1.0) {benfordize *= 10;}
 			int hotbinB = floor(benfordize);
 			//hotbin becomes the Benford bin value for this number ceiled
-			long double totalB = 0;
+			double totalB = 0;
 			if ((hotbinB > 0) && (hotbinB < 10))
 			{
 				bynL[hotbinB] += 1;
@@ -252,11 +252,11 @@ void StudioTan::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		}
 		
 		//shared output stage
-		long double noiseSuppressL = fabs(inputSampleL);
+		double noiseSuppressL = fabs(inputSampleL);
 		if (noiseShapingL > noiseSuppressL) noiseShapingL = noiseSuppressL;
 		if (noiseShapingL < -noiseSuppressL) noiseShapingL = -noiseSuppressL;
 
-		long double noiseSuppressR = fabs(inputSampleR);
+		double noiseSuppressR = fabs(inputSampleR);
 		if (noiseShapingR > noiseSuppressR) noiseShapingR = noiseSuppressR;
 		if (noiseShapingR < -noiseSuppressR) noiseShapingR = -noiseSuppressR;
 		
@@ -308,12 +308,12 @@ void StudioTan::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL;
-		long double outputSampleL;
-		long double drySampleL;
-		long double inputSampleR;
-		long double outputSampleR;
-		long double drySampleR;
+		double inputSampleL;
+		double outputSampleL;
+		double drySampleL;
+		double inputSampleR;
+		double outputSampleR;
+		double drySampleR;
 		
 		if (highres) {
 			inputSampleL = *in1 * 8388608.0;
@@ -332,7 +332,7 @@ void StudioTan::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			inputSampleR -= noiseShapingR;
 			
 			cutbins = false;
-			long double benfordize; //we get to re-use this for each channel
+			double benfordize; //we get to re-use this for each channel
 			
 			//begin left channel NJAD
 			benfordize = floor(inputSampleL);
@@ -344,7 +344,7 @@ void StudioTan::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			if (benfordize < 1.0) {benfordize *= 10;}
 			int hotbinA = floor(benfordize);
 			//hotbin becomes the Benford bin value for this number floored
-			long double totalA = 0;
+			double totalA = 0;
 			if ((hotbinA > 0) && (hotbinA < 10))
 			{
 				bynL[hotbinA] += 1;
@@ -371,7 +371,7 @@ void StudioTan::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			if (benfordize < 1.0) {benfordize *= 10;}
 			int hotbinB = floor(benfordize);
 			//hotbin becomes the Benford bin value for this number ceiled
-			long double totalB = 0;
+			double totalB = 0;
 			if ((hotbinB > 0) && (hotbinB < 10))
 			{
 				bynL[hotbinB] += 1;
@@ -530,11 +530,11 @@ void StudioTan::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		}
 		
 		//shared output stage
-		long double noiseSuppressL = fabs(inputSampleL);
+		double noiseSuppressL = fabs(inputSampleL);
 		if (noiseShapingL > noiseSuppressL) noiseShapingL = noiseSuppressL;
 		if (noiseShapingL < -noiseSuppressL) noiseShapingL = -noiseSuppressL;
 		
-		long double noiseSuppressR = fabs(inputSampleR);
+		double noiseSuppressR = fabs(inputSampleR);
 		if (noiseShapingR > noiseSuppressR) noiseShapingR = noiseSuppressR;
 		if (noiseShapingR < -noiseSuppressR) noiseShapingR = -noiseSuppressR;
 		

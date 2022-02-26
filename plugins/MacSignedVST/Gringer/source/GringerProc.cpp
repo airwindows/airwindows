@@ -58,8 +58,8 @@ void Gringer::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
@@ -67,7 +67,7 @@ void Gringer::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSampleL * inbandL[2]) + inbandL[7];
+		double tempSample = (inputSampleL * inbandL[2]) + inbandL[7];
 		inbandL[7] = -(tempSample * inbandL[5]) + inbandL[8];
 		inbandL[8] = (inputSampleL * inbandL[4]) - (tempSample * inbandL[6]);
 		inputSampleL = fabs(tempSample);
@@ -173,8 +173,8 @@ void Gringer::processDoubleReplacing(double **inputs, double **outputs, VstInt32
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
@@ -182,7 +182,7 @@ void Gringer::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSampleL * inbandL[2]) + inbandL[7];
+		double tempSample = (inputSampleL * inbandL[2]) + inbandL[7];
 		inbandL[7] = -(tempSample * inbandL[5]) + inbandL[8];
 		inbandL[8] = (inputSampleL * inbandL[4]) - (tempSample * inbandL[6]);
 		inputSampleL = fabs(tempSample);

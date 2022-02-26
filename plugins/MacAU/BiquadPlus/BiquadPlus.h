@@ -160,7 +160,7 @@ public:
 			biq_total
 		};
 		
-		long double biquad[biq_total];
+		double biquad[biq_total];
 		
 		uint32_t fpd;
 	};

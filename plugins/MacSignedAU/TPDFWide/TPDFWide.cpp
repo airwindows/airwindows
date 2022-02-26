@@ -227,8 +227,8 @@ OSStatus		TPDFWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 	if (outScale < 8.0) outScale = 8.0;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
@@ -238,12 +238,12 @@ OSStatus		TPDFWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
-		long double ditherL = -1.0;
+		double ditherL = -1.0;
 		ditherL += (rand()/(double)RAND_MAX);
 		ditherL += (rand()/(double)RAND_MAX);
 		//TPDF: two 0-1 random noises
 		
-		long double ditherR = -1.0;
+		double ditherR = -1.0;
 		ditherR += (rand()/(double)RAND_MAX);
 		ditherR += (rand()/(double)RAND_MAX);
 		//TPDF: two 0-1 random noises

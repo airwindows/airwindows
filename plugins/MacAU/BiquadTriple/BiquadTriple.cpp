@@ -200,7 +200,7 @@ void		BiquadTriple::BiquadTripleKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -273,15 +273,15 @@ void		BiquadTriple::BiquadTripleKernel::Process(	const Float32 	*inSourceP,
 	for (int x = 0; x < 7; x++) {biquadC[x] = biquadB[x] = biquadA[x];}
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = *sourceP;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = *sourceP;
 		
 		
 		inputSample = sin(inputSample);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSample * biquadA[2]) + biquadA[7];
+		double tempSample = (inputSample * biquadA[2]) + biquadA[7];
 		biquadA[7] = (inputSample * biquadA[3]) - (tempSample * biquadA[5]) + biquadA[8];
 		biquadA[8] = (inputSample * biquadA[4]) - (tempSample * biquadA[6]);
 		inputSample = tempSample;

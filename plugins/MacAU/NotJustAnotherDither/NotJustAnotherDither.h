@@ -132,7 +132,7 @@ public:
 		
 		private: 
 		Float64 byn[13];
-		long double noiseShaping;
+		double noiseShaping;
 		uint32_t fpd;
 	};
 };

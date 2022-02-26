@@ -234,9 +234,9 @@ void		ADT::ADTKernel::Process(	const Float32 	*inSourceP,
 	int count;
 	Float64 temp;
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		
 		if (fabs(offsetA - targetA) > 1000) offsetA = targetA;

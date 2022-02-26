@@ -130,7 +130,7 @@ public:
 		private: 
 		Float64 d[1503];
 		int one, maxdelay;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

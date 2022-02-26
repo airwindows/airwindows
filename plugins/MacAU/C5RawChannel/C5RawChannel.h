@@ -127,7 +127,7 @@ public:
 		private: 
 		Float64 lastSampleChannel;
 		Float64 lastFXChannel;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

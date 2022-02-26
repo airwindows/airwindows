@@ -23,8 +23,8 @@ void BrightAmbience::processReplacing(float **inputs, float **outputs, VstInt32 
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 
@@ -174,7 +174,7 @@ void BrightAmbience::processReplacing(float **inputs, float **outputs, VstInt32 
 				temp += pL[count+121]; temp += pL[count+109]; temp += pL[count+73]; temp += pL[count+47]; temp += pL[count+41]; temp += pL[count+19]; temp += pL[count+11]; 
 				//Highest Offset = 12679: gcount limit is 12680, Reset() goes to 25360, definition in .h must be p[25361]
 		}
-		inputSampleL = (inputSampleL*(1-wet))+((long double)(temp/(8388352.0*scale))*wet);
+		inputSampleL = (inputSampleL*(1-wet))+((double)(temp/(8388352.0*scale))*wet);
 		//end L
 		
 		//begin R
@@ -315,7 +315,7 @@ void BrightAmbience::processReplacing(float **inputs, float **outputs, VstInt32 
 				temp += pR[count+121]; temp += pR[count+109]; temp += pR[count+73]; temp += pR[count+47]; temp += pR[count+41]; temp += pR[count+19]; temp += pR[count+11]; 
 				//Highest Offset = 12679: gcount limit is 12680, Reset() goes to 25360, definition in .h must be p[25361]
 		}
-		inputSampleR = (inputSampleR*(1-wet))+((long double)(temp/(8388352.0*scale))*wet);
+		inputSampleR = (inputSampleR*(1-wet))+((double)(temp/(8388352.0*scale))*wet);
 		//end R
 		
 		gcount--;
@@ -355,8 +355,8 @@ void BrightAmbience::processDoubleReplacing(double **inputs, double **outputs, V
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 
@@ -506,7 +506,7 @@ void BrightAmbience::processDoubleReplacing(double **inputs, double **outputs, V
 				temp += pL[count+121]; temp += pL[count+109]; temp += pL[count+73]; temp += pL[count+47]; temp += pL[count+41]; temp += pL[count+19]; temp += pL[count+11]; 
 				//Highest Offset = 12679: gcount limit is 12680, Reset() goes to 25360, definition in .h must be p[25361]
 		}
-		inputSampleL = (inputSampleL*(1-wet))+((long double)(temp/(8388352.0*scale))*wet);
+		inputSampleL = (inputSampleL*(1-wet))+((double)(temp/(8388352.0*scale))*wet);
 		//end L
 		
 		//begin R
@@ -647,7 +647,7 @@ void BrightAmbience::processDoubleReplacing(double **inputs, double **outputs, V
 				temp += pR[count+121]; temp += pR[count+109]; temp += pR[count+73]; temp += pR[count+47]; temp += pR[count+41]; temp += pR[count+19]; temp += pR[count+11]; 
 				//Highest Offset = 12679: gcount limit is 12680, Reset() goes to 25360, definition in .h must be p[25361]
 		}
-		inputSampleR = (inputSampleR*(1-wet))+((long double)(temp/(8388352.0*scale))*wet);
+		inputSampleR = (inputSampleR*(1-wet))+((double)(temp/(8388352.0*scale))*wet);
 		//end R
 		
 		gcount--;

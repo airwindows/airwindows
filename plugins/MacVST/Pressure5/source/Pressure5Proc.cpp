@@ -49,18 +49,18 @@ void Pressure5::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
 		
 		if (fixA[fix_freq] < 0.4999) {
-			long double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
+			double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
 			fixA[fix_sL1] = (inputSampleL * fixA[fix_a1]) - (temp * fixA[fix_b1]) + fixA[fix_sL2];
 			fixA[fix_sL2] = (inputSampleL * fixA[fix_a2]) - (temp * fixA[fix_b2]);
 			inputSampleL = temp;
@@ -160,7 +160,7 @@ void Pressure5::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		flip = !flip;
 		
 		if (fixB[fix_freq] < 0.49999) {
-			long double temp = (inputSampleL * fixB[fix_a0]) + fixB[fix_sL1];
+			double temp = (inputSampleL * fixB[fix_a0]) + fixB[fix_sL1];
 			fixB[fix_sL1] = (inputSampleL * fixB[fix_a1]) - (temp * fixB[fix_b1]) + fixB[fix_sL2];
 			fixB[fix_sL2] = (inputSampleL * fixB[fix_a2]) - (temp * fixB[fix_b2]);
 			inputSampleL = temp;
@@ -276,18 +276,18 @@ void Pressure5::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL = inputSampleL * muMakeupGain;
 		inputSampleR = inputSampleR * muMakeupGain;
 		
 		if (fixA[fix_freq] < 0.4999) {
-			long double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
+			double temp = (inputSampleL * fixA[fix_a0]) + fixA[fix_sL1];
 			fixA[fix_sL1] = (inputSampleL * fixA[fix_a1]) - (temp * fixA[fix_b1]) + fixA[fix_sL2];
 			fixA[fix_sL2] = (inputSampleL * fixA[fix_a2]) - (temp * fixA[fix_b2]);
 			inputSampleL = temp;
@@ -387,7 +387,7 @@ void Pressure5::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		flip = !flip;
 		
 		if (fixB[fix_freq] < 0.49999) {
-			long double temp = (inputSampleL * fixB[fix_a0]) + fixB[fix_sL1];
+			double temp = (inputSampleL * fixB[fix_a0]) + fixB[fix_sL1];
 			fixB[fix_sL1] = (inputSampleL * fixB[fix_a1]) - (temp * fixB[fix_b1]) + fixB[fix_sL2];
 			fixB[fix_sL2] = (inputSampleL * fixB[fix_a2]) - (temp * fixB[fix_b2]);
 			inputSampleL = temp;
@@ -443,12 +443,12 @@ void Pressure5::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		//final clip runs AFTER the Dry/Wet. It serves as a safety clip even if you're not full wet
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

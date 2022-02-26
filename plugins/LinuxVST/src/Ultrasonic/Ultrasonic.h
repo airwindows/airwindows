@@ -51,11 +51,11 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double biquadA[15];
-	long double biquadB[15];
-	long double biquadC[15];
-	long double biquadD[15];
-	long double biquadE[15]; //note that this stereo form doesn't require L and R forms!
+	double biquadA[15];
+	double biquadB[15];
+	double biquadC[15];
+	double biquadD[15];
+	double biquadE[15]; //note that this stereo form doesn't require L and R forms!
 	//This is because so much of it is coefficients etc. that are the same on both channels.
 	//So the stored samples are in 7-8-9-10 and 11-12-13-14, and freq/res/coefficients serve both.
 	

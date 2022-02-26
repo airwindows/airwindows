@@ -131,37 +131,37 @@ public:
         virtual void		Reset();
 		
 		private:
-		long double lastSampleA;
-		long double lastSampleB;
-		long double lastSampleC;
-		long double lastSampleD;
-		long double lastSampleE;
-		long double lastSampleF;
-		long double lastSampleG;
-		long double lastSampleH;
-		long double lastSampleI;
-		long double lastSampleJ;
-		long double lastSampleK;
-		long double lastSampleL;
-		long double lastSampleM;
-		long double thresholdA;
-		long double thresholdB;
-		long double thresholdC;
-		long double thresholdD;
-		long double thresholdE;
-		long double thresholdF;
-		long double thresholdG;
-		long double thresholdH;
-		long double thresholdI;
-		long double thresholdJ;
-		long double thresholdK;
-		long double thresholdL;
-		long double thresholdM;
+		double lastSampleA;
+		double lastSampleB;
+		double lastSampleC;
+		double lastSampleD;
+		double lastSampleE;
+		double lastSampleF;
+		double lastSampleG;
+		double lastSampleH;
+		double lastSampleI;
+		double lastSampleJ;
+		double lastSampleK;
+		double lastSampleL;
+		double lastSampleM;
+		double thresholdA;
+		double thresholdB;
+		double thresholdC;
+		double thresholdD;
+		double thresholdE;
+		double thresholdF;
+		double thresholdG;
+		double thresholdH;
+		double thresholdI;
+		double thresholdJ;
+		double thresholdK;
+		double thresholdL;
+		double thresholdM;
 		
 		Float64 thirdSample;
 		Float64 lastSample;
 		
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

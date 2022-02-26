@@ -56,22 +56,22 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double iirSampleAL;
-	long double iirSampleBL;
-	long double iirSampleCL;
-	long double iirSampleDL;
-	long double iirSampleEL;
-	long double iirSampleFL;
-	long double iirSampleAR;
-	long double iirSampleBR;
-	long double iirSampleCR;
-	long double iirSampleDR;
-	long double iirSampleER;
-	long double iirSampleFR;
-	long double biquadA[15];
-	long double biquadB[15];
-	long double biquadC[15];
-	long double biquadD[15];
+	double iirSampleAL;
+	double iirSampleBL;
+	double iirSampleCL;
+	double iirSampleDL;
+	double iirSampleEL;
+	double iirSampleFL;
+	double iirSampleAR;
+	double iirSampleBR;
+	double iirSampleCR;
+	double iirSampleDR;
+	double iirSampleER;
+	double iirSampleFR;
+	double biquadA[15];
+	double biquadB[15];
+	double biquadC[15];
+	double biquadD[15];
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

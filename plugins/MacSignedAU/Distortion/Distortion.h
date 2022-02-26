@@ -145,8 +145,8 @@ public:
         virtual void		Reset();
 		
 		private:
-		long double previousIn[9];
-		long double previousOut[9];
+		double previousIn[9];
+		double previousOut[9];
 		uint32_t fpd;
 	};
 };

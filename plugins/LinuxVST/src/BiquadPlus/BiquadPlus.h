@@ -80,7 +80,7 @@ private:
 		biq_total
 	};
 	
-	long double biquad[biq_total];
+	double biquad[biq_total];
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

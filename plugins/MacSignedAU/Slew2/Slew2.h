@@ -141,7 +141,7 @@ public:
 		Float64 ataPrevDiffSample;
 		bool ataFlip; //end defining of antialiasing variables
 		Float64 lastSample;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

@@ -57,9 +57,9 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double biquadA[11];
-	long double biquadB[11];
-	long double biquadC[11];
+	double biquadA[11];
+	double biquadB[11];
+	double biquadC[11];
 	
 	double aAL[8111];
 	double aBL[7511];

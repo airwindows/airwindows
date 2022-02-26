@@ -232,18 +232,18 @@ void		XLowpass::XLowpassKernel::Process(	const Float32 	*inSourceP,
 	//output as the control is turned up. Each one independently goes from 0-1 and stays at 1
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
 	//which lets you fall through to simpler processing at lower settings.
-	long double outSample = 0.0;
+	double outSample = 0.0;
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		if (gain != 1.0) {
 			inputSample *= gain;
 		}
 		
-		long double nukeLevel = inputSample;
+		double nukeLevel = inputSample;
 		
 		outSample = biquad[2]*inputSample+biquad[3]*biquad[7]+biquad[4]*biquad[8]-biquad[5]*biquad[9]-biquad[6]*biquad[10];
 		biquad[8] = biquad[7]; biquad[7] = inputSample; biquad[10] = biquad[9];

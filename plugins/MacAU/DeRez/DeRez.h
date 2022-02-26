@@ -133,7 +133,7 @@ public:
 		Float64 position;
 		Float64 incrementA;
 		Float64 incrementB;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

@@ -130,19 +130,19 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double muVary;
-		long double muAttack;
-		long double muNewSpeed;
-		long double muSpeedA;
-		long double muSpeedB;
-		long double muCoefficientA;
-		long double muCoefficientB;
-		long double thicken;
-		long double previous;
-		long double previous2;
-		long double previous3;
-		long double previous4;
-		long double previous5;
+		double muVary;
+		double muAttack;
+		double muNewSpeed;
+		double muSpeedA;
+		double muSpeedB;
+		double muCoefficientA;
+		double muCoefficientB;
+		double thicken;
+		double previous;
+		double previous2;
+		double previous3;
+		double previous4;
+		double previous5;
 		Float64 d[10001];
 		int delay;
 		bool flip;

@@ -56,25 +56,25 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 	
-	long double biquadA[15];
-	long double biquadB[15];
-	long double biquadC[15];
+	double biquadA[15];
+	double biquadB[15];
+	double biquadC[15];
 	
-	long double bassBalanceL;
-	long double midBalanceL;
-	long double highBalanceL;
-	long double bassTrackL;
-	long double midTrackL;
-	long double highTrackL;
-	long double quicknessL;
+	double bassBalanceL;
+	double midBalanceL;
+	double highBalanceL;
+	double bassTrackL;
+	double midTrackL;
+	double highTrackL;
+	double quicknessL;
 	
-	long double bassBalanceR;
-	long double midBalanceR;
-	long double highBalanceR;
-	long double bassTrackR;
-	long double midTrackR;
-	long double highTrackR;
-	long double quicknessR;
+	double bassBalanceR;
+	double midBalanceR;
+	double highBalanceR;
+	double bassTrackR;
+	double midTrackR;
+	double highTrackR;
+	double quicknessR;
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

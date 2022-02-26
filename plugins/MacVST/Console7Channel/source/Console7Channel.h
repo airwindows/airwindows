@@ -55,7 +55,7 @@ private:
 	double gainchase;
 	double chasespeed;
 	
-	long double biquadA[15];
+	double biquadA[15];
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

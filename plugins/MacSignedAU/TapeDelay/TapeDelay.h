@@ -148,7 +148,7 @@ public:
 		int delay;
 		int maxdelay;
 		int chase;		
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

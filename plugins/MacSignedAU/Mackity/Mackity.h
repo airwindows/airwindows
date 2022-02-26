@@ -128,10 +128,10 @@ public:
         virtual void		Reset();
 		
 		private:
-		long double iirSampleA;
-		long double iirSampleB;
-		long double biquadA[11];
-		long double biquadB[11];
+		double iirSampleA;
+		double iirSampleB;
+		double biquadA[11];
+		double biquadB[11];
 
 		uint32_t fpd;
 	};

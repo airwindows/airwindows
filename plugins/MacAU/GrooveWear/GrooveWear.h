@@ -138,7 +138,7 @@ public:
 		Float64 cMidPrev;
 		Float64 dMidPrev;
 		
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

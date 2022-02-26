@@ -227,9 +227,9 @@ void		Channel6::Channel6Kernel::Process(	const Float32 	*inSourceP,
 	threshold /= overallscale; //now with 96K AND working selector!
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (flip)
 		{
@@ -242,14 +242,14 @@ void		Channel6::Channel6Kernel::Process(	const Float32 	*inSourceP,
 			inputSample = inputSample - iirSampleB;
 		}
 		//highpass section
-		long double drySample = inputSample;
+		double drySample = inputSample;
 		
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;
 		inputSample *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output
 		
-		long double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
+		double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 		inputSample = (drySample*(1-density))+(distSample*density);
 		//drive section
 		

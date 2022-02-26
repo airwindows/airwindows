@@ -141,14 +141,14 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double lastSample;
+		double lastSample;
 		Float32 b[22200];
 		int gcount;
 		Float64 lows;
 		Float64 iirLowsA;
 		Float64 iirLowsB;
-		long double refclip;
-		long double fpNShape;
+		double refclip;
+		uint32_t fpd;
 	};
 };
 

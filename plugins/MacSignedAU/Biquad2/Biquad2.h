@@ -137,7 +137,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double biquad[11];
+		double biquad[11];
 		Float64 b[11];
 		Float64 f[11];		
 		Float64 frequencychase;

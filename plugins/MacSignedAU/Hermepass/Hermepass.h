@@ -139,7 +139,7 @@ public:
 		Float64 iirH; //seven poles max, and the final pole is always at 20hz directly.
 		
 		
-		long double fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 	};
 };

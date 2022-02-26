@@ -209,8 +209,8 @@ OSStatus		VoiceTrick::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	Float64 invLowpass;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
@@ -218,7 +218,7 @@ OSStatus		VoiceTrick::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		//setting chase functionality of Capacitor Lowpass. I could just use this value directly from the control,
 		//but if I say it's the lowpass out of Capacitor it should literally be that in every behavior.
 				
-		long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+		double inputSample = (inputSampleL + inputSampleR) * 0.5;
 		//this is now our mono audio
 		
 		count++; if (count > 5) count = 0; switch (count)

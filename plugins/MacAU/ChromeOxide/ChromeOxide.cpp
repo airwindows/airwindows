@@ -220,8 +220,8 @@ void		ChromeOxide::ChromeOxideKernel::Process(	const Float32 	*inSourceP,
 	//everything runs off Intensity now
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		inputSample *= indrive;
 		bassSample = inputSample;

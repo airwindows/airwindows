@@ -185,8 +185,8 @@ OSStatus		Recurve::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 	UInt32 nSampleFrames = inFramesToProcess;
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;

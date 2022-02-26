@@ -224,14 +224,14 @@ void		Distortion::DistortionKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Four );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		inputSample *= input;
 		
 		for (int x = 0; x < stages; x++) {
-			long double temp;
+			double temp;
 			temp = (inputSample+previousIn[x])*0.5;
 			previousIn[x] = inputSample;
 			inputSample = temp;
@@ -258,19 +258,19 @@ void		Distortion::DistortionKernel::Process(	const Float32 	*inSourceP,
 				inputSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 				break;
 			case 3: //Mojo
-				long double mojo; mojo = pow(fabs(inputSample),0.25);
+				double mojo; mojo = pow(fabs(inputSample),0.25);
 				if (mojo > 0.0) inputSample = (sin(inputSample * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				//mojo is the one that flattens WAAAAY out very softly before wavefolding				
 				break;
 			case 4: //Dyno
-				long double dyno; dyno = pow(fabs(inputSample),4);
+				double dyno; dyno = pow(fabs(inputSample),4);
 				if (dyno > 0.0) inputSample = (sin(inputSample * dyno) / dyno) * 1.1654321;
 				//dyno is the one that tries to raise peak energy				
 				break;
 		}
 		
 		for (int x = 1; x < (stages/2); x++) {
-			long double temp;
+			double temp;
 			temp = (inputSample+previousOut[x])*0.5;
 			previousOut[x] = inputSample;
 			inputSample = temp;

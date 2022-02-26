@@ -199,13 +199,13 @@ void		Loud::LoudKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Three );
 	Float64 dry = 1.0-wet;
 	
-	long double inputSample;
+	double inputSample;
 	Float64 drySample;
 	Float64 clamp;
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		drySample = inputSample;
 		
 		inputSample *= boost;

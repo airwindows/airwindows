@@ -121,17 +121,17 @@ public:
 	virtual ComponentResult		Version() { return kSrslyVersion; }
 	
 	private: 
-	long double biquadM2[11];
-	long double biquadM7[11];
-	long double biquadM10[11];
+	double biquadM2[11];
+	double biquadM7[11];
+	double biquadM10[11];
 	
-	long double biquadL3[11];
-	long double biquadL7[11];
-	long double biquadR3[11];
-	long double biquadR7[11];
+	double biquadL3[11];
+	double biquadL7[11];
+	double biquadR3[11];
+	double biquadR7[11];
 
-	long double biquadS3[11];
-	long double biquadS5[11];
+	double biquadS3[11];
+	double biquadS5[11];
 
 	uint32_t fpdL;
 	uint32_t fpdR;

@@ -125,9 +125,9 @@ public:
 	int gcount;	
 	Float32 pL[32768];
 	Float32 pR[32768];
-	long double feedbackA;
-	long double feedbackB;
-	long double feedbackC;
+	double feedbackA;
+	double feedbackB;
+	double feedbackC;
 	uint32_t fpd;
 };
 

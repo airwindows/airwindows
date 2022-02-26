@@ -22,7 +22,7 @@ void Coils2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	if (distScaling < 0.0001) distScaling = 0.0001;
 	biquadA[0] = 600.0/getSampleRate();
 	biquadA[1] = 0.01+(pow(B,2)*0.5);
-	long double iirAmount = biquadA[1]/overallscale;
+	double iirAmount = biquadA[1]/overallscale;
 	double K = tan(M_PI * biquadA[0]);
 	double norm = 1.0 / (1.0 + K / biquadA[1] + K * K);
 	biquadA[2] = K / biquadA[1] * norm;
@@ -42,15 +42,15 @@ void Coils2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (biquadA[0] < 0.49999) {
-			long double tempSample = (inputSampleL * biquadA[2]) + biquadA[7];
+			double tempSample = (inputSampleL * biquadA[2]) + biquadA[7];
 			biquadA[7] = -(tempSample * biquadA[5]) + biquadA[8];
 			biquadA[8] = (inputSampleL * biquadA[4]) - (tempSample * biquadA[6]);
 			inputSampleL = tempSample;			
@@ -59,10 +59,10 @@ void Coils2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			biquadA[10] = (inputSampleR * biquadA[4]) - (tempSample * biquadA[6]);
 			inputSampleR = tempSample; //create bandpass of clean tone
 		}
-		long double diffSampleL = (drySampleL-inputSampleL)/distScaling;
-		long double diffSampleR = (drySampleR-inputSampleR)/distScaling; //mids notched out		
+		double diffSampleL = (drySampleL-inputSampleL)/distScaling;
+		double diffSampleR = (drySampleR-inputSampleR)/distScaling; //mids notched out		
 		if (biquadB[0] < 0.49999) {
-			long double tempSample = (diffSampleL * biquadB[2]) + biquadB[7];
+			double tempSample = (diffSampleL * biquadB[2]) + biquadB[7];
 			biquadB[7] = (diffSampleL * biquadB[3]) - (tempSample * biquadB[5]) + biquadB[8];
 			biquadB[8] = (diffSampleL * biquadB[4]) - (tempSample * biquadB[6]);
 			diffSampleL = tempSample;
@@ -121,7 +121,7 @@ void Coils2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	if (distScaling < 0.0001) distScaling = 0.0001;
 	biquadA[0] = 600.0/getSampleRate();
 	biquadA[1] = 0.01+(pow(B,2)*0.5);
-	long double iirAmount = biquadA[1]/overallscale;
+	double iirAmount = biquadA[1]/overallscale;
 	double K = tan(M_PI * biquadA[0]);
 	double norm = 1.0 / (1.0 + K / biquadA[1] + K * K);
 	biquadA[2] = K / biquadA[1] * norm;
@@ -141,15 +141,15 @@ void Coils2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (biquadA[0] < 0.49999) {
-			long double tempSample = (inputSampleL * biquadA[2]) + biquadA[7];
+			double tempSample = (inputSampleL * biquadA[2]) + biquadA[7];
 			biquadA[7] = -(tempSample * biquadA[5]) + biquadA[8];
 			biquadA[8] = (inputSampleL * biquadA[4]) - (tempSample * biquadA[6]);
 			inputSampleL = tempSample;			
@@ -158,10 +158,10 @@ void Coils2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			biquadA[10] = (inputSampleR * biquadA[4]) - (tempSample * biquadA[6]);
 			inputSampleR = tempSample; //create bandpass of clean tone
 		}
-		long double diffSampleL = (drySampleL-inputSampleL)/distScaling;
-		long double diffSampleR = (drySampleR-inputSampleR)/distScaling; //mids notched out		
+		double diffSampleL = (drySampleL-inputSampleL)/distScaling;
+		double diffSampleR = (drySampleR-inputSampleR)/distScaling; //mids notched out		
 		if (biquadB[0] < 0.49999) {
-			long double tempSample = (diffSampleL * biquadB[2]) + biquadB[7];
+			double tempSample = (diffSampleL * biquadB[2]) + biquadB[7];
 			biquadB[7] = (diffSampleL * biquadB[3]) - (tempSample * biquadB[5]) + biquadB[8];
 			biquadB[8] = (diffSampleL * biquadB[4]) - (tempSample * biquadB[6]);
 			diffSampleL = tempSample;
@@ -187,12 +187,12 @@ void Coils2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		}
 				
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

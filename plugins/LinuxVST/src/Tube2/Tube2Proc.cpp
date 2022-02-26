@@ -27,10 +27,10 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		if (inputPad < 1.0) {
 			inputSampleL *= inputPad;
@@ -38,7 +38,7 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		
 		if (overallscale > 1.9) {
-			long double stored = inputSampleL;
+			double stored = inputSampleL;
 			inputSampleL += previousSampleA; previousSampleA = stored; inputSampleL *= 0.5;
 			stored = inputSampleR;
 			inputSampleR += previousSampleB; previousSampleB = stored; inputSampleR *= 0.5;
@@ -51,7 +51,7 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		
 		//flatten bottom, point top of sine waveshaper L
 		inputSampleL /= asymPad;
-		long double sharpen = -inputSampleL;
+		double sharpen = -inputSampleL;
 		if (sharpen > 0.0) sharpen = 1.0+sqrt(sharpen);
 		else sharpen = 1.0-sqrt(-sharpen);
 		inputSampleL -= inputSampleL*fabs(inputSampleL)*sharpen*0.25;
@@ -84,7 +84,7 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR *= outputscaling;
 
 		if (overallscale > 1.9) {
-			long double stored = inputSampleL;
+			double stored = inputSampleL;
 			inputSampleL += previousSampleC; previousSampleC = stored; inputSampleL *= 0.5;
 			stored = inputSampleR;
 			inputSampleR += previousSampleD; previousSampleD = stored; inputSampleR *= 0.5;
@@ -92,9 +92,9 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//end original Tube. Now we have a boosted fat sound peaking at 0dB exactly
 		
 		//hysteresis and spiky fuzz L
-		long double slew = previousSampleE - inputSampleL;
+		double slew = previousSampleE - inputSampleL;
 		if (overallscale > 1.9) {
-			long double stored = inputSampleL;
+			double stored = inputSampleL;
 			inputSampleL += previousSampleE; previousSampleE = stored; inputSampleL *= 0.5;
 		} else previousSampleE = inputSampleL; //for this, need previousSampleC always
 		if (slew > 0.0) slew = 1.0+(sqrt(slew)*0.5);
@@ -107,7 +107,7 @@ void Tube2::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//hysteresis and spiky fuzz R
 		slew = previousSampleF - inputSampleR;
 		if (overallscale > 1.9) {
-			long double stored = inputSampleR;
+			double stored = inputSampleR;
 			inputSampleR += previousSampleF; previousSampleF = stored; inputSampleR *= 0.5;
 		} else previousSampleF = inputSampleR; //for this, need previousSampleC always
 		if (slew > 0.0) slew = 1.0+(sqrt(slew)*0.5);
@@ -158,10 +158,10 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		if (inputPad < 1.0) {
 			inputSampleL *= inputPad;
@@ -169,7 +169,7 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		
 		if (overallscale > 1.9) {
-			long double stored = inputSampleL;
+			double stored = inputSampleL;
 			inputSampleL += previousSampleA; previousSampleA = stored; inputSampleL *= 0.5;
 			stored = inputSampleR;
 			inputSampleR += previousSampleB; previousSampleB = stored; inputSampleR *= 0.5;
@@ -182,7 +182,7 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		
 		//flatten bottom, point top of sine waveshaper L
 		inputSampleL /= asymPad;
-		long double sharpen = -inputSampleL;
+		double sharpen = -inputSampleL;
 		if (sharpen > 0.0) sharpen = 1.0+sqrt(sharpen);
 		else sharpen = 1.0-sqrt(-sharpen);
 		inputSampleL -= inputSampleL*fabs(inputSampleL)*sharpen*0.25;
@@ -215,7 +215,7 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR *= outputscaling;
 		
 		if (overallscale > 1.9) {
-			long double stored = inputSampleL;
+			double stored = inputSampleL;
 			inputSampleL += previousSampleC; previousSampleC = stored; inputSampleL *= 0.5;
 			stored = inputSampleR;
 			inputSampleR += previousSampleD; previousSampleD = stored; inputSampleR *= 0.5;
@@ -223,9 +223,9 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//end original Tube. Now we have a boosted fat sound peaking at 0dB exactly
 		
 		//hysteresis and spiky fuzz L
-		long double slew = previousSampleE - inputSampleL;
+		double slew = previousSampleE - inputSampleL;
 		if (overallscale > 1.9) {
-			long double stored = inputSampleL;
+			double stored = inputSampleL;
 			inputSampleL += previousSampleE; previousSampleE = stored; inputSampleL *= 0.5;
 		} else previousSampleE = inputSampleL; //for this, need previousSampleC always
 		if (slew > 0.0) slew = 1.0+(sqrt(slew)*0.5);
@@ -238,7 +238,7 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//hysteresis and spiky fuzz R
 		slew = previousSampleF - inputSampleR;
 		if (overallscale > 1.9) {
-			long double stored = inputSampleR;
+			double stored = inputSampleR;
 			inputSampleR += previousSampleF; previousSampleF = stored; inputSampleR *= 0.5;
 		} else previousSampleF = inputSampleR; //for this, need previousSampleC always
 		if (slew > 0.0) slew = 1.0+(sqrt(slew)*0.5);
@@ -251,12 +251,12 @@ void Tube2::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//end hysteresis and spiky fuzz section
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

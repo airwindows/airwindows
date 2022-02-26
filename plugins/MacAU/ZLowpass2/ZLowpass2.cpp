@@ -203,7 +203,7 @@ void		ZLowpass2::ZLowpass2Kernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -247,15 +247,15 @@ void		ZLowpass2::ZLowpass2Kernel::Process(	const Float32 	*inSourceP,
 	//end opamp stuff	
 	
  	double trim = 0.1+(3.712*biquadA[biq_freq]);
-	long double outSample = 0.0;
+	double outSample = 0.0;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
-		long double drySample = *sourceP;
-		long double overallDrySample = *sourceP;
+		double drySample = *sourceP;
+		double overallDrySample = *sourceP;
 		
-		long double temp = (long double)nSampleFrames/inFramesToProcess;
+		double temp = (double)nSampleFrames/inFramesToProcess;
 		biquadA[biq_a0] = (biquadA[biq_aA0]*temp)+(biquadA[biq_aB0]*(1.0-temp));
 		biquadA[biq_a1] = (biquadA[biq_aA1]*temp)+(biquadA[biq_aB1]*(1.0-temp));
 		biquadA[biq_a2] = (biquadA[biq_aA2]*temp)+(biquadA[biq_aB2]*(1.0-temp));
@@ -263,13 +263,13 @@ void		ZLowpass2::ZLowpass2Kernel::Process(	const Float32 	*inSourceP,
 		biquadA[biq_b2] = (biquadA[biq_bA2]*temp)+(biquadA[biq_bB2]*(1.0-temp));
 		for (int x = 0; x < 7; x++) {biquadD[x] = biquadC[x] = biquadB[x] = biquadA[x];}
 		//this is the interpolation code for the biquad
-		long double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		long double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
-		long double wet = (wetA*temp)+(wetB*(1.0-temp));
-		long double aWet = 1.0;
-		long double bWet = 1.0;
-		long double cWet = 1.0;
-		long double dWet = wet*4.0;
+		double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
+		double outTrim = (outTrimA*temp)+(outTrimB*(1.0-temp));
+		double wet = (wetA*temp)+(wetB*(1.0-temp));
+		double aWet = 1.0;
+		double bWet = 1.0;
+		double cWet = 1.0;
+		double dWet = wet*4.0;
 		//four-stage wet/dry control using progressive stages that bypass when not engaged
 		if (dWet < 1.0) {aWet = dWet; bWet = 0.0; cWet = 0.0; dWet = 0.0;}
 		else if (dWet < 2.0) {bWet = dWet - 1.0; cWet = 0.0; dWet = 0.0;}

@@ -225,7 +225,7 @@ public:
 		Float64 PrevB;
 		Float64 PrevA;
 
-		long double fpNShape;
+		uint32_t fpd;
 
 	};
 };

@@ -116,7 +116,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double noiseShaping;
+		double noiseShaping;
 		Float64 lastSample;
 		Float64 lastSample2;
 	};

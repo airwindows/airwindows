@@ -184,7 +184,7 @@ void		TremoSquare::TremoSquareKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -192,8 +192,8 @@ void		TremoSquare::TremoSquareKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Two );
 
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 		
 		osc += increment; if (osc > 1.0) osc = 0.0;

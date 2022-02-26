@@ -221,9 +221,9 @@ void		StudioTan::StudioTanKernel::Process(	const Float32 	*inSourceP,
 	}
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample;
-		long double outputSample;
-		long double drySample;
+		double inputSample;
+		double outputSample;
+		double drySample;
 		
 		if (highres) inputSample = *sourceP * 8388608.0;
 		else inputSample = *sourceP * 32768.0;
@@ -234,7 +234,7 @@ void		StudioTan::StudioTanKernel::Process(	const Float32 	*inSourceP,
 			cutbins = false;
 			drySample = inputSample;
 			inputSample -= noiseShaping;
-			long double benfordize = floor(inputSample);
+			double benfordize = floor(inputSample);
 			while (benfordize >= 1.0) {benfordize /= 10;}
 			if (benfordize < 1.0) {benfordize *= 10;}
 			if (benfordize < 1.0) {benfordize *= 10;}
@@ -243,7 +243,7 @@ void		StudioTan::StudioTanKernel::Process(	const Float32 	*inSourceP,
 			if (benfordize < 1.0) {benfordize *= 10;}
 			int hotbinA = floor(benfordize);
 			//hotbin becomes the Benford bin value for this number floored
-			long double totalA = 0;
+			double totalA = 0;
 			if ((hotbinA > 0) && (hotbinA < 10))
 			{
 				byn[hotbinA] += 1;
@@ -270,7 +270,7 @@ void		StudioTan::StudioTanKernel::Process(	const Float32 	*inSourceP,
 			if (benfordize < 1.0) {benfordize *= 10;}
 			int hotbinB = floor(benfordize);
 			//hotbin becomes the Benford bin value for this number ceiled
-			long double totalB = 0;
+			double totalB = 0;
 			if ((hotbinB > 0) && (hotbinB < 10))
 			{
 				byn[hotbinB] += 1;
@@ -334,7 +334,7 @@ void		StudioTan::StudioTanKernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		//shared output stage
-		long double noiseSuppress = fabs(inputSample);
+		double noiseSuppress = fabs(inputSample);
 		if (noiseShaping > noiseSuppress) noiseShaping = noiseSuppress;
 		if (noiseShaping < -noiseSuppress) noiseShaping = -noiseSuppress;
 		

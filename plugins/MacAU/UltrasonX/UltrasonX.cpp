@@ -214,8 +214,8 @@ void		UltrasonX::UltrasonXKernel::Process(	const Float32 	*inSourceP,
 			break;
 	}			
 		
-	long double K = tan(M_PI * fixA[fix_freq]);
-	long double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
+	double K = tan(M_PI * fixA[fix_freq]);
+	double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
 	fixA[fix_a0] = K * K * norm;
 	fixA[fix_a1] = 2.0 * fixA[fix_a0];
 	fixA[fix_a2] = fixA[fix_a0];
@@ -224,10 +224,10 @@ void		UltrasonX::UltrasonXKernel::Process(	const Float32 	*inSourceP,
 	//for the fixed-position biquad filter
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
-		long double temp = (inputSample * fixA[fix_a0]) + fixA[fix_sL1];
+		double temp = (inputSample * fixA[fix_a0]) + fixA[fix_sL1];
 		fixA[fix_sL1] = (inputSample * fixA[fix_a1]) - (temp * fixA[fix_b1]) + fixA[fix_sL2];
 		fixA[fix_sL2] = (inputSample * fixA[fix_a2]) - (temp * fixA[fix_b2]);
 		inputSample = temp; //fixed biquad filtering ultrasonics

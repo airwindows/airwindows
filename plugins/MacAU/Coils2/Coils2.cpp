@@ -191,7 +191,7 @@ void		Coils2::Coils2Kernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -199,7 +199,7 @@ void		Coils2::Coils2Kernel::Process(	const Float32 	*inSourceP,
 	if (distScaling < 0.0001) distScaling = 0.0001;
 	biquadA[0] = 600.0/GetSampleRate();
 	biquadA[1] = 0.01+(pow(GetParameter( kParam_Two ),2)*0.5);
-	long double iirAmount = biquadA[1]/overallscale;
+	double iirAmount = biquadA[1]/overallscale;
 	double K = tan(M_PI * biquadA[0]);
 	double norm = 1.0 / (1.0 + K / biquadA[1] + K * K);
 	biquadA[2] = K / biquadA[1] * norm;
@@ -218,19 +218,19 @@ void		Coils2::Coils2Kernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Three );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		if (biquadA[0] < 0.49999) {
-			long double tempSample = (inputSample * biquadA[2]) + biquadA[7];
+			double tempSample = (inputSample * biquadA[2]) + biquadA[7];
 			biquadA[7] = -(tempSample * biquadA[5]) + biquadA[8];
 			biquadA[8] = (inputSample * biquadA[4]) - (tempSample * biquadA[6]);
 			inputSample = tempSample; //create bandpass of clean tone
 		}
-		long double diffSample = (drySample-inputSample)/distScaling; //mids notched out		
+		double diffSample = (drySample-inputSample)/distScaling; //mids notched out		
 		if (biquadB[0] < 0.49999) {
-			long double tempSample = (diffSample * biquadB[2]) + biquadB[7];
+			double tempSample = (diffSample * biquadB[2]) + biquadB[7];
 			biquadB[7] = (diffSample * biquadB[3]) - (tempSample * biquadB[5]) + biquadB[8];
 			biquadB[8] = (diffSample * biquadB[4]) - (tempSample * biquadB[6]);
 			diffSample = tempSample; //lowpass filter the notch content before distorting

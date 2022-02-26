@@ -125,10 +125,10 @@ public:
 	int gcount;	
 	Float32 pL[32768];
 	Float32 pR[32768];
-	long double feedbackA;
-	long double feedbackB;
-	long double figureL[9];
-	long double figureR[9];
+	double feedbackA;
+	double feedbackB;
+	double figureL[9];
+	double figureR[9];
 	double lastRefL[10];
 	double lastRefR[10];
 	int cycle;	

@@ -32,14 +32,14 @@ void Coils::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		//long double tempSample = (inputSample * figure[2]) + figure[7];
+		//double tempSample = (inputSample * figure[2]) + figure[7];
 		//figure[7] = -(tempSample * figure[5]) + figure[8];
 		//figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		//inputSample = tempSample + sin(drySample-tempSample);
@@ -51,7 +51,7 @@ void Coils::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
 		
 				
-		long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
+		double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 		figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 		figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
 		inputSampleL = tempSample + ((sin(((drySampleL-tempSample)/boost)+offset)-sinOffset)*boost);
@@ -116,14 +116,14 @@ void Coils::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		//long double tempSample = (inputSample * figure[2]) + figure[7];
+		//double tempSample = (inputSample * figure[2]) + figure[7];
 		//figure[7] = -(tempSample * figure[5]) + figure[8];
 		//figure[8] = (inputSample * figure[4]) - (tempSample * figure[6]);
 		//inputSample = tempSample + sin(drySample-tempSample);
@@ -135,7 +135,7 @@ void Coils::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		//we are not using a high Q we can remove the extra sin/asin on the biquad.
 		
 		
-		long double tempSample = (inputSampleL * figureL[2]) + figureL[7];
+		double tempSample = (inputSampleL * figureL[2]) + figureL[7];
 		figureL[7] = -(tempSample * figureL[5]) + figureL[8];
 		figureL[8] = (inputSampleL * figureL[4]) - (tempSample * figureL[6]);
 		inputSampleL = tempSample + ((sin(((drySampleL-tempSample)/boost)+offset)-sinOffset)*boost);

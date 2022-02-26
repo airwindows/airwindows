@@ -52,8 +52,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double bynL[13], bynR[13];
-	long double noiseShapingL, noiseShapingR;
+	double bynL[13], bynR[13];
+	double noiseShapingL, noiseShapingR;
 	//NJAD
 	double aL[1503], bL[1503], cL[1503], dL[1503];
 	double aR[1503], bR[1503], cR[1503], dR[1503];
@@ -73,8 +73,8 @@ private:
 	double iirSampleTR, iirSampleUR, iirSampleVR;
 	double iirSampleWR, iirSampleXR, iirSampleYR, iirSampleZR; // o/`
 	//SubsOnly
-	long double biquadL[11];
-	long double biquadR[11];
+	double biquadL[11];
+	double biquadR[11];
 	//Bandpasses
 
 	uint32_t fpd;

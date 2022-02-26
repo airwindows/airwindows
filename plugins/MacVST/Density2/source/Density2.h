@@ -59,25 +59,25 @@ private:
 	uint32_t fpdR;
 	//default stuff
 
-	long double last3SampleL;
-	long double last2SampleL;
-	long double last1SampleL;
-	long double ataAL;
-	long double ataBL;
-	long double ataCL;
-	long double lastDiffSampleL;
-	long double iirSampleAL;
-	long double iirSampleBL;
+	double last3SampleL;
+	double last2SampleL;
+	double last1SampleL;
+	double ataAL;
+	double ataBL;
+	double ataCL;
+	double lastDiffSampleL;
+	double iirSampleAL;
+	double iirSampleBL;
 
-	long double last3SampleR;
-	long double last2SampleR;
-	long double last1SampleR;
-	long double ataAR;
-	long double ataBR;
-	long double ataCR;
-	long double lastDiffSampleR;
-	long double iirSampleAR;
-	long double iirSampleBR;
+	double last3SampleR;
+	double last2SampleR;
+	double last1SampleR;
+	double ataAR;
+	double ataBR;
+	double ataCR;
+	double lastDiffSampleR;
+	double iirSampleAR;
+	double iirSampleBR;
 	
     float A;
     float B;

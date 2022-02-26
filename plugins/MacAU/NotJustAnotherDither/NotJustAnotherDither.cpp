@@ -222,23 +222,23 @@ void		NotJustAnotherDither::NotJustAnotherDitherKernel::Process(	const Float32 	
 	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
 		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
 		bool cutbins; cutbins = false;
-		long double drySample = inputSample;
+		double drySample = inputSample;
 		inputSample -= noiseShaping;
 		
-		long double benfordize; benfordize = floor(inputSample);
+		double benfordize; benfordize = floor(inputSample);
 		while (benfordize >= 1.0) benfordize /= 10;
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinA; hotbinA = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number floored
-		long double totalA; totalA = 0;
+		double totalA; totalA = 0;
 		if ((hotbinA > 0) && (hotbinA < 10))
 		{
 			byn[hotbinA] += 1; if (byn[hotbinA] > 982) cutbins = true;
@@ -254,7 +254,7 @@ void		NotJustAnotherDither::NotJustAnotherDitherKernel::Process(	const Float32 	
 		while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
 		int hotbinB; hotbinB = floor(benfordize);
 		//hotbin becomes the Benford bin value for this number ceiled
-		long double totalB; totalB = 0;
+		double totalB; totalB = 0;
 		if ((hotbinB > 0) && (hotbinB < 10))
 		{
 			byn[hotbinB] += 1; if (byn[hotbinB] > 982) cutbins = true;
@@ -265,7 +265,7 @@ void		NotJustAnotherDither::NotJustAnotherDitherKernel::Process(	const Float32 	
 		} else hotbinB = 10;
 		//produce total number- smaller is closer to Benford real
 		
-		long double outputSample;
+		double outputSample;
 		if (totalA < totalB) {byn[hotbinA] += 1; outputSample = floor(inputSample);}
 		else {byn[hotbinB] += 1; outputSample = floor(inputSample+1);}
 		//assign the relevant one to the delay line

@@ -133,8 +133,8 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double biquadA[11];
-		long double biquadB[11];
+		double biquadA[11];
+		double biquadB[11];
 		Float64 iirSampleA;
 		Float64 iirSampleB;
 		Float64 d[264];

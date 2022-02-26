@@ -188,7 +188,7 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -219,18 +219,18 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 	biquadC[6] = biquadD[6] = (1.0 - K / biquadD[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (inputgain < 1.0) {
 			inputSample *= inputgain;
 		} //gain cut before anything, even dry
 		
-		long double drySample = inputSample;
+		double drySample = inputSample;
 		
-		long double HighsSample = 0.0;
-		long double NonHighsSample = 0.0;
-		long double tempSample;
+		double HighsSample = 0.0;
+		double NonHighsSample = 0.0;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -284,13 +284,13 @@ void		Tape::TapeKernel::Process(	const Float32 	*inSourceP,
 		}
 		flip = !flip;
 		
-		long double groundSample = drySample - inputSample; //set up UnBox
+		double groundSample = drySample - inputSample; //set up UnBox
 		if (inputgain > 1.0) {
 			inputSample *= inputgain;
 		} //gain boost inside UnBox: do not boost fringe audio
 		
 		
-		long double applySoften = fabs(HighsSample)*1.57079633;
+		double applySoften = fabs(HighsSample)*1.57079633;
 		if (applySoften > 1.57079633) applySoften = 1.57079633;
 		applySoften = 1-cos(applySoften);
 		if (HighsSample > 0) inputSample -= applySoften;

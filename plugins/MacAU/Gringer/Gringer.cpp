@@ -166,7 +166,7 @@ void		Gringer::GringerKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	inband[0] = 0.025/overallscale;
@@ -190,13 +190,13 @@ void		Gringer::GringerKernel::Process(	const Float32 	*inSourceP,
 	outband[6] = (1.0 - K / outband[1] + K * K) * norm;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		inputSample = sin(inputSample);
 		//encode Console5: good cleanness
 		
-		long double tempSample = (inputSample * inband[2]) + inband[7];
+		double tempSample = (inputSample * inband[2]) + inband[7];
 		inband[7] = -(tempSample * inband[5]) + inband[8];
 		inband[8] = (inputSample * inband[4]) - (tempSample * inband[6]);
 		

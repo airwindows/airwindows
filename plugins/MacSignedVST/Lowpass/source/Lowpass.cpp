@@ -19,8 +19,8 @@ Lowpass::Lowpass(audioMasterCallback audioMaster) :
 	iirSampleBL = 0.0;
 	iirSampleAR = 0.0;
 	iirSampleBR = 0.0;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	fpFlip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	

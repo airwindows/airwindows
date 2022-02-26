@@ -135,15 +135,15 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double last3Sample;
-		long double last2Sample;
-		long double last1Sample;
-		long double ataA;
-		long double ataB;
-		long double ataC;
-		long double lastDiffSample;
-		long double iirSampleA;
-		long double iirSampleB;
+		double last3Sample;
+		double last2Sample;
+		double last1Sample;
+		double ataA;
+		double ataB;
+		double ataC;
+		double lastDiffSample;
+		double iirSampleA;
+		double iirSampleB;
 		uint32_t fpd;
 	};
 };

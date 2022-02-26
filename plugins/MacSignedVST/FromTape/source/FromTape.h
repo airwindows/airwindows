@@ -120,8 +120,8 @@ private:
 	double iirSampleYR;
 	double iirSampleZR;
     
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 	
     float A;

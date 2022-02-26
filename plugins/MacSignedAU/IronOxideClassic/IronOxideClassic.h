@@ -142,7 +142,7 @@ public:
 		Float64 slowIIRB;
 		SInt32 gcount;
 		
-		long double fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 	};
 };

@@ -248,7 +248,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -275,8 +275,8 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 	//for Bandpasses
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
@@ -346,7 +346,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 			case kSLEW:
 				Float64 trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
-				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
+				double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
 				lastSampleL = inputSampleL;
 				if (slewSample > 1.0) slewSample = 1.0; if (slewSample < -1.0) slewSample = -1.0;
 				inputSampleL = slewSample;
@@ -519,8 +519,8 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				break;
 			case kMONO:
 			case kSIDE:
-				long double mid; mid = inputSampleL + inputSampleR;
-				long double side; side = inputSampleL - inputSampleR;
+				double mid; mid = inputSampleL + inputSampleR;
+				double side; side = inputSampleL - inputSampleR;
 				if (processing < 6) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
@@ -536,17 +536,17 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				
 				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == kPHONE) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == kPHONE) {double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
 				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
 				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
 				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
 				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
@@ -568,9 +568,9 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
-				long double drySampleL; drySampleL = inputSampleL;
-				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
-				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				double drySampleL; drySampleL = inputSampleL;
+				double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				double bass; bass = (processing * processing * 0.00001) / overallscale;
 				//we are using the iir filters from out of SubsOnly
 				
 				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
@@ -627,7 +627,7 @@ OSStatus		Monitoring2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 				//ConsoleBuss processing
 				break;
 			case kTRICK:
-				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
 				break;

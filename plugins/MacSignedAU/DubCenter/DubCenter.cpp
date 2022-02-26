@@ -302,8 +302,8 @@ ComponentResult		DubCenter::Reset(AudioUnitScope inScope, AudioUnitElement inEle
 	
 	oscGate = 1.0;
 	
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
 }
 
@@ -320,7 +320,7 @@ OSStatus		DubCenter::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	Float64 driveone = pow(GetParameter( kParam_One )*3.0,2);
@@ -352,8 +352,8 @@ OSStatus		DubCenter::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	Float64 tempSample;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
 		int residue;
@@ -390,8 +390,8 @@ OSStatus		DubCenter::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 
 		// here's the plan.
 		// Grind Boost
@@ -610,7 +610,7 @@ OSStatus		DubCenter::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		
 		//stereo 32 bit dither, made small and tidy.
 		int expon; frexpf((Float32)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
+		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
 		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
 		frexpf((Float32)inputSampleR, &expon);
 		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);

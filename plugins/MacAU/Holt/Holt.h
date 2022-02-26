@@ -137,14 +137,14 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double previousSampleA;
-		long double previousTrendA;
-		long double previousSampleB;
-		long double previousTrendB;
-		long double previousSampleC;
-		long double previousTrendC;
-		long double previousSampleD;
-		long double previousTrendD;
+		double previousSampleA;
+		double previousTrendA;
+		double previousSampleB;
+		double previousTrendB;
+		double previousSampleC;
+		double previousTrendC;
+		double previousSampleD;
+		double previousTrendD;
 		uint32_t fpd;
 	};
 };

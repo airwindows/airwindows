@@ -230,8 +230,8 @@ void		Channel7::Channel7Kernel::Process(	const Float32 	*inSourceP,
 	iirAmount /= overallscale; //we've learned not to try and adjust threshold for sample rate
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (flip)
 		{
@@ -244,15 +244,15 @@ void		Channel7::Channel7Kernel::Process(	const Float32 	*inSourceP,
 			inputSample = inputSample - iirSampleB;
 		}
 		//highpass section
-		long double drySample = inputSample;
+		double drySample = inputSample;
 		
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;
 		
-		long double phatSample = sin(inputSample * 1.57079633);
+		double phatSample = sin(inputSample * 1.57079633);
 		inputSample *= 1.2533141373155;
 		//clip to 1.2533141373155 to reach maximum output, or 1.57079633 for pure sine 'phat' version
-		long double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
+		double distSample = sin(inputSample * fabs(inputSample)) / ((fabs(inputSample) == 0.0) ?1:fabs(inputSample));
 		
 		inputSample = distSample; //purest form is full Spiral
 		if (density < 1.0) inputSample = (drySample*(1-density))+(distSample*density); //fade Spiral aspect

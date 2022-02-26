@@ -122,7 +122,7 @@ public:
 		
 		private: 
 		Float64 lastSample;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

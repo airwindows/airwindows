@@ -57,14 +57,14 @@ private:
 	double iirSampleDL;
 	double iirSampleEL;
 	double iirSampleFL;
-	long double lastSampleL;
+	double lastSampleL;
 	double iirSampleAR;
 	double iirSampleBR;
 	double iirSampleCR;
 	double iirSampleDR;
 	double iirSampleER;
 	double iirSampleFR;
-	long double lastSampleR;
+	double lastSampleR;
 	uint32_t fpd;
 	bool flip;
 };

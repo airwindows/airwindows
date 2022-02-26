@@ -145,14 +145,14 @@ public:
 		
 		private: 
 		uint32_t fpd;
-		long double iirSampleA;
-		long double iirSampleB;
+		double iirSampleA;
+		double iirSampleB;
 		bool flip;
-		long double lastSampleA;
-		long double lastSampleB;
-		long double lastSampleC;
-		long double biquadA[11];
-		long double biquadB[11];
+		double lastSampleA;
+		double lastSampleB;
+		double lastSampleC;
+		double biquadA[11];
+		double biquadB[11];
 
 	};
 };

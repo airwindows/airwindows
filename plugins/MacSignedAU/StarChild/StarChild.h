@@ -133,8 +133,8 @@ private:
 	Float64 wearLPrev;
 	Float64 wearRPrev;
 		
-	long double fpNShapeR;
-	long double fpNShapeL;
+	double fpNShapeR;
+	double fpNShapeL;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

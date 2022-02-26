@@ -193,7 +193,7 @@ void		UnBox::UnBoxKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 
@@ -247,12 +247,12 @@ void		UnBox::UnBoxKernel::Process(	const Float32 	*inSourceP,
 	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		
 		if (input != 1.0) inputSample *= input;
 
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 
 		a[4] = a[3]; a[3] = a[2]; a[2] = a[1];
 		a[1] = a[0]; a[0] = inputSample;
@@ -280,7 +280,7 @@ void		UnBox::UnBoxKernel::Process(	const Float32 	*inSourceP,
 		inputSample /= unbox;	
 		//now we have a distorted inputSample at the correct volume relative to drySample
 		
-		long double accumulatorSample = (drySample - inputSample);
+		double accumulatorSample = (drySample - inputSample);
 		c[9] = c[8]; c[8] = c[7]; c[7] = c[6]; c[6] = c[5];
 		c[5] = c[4]; c[4] = c[3]; c[3] = c[2]; c[2] = c[1];
 		c[1] = c[0]; c[0] = accumulatorSample;

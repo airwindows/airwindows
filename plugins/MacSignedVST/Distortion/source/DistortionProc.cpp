@@ -23,18 +23,18 @@ void Distortion::processReplacing(float **inputs, float **outputs, VstInt32 samp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL *= input;
 		inputSampleR *= input;
 		
 		for (int x = 0; x < stages; x++) {
-			long double temp;
+			double temp;
 			temp = (inputSampleL+previousInL[x])*0.5;
 			previousInL[x] = inputSampleL;
 			inputSampleL = temp;
@@ -74,14 +74,14 @@ void Distortion::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 				break;
 			case 3: //Mojo
-				long double mojo; mojo = pow(fabs(inputSampleL),0.25);
+				double mojo; mojo = pow(fabs(inputSampleL),0.25);
 				if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				mojo = pow(fabs(inputSampleR),0.25);
 				if (mojo > 0.0) inputSampleR = (sin(inputSampleR * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				//mojo is the one that flattens WAAAAY out very softly before wavefolding				
 				break;
 			case 4: //Dyno
-				long double dyno; dyno = pow(fabs(inputSampleL),4);
+				double dyno; dyno = pow(fabs(inputSampleL),4);
 				if (dyno > 0.0) inputSampleL = (sin(inputSampleL * dyno) / dyno) * 1.1654321;
 				dyno = pow(fabs(inputSampleR),4);
 				if (dyno > 0.0) inputSampleR = (sin(inputSampleR * dyno) / dyno) * 1.1654321;
@@ -90,7 +90,7 @@ void Distortion::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}				
 		
 		for (int x = 1; x < (stages/2); x++) {
-			long double temp;
+			double temp;
 			temp = (inputSampleL+previousOutL[x])*0.5;
 			previousOutL[x] = inputSampleL;
 			inputSampleL = temp;
@@ -144,18 +144,18 @@ void Distortion::processDoubleReplacing(double **inputs, double **outputs, VstIn
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL *= input;
 		inputSampleR *= input;
 		
 		for (int x = 0; x < stages; x++) {
-			long double temp;
+			double temp;
 			temp = (inputSampleL+previousInL[x])*0.5;
 			previousInL[x] = inputSampleL;
 			inputSampleL = temp;
@@ -195,14 +195,14 @@ void Distortion::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				inputSampleR = sin(inputSampleR * fabs(inputSampleR)) / ((fabs(inputSampleR) == 0.0) ?1:fabs(inputSampleR));
 				break;
 			case 3: //Mojo
-				long double mojo; mojo = pow(fabs(inputSampleL),0.25);
+				double mojo; mojo = pow(fabs(inputSampleL),0.25);
 				if (mojo > 0.0) inputSampleL = (sin(inputSampleL * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				mojo = pow(fabs(inputSampleR),0.25);
 				if (mojo > 0.0) inputSampleR = (sin(inputSampleR * mojo * M_PI * 0.5) / mojo) * 0.987654321;
 				//mojo is the one that flattens WAAAAY out very softly before wavefolding				
 				break;
 			case 4: //Dyno
-				long double dyno; dyno = pow(fabs(inputSampleL),4);
+				double dyno; dyno = pow(fabs(inputSampleL),4);
 				if (dyno > 0.0) inputSampleL = (sin(inputSampleL * dyno) / dyno) * 1.1654321;
 				dyno = pow(fabs(inputSampleR),4);
 				if (dyno > 0.0) inputSampleR = (sin(inputSampleR * dyno) / dyno) * 1.1654321;
@@ -211,7 +211,7 @@ void Distortion::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}				
 		
 		for (int x = 1; x < (stages/2); x++) {
-			long double temp;
+			double temp;
 			temp = (inputSampleL+previousOutL[x])*0.5;
 			previousOutL[x] = inputSampleL;
 			inputSampleL = temp;

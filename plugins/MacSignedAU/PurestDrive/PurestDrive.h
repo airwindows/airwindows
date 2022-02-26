@@ -126,7 +126,7 @@ public:
 		
 		private: 
 		double previousSample;
-		long double fpNShape;		
+		double fpNShape;		
 	};
 };
 

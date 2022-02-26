@@ -197,7 +197,7 @@ void		Dark::DarkKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	int depth = (int)(17.0*overallscale);
@@ -217,7 +217,7 @@ void		Dark::DarkKernel::Process(	const Float32 	*inSourceP,
 	
 	while (nSampleFrames-- > 0) {
 		Float32 inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 
 		inputSample *= scaleFactor;

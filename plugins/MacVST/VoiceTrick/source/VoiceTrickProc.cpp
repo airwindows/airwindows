@@ -23,8 +23,8 @@ void VoiceTrick::processReplacing(float **inputs, float **outputs, VstInt32 samp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 		
@@ -32,7 +32,7 @@ void VoiceTrick::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		//setting chase functionality of Capacitor Lowpass. I could just use this value directly from the control,
 		//but if I say it's the lowpass out of Capacitor it should literally be that in every behavior.
 		
-		long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+		double inputSample = (inputSampleL + inputSampleR) * 0.5;
 		//this is now our mono audio
 		
 		count++; if (count > 5) count = 0; switch (count)
@@ -126,8 +126,8 @@ void VoiceTrick::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 		
@@ -135,7 +135,7 @@ void VoiceTrick::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		//setting chase functionality of Capacitor Lowpass. I could just use this value directly from the control,
 		//but if I say it's the lowpass out of Capacitor it should literally be that in every behavior.
 		
-		long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+		double inputSample = (inputSampleL + inputSampleR) * 0.5;
 		//this is now our mono audio
 		
 		count++; if (count > 5) count = 0; switch (count)

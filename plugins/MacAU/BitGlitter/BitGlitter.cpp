@@ -221,8 +221,8 @@ void		BitGlitter::BitGlitterKernel::Process(	const Float32 	*inSourceP,
 
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		double drySample = inputSample;
 		//first, the distortion section
 		inputSample *= ingain;
 		
@@ -239,7 +239,7 @@ void		BitGlitter::BitGlitterKernel::Process(	const Float32 	*inSourceP,
 		
 		//begin raw sample
 		positionA += rateA;
-		long double outputSample = heldSampleA;
+		double outputSample = heldSampleA;
 		if (positionA > 1.0)
 		{
 			positionA -= 1.0;

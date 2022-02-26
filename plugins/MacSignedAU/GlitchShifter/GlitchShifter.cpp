@@ -235,8 +235,8 @@ void		GlitchShifter::GlitchShifterKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Five );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
 		airFactor = airPrev - inputSample;
 		if (flip) {airEven += airFactor; airOdd -= airFactor; airFactor = airEven;}

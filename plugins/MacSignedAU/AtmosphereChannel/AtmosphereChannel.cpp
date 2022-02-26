@@ -162,7 +162,7 @@ void		AtmosphereChannel::AtmosphereChannelKernel::Reset()
 	settingchase = -90.0;
 	chasespeed = 350.0;
 
-	fpNShape = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	lastSampleA = 0.0;
 	lastSampleB = 0.0;
 	lastSampleC = 0.0;
@@ -206,9 +206,9 @@ void		AtmosphereChannel::AtmosphereChannelKernel::Process(	const Float32 	*inSou
 	Float64 overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-	long double inputSample;
-	long double drySample;
-	long double clamp;
+	double inputSample;
+	double drySample;
+	double clamp;
 	Float64 inputgain = GetParameter( kParam_One );
 	if (settingchase != inputgain) {
 		chasespeed *= 2.0;
@@ -234,25 +234,7 @@ void		AtmosphereChannel::AtmosphereChannelKernel::Process(	const Float32 	*inSou
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
 
-		static int noisesource = 0;
-		int residue;
-		double applyresidue;
-		noisesource = noisesource % 1700021; noisesource++;
-		residue = noisesource * noisesource;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSample += applyresidue;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			inputSample -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		chasespeed *= 0.9999;
 		chasespeed -= 0.01;
@@ -338,11 +320,11 @@ void		AtmosphereChannel::AtmosphereChannelKernel::Process(	const Float32 	*inSou
 		lastSampleA = drySample;
 		//store the raw input sample again for use next time
 		
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 		
 		*destP = inputSample;
 		

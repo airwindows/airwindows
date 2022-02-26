@@ -53,14 +53,14 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	bool flip;
-	long double chaseA;
-	long double chaseB;
-	long double chaseC;
-	long double chaseD;
-	long double chaseMax;
+	double chaseA;
+	double chaseB;
+	double chaseC;
+	double chaseD;
+	double chaseMax;
 	
     float A;
     float B;

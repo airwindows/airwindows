@@ -145,8 +145,8 @@ public:
 		Float64 regenSample;
 		Float64 delay;
 		Float64 sweep;
-		long double regenFilter[9];
-		long double outFilter[9];
+		double regenFilter[9];
+		double outFilter[9];
 		double lastRef[10];
 		int cycle;	
 		uint32_t fpd;

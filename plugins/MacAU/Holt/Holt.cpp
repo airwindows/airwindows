@@ -220,8 +220,8 @@ void		Holt::HoltKernel::Process(	const Float32 	*inSourceP,
 	alpha += ((1.0-beta)*pow(GetParameter( kParam_One ),3)); //correct for droop in frequency
 	if (alpha > 1.0) alpha = 1.0;
 	
-	long double trend;
-	long double forecast; //defining these here because we're copying the routine four times
+	double trend;
+	double forecast; //defining these here because we're copying the routine four times
 	
 	Float64 aWet = 1.0;
 	Float64 bWet = 1.0;
@@ -241,10 +241,10 @@ void		Holt::HoltKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Five );	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 
 		if (aWet > 0.0) {
 			trend = (beta * (inputSample - previousSampleA) + ((0.999-beta) * previousTrendA));

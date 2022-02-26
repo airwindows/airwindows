@@ -226,7 +226,7 @@ public:
 		Float64 PrevB;
 		Float64 PrevA;
 
-		long double lastRef[10];
+		double lastRef[10];
 		int cycle;
 
 		uint32_t fpd;

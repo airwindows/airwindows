@@ -250,12 +250,12 @@ OSStatus		TripleSpread::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		airFactorL = airPrevL - inputSampleL;
 		if (flip) {airEvenL += airFactorL; airOddL -= airFactorL; airFactorL = airEvenL;}
@@ -520,8 +520,8 @@ OSStatus		TripleSpread::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		thirdtempR = lasttempR;
 		lasttempR = tempR;
 		
-		long double mid = (inputSampleL + inputSampleR)*(1-wet);
-		long double side = inputSampleL - inputSampleR;
+		double mid = (inputSampleL + inputSampleR)*(1-wet);
+		double side = inputSampleL - inputSampleR;
 		//assign mid and side.Between these sections, you can do mid/side processing
 		inputSampleL = (mid+side)/2.0;
 		inputSampleR = (mid-side)/2.0;

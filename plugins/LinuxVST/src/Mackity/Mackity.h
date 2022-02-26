@@ -54,12 +54,12 @@ private:
     std::set< std::string > _canDo;
     
 	
-	long double iirSampleAL;
-	long double iirSampleBL;
-	long double iirSampleAR;
-	long double iirSampleBR;
-	long double biquadA[15];
-	long double biquadB[15];
+	double iirSampleAL;
+	double iirSampleBL;
+	double iirSampleAR;
+	double iirSampleBR;
+	double biquadA[15];
+	double biquadB[15];
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

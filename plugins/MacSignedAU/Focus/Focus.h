@@ -148,7 +148,7 @@ public:
         virtual void		Reset();
 		
 		private:
-		long double figure[9];
+		double figure[9];
 		uint32_t fpd;
 	};
 };

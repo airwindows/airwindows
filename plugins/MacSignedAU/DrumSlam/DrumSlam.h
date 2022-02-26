@@ -140,7 +140,7 @@ public:
 		Float64 iirSampleG;
 		Float64 iirSampleH;
 		Float64 lastSample;
-		long double fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 	};
 };

@@ -214,7 +214,7 @@ void		RawGlitters::RawGlittersKernel::Process(	const Float32 	*inSourceP,
 	while (nSampleFrames-- > 0) {
 		
 		Float64 inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 
 		Float64 outputSample;

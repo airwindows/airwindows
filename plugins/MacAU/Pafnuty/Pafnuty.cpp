@@ -254,7 +254,7 @@ ComponentResult Pafnuty::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Pafnuty::PafnutyKernel::Reset()
 {
-	fpNShape = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -269,70 +269,52 @@ void		Pafnuty::PafnutyKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double chebyshev;
-	long double effect;
-	long double inP2;
-	long double inP3;
-	long double inP4;
-	long double inP5;
-	long double inP6;
-	long double inP7;
-	long double inP8;
-	long double inP9;
-	long double inP10;
-	long double inP11;
-	long double inP12;
-	long double inP13;
-	long double second = (GetParameter( kParam_One )*1.0);
+	double chebyshev;
+	double effect;
+	double inP2;
+	double inP3;
+	double inP4;
+	double inP5;
+	double inP6;
+	double inP7;
+	double inP8;
+	double inP9;
+	double inP10;
+	double inP11;
+	double inP12;
+	double inP13;
+	double second = (GetParameter( kParam_One )*1.0);
 	second = second * fabs(second);
-	long double third = -(GetParameter( kParam_Two )*0.60);
+	double third = -(GetParameter( kParam_Two )*0.60);
 	third = third * fabs(third);
-	long double fourth = -(GetParameter( kParam_Three )*0.60);
+	double fourth = -(GetParameter( kParam_Three )*0.60);
 	fourth = fourth * fabs(fourth);
-	long double fifth = (GetParameter( kParam_Four )*0.45);
+	double fifth = (GetParameter( kParam_Four )*0.45);
 	fifth = fifth * fabs(fifth);
-	long double sixth = (GetParameter( kParam_Five )*0.45);
+	double sixth = (GetParameter( kParam_Five )*0.45);
 	sixth = sixth * fabs(sixth);
-	long double seventh = -(GetParameter( kParam_Six )*0.38);
+	double seventh = -(GetParameter( kParam_Six )*0.38);
 	seventh = seventh * fabs(seventh);
-	long double eighth = -(GetParameter( kParam_Seven )*0.38);
+	double eighth = -(GetParameter( kParam_Seven )*0.38);
 	eighth = eighth * fabs(eighth);
-	long double ninth = (GetParameter( kParam_Eight )*0.35);
+	double ninth = (GetParameter( kParam_Eight )*0.35);
 	ninth = ninth * fabs(ninth);
-	long double tenth = (GetParameter( kParam_Nine )*0.35);
+	double tenth = (GetParameter( kParam_Nine )*0.35);
 	tenth = tenth * fabs(tenth);
-	long double eleventh = -(GetParameter( kParam_Ten )*0.32);
+	double eleventh = -(GetParameter( kParam_Ten )*0.32);
 	eleventh = eleventh * fabs(eleventh);
-	long double twelvth = -(GetParameter( kParam_Eleven )*0.32);
+	double twelvth = -(GetParameter( kParam_Eleven )*0.32);
 	twelvth = twelvth * fabs(twelvth);
-	long double thirteenth = (GetParameter( kParam_Twelve )*0.30);
+	double thirteenth = (GetParameter( kParam_Twelve )*0.30);
 	thirteenth = thirteenth * fabs(thirteenth);
-	long double amount = GetParameter( kParam_Thirteen );
+	double amount = GetParameter( kParam_Thirteen );
 	amount = amount * fabs(amount);
 	//setting up 
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 
-		static int noisesource = 0;
-		int residue;
-		double applyresidue;
-		noisesource = noisesource % 1700021; noisesource++;
-		residue = noisesource * noisesource;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSample += applyresidue;
-		if (inputSample<1.2e-38 && -inputSample<1.2e-38) {
-			inputSample -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
 		effect = 0.0;
 		inP2 = inputSample * inputSample;
@@ -412,11 +394,11 @@ void		Pafnuty::PafnutyKernel::Process(	const Float32 	*inSourceP,
 		inputSample += (effect * amount);
 		//You too can make a horrible graunch and then SUBTRACT it leaving only the refreshing smell of pine...
 		
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 		
 		*destP = inputSample;
 		

@@ -176,7 +176,7 @@ void		Console7Channel::Console7ChannelKernel::Process(	const Float32 	*inSourceP
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double inputgain = GetParameter( kParam_One )*1.272019649514069;
+	double inputgain = GetParameter( kParam_One )*1.272019649514069;
 	//which is, in fact, the square root of 1.618033988749894848204586...
 	//this happens to give us a boost factor where the track continues to get louder even
 	//as it saturates and loses a bit of peak energy. Console7Channel channels go to 12! (.272,etc)
@@ -197,10 +197,10 @@ void		Console7Channel::Console7ChannelKernel::Process(	const Float32 	*inSourceP
 	biquadA[6] = (1.0 - K / biquadA[1] + K * K) * norm;	
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
-		long double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double tempSample = biquadA[2]*inputSample+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSample; inputSample = tempSample; 
 		biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 		

@@ -56,8 +56,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double figureL[9];
-	long double figureR[9];
+	double figureL[9];
+	double figureR[9];
 	uint32_t fpd;
 	//default stuff
 

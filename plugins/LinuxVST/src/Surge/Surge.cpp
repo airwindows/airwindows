@@ -12,8 +12,8 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new S
 Surge::Surge(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	flip = true;
 	chaseA = 0.0;
 	chaseB = 0.0;

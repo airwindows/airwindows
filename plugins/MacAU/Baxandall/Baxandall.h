@@ -131,10 +131,10 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double trebleA[9];
-		long double trebleB[9];
-		long double bassA[9];
-		long double bassB[9];
+		double trebleA[9];
+		double trebleB[9];
+		double bassA[9];
+		double bassB[9];
 		bool flip;
 		uint32_t fpd;
 	};

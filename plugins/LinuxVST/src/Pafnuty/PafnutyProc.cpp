@@ -14,52 +14,52 @@ void Pafnuty::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	long double chebyshev;
-	long double effxct; //this highlighted when spelled 'effect', might be a reserved word for VST
-	long double inP2;
-	long double inP3;
-	long double inP4;
-	long double inP5;
-	long double inP6;
-	long double inP7;
-	long double inP8;
-	long double inP9;
-	long double inP10;
-	long double inP11;
-	long double inP12;
-	long double inP13;
-	long double second = (((A*2.0)-1.0)*1.0);
+	double chebyshev;
+	double effxct; //this highlighted when spelled 'effect', might be a reserved word for VST
+	double inP2;
+	double inP3;
+	double inP4;
+	double inP5;
+	double inP6;
+	double inP7;
+	double inP8;
+	double inP9;
+	double inP10;
+	double inP11;
+	double inP12;
+	double inP13;
+	double second = (((A*2.0)-1.0)*1.0);
 	second = second * fabs(second);
-	long double third = -(((B*2.0)-1.0)*0.60);
+	double third = -(((B*2.0)-1.0)*0.60);
 	third = third * fabs(third);
-	long double fourth = -(((C*2.0)-1.0)*0.60);
+	double fourth = -(((C*2.0)-1.0)*0.60);
 	fourth = fourth * fabs(fourth);
-	long double fifth = (((D*2.0)-1.0)*0.45);
+	double fifth = (((D*2.0)-1.0)*0.45);
 	fifth = fifth * fabs(fifth);
-	long double sixth = (((E*2.0)-1.0)*0.45);
+	double sixth = (((E*2.0)-1.0)*0.45);
 	sixth = sixth * fabs(sixth);
-	long double seventh = -(((F*2.0)-1.0)*0.38);
+	double seventh = -(((F*2.0)-1.0)*0.38);
 	seventh = seventh * fabs(seventh);
-	long double eighth = -(((G*2.0)-1.0)*0.38);
+	double eighth = -(((G*2.0)-1.0)*0.38);
 	eighth = eighth * fabs(eighth);
-	long double ninth = (((H*2.0)-1.0)*0.35);
+	double ninth = (((H*2.0)-1.0)*0.35);
 	ninth = ninth * fabs(ninth);
-	long double tenth = (((I*2.0)-1.0)*0.35);
+	double tenth = (((I*2.0)-1.0)*0.35);
 	tenth = tenth * fabs(tenth);
-	long double eleventh = -(((J*2.0)-1.0)*0.32);
+	double eleventh = -(((J*2.0)-1.0)*0.32);
 	eleventh = eleventh * fabs(eleventh);
-	long double twelvth = -(((K*2.0)-1.0)*0.32);
+	double twelvth = -(((K*2.0)-1.0)*0.32);
 	twelvth = twelvth * fabs(twelvth);
-	long double thirteenth = (((L*2.0)-1.0)*0.30);
+	double thirteenth = (((L*2.0)-1.0)*0.30);
 	thirteenth = thirteenth * fabs(thirteenth);
-	long double amount = (M*2.0)-1.0;
+	double amount = (M*2.0)-1.0;
 	amount = amount * fabs(amount);
 	//setting up
 	
 	while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -258,14 +258,14 @@ void Pafnuty::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//You too can make a horrible graunch and then SUBTRACT it leaving only the refreshing smell of pine...
 		//end right channel
 		
-		//stereo 32 bit dither, made small and tidy.
+		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -284,52 +284,52 @@ void Pafnuty::processDoubleReplacing(double **inputs, double **outputs, VstInt32
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	long double chebyshev;
-	long double effxct; //this highlighted when spelled 'effect', might be a reserved word for VST
-	long double inP2;
-	long double inP3;
-	long double inP4;
-	long double inP5;
-	long double inP6;
-	long double inP7;
-	long double inP8;
-	long double inP9;
-	long double inP10;
-	long double inP11;
-	long double inP12;
-	long double inP13;
-	long double second = (((A*2.0)-1.0)*1.0);
+	double chebyshev;
+	double effxct; //this highlighted when spelled 'effect', might be a reserved word for VST
+	double inP2;
+	double inP3;
+	double inP4;
+	double inP5;
+	double inP6;
+	double inP7;
+	double inP8;
+	double inP9;
+	double inP10;
+	double inP11;
+	double inP12;
+	double inP13;
+	double second = (((A*2.0)-1.0)*1.0);
 	second = second * fabs(second);
-	long double third = -(((B*2.0)-1.0)*0.60);
+	double third = -(((B*2.0)-1.0)*0.60);
 	third = third * fabs(third);
-	long double fourth = -(((C*2.0)-1.0)*0.60);
+	double fourth = -(((C*2.0)-1.0)*0.60);
 	fourth = fourth * fabs(fourth);
-	long double fifth = (((D*2.0)-1.0)*0.45);
+	double fifth = (((D*2.0)-1.0)*0.45);
 	fifth = fifth * fabs(fifth);
-	long double sixth = (((E*2.0)-1.0)*0.45);
+	double sixth = (((E*2.0)-1.0)*0.45);
 	sixth = sixth * fabs(sixth);
-	long double seventh = -(((F*2.0)-1.0)*0.38);
+	double seventh = -(((F*2.0)-1.0)*0.38);
 	seventh = seventh * fabs(seventh);
-	long double eighth = -(((G*2.0)-1.0)*0.38);
+	double eighth = -(((G*2.0)-1.0)*0.38);
 	eighth = eighth * fabs(eighth);
-	long double ninth = (((H*2.0)-1.0)*0.35);
+	double ninth = (((H*2.0)-1.0)*0.35);
 	ninth = ninth * fabs(ninth);
-	long double tenth = (((I*2.0)-1.0)*0.35);
+	double tenth = (((I*2.0)-1.0)*0.35);
 	tenth = tenth * fabs(tenth);
-	long double eleventh = -(((J*2.0)-1.0)*0.32);
+	double eleventh = -(((J*2.0)-1.0)*0.32);
 	eleventh = eleventh * fabs(eleventh);
-	long double twelvth = -(((K*2.0)-1.0)*0.32);
+	double twelvth = -(((K*2.0)-1.0)*0.32);
 	twelvth = twelvth * fabs(twelvth);
-	long double thirteenth = (((L*2.0)-1.0)*0.30);
+	double thirteenth = (((L*2.0)-1.0)*0.30);
 	thirteenth = thirteenth * fabs(thirteenth);
-	long double amount = (M*2.0)-1.0;
+	double amount = (M*2.0)-1.0;
 	amount = amount * fabs(amount);
 	//setting up
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -528,16 +528,14 @@ void Pafnuty::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//You too can make a horrible graunch and then SUBTRACT it leaving only the refreshing smell of pine...
 		//end right channel
 
-		//stereo 64 bit dither, made small and tidy.
-		int expon; frexp((double)inputSampleL, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexp((double)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 64 bit dither
+		//begin 64 bit stereo floating point dither
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

@@ -210,7 +210,7 @@ void		DeBess::DeBessKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 
@@ -223,7 +223,7 @@ void		DeBess::DeBessKernel::Process(	const Float32 	*inSourceP,
 	int monitoring = GetParameter( kParam_Five );
 		
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;		
 		
 		s[0] = inputSample; //set up so both [0] and [1] will be input sample

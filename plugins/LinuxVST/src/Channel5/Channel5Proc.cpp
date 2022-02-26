@@ -23,8 +23,8 @@ void Channel5::processReplacing(float **inputs, float **outputs, VstInt32 sample
 
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -79,7 +79,7 @@ void Channel5::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		//highpass section
 		
-		long double bridgerectifier = fabs(inputSampleL)*1.57079633;
+		double bridgerectifier = fabs(inputSampleL)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-density))+(bridgerectifier*density);
@@ -158,8 +158,8 @@ void Channel5::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -214,7 +214,7 @@ void Channel5::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		//highpass section
 		
-		long double bridgerectifier = fabs(inputSampleL)*1.57079633;
+		double bridgerectifier = fabs(inputSampleL)*1.57079633;
 		if (bridgerectifier > 1.57079633) bridgerectifier = 1.0;
 		else bridgerectifier = sin(bridgerectifier);
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*(1-density))+(bridgerectifier*density);

@@ -54,8 +54,8 @@ private:
     
 	double bynL[13];
 	double bynR[13];
-	long double noiseShapingL;
-	long double noiseShapingR;
+	double noiseShapingL;
+	double noiseShapingR;
 	double contingentErrL;
 	double contingentErrR;
 	double currentDitherL;
@@ -68,10 +68,10 @@ private:
 	double NSOddR;
 	double prevR;
 	double nsR[16];
-	long double lastSampleL;
-	long double outSampleL;
-	long double lastSampleR;
-	long double outSampleR;
+	double lastSampleL;
+	double outSampleL;
+	double lastSampleR;
+	double outSampleR;
 	
 	double iirSampleAL;
 	double iirSampleBL;

@@ -243,8 +243,8 @@ void		DarkNoise::DarkNoiseKernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Four );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 		
 		if (freqTarget < freq) {
@@ -269,7 +269,7 @@ void		DarkNoise::DarkNoiseKernel::Process(	const Float32 	*inSourceP,
 		
 		Float64 nondarkSample = inputSample;
 		
-		long double previousPole = 0;		
+		double previousPole = 0;		
 		for (int y = 0; y < yLimit; y++) {
 			for (int x = xLimit; x >= 0; x--) b[x+1][y] = b[x][y];
 			b[0][y] = previousPole = inputSample;

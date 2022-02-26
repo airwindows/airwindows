@@ -54,13 +54,13 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
 
-	long double swellL;
-	long double swellR;
+	double swellL;
+	double swellR;
 	bool louderL;
 	bool louderR;
 	

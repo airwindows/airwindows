@@ -28,8 +28,8 @@ void Smooth::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -67,8 +67,8 @@ void Smooth::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		//left channel
 		clamp = fabs(inputSampleL - lastSampleAL);
@@ -214,8 +214,8 @@ void Smooth::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -253,8 +253,8 @@ void Smooth::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		//left channel
 		clamp = fabs(inputSampleL - lastSampleAL);

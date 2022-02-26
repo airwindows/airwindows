@@ -237,7 +237,7 @@ OSStatus		Srsly2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	
 	Float64 sampleRate = GetSampleRate();
 	if (sampleRate < 22000) sampleRate = 22000; //keep biquads in range
-	long double tempSample;
+	double tempSample;
 	
 	biquadM2[0] = 2000 / sampleRate; //up
 	biquadM7[0] = 7000 / sampleRate; //down
@@ -353,10 +353,10 @@ OSStatus		Srsly2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	//[10] is RIGHT stored delayed sample (you have to include the coefficient making code if you do that)
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
@@ -365,70 +365,70 @@ OSStatus		Srsly2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 		inputSampleR = sin(inputSampleR);
 		//encode Console5: good cleanness
 		
-		long double mid = inputSampleL + inputSampleR;
-		long double rawmid = mid * 0.5; //we'll use this to isolate L&R a little
-		long double side = inputSampleL - inputSampleR;
-		long double boostside = side * depthS;
+		double mid = inputSampleL + inputSampleR;
+		double rawmid = mid * 0.5; //we'll use this to isolate L&R a little
+		double side = inputSampleL - inputSampleR;
+		double boostside = side * depthS;
 		//assign mid and side.Between these sections, you can do mid/side processing
 		
 		tempSample = (mid * biquadM2[2]) + biquadM2[7];
 		biquadM2[7] = (-tempSample * biquadM2[5]) + biquadM2[8];
 		biquadM2[8] = (mid * biquadM2[4]) - (tempSample * biquadM2[6]);
-		long double M2Sample = tempSample; //like mono AU, 7 and 8 store L channel
+		double M2Sample = tempSample; //like mono AU, 7 and 8 store L channel
 		
 		tempSample = (mid * biquadM7[2]) + biquadM7[7];
 		biquadM7[7] = (-tempSample * biquadM7[5]) + biquadM7[8];
 		biquadM7[8] = (mid * biquadM7[4]) - (tempSample * biquadM7[6]);
-		long double M7Sample = -tempSample*2.0; //like mono AU, 7 and 8 store L channel
+		double M7Sample = -tempSample*2.0; //like mono AU, 7 and 8 store L channel
 		
 		tempSample = (mid * biquadM10[2]) + biquadM10[7];
 		biquadM10[7] = (-tempSample * biquadM10[5]) + biquadM10[8];
 		biquadM10[8] = (mid * biquadM10[4]) - (tempSample * biquadM10[6]);
-		long double M10Sample = -tempSample*2.0; //like mono AU, 7 and 8 store L channel
+		double M10Sample = -tempSample*2.0; //like mono AU, 7 and 8 store L channel
 		//mid
 		
 		tempSample = (side * biquadS3[2]) + biquadS3[7];
 		biquadS3[7] = (-tempSample * biquadS3[5]) + biquadS3[8];
 		biquadS3[8] = (side * biquadS3[4]) - (tempSample * biquadS3[6]);
-		long double S3Sample = tempSample*2.0; //like mono AU, 7 and 8 store L channel
+		double S3Sample = tempSample*2.0; //like mono AU, 7 and 8 store L channel
 		
 		tempSample = (side * biquadS5[2]) + biquadS5[7];
 		biquadS5[7] = (-tempSample * biquadS5[5]) + biquadS5[8];
 		biquadS5[8] = (side * biquadS5[4]) - (tempSample * biquadS5[6]);
-		long double S5Sample = -tempSample*5.0; //like mono AU, 7 and 8 store L channel
+		double S5Sample = -tempSample*5.0; //like mono AU, 7 and 8 store L channel
 		
 		mid = (M2Sample + M7Sample + M10Sample)*depthM;
 		side = (S3Sample + S5Sample + boostside)*depthS;
 		
-		long double msOutSampleL = (mid+side)/2.0;
-		long double msOutSampleR = (mid-side)/2.0;
+		double msOutSampleL = (mid+side)/2.0;
+		double msOutSampleR = (mid-side)/2.0;
 		//unassign mid and side
 		
-		long double isoSampleL = inputSampleL-rawmid;
-		long double isoSampleR = inputSampleR-rawmid; //trying to isolate L and R a little
+		double isoSampleL = inputSampleL-rawmid;
+		double isoSampleR = inputSampleR-rawmid; //trying to isolate L and R a little
 		
 		tempSample = (isoSampleL * biquadL3[2]) + biquadL3[7];
 		biquadL3[7] = (-tempSample * biquadL3[5]) + biquadL3[8];
 		biquadL3[8] = (isoSampleL * biquadL3[4]) - (tempSample * biquadL3[6]);
-		long double L3Sample = tempSample; //like mono AU, 7 and 8 store L channel
+		double L3Sample = tempSample; //like mono AU, 7 and 8 store L channel
 		
 		tempSample = (isoSampleR * biquadR3[2]) + biquadR3[9];
 		biquadR3[9] = (-tempSample * biquadR3[5]) + biquadR3[10];
 		biquadR3[10] = (isoSampleR * biquadR3[4]) - (tempSample * biquadR3[6]);
-		long double R3Sample = tempSample; //note: 9 and 10 store the R channel
+		double R3Sample = tempSample; //note: 9 and 10 store the R channel
 		
 		tempSample = (isoSampleL * biquadL7[2]) + biquadL7[7];
 		biquadL7[7] = (-tempSample * biquadL7[5]) + biquadL7[8];
 		biquadL7[8] = (isoSampleL * biquadL7[4]) - (tempSample * biquadL7[6]);
-		long double L7Sample = tempSample*3.0; //like mono AU, 7 and 8 store L channel
+		double L7Sample = tempSample*3.0; //like mono AU, 7 and 8 store L channel
 		
 		tempSample = (isoSampleR * biquadR7[2]) + biquadR7[9];
 		biquadR7[9] = (-tempSample * biquadR7[5]) + biquadR7[10];
 		biquadR7[10] = (isoSampleR * biquadR7[4]) - (tempSample * biquadR7[6]);
-		long double R7Sample = tempSample*3.0; //note: 9 and 10 store the R channel
+		double R7Sample = tempSample*3.0; //note: 9 and 10 store the R channel
 		
-		long double processingL = msOutSampleL + ((L3Sample + L7Sample)*depthS);
-		long double processingR = msOutSampleR + ((R3Sample + R7Sample)*depthS);
+		double processingL = msOutSampleL + ((L3Sample + L7Sample)*depthS);
+		double processingR = msOutSampleR + ((R3Sample + R7Sample)*depthS);
 		//done with making filters, now we apply them
 		
 		mid = inputSampleL + inputSampleR;

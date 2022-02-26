@@ -132,7 +132,7 @@ public:
 		Float64 controlneg;
 		Float64 targetpos;
 		Float64 targetneg;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

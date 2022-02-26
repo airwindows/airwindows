@@ -36,8 +36,8 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     
     while (--sampleFrames >= 0)
     {
-		long double LinputSample = *in1;
-		long double RinputSample = *in2;
+		double LinputSample = *in1;
+		double RinputSample = *in2;
 		if (fabs(LinputSample)<1.18e-37) LinputSample = fpd * 1.18e-37;
 		if (fabs(RinputSample)<1.18e-37) RinputSample = fpd * 1.18e-37;
 		
@@ -408,8 +408,8 @@ void BassAmp::processDoubleReplacing(double **inputs, double **outputs, VstInt32
     
     while (--sampleFrames >= 0)
     {
-		long double LinputSample = *in1;
-		long double RinputSample = *in2;
+		double LinputSample = *in1;
+		double RinputSample = *in2;
 		if (fabs(LinputSample)<1.18e-43) LinputSample = fpd * 1.18e-43;
 		if (fabs(RinputSample)<1.18e-43) RinputSample = fpd * 1.18e-43;
 		

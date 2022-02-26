@@ -108,7 +108,7 @@ private:
 	double rightSampleZ;
 	
 	double bynL[13];
-	long double noiseShapingL;
+	double noiseShapingL;
 	double lastSampleL;
 	double IIRsampleL;
 	double gwPrevL;
@@ -116,15 +116,15 @@ private:
 	double gwBL;
     
 	double bynR[13];
-	long double noiseShapingR;
+	double noiseShapingR;
 	double lastSampleR;
 	double IIRsampleR;
 	double gwPrevR;
 	double gwAR;
 	double gwBR;
     
-	long double fpNShapeL;
-	long double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

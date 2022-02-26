@@ -56,18 +56,18 @@ private:
     
 		uint32_t fpd;
 	//default stuff
-	long double aL[5];
-	long double bL[5];
-	long double cL[11];
-	long double aR[5];
-	long double bR[5];
-	long double cR[11];
-	long double e[5];
-	long double f[11];
-	long double iirSampleAL;
-	long double iirSampleBL;
-	long double iirSampleAR;
-	long double iirSampleBR;
+	double aL[5];
+	double bL[5];
+	double cL[11];
+	double aR[5];
+	double bR[5];
+	double cR[11];
+	double e[5];
+	double f[11];
+	double iirSampleAL;
+	double iirSampleBL;
+	double iirSampleAR;
+	double iirSampleBR;
 	
 
     float A;

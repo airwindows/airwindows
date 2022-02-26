@@ -158,7 +158,7 @@ public:
 		Float64 lastHighpass;
 		Float64 lastWet;
 		
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

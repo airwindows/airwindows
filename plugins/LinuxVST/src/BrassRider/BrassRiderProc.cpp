@@ -21,8 +21,8 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -60,8 +60,8 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL *= limitOut;
 		highIIRL = (highIIRL*0.5);
@@ -70,7 +70,7 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		highIIR2L = (highIIR2L*0.5);
 		highIIR2L += (inputSampleL*0.5);
 		inputSampleL -= highIIR2L;
-		long double slewSampleL = fabs(inputSampleL - lastSampleL);
+		double slewSampleL = fabs(inputSampleL - lastSampleL);
 		lastSampleL = inputSampleL;
 		slewSampleL /= fabs(inputSampleL * lastSampleL)+0.2;
 		slewIIRL = (slewIIRL*0.5);
@@ -79,7 +79,7 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		slewIIR2L = (slewIIR2L*0.5);
 		slewIIR2L += (slewSampleL*0.5);
 		slewSampleL = fabs(slewSampleL - slewIIR2L);
-		long double bridgerectifier = slewSampleL;
+		double bridgerectifier = slewSampleL;
 		//there's the left channel, now to feed it to overall clamp
 		
 		if (bridgerectifier > 3.1415) bridgerectifier = 0.0;
@@ -102,7 +102,7 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		highIIR2R = (highIIR2R*0.5);
 		highIIR2R += (inputSampleR*0.5);
 		inputSampleR -= highIIR2R;
-		long double slewSampleR = fabs(inputSampleR - lastSampleR);
+		double slewSampleR = fabs(inputSampleR - lastSampleR);
 		lastSampleR = inputSampleR;
 		slewSampleR /= fabs(inputSampleR * lastSampleR)+0.2;
 		slewIIRR = (slewIIRR*0.5);
@@ -163,8 +163,8 @@ void BrassRider::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		static int noisesourceL = 0;
 		static int noisesourceR = 850010;
@@ -202,8 +202,8 @@ void BrassRider::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		//for live air, we always apply the dither noise. Then, if our result is 
 		//effectively digital black, we'll subtract it again. We want a 'air' hiss
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		inputSampleL *= limitOut;
 		highIIRL = (highIIRL*0.5);
@@ -212,7 +212,7 @@ void BrassRider::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		highIIR2L = (highIIR2L*0.5);
 		highIIR2L += (inputSampleL*0.5);
 		inputSampleL -= highIIR2L;
-		long double slewSampleL = fabs(inputSampleL - lastSampleL);
+		double slewSampleL = fabs(inputSampleL - lastSampleL);
 		lastSampleL = inputSampleL;
 		slewSampleL /= fabs(inputSampleL * lastSampleL)+0.2;
 		slewIIRL = (slewIIRL*0.5);
@@ -221,7 +221,7 @@ void BrassRider::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		slewIIR2L = (slewIIR2L*0.5);
 		slewIIR2L += (slewSampleL*0.5);
 		slewSampleL = fabs(slewSampleL - slewIIR2L);
-		long double bridgerectifier = slewSampleL;
+		double bridgerectifier = slewSampleL;
 		//there's the left channel, now to feed it to overall clamp
 		
 		if (bridgerectifier > 3.1415) bridgerectifier = 0.0;
@@ -244,7 +244,7 @@ void BrassRider::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		highIIR2R = (highIIR2R*0.5);
 		highIIR2R += (inputSampleR*0.5);
 		inputSampleR -= highIIR2R;
-		long double slewSampleR = fabs(inputSampleR - lastSampleR);
+		double slewSampleR = fabs(inputSampleR - lastSampleR);
 		lastSampleR = inputSampleR;
 		slewSampleR /= fabs(inputSampleR * lastSampleR)+0.2;
 		slewIIRR = (slewIIRR*0.5);

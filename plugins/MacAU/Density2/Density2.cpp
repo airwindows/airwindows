@@ -199,7 +199,7 @@ void		Density2::Density2Kernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	Float64 density = GetParameter( kParam_One );
@@ -211,18 +211,18 @@ void		Density2::Density2Kernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Four );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
-		long double halfwaySample = (inputSample + last1Sample + ((-last2Sample + last3Sample) * 0.0414213562373095048801688)) / 2.0;
-		long double halfDrySample = halfwaySample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
+		double halfwaySample = (inputSample + last1Sample + ((-last2Sample + last3Sample) * 0.0414213562373095048801688)) / 2.0;
+		double halfDrySample = halfwaySample;
 		
 		last3Sample = last2Sample; last2Sample = last1Sample; last1Sample = inputSample;
 
 		iirSampleB = (iirSampleB * (1.0 - iirAmount)) + (halfwaySample * iirAmount); halfwaySample -= iirSampleB; //highpass section
 		
 		double count = density;
-		long double bridgerectifier;
+		double bridgerectifier;
 		while (count > 1.0) {
 			bridgerectifier = fabs(halfwaySample)*1.57079633;
 			if (bridgerectifier > 1.57079633) bridgerectifier = 1.57079633;
@@ -241,7 +241,7 @@ void		Density2::Density2Kernel::Process(	const Float32 	*inSourceP,
 		ataC = halfwaySample - halfDrySample;
 		ataA *= 0.915965594177219015; ataB *= 0.915965594177219015;
 		ataB += ataC; ataA -= ataC; ataC = ataB;
-		long double halfDiffSample = ataC * 0.915965594177219015;
+		double halfDiffSample = ataC * 0.915965594177219015;
 		
 		iirSampleA = (iirSampleA * (1.0 - iirAmount)) + (inputSample * iirAmount); inputSample -= iirSampleA; //highpass section
 		
@@ -264,7 +264,7 @@ void		Density2::Density2Kernel::Process(	const Float32 	*inSourceP,
 		ataC = inputSample - drySample;
 		ataA *= 0.915965594177219015; ataB *= 0.915965594177219015;
 		ataA += ataC; ataB -= ataC; ataC = ataA;
-		long double diffSample = ataC * 0.915965594177219015; 
+		double diffSample = ataC * 0.915965594177219015; 
 		
 		inputSample = drySample + ((diffSample + halfDiffSample + lastDiffSample) / 1.187);
 		lastDiffSample = diffSample / 2.0;

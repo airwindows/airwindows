@@ -70,10 +70,10 @@ private:
 	
 	bool flip;
 	
-	long double fpNShapeLA;
-	long double fpNShapeLB;
-	long double fpNShapeRA;
-	long double fpNShapeRB;
+	double fpNShapeLA;
+	double fpNShapeLB;
+	double fpNShapeRA;
+	double fpNShapeRB;
 	bool fpFlip;
 	//default stuff
 

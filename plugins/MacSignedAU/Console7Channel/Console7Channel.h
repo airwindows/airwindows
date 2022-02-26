@@ -127,7 +127,7 @@ public:
 		private: 
 		Float64 gainchase;
 		Float64 chasespeed;
-		long double biquadA[11];
+		double biquadA[11];
 		uint32_t fpd;
 	};
 };

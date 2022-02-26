@@ -220,49 +220,13 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	Float64 wet = GetParameter( kParam_Two );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		//assign working variables
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 
 		inputSampleL *= limitOut;
 		highIIRL = (highIIRL*0.5);
@@ -271,7 +235,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		highIIR2L = (highIIR2L*0.5);
 		highIIR2L += (inputSampleL*0.5);
 		inputSampleL -= highIIR2L;
-		long double slewSampleL = fabs(inputSampleL - lastSampleL);
+		double slewSampleL = fabs(inputSampleL - lastSampleL);
 		lastSampleL = inputSampleL;
 		slewSampleL /= fabs(inputSampleL * lastSampleL)+0.2;
 		slewIIRL = (slewIIRL*0.5);
@@ -280,7 +244,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		slewIIR2L = (slewIIR2L*0.5);
 		slewIIR2L += (slewSampleL*0.5);
 		slewSampleL = fabs(slewSampleL - slewIIR2L);
-		long double bridgerectifier = slewSampleL;
+		double bridgerectifier = slewSampleL;
 		//there's the left channel, now to feed it to overall clamp
 		
 		if (bridgerectifier > 3.1415) bridgerectifier = 0.0;
@@ -303,7 +267,7 @@ OSStatus		BrassRider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		highIIR2R = (highIIR2R*0.5);
 		highIIR2R += (inputSampleR*0.5);
 		inputSampleR -= highIIR2R;
-		long double slewSampleR = fabs(inputSampleR - lastSampleR);
+		double slewSampleR = fabs(inputSampleR - lastSampleR);
 		lastSampleR = inputSampleR;
 		slewSampleR /= fabs(inputSampleR * lastSampleR)+0.2;
 		slewIIRR = (slewIIRR*0.5);

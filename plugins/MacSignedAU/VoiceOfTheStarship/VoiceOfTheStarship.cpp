@@ -175,7 +175,7 @@ void		VoiceOfTheStarship::VoiceOfTheStarshipKernel::Reset()
 	filterflip = false;
 	for(int count = 0; count < 11; count++) {b[count] = 0.0; f[count] = 0.0;}
 	lastAlgorithm = 0;
-	fpNShape = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -318,11 +318,11 @@ void		VoiceOfTheStarship::VoiceOfTheStarshipKernel::Process(	const Float32 	*inS
 		flip = !flip;
 		filterflip = !filterflip;
 		
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		long double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 
 		*destP = inputSample;
 		sourceP += inNumChannels;

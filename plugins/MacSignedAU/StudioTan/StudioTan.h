@@ -137,10 +137,10 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double byn[13];
-		long double noiseShaping;
-		long double lastSample;
-		long double lastSample2;
+		double byn[13];
+		double noiseShaping;
+		double lastSample;
+		double lastSample2;
 	};
 };
 

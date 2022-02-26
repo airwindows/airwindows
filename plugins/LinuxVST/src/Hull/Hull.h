@@ -53,11 +53,11 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double bL[4005];	
-	long double bR[4005];	
+	double bL[4005];	
+	double bR[4005];	
 	int bPointer;
-	long double cL[105];
-	long double cR[105];
+	double cL[105];
+	double cR[105];
 	int cPointer;
 
 	uint32_t fpdL;

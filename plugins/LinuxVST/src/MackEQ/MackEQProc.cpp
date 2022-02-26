@@ -73,12 +73,12 @@ void MackEQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (fabs(iirSampleAL)<1.18e-37) iirSampleAL = 0.0;
 		iirSampleAL = (iirSampleAL * (1.0 - iirAmountA)) + (inputSampleL * iirAmountA);
@@ -90,10 +90,10 @@ void MackEQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (inTrim != 1.0) {inputSampleL *= inTrim; inputSampleR *= inTrim;}
 		
 		//begin Mackity input stage
-		long double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = outSampleL; biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
+		double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
 		biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
@@ -123,10 +123,10 @@ void MackEQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		if (fabs(iirSampleCR)<1.18e-37) iirSampleCR = 0.0;
 		iirSampleCR = (iirSampleCR * (1.0 - iirBassMid)) + (inputSampleR * iirBassMid);
 		
-		long double bassSampleL = iirSampleCL;
-		long double midSampleL = inputSampleL - bassSampleL;
-		long double bassSampleR = iirSampleCR;
-		long double midSampleR = inputSampleR - bassSampleR;
+		double bassSampleL = iirSampleCL;
+		double midSampleL = inputSampleL - bassSampleL;
+		double bassSampleR = iirSampleCR;
+		double midSampleR = inputSampleR - bassSampleR;
 		
 		if (gainBass != 1.0) {bassSampleL *= gainBass; bassSampleR *= gainBass;}
 		
@@ -149,11 +149,11 @@ void MackEQ::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		
 		if (fabs(iirSampleEL)<1.18e-37) iirSampleEL = 0.0;
 		iirSampleEL = (iirSampleEL * (1.0 - iirMidHigh)) + (midSampleL * iirMidHigh);
-		long double highSampleL = midSampleL - iirSampleEL;
+		double highSampleL = midSampleL - iirSampleEL;
 		midSampleL = iirSampleEL;
 		if (fabs(iirSampleER)<1.18e-37) iirSampleER = 0.0;
 		iirSampleER = (iirSampleER * (1.0 - iirMidHigh)) + (midSampleR * iirMidHigh);
-		long double highSampleR = midSampleR - iirSampleER;
+		double highSampleR = midSampleR - iirSampleER;
 		midSampleR = iirSampleER;
 		//here is where we make the high sample out of the mid, and take highs
 		//away from the mid.
@@ -294,12 +294,12 @@ void MackEQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		if (fabs(iirSampleAL)<1.18e-37) iirSampleAL = 0.0;
 		iirSampleAL = (iirSampleAL * (1.0 - iirAmountA)) + (inputSampleL * iirAmountA);
@@ -311,10 +311,10 @@ void MackEQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (inTrim != 1.0) {inputSampleL *= inTrim; inputSampleR *= inTrim;}
 		
 		//begin Mackity input stage
-		long double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
+		double outSampleL = biquadA[2]*inputSampleL+biquadA[3]*biquadA[7]+biquadA[4]*biquadA[8]-biquadA[5]*biquadA[9]-biquadA[6]*biquadA[10];
 		biquadA[8] = biquadA[7]; biquadA[7] = inputSampleL; inputSampleL = outSampleL; biquadA[10] = biquadA[9]; biquadA[9] = inputSampleL; //DF1 left
 		
-		long double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
+		double outSampleR = biquadA[2]*inputSampleR+biquadA[3]*biquadA[11]+biquadA[4]*biquadA[12]-biquadA[5]*biquadA[13]-biquadA[6]*biquadA[14];
 		biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
@@ -344,10 +344,10 @@ void MackEQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		if (fabs(iirSampleCR)<1.18e-37) iirSampleCR = 0.0;
 		iirSampleCR = (iirSampleCR * (1.0 - iirBassMid)) + (inputSampleR * iirBassMid);
 		
-		long double bassSampleL = iirSampleCL;
-		long double midSampleL = inputSampleL - bassSampleL;
-		long double bassSampleR = iirSampleCR;
-		long double midSampleR = inputSampleR - bassSampleR;
+		double bassSampleL = iirSampleCL;
+		double midSampleL = inputSampleL - bassSampleL;
+		double bassSampleR = iirSampleCR;
+		double midSampleR = inputSampleR - bassSampleR;
 		
 		if (gainBass != 1.0) {bassSampleL *= gainBass; bassSampleR *= gainBass;}
 		
@@ -370,11 +370,11 @@ void MackEQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		
 		if (fabs(iirSampleEL)<1.18e-37) iirSampleEL = 0.0;
 		iirSampleEL = (iirSampleEL * (1.0 - iirMidHigh)) + (midSampleL * iirMidHigh);
-		long double highSampleL = midSampleL - iirSampleEL;
+		double highSampleL = midSampleL - iirSampleEL;
 		midSampleL = iirSampleEL;
 		if (fabs(iirSampleER)<1.18e-37) iirSampleER = 0.0;
 		iirSampleER = (iirSampleER * (1.0 - iirMidHigh)) + (midSampleR * iirMidHigh);
-		long double highSampleR = midSampleR - iirSampleER;
+		double highSampleR = midSampleR - iirSampleER;
 		midSampleR = iirSampleER;
 		//here is where we make the high sample out of the mid, and take highs
 		//away from the mid.
@@ -431,12 +431,12 @@ void MackEQ::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//Dry/Wet control, defaults to the last slider
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

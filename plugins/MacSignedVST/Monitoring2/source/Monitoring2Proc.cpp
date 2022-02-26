@@ -42,8 +42,8 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
@@ -113,7 +113,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			case kSLEW:
 				double trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
-				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
+				double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
 				lastSampleL = inputSampleL;
 				if (slewSample > 1.0) slewSample = 1.0; if (slewSample < -1.0) slewSample = -1.0;
 				inputSampleL = slewSample;
@@ -286,8 +286,8 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				break;
 			case kMONO:
 			case kSIDE:
-				long double mid; mid = inputSampleL + inputSampleR;
-				long double side; side = inputSampleL - inputSampleR;
+				double mid; mid = inputSampleL + inputSampleR;
+				double side; side = inputSampleL - inputSampleR;
 				if (processing < kSIDE) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
@@ -302,17 +302,17 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				//7 Vinyl, 8 9 10 Aurat, 11 Phone
 				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == kPHONE) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == kPHONE) {double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
 				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
 				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
 				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
 				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
@@ -334,9 +334,9 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
-				long double drySampleL; drySampleL = inputSampleL;
-				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
-				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				double drySampleL; drySampleL = inputSampleL;
+				double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				double bass; bass = (processing * processing * 0.00001) / overallscale;
 				//we are using the iir filters from out of SubsOnly
 				
 				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
@@ -393,7 +393,7 @@ void Monitoring2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 				//ConsoleBuss processing
 				break;
 			case kTRICK:
-				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
 				break;
@@ -525,8 +525,8 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
@@ -596,7 +596,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			case kSLEW:
 				double trim;
 				trim = 2.302585092994045684017991; //natural logarithm of 10
-				long double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
+				double slewSample; slewSample = (inputSampleL - lastSampleL)*trim;
 				lastSampleL = inputSampleL;
 				if (slewSample > 1.0) slewSample = 1.0; if (slewSample < -1.0) slewSample = -1.0;
 				inputSampleL = slewSample;
@@ -769,8 +769,8 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				break;
 			case kMONO:
 			case kSIDE:
-				long double mid; mid = inputSampleL + inputSampleR;
-				long double side; side = inputSampleL - inputSampleR;
+				double mid; mid = inputSampleL + inputSampleR;
+				double side; side = inputSampleL - inputSampleR;
 				if (processing < kSIDE) side = 0.0;
 				else mid = 0.0; //mono monitoring, or side-only monitoring
 				inputSampleL = (mid+side)/2.0;
@@ -785,17 +785,17 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				//7 Vinyl, 8 9 10 Aurat, 11 Phone
 				if (processing == kMONORAT) {inputSampleR = (inputSampleL + inputSampleR)*0.5;inputSampleL = 0.0;}
 				if (processing == kMONOLAT) {inputSampleL = (inputSampleL + inputSampleR)*0.5;inputSampleR = 0.0;}
-				if (processing == kPHONE) {long double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
+				if (processing == kPHONE) {double M; M = (inputSampleL + inputSampleR)*0.5; inputSampleL = M;inputSampleR = M;}
 				
 				inputSampleL = sin(inputSampleL); inputSampleR = sin(inputSampleR);
 				//encode Console5: good cleanness
 				
-				long double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
+				double tempSampleL; tempSampleL = (inputSampleL * biquad[fix_a0]) + biquad[fix_sL1];
 				biquad[fix_sL1] = (-tempSampleL * biquad[fix_b1]) + biquad[fix_sL2];
 				biquad[fix_sL2] = (inputSampleL * biquad[fix_a2]) - (tempSampleL * biquad[fix_b2]);
 				inputSampleL = tempSampleL; //like mono AU, 7 and 8 store L channel
 				
-				long double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
+				double tempSampleR; tempSampleR = (inputSampleR * biquad[fix_a0]) + biquad[fix_sR1];
 				biquad[fix_sR1] = (-tempSampleR * biquad[fix_b1]) + biquad[fix_sR2];
 				biquad[fix_sR2] = (inputSampleR * biquad[fix_a2]) - (tempSampleR * biquad[fix_b2]);
 				inputSampleR = tempSampleR; //note: 9 and 10 store the R channel
@@ -817,9 +817,9 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				//we do a volume compensation immediately to gain stage stuff cleanly
 				inputSampleL = sin(inputSampleL);
 				inputSampleR = sin(inputSampleR);
-				long double drySampleL; drySampleL = inputSampleL;
-				long double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
-				long double bass; bass = (processing * processing * 0.00001) / overallscale;
+				double drySampleL; drySampleL = inputSampleL;
+				double drySampleR; drySampleR = inputSampleR; //everything runs 'inside' Console
+				double bass; bass = (processing * processing * 0.00001) / overallscale;
 				//we are using the iir filters from out of SubsOnly
 				
 				mid = inputSampleL + inputSampleR; side = inputSampleL - inputSampleR;
@@ -876,7 +876,7 @@ void Monitoring2::processDoubleReplacing(double **inputs, double **outputs, VstI
 				//ConsoleBuss processing
 				break;
 			case kTRICK:
-				long double inputSample = (inputSampleL + inputSampleR) * 0.5;
+				double inputSample = (inputSampleL + inputSampleR) * 0.5;
 				inputSampleL = -inputSample;
 				inputSampleR = inputSample;
 				break;

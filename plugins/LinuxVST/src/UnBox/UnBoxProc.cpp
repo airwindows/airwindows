@@ -68,16 +68,16 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		if (input != 1.0) {inputSampleL *= input; inputSampleR *= input;}
 
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
 
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		aL[4] = aL[3]; aL[3] = aL[2]; aL[2] = aL[1];
 		aL[1] = aL[0]; aL[0] = inputSampleL;
@@ -130,7 +130,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR /= unbox;	
 		//now we have a distorted inputSample at the correct volume relative to drySample
 		
-		long double accumulatorSampleL = (drySampleL - inputSampleL);
+		double accumulatorSampleL = (drySampleL - inputSampleL);
 		cL[9] = cL[8]; cL[8] = cL[7]; cL[7] = cL[6]; cL[6] = cL[5];
 		cL[5] = cL[4]; cL[4] = cL[3]; cL[3] = cL[2]; cL[2] = cL[1];
 		cL[1] = cL[0]; cL[0] = accumulatorSampleL;
@@ -146,7 +146,7 @@ void UnBox::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		accumulatorSampleL += (cL[9] * f[9]);
 		//this is now an average of all the recent variances from dry
 		
-		long double accumulatorSampleR = (drySampleR - inputSampleR);
+		double accumulatorSampleR = (drySampleR - inputSampleR);
 		cR[9] = cR[8]; cR[8] = cR[7]; cR[7] = cR[6]; cR[6] = cR[5];
 		cR[5] = cR[4]; cR[4] = cR[3]; cR[3] = cR[2]; cR[2] = cR[1];
 		cR[1] = cR[0]; cR[0] = accumulatorSampleR;
@@ -265,16 +265,16 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 
 		if (input != 1.0) {inputSampleL *= input; inputSampleR *= input;}
 
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
 
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		aL[4] = aL[3]; aL[3] = aL[2]; aL[2] = aL[1];
 		aL[1] = aL[0]; aL[0] = inputSampleL;
@@ -327,7 +327,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR /= unbox;	
 		//now we have a distorted inputSample at the correct volume relative to drySample
 		
-		long double accumulatorSampleL = (drySampleL - inputSampleL);
+		double accumulatorSampleL = (drySampleL - inputSampleL);
 		cL[9] = cL[8]; cL[8] = cL[7]; cL[7] = cL[6]; cL[6] = cL[5];
 		cL[5] = cL[4]; cL[4] = cL[3]; cL[3] = cL[2]; cL[2] = cL[1];
 		cL[1] = cL[0]; cL[0] = accumulatorSampleL;
@@ -343,7 +343,7 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		accumulatorSampleL += (cL[9] * f[9]);
 		//this is now an average of all the recent variances from dry
 		
-		long double accumulatorSampleR = (drySampleR - inputSampleR);
+		double accumulatorSampleR = (drySampleR - inputSampleR);
 		cR[9] = cR[8]; cR[8] = cR[7]; cR[7] = cR[6]; cR[6] = cR[5];
 		cR[5] = cR[4]; cR[4] = cR[3]; cR[3] = cR[2]; cR[2] = cR[1];
 		cR[1] = cR[0]; cR[0] = accumulatorSampleR;

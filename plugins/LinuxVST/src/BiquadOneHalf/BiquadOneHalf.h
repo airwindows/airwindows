@@ -55,10 +55,10 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double biquadAL[9];
-	long double biquadAR[9];
-	long double biquadBL[9];
-	long double biquadBR[9];
+	double biquadAL[9];
+	double biquadAR[9];
+	double biquadBL[9];
+	double biquadBR[9];
 	bool flip;
 	uint32_t fpd;
 	//default stuff

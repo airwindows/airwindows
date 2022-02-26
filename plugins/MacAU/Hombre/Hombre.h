@@ -131,7 +131,7 @@ public:
 		Float64 p[4001];
 		Float64 slide;
 		int gcount;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

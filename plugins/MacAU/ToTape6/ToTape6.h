@@ -149,12 +149,12 @@ public:
 		Float64 iirMidRollerB;
 		Float64 iirHeadBumpA;
 		Float64 iirHeadBumpB;
-		long double biquadA[9];
-		long double biquadB[9];
-		long double biquadC[9];
-		long double biquadD[9];
+		double biquadA[9];
+		double biquadB[9];
+		double biquadC[9];
+		double biquadD[9];
 		bool flip;
-		long double lastSample;
+		double lastSample;
 		
 		uint32_t fpd;
 	};

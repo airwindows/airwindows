@@ -27,18 +27,18 @@ void Density2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	    
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpdL * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpdR * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double halfwaySampleL = (inputSampleL + last1SampleL + ((-last2SampleL + last3SampleL) * 0.0414213562373095048801688)) / 2.0;
-		long double halfDrySampleL = halfwaySampleL;
+		double halfwaySampleL = (inputSampleL + last1SampleL + ((-last2SampleL + last3SampleL) * 0.0414213562373095048801688)) / 2.0;
+		double halfDrySampleL = halfwaySampleL;
 		
-		long double halfwaySampleR = (inputSampleR + last1SampleR + ((-last2SampleR + last3SampleR) * 0.0414213562373095048801688)) / 2.0;
-		long double halfDrySampleR = halfwaySampleR;
+		double halfwaySampleR = (inputSampleR + last1SampleR + ((-last2SampleR + last3SampleR) * 0.0414213562373095048801688)) / 2.0;
+		double halfDrySampleR = halfwaySampleR;
 		
 		last3SampleL = last2SampleL; last2SampleL = last1SampleL; last1SampleL = inputSampleL;
 		last3SampleR = last2SampleR; last2SampleR = last1SampleR; last1SampleR = inputSampleR;
@@ -46,7 +46,7 @@ void Density2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		iirSampleBL = (iirSampleBL * (1.0 - iirAmount)) + (halfwaySampleL * iirAmount); halfwaySampleL -= iirSampleBL; //highpass section
 		iirSampleBR = (iirSampleBR * (1.0 - iirAmount)) + (halfwaySampleR * iirAmount); halfwaySampleR -= iirSampleBR; //highpass section
 		
-		long double bridgerectifier;
+		double bridgerectifier;
 
 		double count = density;
 		while (count > 1.0) {
@@ -83,12 +83,12 @@ void Density2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		ataCL = halfwaySampleL - halfDrySampleL;
 		ataAL *= 0.915965594177219015; ataBL *= 0.915965594177219015;
 		ataBL += ataCL; ataAL -= ataCL; ataCL = ataBL;
-		long double halfDiffSampleL = ataCL * 0.915965594177219015;
+		double halfDiffSampleL = ataCL * 0.915965594177219015;
 		
 		ataCR = halfwaySampleR - halfDrySampleR;
 		ataAR *= 0.915965594177219015; ataBR *= 0.915965594177219015;
 		ataBR += ataCR; ataAR -= ataCR; ataCR = ataBR;
-		long double halfDiffSampleR = ataCR * 0.915965594177219015;
+		double halfDiffSampleR = ataCR * 0.915965594177219015;
 		
 		iirSampleAL = (iirSampleAL * (1.0 - iirAmount)) + (inputSampleL * iirAmount); inputSampleL -= iirSampleAL; //highpass section
 		iirSampleAR = (iirSampleAR * (1.0 - iirAmount)) + (inputSampleR * iirAmount); inputSampleR -= iirSampleAR; //highpass section
@@ -128,12 +128,12 @@ void Density2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		ataCL = inputSampleL - drySampleL;
 		ataAL *= 0.915965594177219015; ataBL *= 0.915965594177219015;
 		ataAL += ataCL; ataBL -= ataCL; ataCL = ataAL;
-		long double diffSampleL = ataCL * 0.915965594177219015; 
+		double diffSampleL = ataCL * 0.915965594177219015; 
 		
 		ataCR = inputSampleR - drySampleR;
 		ataAR *= 0.915965594177219015; ataBR *= 0.915965594177219015;
 		ataAR += ataCR; ataBR -= ataCR; ataCR = ataAR;
-		long double diffSampleR = ataCR * 0.915965594177219015; 
+		double diffSampleR = ataCR * 0.915965594177219015; 
 		
 		inputSampleL = drySampleL + ((diffSampleL + halfDiffSampleL + lastDiffSampleL) / 1.187);
 		lastDiffSampleL = diffSampleL / 2.0;
@@ -184,18 +184,18 @@ void Density2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
-		long double halfwaySampleL = (inputSampleL + last1SampleL + ((-last2SampleL + last3SampleL) * 0.0414213562373095048801688)) / 2.0;
-		long double halfDrySampleL = halfwaySampleL;
+		double halfwaySampleL = (inputSampleL + last1SampleL + ((-last2SampleL + last3SampleL) * 0.0414213562373095048801688)) / 2.0;
+		double halfDrySampleL = halfwaySampleL;
 		
-		long double halfwaySampleR = (inputSampleR + last1SampleR + ((-last2SampleR + last3SampleR) * 0.0414213562373095048801688)) / 2.0;
-		long double halfDrySampleR = halfwaySampleR;
+		double halfwaySampleR = (inputSampleR + last1SampleR + ((-last2SampleR + last3SampleR) * 0.0414213562373095048801688)) / 2.0;
+		double halfDrySampleR = halfwaySampleR;
 		
 		last3SampleL = last2SampleL; last2SampleL = last1SampleL; last1SampleL = inputSampleL;
 		last3SampleR = last2SampleR; last2SampleR = last1SampleR; last1SampleR = inputSampleR;
@@ -203,7 +203,7 @@ void Density2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		iirSampleBL = (iirSampleBL * (1.0 - iirAmount)) + (halfwaySampleL * iirAmount); halfwaySampleL -= iirSampleBL; //highpass section
 		iirSampleBR = (iirSampleBR * (1.0 - iirAmount)) + (halfwaySampleR * iirAmount); halfwaySampleR -= iirSampleBR; //highpass section
 		
-		long double bridgerectifier;
+		double bridgerectifier;
 		
 		double count = density;
 		while (count > 1.0) {
@@ -240,12 +240,12 @@ void Density2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		ataCL = halfwaySampleL - halfDrySampleL;
 		ataAL *= 0.915965594177219015; ataBL *= 0.915965594177219015;
 		ataBL += ataCL; ataAL -= ataCL; ataCL = ataBL;
-		long double halfDiffSampleL = ataCL * 0.915965594177219015;
+		double halfDiffSampleL = ataCL * 0.915965594177219015;
 		
 		ataCR = halfwaySampleR - halfDrySampleR;
 		ataAR *= 0.915965594177219015; ataBR *= 0.915965594177219015;
 		ataBR += ataCR; ataAR -= ataCR; ataCR = ataBR;
-		long double halfDiffSampleR = ataCR * 0.915965594177219015;
+		double halfDiffSampleR = ataCR * 0.915965594177219015;
 		
 		iirSampleAL = (iirSampleAL * (1.0 - iirAmount)) + (inputSampleL * iirAmount); inputSampleL -= iirSampleAL; //highpass section
 		iirSampleAR = (iirSampleAR * (1.0 - iirAmount)) + (inputSampleR * iirAmount); inputSampleR -= iirSampleAR; //highpass section
@@ -285,12 +285,12 @@ void Density2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		ataCL = inputSampleL - drySampleL;
 		ataAL *= 0.915965594177219015; ataBL *= 0.915965594177219015;
 		ataAL += ataCL; ataBL -= ataCL; ataCL = ataAL;
-		long double diffSampleL = ataCL * 0.915965594177219015; 
+		double diffSampleL = ataCL * 0.915965594177219015; 
 		
 		ataCR = inputSampleR - drySampleR;
 		ataAR *= 0.915965594177219015; ataBR *= 0.915965594177219015;
 		ataAR += ataCR; ataBR -= ataCR; ataCR = ataAR;
-		long double diffSampleR = ataCR * 0.915965594177219015; 
+		double diffSampleR = ataCR * 0.915965594177219015; 
 		
 		inputSampleL = drySampleL + ((diffSampleL + halfDiffSampleL + lastDiffSampleL) / 1.187);
 		lastDiffSampleL = diffSampleL / 2.0;
@@ -303,12 +303,12 @@ void Density2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleR = (drySampleR*(1.0-wet))+(inputSampleR*wet);
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

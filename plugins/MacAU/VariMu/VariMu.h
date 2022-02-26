@@ -142,7 +142,7 @@ public:
 		Float64 muCoefficientB;
 		Float64 previous;
 		bool flip;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

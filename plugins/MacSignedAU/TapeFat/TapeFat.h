@@ -132,7 +132,7 @@ public:
 		private: 
 		int p[257];
 		int gcount;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

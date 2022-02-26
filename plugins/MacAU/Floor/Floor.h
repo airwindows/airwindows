@@ -142,7 +142,7 @@ public:
 		Float64 iirSample2C;
 		Float64 iirSample2D;
 		Float64 iirSample2E;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

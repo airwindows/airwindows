@@ -225,7 +225,7 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
@@ -264,9 +264,9 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 	Float64 wet = GetParameter( kParam_Six );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
-		long double drySample = inputSample;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
+		double drySample = inputSample;
 		
 		if (inputgain < 1.0) {
 			inputSample *= inputgain;
@@ -280,7 +280,7 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 		int count = gcount;
 		if (depth != 0.0) {
 			
-			long double offset = depth + (depth * pow(rateof,2) * sin(sweep));
+			double offset = depth + (depth * pow(rateof,2) * sin(sweep));
 			
 			count += (int)floor(offset);
 			inputSample = (d[count-((count > 499)?500:0)] * (1-(offset-floor(offset))) );
@@ -297,10 +297,10 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 		}
 		gcount--;
 
-		long double vibDrySample = inputSample;
-		long double HighsSample = 0.0;
-		long double NonHighsSample = 0.0;
-		long double tempSample;
+		double vibDrySample = inputSample;
+		double HighsSample = 0.0;
+		double NonHighsSample = 0.0;
+		double tempSample;
 		
 		if (flip)
 		{
@@ -354,13 +354,13 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 		}
 		flip = !flip;
 
-		long double groundSample = vibDrySample - inputSample; //set up UnBox on fluttered audio
+		double groundSample = vibDrySample - inputSample; //set up UnBox on fluttered audio
 		
 		if (inputgain > 1.0) {
 			inputSample *= inputgain;
 		} //gain boost inside UnBox/Mojo
 		
-		long double applySoften = fabs(HighsSample)*1.57079633;
+		double applySoften = fabs(HighsSample)*1.57079633;
 		if (applySoften > 1.57079633) applySoften = 1.57079633;
 		applySoften = 1-cos(applySoften);
 		if (HighsSample > 0) inputSample -= applySoften;
@@ -379,7 +379,7 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 		
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;
-		long double mojo; mojo = pow(fabs(inputSample),0.25);
+		double mojo; mojo = pow(fabs(inputSample),0.25);
 		if (mojo > 0.0) inputSample = (sin(inputSample * mojo * M_PI * 0.5) / mojo);
 		//mojo is the one that flattens WAAAAY out very softly before wavefolding		
 		

@@ -142,8 +142,8 @@ public:
 	virtual ComponentResult		Version() { return kMonitoringVersion; }
 	
 	private: 
-	long double bynL[13], bynR[13];
-	long double noiseShapingL, noiseShapingR;
+	double bynL[13], bynR[13];
+	double noiseShapingL, noiseShapingR;
 	//NJAD
 	Float64 aL[1503], bL[1503], cL[1503], dL[1503];
 	Float64 aR[1503], bR[1503], cR[1503], dR[1503];
@@ -163,7 +163,7 @@ public:
 	Float64 iirSampleTR, iirSampleUR, iirSampleVR;
 	Float64 iirSampleWR, iirSampleXR, iirSampleYR, iirSampleZR; // o/`
 	//SubsOnly
-	long double biquad[11];
+	double biquad[11];
 	//Bandpasses
 
 	uint32_t fpd;

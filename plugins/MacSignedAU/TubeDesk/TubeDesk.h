@@ -121,8 +121,8 @@ public:
 		Float64 d[5000];
 		Float64 control;
 		int gcount;
-		long double lastSample;
-		long double lastOutSample;
+		double lastSample;
+		double lastOutSample;
 		Float64 lastSlew;
 		Float64 fpNShape;
 	};

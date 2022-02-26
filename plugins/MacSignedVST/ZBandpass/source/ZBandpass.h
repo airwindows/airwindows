@@ -55,14 +55,14 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
 	
-	long double biquadA[15];
-	long double biquadB[15];
-	long double biquadC[15];
-	long double biquadD[15];
-	long double biquadE[15];
-	long double biquadF[15];
-	long double iirSampleAL;
-	long double iirSampleAR;
+	double biquadA[15];
+	double biquadB[15];
+	double biquadC[15];
+	double biquadD[15];
+	double biquadE[15];
+	double biquadF[15];
+	double iirSampleAL;
+	double iirSampleAR;
 	
 	uint32_t fpdL;
 	uint32_t fpdR;

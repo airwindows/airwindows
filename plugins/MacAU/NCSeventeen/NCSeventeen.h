@@ -133,7 +133,7 @@ public:
 		Float64 basslev;
 		Float64 treblev;
 		Float64 cheblev;
-		long double fpNShape;
+		uint32_t fpd;
 		//default stuff
 		
 	};

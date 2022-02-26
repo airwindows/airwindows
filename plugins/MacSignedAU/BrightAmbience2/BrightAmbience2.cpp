@@ -225,14 +225,14 @@ OSStatus		BrightAmbience2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 	Float64 wet = GetParameter( kParam_Four );
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSampleL = *inputL;
-		long double inputSampleR = *inputR;
+		double inputSampleL = *inputL;
+		double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
-		long double tempL = 0.0;
-		long double tempR = 0.0;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
+		double tempL = 0.0;
+		double tempR = 0.0;
 		
 		if (gcount < 0 || gcount > 32767) gcount = 32767;
 		int count = gcount;

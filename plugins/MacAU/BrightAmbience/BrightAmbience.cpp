@@ -199,8 +199,8 @@ void		BrightAmbience::BrightAmbienceKernel::Process(	const Float32 	*inSourceP,
 	int temp;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		temp = 0;
 		if (gcount < 0 || gcount > 12680) {gcount = 12680;}

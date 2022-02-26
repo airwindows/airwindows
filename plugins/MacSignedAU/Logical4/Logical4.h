@@ -210,8 +210,8 @@ private:
 	
 	int gcount;
 	
-	long double fpNShapeR;
-	long double fpNShapeL;
+	double fpNShapeR;
+	double fpNShapeL;
 	bool fpFlip;
 	
 };

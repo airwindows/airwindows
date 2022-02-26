@@ -120,8 +120,8 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double inband[9];
-		long double outband[9];
+		double inband[9];
+		double outband[9];
 		uint32_t fpd;
 	};
 };

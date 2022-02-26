@@ -130,13 +130,13 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double a[5];
-		long double b[5];
-		long double c[11];
-		long double e[5];
-		long double f[11];
-		long double iirSampleA;
-		long double iirSampleB;
+		double a[5];
+		double b[5];
+		double c[11];
+		double e[5];
+		double f[11];
+		double iirSampleA;
+		double iirSampleB;
 		uint32_t fpd;
 	};
 };

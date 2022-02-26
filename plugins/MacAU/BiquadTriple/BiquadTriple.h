@@ -134,9 +134,9 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double biquadA[9];
-		long double biquadB[9];
-		long double biquadC[9];
+		double biquadA[9];
+		double biquadB[9];
+		double biquadC[9];
 		uint32_t fpd;
 	};
 };

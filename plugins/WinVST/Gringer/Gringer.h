@@ -54,10 +54,10 @@ private:
 	uint32_t fpd;
 	//default stuff
 
-	long double inbandL[9];
-	long double outbandL[9];
-	long double inbandR[9];
-	long double outbandR[9];
+	double inbandL[9];
+	double outbandL[9];
+	double inbandR[9];
+	double outbandR[9];
 
 
 };

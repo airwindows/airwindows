@@ -24,12 +24,12 @@ void DigitalBlack::processReplacing(float **inputs, float **outputs, VstInt32 sa
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
 		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 
 		if (inputSampleL > 0) {
@@ -67,7 +67,7 @@ void DigitalBlack::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		double gate = 1.0;
 		if (gaterollerL < 1.0) gate = gaterollerL;
 		
-		long double bridgerectifier = 1-cos(fabs(inputSampleL));
+		double bridgerectifier = 1-cos(fabs(inputSampleL));
 		
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*gate)+(bridgerectifier*(1-gate));
 		else inputSampleL = (inputSampleL*gate)-(bridgerectifier*(1-gate));
@@ -125,12 +125,12 @@ void DigitalBlack::processDoubleReplacing(double **inputs, double **outputs, Vst
     
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
 		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		long double drySampleL = inputSampleL;
-		long double drySampleR = inputSampleR;
+		double drySampleL = inputSampleL;
+		double drySampleR = inputSampleR;
 		
 		
 		if (inputSampleL > 0) {
@@ -168,7 +168,7 @@ void DigitalBlack::processDoubleReplacing(double **inputs, double **outputs, Vst
 		double gate = 1.0;
 		if (gaterollerL < 1.0) gate = gaterollerL;
 		
-		long double bridgerectifier = 1-cos(fabs(inputSampleL));
+		double bridgerectifier = 1-cos(fabs(inputSampleL));
 		
 		if (inputSampleL > 0) inputSampleL = (inputSampleL*gate)+(bridgerectifier*(1-gate));
 		else inputSampleL = (inputSampleL*gate)-(bridgerectifier*(1-gate));

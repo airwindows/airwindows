@@ -56,14 +56,14 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	long double iirSampleAL;
-	long double iirSampleBL;
-	long double prevSampleL;
+	double iirSampleAL;
+	double iirSampleBL;
+	double prevSampleL;
 		uint32_t fpd;
 
-	long double iirSampleAR;
-	long double iirSampleBR;
-	long double prevSampleR;
+	double iirSampleAR;
+	double iirSampleBR;
+	double prevSampleR;
 	bool flip;
 	//default stuff
 

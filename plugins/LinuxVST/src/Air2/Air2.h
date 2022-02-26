@@ -106,7 +106,7 @@ private:
 	bool flipB;
 	bool flop;
 	int count;
-	long double postsine;
+	double postsine;
 
 	
     float A;

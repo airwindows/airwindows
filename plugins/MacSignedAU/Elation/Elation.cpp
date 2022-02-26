@@ -221,8 +221,8 @@ void		Elation::ElationKernel::Process(	const Float32 	*inSourceP,
 	Float64 outputSample;
 	
 	while (nSampleFrames-- > 0) {
-		long double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-37) inputSample = fpd * 1.18e-37;
+		double inputSample = *sourceP;
+		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 
 		inputSample *= indrive;

@@ -146,7 +146,7 @@ public:
 		Float64 lastSample;
 		Float64 lastOutSample;
 		Float64 lastSlew;
-		long double fpNShape;
+		uint32_t fpd;
 	};
 };
 

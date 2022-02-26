@@ -128,12 +128,12 @@ public:
         virtual void		Reset();
 		
 		private: 
-		long double fpNShape;
-		long double chaseA;
-		long double chaseB;
-		long double chaseC;
-		long double chaseD;
-		long double chaseMax;
+		uint32_t fpd;
+		double chaseA;
+		double chaseB;
+		double chaseC;
+		double chaseD;
+		double chaseMax;
 	};
 };
 

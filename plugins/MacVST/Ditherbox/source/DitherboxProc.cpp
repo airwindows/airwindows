@@ -15,31 +15,31 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out2 = outputs[1];
 	
 	int dtype = (int)(A * 24.999)+1; // +1 for Reaper bug workaround
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	long double iirAmount = 2250/44100.0;
-	long double gaintarget = 1.42;
-	long double gain;
+	double iirAmount = 2250/44100.0;
+	double gaintarget = 1.42;
+	double gain;
 	iirAmount /= overallscale;
-	long double altAmount = 1.0 - iirAmount;
-	long double outputSampleL;
-	long double outputSampleR;
-	long double silhouette;
-	long double smoother;
-	long double bridgerectifier;
-	long double benfordize;
+	double altAmount = 1.0 - iirAmount;
+	double outputSampleL;
+	double outputSampleR;
+	double silhouette;
+	double smoother;
+	double bridgerectifier;
+	double benfordize;
 	int hotbinA;
 	int hotbinB;
-	long double totalA;
-	long double totalB;
-	long double contingentRnd;
-	long double absSample;
-	long double contingent;
-	long double randyConstant = 1.61803398874989484820458683436563811772030917980576;
-	long double omegaConstant = 0.56714329040978387299996866221035554975381578718651;
-	long double expConstant = 0.06598803584531253707679018759684642493857704825279;
-	long double trim = 2.302585092994045684017991; //natural logarithm of 10
+	double totalA;
+	double totalB;
+	double contingentRnd;
+	double absSample;
+	double contingent;
+	double randyConstant = 1.61803398874989484820458683436563811772030917980576;
+	double omegaConstant = 0.56714329040978387299996866221035554975381578718651;
+	double expConstant = 0.06598803584531253707679018759684642493857704825279;
+	double trim = 2.302585092994045684017991; //natural logarithm of 10
 	bool highRes = false;
 	bool dithering = true;
 	if (dtype > 11){highRes = true; dtype -= 11;}
@@ -48,46 +48,10 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		float drySampleL = inputSampleL;
 		float drySampleR = inputSampleR;
 				
@@ -1020,31 +984,31 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* out2 = outputs[1];
 	
 	int dtype = (int)(A * 24.999)+1; // +1 for Reaper bug workaround
-	long double overallscale = 1.0;
+	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	long double iirAmount = 2250/44100.0;
-	long double gaintarget = 1.42;
-	long double gain;
+	double iirAmount = 2250/44100.0;
+	double gaintarget = 1.42;
+	double gain;
 	iirAmount /= overallscale;
-	long double altAmount = 1.0 - iirAmount;
-	long double outputSampleL;
-	long double outputSampleR;
-	long double silhouette;
-	long double smoother;
-	long double bridgerectifier;
-	long double benfordize;
+	double altAmount = 1.0 - iirAmount;
+	double outputSampleL;
+	double outputSampleR;
+	double silhouette;
+	double smoother;
+	double bridgerectifier;
+	double benfordize;
 	int hotbinA;
 	int hotbinB;
-	long double totalA;
-	long double totalB;
-	long double contingentRnd;
-	long double absSample;
-	long double contingent;
-	long double randyConstant = 1.61803398874989484820458683436563811772030917980576;
-	long double omegaConstant = 0.56714329040978387299996866221035554975381578718651;
-	long double expConstant = 0.06598803584531253707679018759684642493857704825279;
-	long double trim = 2.302585092994045684017991; //natural logarithm of 10
+	double totalA;
+	double totalB;
+	double contingentRnd;
+	double absSample;
+	double contingent;
+	double randyConstant = 1.61803398874989484820458683436563811772030917980576;
+	double omegaConstant = 0.56714329040978387299996866221035554975381578718651;
+	double expConstant = 0.06598803584531253707679018759684642493857704825279;
+	double trim = 2.302585092994045684017991; //natural logarithm of 10
 	bool highRes = false;
 	bool dithering = true;
 	if (dtype > 11){highRes = true; dtype -= 11;}
@@ -1053,46 +1017,10 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	
     while (--sampleFrames >= 0)
     {
-		long double inputSampleL = *in1;
-		long double inputSampleR = *in2;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			static int noisesource = 0;
-			//this declares a variable before anything else is compiled. It won't keep assigning
-			//it to 0 for every sample, it's as if the declaration doesn't exist in this context,
-			//but it lets me add this denormalization fix in a single place rather than updating
-			//it in three different locations. The variable isn't thread-safe but this is only
-			//a random seed and we can share it with whatever.
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleL = applyresidue;
-		}
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			static int noisesource = 0;
-			noisesource = noisesource % 1700021; noisesource++;
-			int residue = noisesource * noisesource;
-			residue = residue % 170003; residue *= residue;
-			residue = residue % 17011; residue *= residue;
-			residue = residue % 1709; residue *= residue;
-			residue = residue % 173; residue *= residue;
-			residue = residue % 17;
-			double applyresidue = residue;
-			applyresidue *= 0.00000001;
-			applyresidue *= 0.00000001;
-			inputSampleR = applyresidue;
-			//this denormalization routine produces a white noise at -300 dB which the noise
-			//shaping will interact with to produce a bipolar output, but the noise is actually
-			//all positive. That should stop any variables from going denormal, and the routine
-			//only kicks in if digital black is input. As a final touch, if you save to 24-bit
-			//the silence will return to being digital black again.
-		}
+		double inputSampleL = *in1;
+		double inputSampleR = *in2;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		

@@ -118,7 +118,7 @@ public:
 	virtual ComponentResult		Version() { return kBiquadStereoVersion; }
 	
 	private: 
-	long double biquad[11];
+	double biquad[11];
 	uint32_t fpd;
 };
 
