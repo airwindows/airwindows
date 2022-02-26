@@ -210,7 +210,7 @@ void		ToTape6::ToTape6Kernel::Reset()
 	rateof = 0.5;
 	nextmax = 0.5;
 	lastSample = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

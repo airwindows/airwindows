@@ -189,7 +189,7 @@ void		DeRez2::DeRez2Kernel::Reset()
 	position = 0.0;
 	incrementA = 0.0;
 	incrementB = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

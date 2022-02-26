@@ -226,7 +226,7 @@ void		ResEQ::ResEQKernel::Reset()
 	register UInt32 count;
 	for(count = 0; count < 60; count++) {b[count] = 0.0; f[count] = 0.0;}
 	framenumber = 0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

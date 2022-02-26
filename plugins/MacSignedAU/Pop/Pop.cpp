@@ -188,7 +188,7 @@ void		Pop::PopKernel::Reset()
 	previous3 = 0.0;
 	previous4 = 0.0;
 	previous5 = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

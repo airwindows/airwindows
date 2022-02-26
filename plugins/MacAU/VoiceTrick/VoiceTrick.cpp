@@ -183,7 +183,7 @@ ComponentResult		VoiceTrick::Reset(AudioUnitScope inScope, AudioUnitElement inEl
 	lowpassChase = 0.0;
 	lowpassAmount = 1.0;
 	lastLowpass = 1000.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	return noErr;
 }
 
@@ -211,8 +211,8 @@ OSStatus		VoiceTrick::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
 		double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		lowpassAmount = (((lowpassAmount*lowpassSpeed)+lowpassChase)/(lowpassSpeed + 1.0)); invLowpass = 1.0 - lowpassAmount;
 		//setting chase functionality of Capacitor Lowpass. I could just use this value directly from the control,
@@ -279,11 +279,11 @@ OSStatus		VoiceTrick::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		//end 32 bit stereo floating point dither
 		
 		*outputL = inputSampleL;

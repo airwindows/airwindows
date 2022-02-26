@@ -13,7 +13,7 @@ Gringer::Gringer(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	for (int x = 0; x < 9; x++) {inbandL[x] = 0.0; outbandL[x] = 0.0; inbandR[x] = 0.0; outbandR[x] = 0.0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

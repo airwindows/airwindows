@@ -199,7 +199,7 @@ void		Vibrato::VibratoKernel::Reset()
 	airOdd = 0.0;
 	airFactor = 0.0;
 	flip = false;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

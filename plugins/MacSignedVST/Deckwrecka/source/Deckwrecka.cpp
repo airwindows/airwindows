@@ -13,7 +13,7 @@ Deckwrecka::Deckwrecka(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	bflip = 1;
 	
 	iirHeadBumpAL = 0.0;

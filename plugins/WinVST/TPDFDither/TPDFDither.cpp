@@ -14,7 +14,7 @@ TPDFDither::TPDFDither(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.

@@ -190,7 +190,7 @@ ComponentResult Channel7::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Channel7::Channel7Kernel::Reset()
 {
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
 	flip = false;

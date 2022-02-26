@@ -384,14 +384,14 @@ OSStatus		Thunder::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 		}
 		flip = !flip;
 				
-		//stereo 32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSampleL, &expon);
-		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexpf((Float32)inputSampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		//begin 32 bit stereo floating point dither
+		int expon; frexpf((float)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		frexpf((float)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
 		
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;

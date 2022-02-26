@@ -34,42 +34,8 @@ void MV::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrames
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
 
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
-		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
@@ -830,42 +796,8 @@ void MV::processDoubleReplacing(double **inputs, double **outputs, VstInt32 samp
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
 
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
-		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		

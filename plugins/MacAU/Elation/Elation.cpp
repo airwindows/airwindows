@@ -186,7 +186,7 @@ void		Elation::ElationKernel::Reset()
 	compA = 1.0; compB = 1.0; flip = false; previous = 0.0;
 	compC = 1.0; compD = 1.0; previousB = 0.0;
 	lastSample = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

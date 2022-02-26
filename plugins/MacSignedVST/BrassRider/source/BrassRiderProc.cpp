@@ -24,42 +24,8 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
 
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
-		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
@@ -132,11 +98,11 @@ void BrassRider::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
@@ -166,42 +132,8 @@ void BrassRider::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
 
-		static int noisesourceL = 0;
-		static int noisesourceR = 850010;
-		int residue;
-		double applyresidue;
-		
-		noisesourceL = noisesourceL % 1700021; noisesourceL++;
-		residue = noisesourceL * noisesourceL;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleL += applyresidue;
-		if (inputSampleL<1.2e-38 && -inputSampleL<1.2e-38) {
-			inputSampleL -= applyresidue;
-		}
-		
-		noisesourceR = noisesourceR % 1700021; noisesourceR++;
-		residue = noisesourceR * noisesourceR;
-		residue = residue % 170003; residue *= residue;
-		residue = residue % 17011; residue *= residue;
-		residue = residue % 1709; residue *= residue;
-		residue = residue % 173; residue *= residue;
-		residue = residue % 17;
-		applyresidue = residue;
-		applyresidue *= 0.00000001;
-		applyresidue *= 0.00000001;
-		inputSampleR += applyresidue;
-		if (inputSampleR<1.2e-38 && -inputSampleR<1.2e-38) {
-			inputSampleR -= applyresidue;
-		}
-		//for live air, we always apply the dither noise. Then, if our result is 
-		//effectively digital black, we'll subtract it again. We want a 'air' hiss
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		

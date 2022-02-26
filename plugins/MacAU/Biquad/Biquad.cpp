@@ -185,7 +185,7 @@ ComponentResult Biquad::Initialize()
 void		Biquad::BiquadKernel::Reset()
 {
 	for (int x = 0; x < 9; x++) {biquad[x] = 0.0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

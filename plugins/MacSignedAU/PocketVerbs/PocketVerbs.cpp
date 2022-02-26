@@ -291,7 +291,7 @@ void		PocketVerbs::PocketVerbsKernel::Reset()
 	savedRoomsize = -1.0; //force update to begin
 	countdown = -1;
 	peak = 1.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

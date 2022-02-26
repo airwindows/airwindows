@@ -16,7 +16,7 @@ Highpass2::Highpass2(audioMasterCallback audioMaster) :
 	B = 0.5; //-1.0 to 1.0
 	C = 0.25; // 0.0 to 4.0
 	D = 1.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	
 	iirSampleAL = 0.0;
 	iirSampleBL = 0.0;

@@ -169,7 +169,7 @@ void		TremoSquare::TremoSquareKernel::Reset()
 	osc = 0.0;
 	polarity = false;
 	mute = false;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

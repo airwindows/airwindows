@@ -250,7 +250,7 @@ ComponentResult		Monitoring::Reset(AudioUnitScope inScope, AudioUnitElement inEl
 	//SubsOnly
 	for (int x = 0; x < 11; x++) {biquad[x] = 0.0;}
 	//Bandpasses
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	return noErr;
 }
 
@@ -291,8 +291,8 @@ OSStatus		Monitoring::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFl
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
 		double inputSampleR = *inputR;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		switch (processing)
 		{

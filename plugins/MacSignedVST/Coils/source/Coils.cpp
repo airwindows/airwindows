@@ -16,7 +16,7 @@ Coils::Coils(audioMasterCallback audioMaster) :
 	B = 0.5;
 	C = 1.0;
 	for (int x = 0; x < 9; x++) {figureL[x] = 0.0;figureR[x] = 0.0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

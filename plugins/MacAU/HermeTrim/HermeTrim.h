@@ -121,8 +121,7 @@ public:
 	virtual ComponentResult	Version() { return kHermeTrimVersion; }
 	
 	private: 
-	uint32_t fpdL;
-	uint32_t fpdR;
+		uint32_t fpd;
 	//default stuff
 	
 };

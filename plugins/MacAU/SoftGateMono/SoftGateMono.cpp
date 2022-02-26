@@ -177,7 +177,7 @@ void		SoftGateMono::SoftGateMonoKernel::Reset()
 	storedL[0] = storedL[1] = 0.0;
 	diffL = 0.0;
 	gate = 1.1;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

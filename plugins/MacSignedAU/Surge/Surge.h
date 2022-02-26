@@ -112,8 +112,7 @@ public:
 	virtual ComponentResult		Version() { return kSurgeVersion; }
 	
 private: 
-	uint32_t fpdL;
-	uint32_t fpdR;
+		uint32_t fpd;
 	double chaseA;
 	double chaseB;
 	double chaseC;

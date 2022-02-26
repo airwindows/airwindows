@@ -190,7 +190,7 @@ ComponentResult Beam::Initialize()
 void		Beam::BeamKernel::Reset()
 {
 	for(int count = 0; count < 99; count++) {lastSample[count] = 0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -64,7 +64,7 @@ PurestSquish::PurestSquish(audioMasterCallback audioMaster) :
 	count = 1;
 	fpFlip = true;
 	
-		fpd = 17;
+		fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

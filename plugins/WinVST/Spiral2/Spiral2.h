@@ -59,7 +59,8 @@ private:
 	double iirSampleAL;
 	double iirSampleBL;
 	double prevSampleL;
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 
 	double iirSampleAR;
 	double iirSampleBR;

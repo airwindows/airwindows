@@ -196,7 +196,7 @@ void		Compresaturator::CompresaturatorKernel::Reset()
 	dCount = 0;
 	lastWidth = 500;
 	padFactor = 0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

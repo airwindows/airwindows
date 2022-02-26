@@ -14,7 +14,7 @@ NotJustAnotherDither::NotJustAnotherDither(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	bynL[0] = 1000;
 	bynL[1] = 301;
 	bynL[2] = 176;

@@ -14,7 +14,7 @@ SpatializeDither::SpatializeDither(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	contingentErrL = 0.0;
 	contingentErrR = 0.0;
 	flip = false;

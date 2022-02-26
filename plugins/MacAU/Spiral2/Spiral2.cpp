@@ -194,7 +194,7 @@ void		Spiral2::Spiral2Kernel::Reset()
 	iirSampleB = 0.0;
 	prevSample = 0.0;
 	flip = true;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

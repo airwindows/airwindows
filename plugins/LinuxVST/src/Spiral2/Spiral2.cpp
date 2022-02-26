@@ -20,7 +20,7 @@ Spiral2::Spiral2(audioMasterCallback audioMaster) :
 	iirSampleAL = 0.0;
 	iirSampleBL = 0.0;
 	prevSampleL = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 
 	iirSampleAR = 0.0;
 	iirSampleBR = 0.0;

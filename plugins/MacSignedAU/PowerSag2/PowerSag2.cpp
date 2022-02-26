@@ -169,7 +169,7 @@ void		PowerSag2::PowerSag2Kernel::Reset()
 	for(int count = 0; count < 16385; count++) {d[count] = 0;}
 	control = 0;
 	gcount = 0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -202,7 +202,7 @@ void		ADT::ADTKernel::Reset()
 	offsetA = 9001;
 	offsetB = 9001;  //  :D
 	gcount = 0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

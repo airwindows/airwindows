@@ -204,7 +204,7 @@ void		Biquad2::Biquad2Kernel::Reset()
 	wetsetting = -2.0; //-1.0 is a possible setting here and this forces an update on chasespeed
 	
 	chasespeed = 500.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

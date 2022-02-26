@@ -199,7 +199,7 @@ void		VinylDither::VinylDitherKernel::Reset()
 	ns[13] = 0;
 	ns[14] = 0;
 	ns[15] = 0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

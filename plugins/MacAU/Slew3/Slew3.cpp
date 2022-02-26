@@ -159,7 +159,7 @@ ComponentResult Slew3::Initialize()
 void		Slew3::Slew3Kernel::Reset()
 {
 	lastSampleA = lastSampleB = lastSampleC = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

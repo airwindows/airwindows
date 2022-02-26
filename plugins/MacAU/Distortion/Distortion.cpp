@@ -201,7 +201,7 @@ ComponentResult Distortion::Initialize()
 void		Distortion::DistortionKernel::Reset()
 {
 	for (int x = 0; x < 9; x++) {previousIn[x] = 0.0; previousOut[x] = 0.0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

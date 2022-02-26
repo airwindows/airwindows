@@ -186,7 +186,7 @@ void		BiquadOneHalf::BiquadOneHalfKernel::Reset()
 {
 	for (int x = 0; x < 9; x++) {biquadA[x] = 0.0;biquadB[x] = 0.0;}
 	flip = false;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

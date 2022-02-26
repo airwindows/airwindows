@@ -170,7 +170,7 @@ void		DeHiss::DeHissKernel::Reset()
 	diff[0] = diff[1] = diff[2] = diff[3] = diff[4] = diff[5] = 0.0;
 	gate = 1.0;
 	raw = 2.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

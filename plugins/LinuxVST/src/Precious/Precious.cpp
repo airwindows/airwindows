@@ -18,7 +18,7 @@ Precious::Precious(audioMasterCallback audioMaster) :
 	D = 1.0;
 	for(int count = 0; count < 34; count++) {bR[count] = 0;bL[count] = 0;}
 	lastSampleR = 0.0;lastSampleL = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

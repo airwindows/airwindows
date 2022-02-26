@@ -135,7 +135,7 @@ BassAmp::BassAmp(audioMasterCallback audioMaster) :
 	ataK3 = 0.114; //add raw to interpolated dry, toughens
 	ataK4 = 0.886; //remainder of interpolated dry, adds up to 1.0
 	ataK5 = 0.122; //subtract this much prev. diff sample, brightens
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

@@ -169,7 +169,7 @@ void		DigitalBlack::DigitalBlackKernel::Reset()
 	WasNegative = false;
 	ZeroCross = 0;
 	gateroller = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

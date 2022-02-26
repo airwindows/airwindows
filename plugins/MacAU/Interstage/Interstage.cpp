@@ -157,7 +157,7 @@ void		Interstage::InterstageKernel::Reset()
 	iirSampleE = 0.0;
 	iirSampleF = 0.0;
 	lastSample = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	flip = true;
 }
 

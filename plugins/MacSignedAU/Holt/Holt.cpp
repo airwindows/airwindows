@@ -198,7 +198,7 @@ void		Holt::HoltKernel::Reset()
 	previousTrendC = 0.0;
 	previousSampleD = 0.0;
 	previousTrendD = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

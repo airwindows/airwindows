@@ -14,7 +14,7 @@ TapeDither::TapeDither(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	previousDither1L = 0.0;
 	previousDither2L = 0.0;
 	previousDither3L = 0.0;

@@ -49,8 +49,8 @@ void PurestFade::processReplacing(float **inputs, float **outputs, VstInt32 samp
     {
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 
 		targetgain = pow(10.0,settingchase/20.0);
 		//now we have the target in our temp variable

@@ -175,7 +175,7 @@ ComponentResult Coils::Initialize()
 void		Coils::CoilsKernel::Reset()
 {
 	for (int x = 0; x < 9; x++) {figure[x] = 0.0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -112,8 +112,7 @@ private:
 	Float64 iirSampleA;
 	Float64 iirSampleB;
 	bool flip;
-	uint32_t fpdL;
-	uint32_t fpdR;
+		uint32_t fpd;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

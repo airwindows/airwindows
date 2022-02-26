@@ -152,7 +152,7 @@ void		PeaksOnly::PeaksOnlyKernel::Reset()
 {
 	for(int count = 0; count < 1502; count++) {a[count] = 0.0; b[count] = 0.0; c[count] = 0.0; d[count] = 0.0;}
 	ax = 1; bx = 1; cx = 1; dx = 1;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

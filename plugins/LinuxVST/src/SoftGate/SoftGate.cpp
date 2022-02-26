@@ -20,7 +20,7 @@ SoftGate::SoftGate(audioMasterCallback audioMaster) :
 	storedR[0] = storedR[1] = 0.0;
 	diffR = 0.0;
 	gate = 1.1;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

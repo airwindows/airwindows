@@ -204,7 +204,7 @@ void		Capacitor2::Capacitor2Kernel::Reset()
 	lastLowpass = 1000.0;
 	lastHighpass = 1000.0;
 	lastWet = 1000.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

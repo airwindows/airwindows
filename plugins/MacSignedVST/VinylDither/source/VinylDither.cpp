@@ -14,7 +14,7 @@ VinylDither::VinylDither(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	NSOddL = 0.0;
 	prevL = 0.0;
 	nsL[0] = 0;

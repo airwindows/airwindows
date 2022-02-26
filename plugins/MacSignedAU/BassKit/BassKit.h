@@ -168,8 +168,7 @@ public:
 	Float64 iirSampleZ;		
 	Float64 oscGate;
 	
-	uint32_t fpdL;
-	uint32_t fpdR;
+		uint32_t fpd;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

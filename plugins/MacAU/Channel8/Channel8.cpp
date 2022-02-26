@@ -190,7 +190,7 @@ ComponentResult Channel8::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Channel8::Channel8Kernel::Reset()
 {
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	iirSampleA = iirSampleB = 0.0;
 	flip = false;
 	lastSampleA = lastSampleB = lastSampleC = 0.0;

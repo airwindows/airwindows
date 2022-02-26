@@ -151,7 +151,7 @@ ComponentResult Gringer::Initialize()
 void		Gringer::GringerKernel::Reset()
 {
 	for (int x = 0; x < 9; x++) {inband[x] = 0.0; outband[x] = 0.0;}
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

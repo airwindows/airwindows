@@ -205,7 +205,7 @@ void		PurestSquish::PurestSquishKernel::Reset()
 	muVary = 1;
 	count = 1;
 	fpFlip = true;
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -174,7 +174,7 @@ ComponentResult UnBox::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		UnBox::UnBoxKernel::Reset()
 {
-	fpd = 17;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	for(int count = 0; count < 5; count++) {a[count] = 0.0; b[count] = 0.0; e[count] = 0.0;}
 	for(int count = 0; count < 11; count++) {c[count] = 0.0; f[count] = 0.0;}
 	iirSampleA = 0.0;
