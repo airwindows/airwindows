@@ -277,7 +277,7 @@ void		Noise::NoiseKernel::Process(	const Float32 	*inSourceP,
 	Float64 decay = 0.001 - ((1.0-pow(1.0-GetParameter( kParam_Four ),3))*0.001);
 	if (decay == 0.001) decay = 0.1;
 	Float64 wet = GetParameter( kParam_Six );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	wet *= 0.01; //correct large gain issue
 	Float64 correctionSample;
 	Float64 accumulatorSample;
@@ -374,7 +374,7 @@ void		Noise::NoiseKernel::Process(	const Float32 	*inSourceP,
 		inputSample *= (1.0-rumblecutoff);
 		
 		inputSample *= wet;
-		inputSample += (drySample * dry);
+		inputSample += (drySample * (1.0-wet));
 		//apply the dry to the noise
 		
 		b[9] = b[8]; b[8] = b[7]; b[7] = b[6]; b[6] = b[5];

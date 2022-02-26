@@ -279,7 +279,7 @@ void		BussColors4::BussColors4Kernel::Process(	const Float32 	*inSourceP,
 	gain *= pow(10.0,GetParameter( kParam_Two )/14.0); //add adjustment factor
 	outgain *= pow(10.0,(GetParameter( kParam_Three )+3.3)/14.0); //add adjustment factor
 	Float64 wet = GetParameter( kParam_Four );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
@@ -631,7 +631,7 @@ void		BussColors4::BussColors4Kernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		//begin 32 bit floating point dither

@@ -205,7 +205,7 @@ void		ButterComp2::ButterComp2Kernel::Process(	const Float32 	*inSourceP,
 	Float64 compfactor = 0.012 * (GetParameter( kParam_One ) / 135.0);
 	Float64 output = GetParameter( kParam_Two );
 	Float64 wet = GetParameter( kParam_Three );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 outputgain = inputgain;
 	outputgain -= 1.0;
 	outputgain /= 1.5;
@@ -290,7 +290,7 @@ void		ButterComp2::ButterComp2Kernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 		

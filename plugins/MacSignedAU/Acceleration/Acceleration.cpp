@@ -191,7 +191,7 @@ void		Acceleration::AccelerationKernel::Process(	const Float32 	*inSourceP,
 
 	Float64 intensity = pow(GetParameter( kParam_One ),3)*(32/overallscale);
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	
 	Float64 senseL;
 	Float64 smoothL;
@@ -230,7 +230,7 @@ void		Acceleration::AccelerationKernel::Process(	const Float32 	*inSourceP,
 		
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 

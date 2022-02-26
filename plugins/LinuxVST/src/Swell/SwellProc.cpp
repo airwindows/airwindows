@@ -23,7 +23,7 @@ void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double thresholdOff = thresholdOn * B;
 	double speedOff = (sin(B)*0.01)/overallscale;
 	double wet = C;
-	double dry = 1.0 - wet;	
+	//removed extra dry variable	
 	
 	double drySampleL;
 	double drySampleR;
@@ -54,8 +54,8 @@ void Swell::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR *= swellR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -93,7 +93,7 @@ void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double thresholdOff = thresholdOn * B;
 	double speedOff = (sin(B)*0.01)/overallscale;
 	double wet = C;
-	double dry = 1.0 - wet;	
+	//removed extra dry variable	
 
 	double drySampleL;
 	double drySampleR;
@@ -124,8 +124,8 @@ void Swell::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR *= swellR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

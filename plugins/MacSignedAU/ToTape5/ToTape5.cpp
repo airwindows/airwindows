@@ -261,7 +261,7 @@ void		ToTape5::ToTape5Kernel::Process(	const Float32 	*inSourceP,
 	Float64 inputgain = pow(GetParameter( kParam_One )+1.0,3);
 	Float64 outputgain = GetParameter( kParam_Five );
 	Float64 wet = GetParameter( kParam_Six );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 trim = 0.211324865405187117745425;
 	Float64 SoftenControl = pow(GetParameter( kParam_Two ),2);
 	Float64 tempRandy = 0.06 + (SoftenControl/10.0);
@@ -445,7 +445,7 @@ void		ToTape5::ToTape5Kernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		

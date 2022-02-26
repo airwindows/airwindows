@@ -191,7 +191,7 @@ void		Average::AverageKernel::Process(	const Float32 	*inSourceP,
 	Float64 drySample;
 	Float64 overallscale = GetParameter( kParam_One );
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 gain = overallscale;
 	
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -251,7 +251,7 @@ void		Average::AverageKernel::Process(	const Float32 	*inSourceP,
 		inputSample -= correctionSample;
 		//our one math operation on the input data coming in
 		
-		if (wet < 1.0) inputSample = (inputSample * wet) + (drySample * dry);
+		if (wet < 1.0) inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		//dry/wet control only applies if you're using it. We don't do a multiply by 1.0
 		//if it 'won't change anything' but our sample might be at a very different scaling
 		//in the floating point system.

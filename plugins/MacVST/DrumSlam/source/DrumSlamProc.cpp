@@ -24,7 +24,7 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double drive = (A*3.0)+1.0;
 	double out = B;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -179,8 +179,8 @@ void DrumSlam::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		inputSampleR = ((lowSampleR + midSampleR + highSampleR)/drive)*out;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -219,7 +219,7 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double drive = (A*3.0)+1.0;
 	double out = B;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -374,8 +374,8 @@ void DrumSlam::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleR = ((lowSampleR + midSampleR + highSampleR)/drive)*out;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

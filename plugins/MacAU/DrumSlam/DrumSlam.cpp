@@ -214,7 +214,7 @@ void		DrumSlam::DrumSlamKernel::Process(	const Float32 	*inSourceP,
 	Float64 drive = GetParameter( kParam_One );
 	Float64 out = GetParameter( kParam_Two );
 	Float64 wet = GetParameter( kParam_Three );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;

@@ -497,7 +497,7 @@ void		DubSub::DubSubKernel::Process(	const Float32 	*inSourceP,
 		lastSubBump = SubBump;
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 		

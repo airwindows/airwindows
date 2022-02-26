@@ -199,7 +199,7 @@ void		Swell::SwellKernel::Process(	const Float32 	*inSourceP,
 	Float64 thresholdOff = thresholdOn * GetParameter( kParam_Two );
 	Float64 speedOff = (sin(GetParameter( kParam_Two ))*0.01)/overallscale;
 	Float64 wet = GetParameter( kParam_Three );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 
 	double drySample;
 	double inputSample;
@@ -219,7 +219,7 @@ void		Swell::SwellKernel::Process(	const Float32 	*inSourceP,
 		inputSample *= swell;
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 
 		//begin 32 bit floating point dither

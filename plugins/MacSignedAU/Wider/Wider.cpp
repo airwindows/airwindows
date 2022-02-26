@@ -222,7 +222,7 @@ OSStatus		Wider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 	Float64 densityside = GetParameter( kParam_One );
 	Float64 densitymid = GetParameter( kParam_Two );
 	Float64 wet = GetParameter( kParam_Three );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	wet *= 0.5; //we make mid-side by adding/subtracting both channels into each channel
 	//and that's why we gotta divide it by 2: otherwise everything's doubled. So, premultiply it to save an extra 'math'
 	Float64 offset = (densityside-densitymid)/2;

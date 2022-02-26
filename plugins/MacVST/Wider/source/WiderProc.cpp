@@ -28,7 +28,7 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double densityside = (A*2.0)-1.0;
 	double densitymid = (B*2.0)-1.0;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	wet *= 0.5; //we make mid-side by adding/subtracting both channels into each channel
 	//and that's why we gotta divide it by 2: otherwise everything's doubled. So, premultiply it to save an extra 'math'
 	double offset = (densityside-densitymid)/2;
@@ -142,7 +142,7 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double densityside = (A*2.0)-1.0;
 	double densitymid = (B*2.0)-1.0;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	wet *= 0.5; //we make mid-side by adding/subtracting both channels into each channel
 	//and that's why we gotta divide it by 2: otherwise everything's doubled. So, premultiply it to save an extra 'math'
 	double offset = (densityside-densitymid)/2;

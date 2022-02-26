@@ -309,7 +309,7 @@ void		ElectroHat::ElectroHatKernel::Process(	const Float32 	*inSourceP,
 		storedSample = tempSample;
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}		
 		
 		//begin 32 bit floating point dither

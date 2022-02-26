@@ -20,7 +20,7 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	//if you see 0.6180 it's not a wild stretch to wonder whether you are working with a constant
 	int maxdelayTarget = (int)(pow(A,3)*1501.0);
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double bridgerectifier;	
 
 	double inputSampleL;
@@ -129,7 +129,7 @@ void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	//if you see 0.6180 it's not a wild stretch to wonder whether you are working with a constant
 	int maxdelayTarget = (int)(pow(A,3)*1501.0);
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double bridgerectifier;	
 	
 	double inputSampleL;

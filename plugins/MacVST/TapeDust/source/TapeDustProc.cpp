@@ -26,7 +26,7 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double gainL;
 	double gainR;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
     
     while (--sampleFrames >= 0)
     {
@@ -78,8 +78,8 @@ void TapeDust::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		
 		if (wet < 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -120,7 +120,7 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double gainL;
 	double gainR;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -172,8 +172,8 @@ void TapeDust::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		
 		if (wet < 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 				
 		//begin 64 bit stereo floating point dither

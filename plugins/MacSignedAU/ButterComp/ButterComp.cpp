@@ -199,7 +199,7 @@ void		ButterComp::ButterCompKernel::Process(	const Float32 	*inSourceP,
 	Float64 drySample;
 	Float64 inputgain = pow(10.0,(GetParameter( kParam_One )*14.0)/20.0);
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 outputgain = inputgain;
 	outputgain -= 1.0;
 	outputgain /= 1.5;

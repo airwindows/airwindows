@@ -40,7 +40,7 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	double inputgain = pow(10.0,(A*14.0)/20.0);
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double outputgain = inputgain;
 	outputgain -= 1.0;
 	outputgain /= 1.5;
@@ -138,8 +138,8 @@ void ButterComp::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleR /= outputgain;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -194,7 +194,7 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
 	double inputgain = pow(10.0,(A*14.0)/20.0);
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double outputgain = inputgain;
 	outputgain -= 1.0;
 	outputgain /= 1.5;
@@ -292,8 +292,8 @@ void ButterComp::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleR /= outputgain;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

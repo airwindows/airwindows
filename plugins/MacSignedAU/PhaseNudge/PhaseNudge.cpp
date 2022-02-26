@@ -190,7 +190,7 @@ void		PhaseNudge::PhaseNudgeKernel::Process(	const Float32 	*inSourceP,
 	//if you see 0.6180 it's not a wild stretch to wonder whether you are working with a constant
 	int maxdelayTarget = (int)(pow(GetParameter( kParam_One ),3)*1501.0);
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 bridgerectifier;
 	
 	double inputSample;

@@ -189,7 +189,7 @@ void		Aura::AuraKernel::Process(	const Float32 	*inSourceP,
 	Float64 velocity;
 	Float64 trim = GetParameter( kParam_One );
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 overallscale = trim * 10.0;
 	Float64 gain = overallscale + (pow(wet,3) * 0.187859642462067);
 	trim *= (1.0 - (pow(wet,3) * 0.187859642462067));
@@ -288,7 +288,7 @@ void		Aura::AuraKernel::Process(	const Float32 	*inSourceP,
 		previousVelocity = -velocity * pow(trim,2);
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}		
 		
 		//begin 32 bit floating point dither

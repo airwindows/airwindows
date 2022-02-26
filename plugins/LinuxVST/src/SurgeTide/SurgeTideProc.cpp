@@ -27,7 +27,7 @@ void SurgeTide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double attack = ((B+0.1)*0.0005)/overallscale;
 	double decay = ((B+0.001)*0.00005)/overallscale;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double inputSense;
 	    
     while (--sampleFrames >= 0)
@@ -110,7 +110,7 @@ void SurgeTide::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double attack = ((B+0.1)*0.0005)/overallscale;
 	double decay = ((B+0.001)*0.00005)/overallscale;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double inputSense;
 	
     while (--sampleFrames >= 0)

@@ -21,7 +21,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double inputgain = pow(A+1.0,3);
 	double outputgain = E;
 	double wet = F;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double trim = 0.211324865405187117745425;
 	double SoftenControl = pow(B,2);
 	double tempRandy = 0.06 + (SoftenControl/10.0);
@@ -315,8 +315,8 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -352,7 +352,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double inputgain = pow(A+1.0,3);
 	double outputgain = E;
 	double wet = F;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double trim = 0.211324865405187117745425;
 	double SoftenControl = pow(B,2);
 	double tempRandy = 0.06 + (SoftenControl/10.0);
@@ -644,8 +644,8 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

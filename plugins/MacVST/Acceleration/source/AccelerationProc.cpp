@@ -20,7 +20,7 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	
 	double intensity = pow(A,3)*(32/overallscale);
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
 	double senseL;
 	double smoothL;
@@ -92,8 +92,8 @@ void Acceleration::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		inputSampleR = accumulatorSample;		
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -128,7 +128,7 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 	
 	double intensity = pow(A,3)*(32/overallscale);
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
 	double senseL;
 	double smoothL;
@@ -200,8 +200,8 @@ void Acceleration::processDoubleReplacing(double **inputs, double **outputs, Vst
 		inputSampleR = accumulatorSample;		
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

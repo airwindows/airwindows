@@ -246,7 +246,7 @@ void		AverMatrix::AverMatrixKernel::Process(	const Float32 	*inSourceP,
 		inputSample = (previousPole * (1.0-yPartial)) + (inputSample * yPartial);
 		//in this way we can blend in the final pole
 		
-		inputSample = (inputSample * wet) + (drySample * dry);
+		inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		//wet can be negative, in which case dry is always full volume and they cancel
 		
 		

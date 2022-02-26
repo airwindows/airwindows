@@ -263,8 +263,8 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		lastSubBump = SubBump;
 		
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 		
@@ -546,8 +546,8 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		lastSubBump = SubBump;
 		
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 		

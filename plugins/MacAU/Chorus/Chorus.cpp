@@ -209,7 +209,7 @@ void		Chorus::ChorusKernel::Process(	const Float32 	*inSourceP,
 	Float64 range = pow(GetParameter( kParam_Two ),4) * loopLimit * 0.499;
 	Float64 wet = GetParameter( kParam_Three );
 	Float64 modulation = range*wet;
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 tupi = 3.141592653589793238 * 2.0;
 	Float64 offset;
 	//this is a double buffer so we will be splitting it in two
@@ -251,7 +251,7 @@ void		Chorus::ChorusKernel::Process(	const Float32 	*inSourceP,
 		//still scrolling through the samples, remember
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		//begin 32 bit floating point dither

@@ -28,7 +28,7 @@ void Surge::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double attack = ((intensity+0.1)*0.0005)/overallscale;
 	double decay = ((intensity+0.001)*0.00005)/overallscale;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double inputSense;
 	
     
@@ -121,7 +121,7 @@ void Surge::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double attack = ((intensity+0.1)*0.0005)/overallscale;
 	double decay = ((intensity+0.001)*0.00005)/overallscale;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double inputSense;
 	
     while (--sampleFrames >= 0)

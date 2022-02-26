@@ -193,7 +193,7 @@ void		Hombre::HombreKernel::Process(	const Float32 	*inSourceP,
 	int widthA = (int)(1.0*overallscale);
 	int widthB = (int)(7.0*overallscale); //max 364 at 44.1, 792 at 96K
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	double inputSample;
 	Float64 drySample;
 	Float64 total;
@@ -240,7 +240,7 @@ void		Hombre::HombreKernel::Process(	const Float32 	*inSourceP,
 		//still scrolling through the samples, remember
 
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		//begin 32 bit floating point dither

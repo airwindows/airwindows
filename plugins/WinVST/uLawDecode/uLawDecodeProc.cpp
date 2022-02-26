@@ -20,7 +20,7 @@ void uLawDecode::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 	double gain = A;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -50,8 +50,8 @@ void uLawDecode::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		if (inputSampleR < 0) inputSampleR = -(pow(256,fabs(inputSampleR))-1.0) / 255;
 		
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -86,7 +86,7 @@ void uLawDecode::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	
 	double gain = A;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 
     while (--sampleFrames >= 0)
     {
@@ -116,8 +116,8 @@ void uLawDecode::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		if (inputSampleR < 0) inputSampleR = -(pow(256,fabs(inputSampleR))-1.0) / 255;
 		
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

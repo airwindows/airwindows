@@ -23,7 +23,7 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	double velocityR;
 	double trim = A;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double overallscale = trim * 10.0;
 	double gain = overallscale + (pow(wet,3) * 0.187859642462067);
 	trim *= (1.0 - (pow(wet,3) * 0.187859642462067));
@@ -168,8 +168,8 @@ void Aura::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		//right channel done
 				
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 		
 		//begin 32 bit stereo floating point dither
@@ -207,7 +207,7 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	double velocityR;
 	double trim = A;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double overallscale = trim * 10.0;
 	double gain = overallscale + (pow(wet,3) * 0.187859642462067);
 	trim *= (1.0 - (pow(wet,3) * 0.187859642462067));
@@ -352,8 +352,8 @@ void Aura::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		//right channel done
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 		
 		//begin 64 bit stereo floating point dither

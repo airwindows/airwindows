@@ -21,7 +21,7 @@ void Lowpass::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	iirAmount /= overallscale;
 	double tight = (B*2.0)-1.0;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double offset;
 	double inputSampleL;
 	double inputSampleR;
@@ -81,8 +81,8 @@ void Lowpass::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 
 		
 		
-		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
-		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
+		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * (1.0-wet));
+		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * (1.0-wet));
 
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -117,7 +117,7 @@ void Lowpass::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	iirAmount /= overallscale;
 	double tight = (B*2.0)-1.0;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double offset;
 	double inputSampleL;
 	double inputSampleR;
@@ -177,8 +177,8 @@ void Lowpass::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		
 		
 		
-		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
-		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
+		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * (1.0-wet));
+		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * (1.0-wet));
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

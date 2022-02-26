@@ -196,7 +196,7 @@ void		SurgeMono::SurgeMonoKernel::Process(	const Float32 	*inSourceP,
 	Float64 attack = ((intensity+0.1)*0.0005)/overallscale;
 	Float64 decay = ((intensity+0.001)*0.00005)/overallscale;
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 inputSense;
 	
 	while (nSampleFrames-- > 0) {

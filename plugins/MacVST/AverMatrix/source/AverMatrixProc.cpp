@@ -75,8 +75,8 @@ void AverMatrix::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleR = (previousPoleR * (1.0-yPartial)) + (inputSampleR * yPartial);
 		//in this way we can blend in the final pole
 		
-		inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-		inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+		inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+		inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		//wet can be negative, in which case dry is always full volume and they cancel
 		
 		//begin 32 bit stereo floating point dither
@@ -167,8 +167,8 @@ void AverMatrix::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleR = (previousPoleR * (1.0-yPartial)) + (inputSampleR * yPartial);
 		//in this way we can blend in the final pole
 		
-		inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-		inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+		inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+		inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		//wet can be negative, in which case dry is always full volume and they cancel
 		
 		//begin 64 bit stereo floating point dither

@@ -19,7 +19,7 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 	double softcrossover = pow(B,3)/8.0;
 	double hardcrossover = pow(C,7)/8.0;
 	double wet = D;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -87,8 +87,8 @@ void SingleEndedTriode::processReplacing(float **inputs, float **outputs, VstInt
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -122,7 +122,7 @@ void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs
 	double softcrossover = pow(B,3)/8.0;
 	double hardcrossover = pow(C,7)/8.0;
 	double wet = D;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 
     while (--sampleFrames >= 0)
     {
@@ -190,8 +190,8 @@ void SingleEndedTriode::processDoubleReplacing(double **inputs, double **outputs
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

@@ -204,7 +204,7 @@ void		SingleEndedTriode::SingleEndedTriodeKernel::Process(	const Float32 	*inSou
 	Float64 softcrossover = pow(GetParameter( kParam_Two ),3)/8.0;
 	Float64 hardcrossover = pow(GetParameter( kParam_Three ),7)/8.0;
 	Float64 wet = GetParameter( kParam_Four );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	
 	
 	while (nSampleFrames-- > 0) {

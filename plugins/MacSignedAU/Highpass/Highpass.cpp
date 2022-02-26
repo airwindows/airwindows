@@ -202,7 +202,7 @@ void		Highpass::HighpassKernel::Process(	const Float32 	*inSourceP,
 	Float64 iirAmount = pow(GetParameter( kParam_One ),3)/overallscale;
 	Float64 tight = GetParameter( kParam_Two );
 	Float64 wet = GetParameter( kParam_Three );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 offset;
 	Float64 inputSample;
 	Float64 outputSample;
@@ -236,7 +236,7 @@ void		Highpass::HighpassKernel::Process(	const Float32 	*inSourceP,
 			outputSample = outputSample - iirSampleB;
 			}
 		
-		if (wet < 1.0) outputSample = (outputSample * wet) + (inputSample * dry);
+		if (wet < 1.0) outputSample = (outputSample * wet) + (inputSample * (1.0-wet));
 		fpFlip = !fpFlip;
 
 		//begin 32 bit floating point dither

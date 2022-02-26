@@ -39,7 +39,7 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double levelcorrect = 1.0 + ((filter / 12.0) * A);
 	//bring in top slider again to manage boost level for lower settings
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -228,8 +228,8 @@ void Distance2::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleR *= levelcorrect;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -283,7 +283,7 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double levelcorrect = 1.0 + ((filter / 12.0) * A);
 	//bring in top slider again to manage boost level for lower settings	
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 
     while (--sampleFrames >= 0)
     {
@@ -472,8 +472,8 @@ void Distance2::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR *= levelcorrect;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

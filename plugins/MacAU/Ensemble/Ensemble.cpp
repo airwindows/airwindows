@@ -218,7 +218,7 @@ void		Ensemble::EnsembleKernel::Process(	const Float32 	*inSourceP,
 	Float64 taps = GetParameter( kParam_One );
 	Float64 brighten = GetParameter( kParam_Three );
 	Float64 wet = GetParameter( kParam_Four );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 hapi = 3.141592653589793238 / taps;
 	Float64 offset;
 	Float64 floffset;
@@ -277,7 +277,7 @@ void		Ensemble::EnsembleKernel::Process(	const Float32 	*inSourceP,
 
 
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		fpFlip = !fpFlip;
 		

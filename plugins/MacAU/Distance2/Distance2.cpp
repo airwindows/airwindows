@@ -337,7 +337,7 @@ void		Distance2::Distance2Kernel::Process(	const Float32 	*inSourceP,
 		inputSample *= levelcorrect;
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 

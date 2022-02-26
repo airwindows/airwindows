@@ -245,7 +245,7 @@ void		FromTape::FromTapeKernel::Process(	const Float32 	*inSourceP,
 	Float64 altAmount = 1.0 - iirAmount;
 	Float64 outputgain = GetParameter( kParam_Four );
 	Float64 wet = GetParameter( kParam_Five );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 HighsSample = 0.0;
 	Float64 Subtract;
 	Float64 bridgerectifier;
@@ -346,7 +346,7 @@ void		FromTape::FromTapeKernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		//begin 32 bit floating point dither

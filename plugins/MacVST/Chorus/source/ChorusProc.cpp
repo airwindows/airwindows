@@ -25,7 +25,7 @@ void Chorus::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	double range = pow(B,4) * loopLimit * 0.499;
 	double wet = C;
 	double modulation = range*wet;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double tupi = 3.141592653589793238 * 2.0;
 	double offset;
 	//this is a double buffer so we will be splitting it in two
@@ -92,8 +92,8 @@ void Chorus::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//still scrolling through the samples, remember
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		fpFlip = !fpFlip;
 
@@ -134,7 +134,7 @@ void Chorus::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double range = pow(B,4) * loopLimit * 0.499;
 	double wet = C;
 	double modulation = range*wet;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double tupi = 3.141592653589793238 * 2.0;
 	double offset;
 	//this is a double buffer so we will be splitting it in two
@@ -201,8 +201,8 @@ void Chorus::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//still scrolling through the samples, remember
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

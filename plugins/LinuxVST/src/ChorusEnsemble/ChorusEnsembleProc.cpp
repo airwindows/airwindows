@@ -25,7 +25,7 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 	double range = pow(B,3) * loopLimit * 0.12;
 	double wet = C;
 	double modulation = range*wet;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double tupi = 3.141592653589793238 * 2.0;
 	double offset;
 	double start[4];
@@ -132,8 +132,8 @@ void ChorusEnsemble::processReplacing(float **inputs, float **outputs, VstInt32 
 		//still scrolling through the samples, remember
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		fpFlip = !fpFlip;
 		
@@ -175,7 +175,7 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 	double range = pow(B,3) * loopLimit * 0.12;
 	double wet = C;
 	double modulation = range*wet;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double tupi = 3.141592653589793238 * 2.0;
 	double offset;
 	double start[4];
@@ -282,8 +282,8 @@ void ChorusEnsemble::processDoubleReplacing(double **inputs, double **outputs, V
 		//still scrolling through the samples, remember
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		fpFlip = !fpFlip;
 		

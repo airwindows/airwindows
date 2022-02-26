@@ -119,8 +119,8 @@ void ElectroHat::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		storedSampleR = tempSampleR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 		
 		//begin 32 bit stereo floating point dither
@@ -254,8 +254,8 @@ void ElectroHat::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		storedSampleR = tempSampleR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 				
 		//begin 64 bit stereo floating point dither

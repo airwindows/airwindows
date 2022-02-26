@@ -52,7 +52,7 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	gain *= pow(10.0,((B * 36.0)-18.0)/14.0); //add adjustment factor
 	outgain *= pow(10.0,(((C * 36.0)-18.0)+3.3)/14.0); //add adjustment factor
 	double wet = D;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -752,8 +752,8 @@ void BussColors4::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -820,7 +820,7 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 	gain *= pow(10.0,((B * 36.0)-18.0)/14.0); //add adjustment factor
 	outgain *= pow(10.0,(((C * 36.0)-18.0)+3.3)/14.0); //add adjustment factor
 	double wet = D;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     while (--sampleFrames >= 0)
     {
@@ -1520,8 +1520,8 @@ void BussColors4::processDoubleReplacing(double **inputs, double **outputs, VstI
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

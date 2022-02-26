@@ -191,7 +191,7 @@ void		TapeDust::TapeDustKernel::Process(	const Float32 	*inSourceP,
 	Float64 rDepth; //the randomly fluctuating value
 	Float64 gain;
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 		
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
@@ -221,7 +221,7 @@ void		TapeDust::TapeDustKernel::Process(	const Float32 	*inSourceP,
 		}
 				
 		if (wet < 1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		fpFlip = !fpFlip;
 		

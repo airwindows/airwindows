@@ -187,7 +187,7 @@ void		uLawEncode::uLawEncodeKernel::Process(	const Float32 	*inSourceP,
 
 	Float64 gain = GetParameter( kParam_One );
 	Float64 wet = GetParameter( kParam_Two );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
@@ -208,7 +208,7 @@ void		uLawEncode::uLawEncodeKernel::Process(	const Float32 	*inSourceP,
 		
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 
 		//begin 32 bit floating point dither

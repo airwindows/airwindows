@@ -112,7 +112,7 @@ void Logical4::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	
 	double outputgain = pow(10.0,((D*40.0)-20.0)/20.0);
 	double wet = E;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
     
     while (--sampleFrames >= 0)
@@ -829,8 +829,8 @@ void Logical4::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 		fpFlip = !fpFlip;
 		
@@ -959,7 +959,7 @@ void Logical4::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
 	double outputgain = pow(10.0,((D*40.0)-20.0)/20.0);
 	double wet = E;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 
     while (--sampleFrames >= 0)
     {
@@ -1675,8 +1675,8 @@ void Logical4::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 		fpFlip = !fpFlip;
 

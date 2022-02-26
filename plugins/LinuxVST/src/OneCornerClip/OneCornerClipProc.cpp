@@ -38,7 +38,7 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 	bool clipEngage = false;	
 
 	double wet = E;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double drySampleL;
 	double drySampleR;
 	double inputSampleL;
@@ -114,8 +114,8 @@ void OneCornerClip::processReplacing(float **inputs, float **outputs, VstInt32 s
 		lastSampleR = inputSampleR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -175,7 +175,7 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 	bool clipEngage = false;	
 	
 	double wet = E;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double drySampleL;
 	double drySampleR;
 	double inputSampleL;
@@ -252,8 +252,8 @@ void OneCornerClip::processDoubleReplacing(double **inputs, double **outputs, Vs
 		lastSampleR = inputSampleR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

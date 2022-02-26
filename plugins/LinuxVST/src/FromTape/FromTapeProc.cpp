@@ -24,7 +24,7 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double altAmount = 1.0 - iirAmount;
 	double outputgain = D*2.0;
 	double wet = E;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double HighsSampleL = 0.0;
 	double SubtractL;
 	double bridgerectifierL;
@@ -181,8 +181,8 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 32 bit stereo floating point dither
@@ -221,7 +221,7 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double altAmount = 1.0 - iirAmount;
 	double outputgain = D*2.0;
 	double wet = E;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double HighsSampleL = 0.0;
 	double SubtractL;
 	double bridgerectifierL;
@@ -378,8 +378,8 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		//begin 64 bit stereo floating point dither

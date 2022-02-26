@@ -238,7 +238,7 @@ void		Desk4::Desk4Kernel::Process(	const Float32 	*inSourceP,
 	balanceB /= overallscale;
 	Float64 outputgain = GetParameter( kParam_Five );
 	Float64 wet = GetParameter( kParam_Six );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 clamp;
 	Float64 thickness;
 	Float64 out;
@@ -323,7 +323,7 @@ void		Desk4::Desk4Kernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		if (wet !=1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		//begin 32 bit floating point dither

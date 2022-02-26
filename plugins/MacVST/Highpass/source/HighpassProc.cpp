@@ -20,7 +20,7 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	double iirAmount = pow(A,3)/overallscale;
 	double tight = (B*2.0)-1.0;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double offset;
 	double inputSampleL;
 	double inputSampleR;
@@ -79,8 +79,8 @@ void Highpass::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		
 		
 		
-		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
-		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
+		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * (1.0-wet));
+		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * (1.0-wet));
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -114,7 +114,7 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	double iirAmount = pow(A,3)/overallscale;
 	double tight = (B*2.0)-1.0;
 	double wet = C;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double offset;
 	double inputSampleL;
 	double inputSampleR;
@@ -173,8 +173,8 @@ void Highpass::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		
 		
 		
-		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * dry);
-		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * dry);
+		if (wet < 1.0) outputSampleL = (outputSampleL * wet) + (inputSampleL * (1.0-wet));
+		if (wet < 1.0) outputSampleR = (outputSampleR * wet) + (inputSampleR * (1.0-wet));
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

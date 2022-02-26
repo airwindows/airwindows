@@ -201,7 +201,7 @@ void		SurgeTideMono::SurgeTideMonoKernel::Process(	const Float32 	*inSourceP,
 	Float64 attack = ((GetParameter( kParam_Two )+0.1)*0.0005)/overallscale;
 	Float64 decay = ((GetParameter( kParam_Two )+0.001)*0.00005)/overallscale;
 	Float64 wet = GetParameter( kParam_Three );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 inputSense;
 	
 	while (nSampleFrames-- > 0) {

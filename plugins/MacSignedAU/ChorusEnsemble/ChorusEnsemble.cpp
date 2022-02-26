@@ -209,7 +209,7 @@ void		ChorusEnsemble::ChorusEnsembleKernel::Process(	const Float32 	*inSourceP,
 	Float64 range = pow(GetParameter( kParam_Two ),3) * loopLimit * 0.12;
 	Float64 wet = GetParameter( kParam_Three );
 	Float64 modulation = range*wet;
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	Float64 tupi = 3.141592653589793238 * 2.0;
 	Float64 offset;
 	Float64 start[4];
@@ -281,7 +281,7 @@ void		ChorusEnsemble::ChorusEnsembleKernel::Process(	const Float32 	*inSourceP,
 		//still scrolling through the samples, remember
 		
 		if (wet != 1.0) {
-			inputSample = (inputSample * wet) + (drySample * dry);
+			inputSample = (inputSample * wet) + (drySample * (1.0-wet));
 		}
 		
 		//begin 32 bit floating point dither

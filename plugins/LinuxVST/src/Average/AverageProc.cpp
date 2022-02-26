@@ -25,7 +25,7 @@ void Average::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	
 	double overallscale = (A * 9.0)+1.0;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double gain = overallscale;
 	
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -107,8 +107,8 @@ void Average::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//our one math operation on the input data coming in
 		
 		if (wet < 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		//dry/wet control only applies if you're using it. We don't do a multiply by 1.0
 		//if it 'won't change anything' but our sample might be at a very different scaling
@@ -150,7 +150,7 @@ void Average::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	
 	double overallscale = (A * 9.0)+1.0;
 	double wet = B;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	double gain = overallscale;
 	
 	if (gain > 1.0) {f[0] = 1.0; gain -= 1.0;} else {f[0] = gain; gain = 0.0;}
@@ -232,8 +232,8 @@ void Average::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//our one math operation on the input data coming in
 		
 		if (wet < 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		//dry/wet control only applies if you're using it. We don't do a multiply by 1.0
 		//if it 'won't change anything' but our sample might be at a very different scaling

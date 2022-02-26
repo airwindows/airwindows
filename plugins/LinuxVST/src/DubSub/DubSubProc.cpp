@@ -383,8 +383,8 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		lastSubBumpR = SubBumpR;
 				
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 		
@@ -786,8 +786,8 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		lastSubBumpR = SubBumpR;
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		//Dry/Wet control, defaults to the last slider
 		

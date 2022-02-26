@@ -33,7 +33,7 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	balanceB /= overallscale;
 	double outputgain = E;
 	double wet = F;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
 	double clampL;
 	double clampR;
@@ -185,8 +185,8 @@ void Desk4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		
@@ -235,7 +235,7 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	balanceB /= overallscale;
 	double outputgain = E;
 	double wet = F;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	
 	double clampL;
 	double clampR;
@@ -387,8 +387,8 @@ void Desk4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		
 		if (wet !=1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}
 		
 		

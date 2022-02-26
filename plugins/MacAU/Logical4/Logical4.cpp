@@ -389,7 +389,7 @@ OSStatus		Logical4::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 	
 	Float64 outputgain = pow(10.0,GetParameter( kParam_Four )/20.0);
 	Float64 wet = GetParameter( kParam_Five );
-	Float64 dry = 1.0 - wet;
+	//removed unnecessary dry variable
 	
 	while (nSampleFrames-- > 0) {
 		inputSampleL = *inputL;
@@ -1105,8 +1105,8 @@ OSStatus		Logical4::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		}
 
 		if (wet != 1.0) {
-			inputSampleL = (inputSampleL * wet) + (drySampleL * dry);
-			inputSampleR = (inputSampleR * wet) + (drySampleR * dry);
+			inputSampleL = (inputSampleL * wet) + (drySampleL * (1.0-wet));
+			inputSampleR = (inputSampleR * wet) + (drySampleR * (1.0-wet));
 		}		
 		fpFlip = !fpFlip;
 		

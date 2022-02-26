@@ -71,7 +71,7 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	double decay = 0.001 - ((1.0-pow(1.0-D,3))*0.001);
 	if (decay == 0.001) decay = 0.1;
 	double wet = F;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	wet *= 0.01; //correct large gain issue
 	double correctionSample;
 	double accumulatorSampleL;
@@ -210,10 +210,10 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		inputSampleR *= (1.0-rumblecutoff);
 
 		inputSampleL *= wet;
-		inputSampleL += (drySampleL * dry);
+		inputSampleL += (drySampleL * (1.0-wet));
 		
 		inputSampleR *= wet;
-		inputSampleR += (drySampleR * dry);
+		inputSampleR += (drySampleR * (1.0-wet));
 		//apply the dry to the noise
 		
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
@@ -343,7 +343,7 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	double decay = 0.001 - ((1.0-pow(1.0-D,3))*0.001);
 	if (decay == 0.001) decay = 0.1;
 	double wet = F;
-	double dry = 1.0 - wet;
+	//removed extra dry variable
 	wet *= 0.01; //correct large gain issue
 	double correctionSample;
 	double accumulatorSampleL;
@@ -480,10 +480,10 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		inputSampleR *= (1.0-rumblecutoff);
 		
 		inputSampleL *= wet;
-		inputSampleL += (drySampleL * dry);
+		inputSampleL += (drySampleL * (1.0-wet));
 		
 		inputSampleR *= wet;
-		inputSampleR += (drySampleR * dry);
+		inputSampleR += (drySampleR * (1.0-wet));
 		//apply the dry to the noise
 		
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
