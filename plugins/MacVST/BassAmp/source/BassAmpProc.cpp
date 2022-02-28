@@ -38,8 +38,8 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
     {
 		double LinputSample = *in1;
 		double RinputSample = *in2;
-		if (fabs(LinputSample)<1.18e-37) LinputSample = fpd * 1.18e-37;
-		if (fabs(RinputSample)<1.18e-37) RinputSample = fpd * 1.18e-37;
+		if (fabs(LinputSample)<1.18e-37) LinputSample = fpdL * 1.18e-37;
+		if (fabs(RinputSample)<1.18e-37) RinputSample = fpdR * 1.18e-37;
 		
 		LataDrySample = LinputSample;
 		LataHalfDrySample = LataHalfwaySample = (LinputSample + LataLast1Sample + (LataLast2Sample*ataK1) + (LataLast3Sample*ataK2) + (LataLast4Sample*ataK6) + (LataLast5Sample*ataK7) + (LataLast6Sample*ataK8)) / 2.0;
@@ -195,7 +195,7 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		double randy = (double(fpd)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
+		double randy = (double(fpdL)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
 		{
@@ -410,8 +410,8 @@ void BassAmp::processDoubleReplacing(double **inputs, double **outputs, VstInt32
     {
 		double LinputSample = *in1;
 		double RinputSample = *in2;
-		if (fabs(LinputSample)<1.18e-43) LinputSample = fpd * 1.18e-43;
-		if (fabs(RinputSample)<1.18e-43) RinputSample = fpd * 1.18e-43;
+		if (fabs(LinputSample)<1.18e-43) LinputSample = fpdL * 1.18e-43;
+		if (fabs(RinputSample)<1.18e-43) RinputSample = fpdR * 1.18e-43;
 		
 		LataDrySample = LinputSample;
 		LataHalfDrySample = LataHalfwaySample = (LinputSample + LataLast1Sample + (LataLast2Sample*ataK1) + (LataLast3Sample*ataK2) + (LataLast4Sample*ataK6) + (LataLast5Sample*ataK7) + (LataLast6Sample*ataK8)) / 2.0;
@@ -567,7 +567,7 @@ void BassAmp::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		double randy = (double(fpd)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
+		double randy = (double(fpdL)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
 		{

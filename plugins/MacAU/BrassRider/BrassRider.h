@@ -131,7 +131,8 @@ public:
 		Float64 lastSampleR;
 		Float64 lastSlewR;
 		int gcount;
-		uint32_t fpd;
+		uint32_t fpdL;
+		uint32_t fpdR;
 
 };
 

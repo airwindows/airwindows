@@ -138,7 +138,8 @@ public:
 		Float64 sampleG;
 		Float64 sampleH;
 		Float64 sampleI;
-		Float64 fpNShape;		
+		Float64 fpNShape;	
+		uint32_t fpd;
 	};
 };
 

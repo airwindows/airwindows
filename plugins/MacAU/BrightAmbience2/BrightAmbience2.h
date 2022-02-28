@@ -128,7 +128,8 @@ public:
 	double feedbackA;
 	double feedbackB;
 	double feedbackC;
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

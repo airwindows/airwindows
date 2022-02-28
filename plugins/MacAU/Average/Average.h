@@ -132,6 +132,7 @@ public:
 		Float64 b[11];
 		Float64 f[11];		
 		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 
