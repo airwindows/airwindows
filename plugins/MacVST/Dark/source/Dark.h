@@ -55,7 +55,8 @@ private:
     
 	float lastSampleL[100];
 	float lastSampleR[100];
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

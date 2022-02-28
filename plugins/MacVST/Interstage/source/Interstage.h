@@ -65,7 +65,8 @@ private:
 	double iirSampleER;
 	double iirSampleFR;
 	double lastSampleR;
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	bool flip;
 };
 

@@ -77,7 +77,8 @@ private:
 	double biquadR[11];
 	//Bandpasses
 
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

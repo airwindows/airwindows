@@ -61,7 +61,8 @@ private:
 	//This is because so much of it is coefficients etc. that are the same on both channels.
 	//So the stored samples are in 7-8 and 9-10, and freq/res/coefficients serve both.
 	
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;
