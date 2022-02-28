@@ -167,8 +167,8 @@ void ADT::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
 
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 
 		
 		if (fabs(offsetA - targetA) > 1000) offsetA = targetA;

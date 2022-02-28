@@ -155,11 +155,11 @@ void Apicolypse::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.033);
+		randy = ((double(fpdL)/UINT32_MAX)*0.033);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.033);
+		randy = ((double(fpdR)/UINT32_MAX)*0.033);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -215,8 +215,8 @@ void Apicolypse::processDoubleReplacing(double **inputs, double **outputs, VstIn
     {
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
+		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
 		
 		inputSampleL *= indrive;
 		inputSampleR *= indrive;
@@ -331,11 +331,11 @@ void Apicolypse::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.033);
+		randy = ((double(fpdL)/UINT32_MAX)*0.033);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.033);
+		randy = ((double(fpdR)/UINT32_MAX)*0.033);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		

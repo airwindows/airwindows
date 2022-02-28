@@ -125,11 +125,11 @@ void ADT::processReplacing(float **inputs, float **outputs, VstInt32 sampleFrame
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += static_cast<int32_t>(fpdL) * 5.960464655174751e-36L * pow(2,expon+62);
 		frexpf((float)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += static_cast<int32_t>(fpd) * 5.960464655174751e-36L * pow(2,expon+62);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += static_cast<int32_t>(fpdR) * 5.960464655174751e-36L * pow(2,expon+62);
 		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
@@ -167,8 +167,8 @@ void ADT::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
 
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpdL * 1.18e-43;
+		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpdR * 1.18e-43;
 
 		
 		if (fabs(offsetA - targetA) > 1000) offsetA = targetA;
@@ -260,11 +260,11 @@ void ADT::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sam
 		
 		//begin 64 bit stereo floating point dither
 		int expon; frexp((double)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += static_cast<int32_t>(fpdL) * 1.110223024625156e-44L * pow(2,expon+62);
 		frexp((double)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += static_cast<int32_t>(fpdR) * 1.110223024625156e-44L * pow(2,expon+62);
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

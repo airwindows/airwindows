@@ -57,7 +57,8 @@ private:
 	double bL[11][11];
 	double bR[11][11];
 	double f[11];		
-	uint32_t fpd;
+    uint32_t fpdL;
+    uint32_t fpdR;
 	//default stuff
 
     float A;

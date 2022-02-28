@@ -128,8 +128,8 @@ void VoiceTrick::processDoubleReplacing(double **inputs, double **outputs, VstIn
     {
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		lowpassAmount = (((lowpassAmount*lowpassSpeed)+lowpassChase)/(lowpassSpeed + 1.0)); invLowpass = 1.0 - lowpassAmount;
 		//setting chase functionality of Capacitor Lowpass. I could just use this value directly from the control,

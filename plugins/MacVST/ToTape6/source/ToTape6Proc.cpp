@@ -390,8 +390,8 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
     {
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		

@@ -5,7 +5,7 @@
 * 
 *	Created:	10/3/13
 *	
-*	Copyright:  Copyright © 2013 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2013 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -158,7 +158,7 @@ public:
 		Float64 iirSampleC;
 		Float64 iirSampleD;
 		bool flip;
-		Float64 fpNShape;
+        uint32_t fpd;
 	};
 };
 

@@ -99,6 +99,9 @@ private:
 	double thresholdK;
 	double thresholdL;
 	double thresholdM;
+    
+    uint32_t fpdL;
+    uint32_t fpdR;
 	
     float A;
 };

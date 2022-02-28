@@ -270,8 +270,8 @@ void UnBox::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 
 		if (input != 1.0) {inputSampleL *= input; inputSampleR *= input;}
 
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
