@@ -258,7 +258,7 @@ void		ButterComp::ButterCompKernel::Process(	const Float32 	*inSourceP,
 
 		inputSample *= totalmultiplier;
 		inputSample /= outputgain;
-		if (wet < 1.0) inputSample = (drySample * dry)+(inputSample*wet);
+		if (wet < 1.0) inputSample = (drySample * (1.0-wet))+(inputSample*wet);
 
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

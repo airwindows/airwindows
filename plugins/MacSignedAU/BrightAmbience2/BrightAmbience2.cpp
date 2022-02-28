@@ -200,7 +200,8 @@ ComponentResult		BrightAmbience2::Reset(AudioUnitScope inScope, AudioUnitElement
 	for(int count = 0; count < 32767; count++) {pL[count] = 0.0; pR[count] = 0.0;}
 	feedbackA = feedbackB = feedbackC = 0.0;
 	gcount = 0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+    fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+    fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
 }
 

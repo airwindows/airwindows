@@ -132,7 +132,8 @@ public:
 	double lastRefL[10];
 	double lastRefR[10];
 	int cycle;	
-		uint32_t fpd;
+    uint32_t fpdL;
+    uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
