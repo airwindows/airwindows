@@ -77,7 +77,8 @@ private:
     float I;
     float J;
 	//parameters. Always 0-1, and we scale/alter them elsewhere.
-
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 #endif
