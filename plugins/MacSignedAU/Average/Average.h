@@ -5,7 +5,7 @@
 * 
 *	Created:	5/5/14
 *	
-*	Copyright:  Copyright © 2014 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2014 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -131,7 +131,7 @@ public:
 	private: 
 		Float64 b[11];
 		Float64 f[11];		
-		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 
