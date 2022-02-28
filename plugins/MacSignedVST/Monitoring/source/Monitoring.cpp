@@ -60,7 +60,8 @@ Monitoring::Monitoring(audioMasterCallback audioMaster) :
 	for (int x = 0; x < 11; x++) {biquadL[x] = 0.0; biquadR[x] = 0.0;}
 	//Bandpasses
 	A = 0.0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

@@ -32,7 +32,8 @@ PodcastDeluxe::PodcastDeluxe(audioMasterCallback audioMaster) :
 	maxdelay1 = 9001; maxdelay2 = 9001; maxdelay3 = 9001; maxdelay4 = 9001; maxdelay5 = 9001;
 	c1R = 2.0; c2R = 2.0; c3R = 2.0; c4R = 2.0; c5R = 2.0; //startup comp gains	
 	
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

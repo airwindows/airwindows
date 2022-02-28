@@ -15,7 +15,8 @@ Channel7::Channel7(audioMasterCallback audioMaster) :
 	consoletype = 0.0;
 	drive = 0.0;
 	output = 1.0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	iirSampleLA = 0.0;
 	iirSampleRA = 0.0;
 	iirSampleLB = 0.0;

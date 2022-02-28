@@ -14,7 +14,8 @@ RawTimbers::RawTimbers(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	lastSampleL = 0.0;
 	lastSample2L = 0.0;
 	lastSampleR = 0.0;
