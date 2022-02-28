@@ -483,7 +483,7 @@ void		CStrip::CStripKernel::Process(	const Float32 	*inSourceP,
 		}
 		//end Gate, begin antialiasing
 				
-		flip = not flip;
+		flip = !flip;
 		flipthree++;
 		if (flipthree < 1 || flipthree > 3) flipthree = 1;
 		//counters

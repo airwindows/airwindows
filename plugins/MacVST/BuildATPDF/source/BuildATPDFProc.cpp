@@ -41,7 +41,7 @@ void BuildATPDF::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
-		bL[1] = bL[0]; bL[0] = (rand()/(double)RAND_MAX);
+		bL[1] = bL[0]; bL[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDither  = (bL[0] * f[0]);
 		currentDither += (bL[1] * f[1]);
@@ -58,7 +58,7 @@ void BuildATPDF::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
-		bR[1] = bR[0]; bR[0] = (rand()/(double)RAND_MAX);
+		bR[1] = bR[0]; bR[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDither  = (bR[0] * f[0]);
 		currentDither += (bR[1] * f[1]);
@@ -78,6 +78,10 @@ void BuildATPDF::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 		
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -122,7 +126,7 @@ void BuildATPDF::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
-		bL[1] = bL[0]; bL[0] = (rand()/(double)RAND_MAX);
+		bL[1] = bL[0]; bL[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDither  = (bL[0] * f[0]);
 		currentDither += (bL[1] * f[1]);
@@ -139,7 +143,7 @@ void BuildATPDF::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
-		bR[1] = bR[0]; bR[0] = (rand()/(double)RAND_MAX);
+		bR[1] = bR[0]; bR[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDither  = (bR[0] * f[0]);
 		currentDither += (bR[1] * f[1]);
@@ -159,6 +163,10 @@ void BuildATPDF::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 		
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 		

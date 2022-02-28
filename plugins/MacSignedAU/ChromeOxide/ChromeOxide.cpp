@@ -256,7 +256,7 @@ void		ChromeOxide::ChromeOxideKernel::Process(	const Float32 	*inSourceP,
 		
 		bridgerectifier = inputSample;
 		//insanity check
-		randy = bias+((rand()/(double)RAND_MAX)*noise);
+		randy = bias+((double(fpd)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSample * randy)+(secondSample * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSample * (randy-1.0))+(thirdSample * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSample * (randy-2.0))+(fourthSample * (3.0-randy));

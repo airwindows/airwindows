@@ -46,34 +46,34 @@ void PaulWide::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		//away from the previous one - this gives you the triangular PDF and the 
 		//filtering in one go :-)
 		
-		double currentDither = (rand()/(double)RAND_MAX);
+		double currentDither = (double(fpd)/UINT32_MAX);
 		double ditherL = currentDither;
 		ditherL -= previousDitherL;
 		previousDitherL = currentDither;
 		//TPDF: two 0-1 random noises
 		
-		currentDither = (rand()/(double)RAND_MAX);
+		currentDither = (double(fpd)/UINT32_MAX);
 		double ditherR = currentDither;
 		ditherR -= previousDitherR;
 		previousDitherR = currentDither;
 		//TPDF: two 0-1 random noises
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
-			currentDither = (rand()/(double)RAND_MAX);
+			currentDither = (double(fpd)/UINT32_MAX);
 			ditherL = currentDither;
 			ditherL -= previousDitherL;
 			previousDitherL = currentDither;
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
-			currentDither = (rand()/(double)RAND_MAX);
+			currentDither = (double(fpd)/UINT32_MAX);
 			ditherR = currentDither;
 			ditherR -= previousDitherR;
 			previousDitherR = currentDither;
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
-			currentDither = (rand()/(double)RAND_MAX);
+			currentDither = (double(fpd)/UINT32_MAX);
 			ditherL = currentDither;
 			ditherL -= previousDitherL;
 			previousDitherL = currentDither;
@@ -134,34 +134,34 @@ void PaulWide::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		//away from the previous one - this gives you the triangular PDF and the 
 		//filtering in one go :-)
 		
-		double currentDither = (rand()/(double)RAND_MAX);
+		double currentDither = (double(fpd)/UINT32_MAX);
 		double ditherL = currentDither;
 		ditherL -= previousDitherL;
 		previousDitherL = currentDither;
 		//TPDF: two 0-1 random noises
 		
-		currentDither = (rand()/(double)RAND_MAX);
+		currentDither = (double(fpd)/UINT32_MAX);
 		double ditherR = currentDither;
 		ditherR -= previousDitherR;
 		previousDitherR = currentDither;
 		//TPDF: two 0-1 random noises
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
-			currentDither = (rand()/(double)RAND_MAX);
+			currentDither = (double(fpd)/UINT32_MAX);
 			ditherL = currentDither;
 			ditherL -= previousDitherL;
 			previousDitherL = currentDither;
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
-			currentDither = (rand()/(double)RAND_MAX);
+			currentDither = (double(fpd)/UINT32_MAX);
 			ditherR = currentDither;
 			ditherR -= previousDitherR;
 			previousDitherR = currentDither;
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
-			currentDither = (rand()/(double)RAND_MAX);
+			currentDither = (double(fpd)/UINT32_MAX);
 			ditherL = currentDither;
 			ditherL -= previousDitherL;
 			previousDitherL = currentDither;

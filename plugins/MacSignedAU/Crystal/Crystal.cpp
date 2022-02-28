@@ -276,7 +276,7 @@ void		Crystal::CrystalKernel::Process(	const Float32 	*inSourceP,
 		//because it introduces a point where the saturation 'curve' changes from straight to curved.
 		//People don't like these discontinuities, but you can use them for effect or to grit up the sound.
 
-		randy = ((rand()/(double)RAND_MAX)*0.022);
+		randy = ((double(fpd)/UINT32_MAX)*0.022);
 		bridgerectifier = ((inputSample*(1-randy))+(lastSample*randy)) * outlevel;
 		lastSample = inputSample;
 		inputSample = bridgerectifier; //applies a tiny 'fuzz' to highs: from original Crystal.

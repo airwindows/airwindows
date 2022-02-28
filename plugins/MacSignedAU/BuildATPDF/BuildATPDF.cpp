@@ -269,7 +269,7 @@ void		BuildATPDF::BuildATPDFKernel::Process(	const Float32 	*inSourceP,
 		
 		b[9] = b[8]; b[8] = b[7]; b[7] = b[6]; b[6] = b[5];
 		b[5] = b[4]; b[4] = b[3]; b[3] = b[2]; b[2] = b[1];
-		b[1] = b[0]; b[0] = (rand()/(double)RAND_MAX);
+		b[1] = b[0]; b[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDither  = (b[0] * f[0]);
 		currentDither += (b[1] * f[1]);
@@ -286,6 +286,10 @@ void		BuildATPDF::BuildATPDFKernel::Process(	const Float32 	*inSourceP,
 		inputSample = floor(inputSample);
 		
 		inputSample /= 8388608.0;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

@@ -56,6 +56,8 @@ private:
 	double settingchase;
 	double chasespeed;		
 	
+	uint32_t fpdL;
+	uint32_t fpdR;
 	double fpNShapeL;
 	double lastSampleAL;
 	double lastSampleBL;

@@ -156,11 +156,11 @@ void Neverland::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			inputSampleR += (bR[33] * (0.00555223929714115  - (0.00030319367948553*fabs(bR[33]))));
 			//we apply the first samples of the Neve impulse- dynamically adjusted.
 		}
-		randy = ((rand()/(double)RAND_MAX)*0.034);
+		randy = ((double(fpd)/UINT32_MAX)*0.034);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((rand()/(double)RAND_MAX)*0.034);
+		randy = ((double(fpd)/UINT32_MAX)*0.034);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -332,22 +332,22 @@ void Neverland::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			inputSampleR += (bR[33] * (0.00555223929714115  - (0.00030319367948553*fabs(bR[33]))));
 			//we apply the first samples of the Neve impulse- dynamically adjusted.
 		}
-		randy = ((rand()/(double)RAND_MAX)*0.034);
+		randy = ((double(fpd)/UINT32_MAX)*0.034);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((rand()/(double)RAND_MAX)*0.034);
+		randy = ((double(fpd)/UINT32_MAX)*0.034);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
 				
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

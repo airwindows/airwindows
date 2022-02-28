@@ -385,7 +385,7 @@ void		AQuickVoiceClip::AQuickVoiceClipKernel::Process(	const Float32 	*inSourceP
 			iirSampleD = (iirSampleD * altAmount) + (passThrough * iirAmount);
 			passThrough -= iirSampleD;
 		}
-		flip = not flip;
+		flip = !flip;
 		//highpass section 
 		
 		

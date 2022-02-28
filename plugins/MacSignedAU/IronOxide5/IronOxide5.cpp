@@ -291,7 +291,7 @@ void		IronOxide5::IronOxide5Kernel::Process(	const Float32 	*inSourceP,
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		drySample = inputSample;
 		
-		flutterrandy = (rand()/(double)RAND_MAX);
+		flutterrandy = (double(fpd)/UINT32_MAX);
 		//part of flutter section
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (fstoredcount < 0 || fstoredcount > 30) {fstoredcount = 30;}
@@ -440,7 +440,7 @@ void		IronOxide5::IronOxide5Kernel::Process(	const Float32 	*inSourceP,
 		else inputSample = -bridgerectifier;
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
 		
-		randy = (0.55 + tempRandy + ((rand()/(double)RAND_MAX)*tempRandy))*noise; //0 to 2
+		randy = (0.55 + tempRandy + ((double(fpd)/UINT32_MAX)*tempRandy))*noise; //0 to 2
 		inputSample *= (1.0 - randy);
 		inputSample += (prevInputSample*randy);
 		prevInputSample = drySample;

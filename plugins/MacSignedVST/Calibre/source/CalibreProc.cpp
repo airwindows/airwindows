@@ -160,11 +160,11 @@ void Calibre::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//otherwise we leave it untouched by the overdrive stuff
 		
 		
-		randy = ((rand()/(double)RAND_MAX)*0.042);
+		randy = ((double(fpd)/UINT32_MAX)*0.042);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((rand()/(double)RAND_MAX)*0.042);
+		randy = ((double(fpd)/UINT32_MAX)*0.042);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -341,22 +341,22 @@ void Calibre::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//otherwise we leave it untouched by the overdrive stuff
 		
 		
-		randy = ((rand()/(double)RAND_MAX)*0.042);
+		randy = ((double(fpd)/UINT32_MAX)*0.042);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((rand()/(double)RAND_MAX)*0.042);
+		randy = ((double(fpd)/UINT32_MAX)*0.042);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

@@ -316,7 +316,7 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 			airOddA = (airOddA - ((airOddA - airEvenA)/256.0)) / filterQ;
 			airEvenA = (airEvenA - ((airEvenA - airOddA)/256.0)) / filterQ;
 			airPrevA = inputSample;
-			flipA = not flipA;
+			flipA = !flipA;
 			correction = correction + airFactorA;
 			}
 		else
@@ -337,7 +337,7 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 			airOddB = (airOddB - ((airOddB - airEvenB)/256.0)) / filterQ;
 			airEvenB = (airEvenB - ((airEvenB - airOddB)/256.0)) / filterQ;
 			airPrevB = inputSample;
-			flipB = not flipB;
+			flipB = !flipB;
 			correction = correction + airFactorB;
 			}
 		//11K one
@@ -358,7 +358,7 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 		airEvenC = (airEvenC - ((airEvenC - airOddC)/256.0)) / filterQ;
 		airPrevC = inputSample;
 		correction = correction + airFactorC;
-		flop = not flop;
+		flop = !flop;
 		
 		inputSample += correction;
 		
@@ -367,11 +367,11 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 		//nice little output stage template: if we have another scale of floating point
 		//number, we really don't want to meaninglessly multiply that by 1.0.		
 		
-		//32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)inputSample, &expon);
-		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		inputSample += (dither-fpNShape); fpNShape = dither;
-		//end 32 bit dither		
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)inputSample, &expon);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 		
 		*destP = inputSample;
 		destP += inNumChannels;

@@ -316,12 +316,12 @@ void		Noise::NoiseKernel::Process(	const Float32 	*inSourceP,
 		
 		if (surge<fabs(inputSample))
 		{
-			surge += (rand()/(double)RAND_MAX)*(fabs(inputSample)-surge);
+			surge += (double(fpd)/UINT32_MAX)*(fabs(inputSample)-surge);
 			if (surge > 1.0) surge = 1.0;
 		}
 		else
 		{
-			surge -= ((rand()/(double)RAND_MAX)*(surge-fabs(inputSample))*decay);
+			surge -= ((double(fpd)/UINT32_MAX)*(surge-fabs(inputSample))*decay);
 			if (surge < 0.0) surge = 0.0;
 		}
 		
@@ -352,8 +352,8 @@ void		Noise::NoiseKernel::Process(	const Float32 	*inSourceP,
 		}
 		
 		
-		if (flip) noiseA += (rand()/(double)RAND_MAX);
-		else noiseA -= (rand()/(double)RAND_MAX);
+		if (flip) noiseA += (double(fpd)/UINT32_MAX);
+		else noiseA -= (double(fpd)/UINT32_MAX);
 		
 		if (filterflip)
 		{

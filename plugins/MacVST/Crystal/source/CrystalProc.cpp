@@ -143,12 +143,12 @@ void Crystal::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//because it introduces a point where the saturation 'curve' changes from straight to curved.
 		//People don't like these discontinuities, but you can use them for effect or to grit up the sound.
 		
-		randy = ((rand()/(double)RAND_MAX)*0.022);
+		randy = ((double(fpd)/UINT32_MAX)*0.022);
 		bridgerectifier = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		inputSampleL = bridgerectifier; //applies a tiny 'fuzz' to highs: from original Crystal.
 		
-		randy = ((rand()/(double)RAND_MAX)*0.022);
+		randy = ((double(fpd)/UINT32_MAX)*0.022);
 		bridgerectifier = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		inputSampleR = bridgerectifier; //applies a tiny 'fuzz' to highs: from original Crystal.
@@ -312,12 +312,12 @@ void Crystal::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//because it introduces a point where the saturation 'curve' changes from straight to curved.
 		//People don't like these discontinuities, but you can use them for effect or to grit up the sound.
 		
-		randy = ((rand()/(double)RAND_MAX)*0.022);
+		randy = ((double(fpd)/UINT32_MAX)*0.022);
 		bridgerectifier = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		inputSampleL = bridgerectifier; //applies a tiny 'fuzz' to highs: from original Crystal.
 		
-		randy = ((rand()/(double)RAND_MAX)*0.022);
+		randy = ((double(fpd)/UINT32_MAX)*0.022);
 		bridgerectifier = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		inputSampleR = bridgerectifier; //applies a tiny 'fuzz' to highs: from original Crystal.

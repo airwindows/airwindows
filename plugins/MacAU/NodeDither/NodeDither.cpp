@@ -224,7 +224,7 @@ void		NodeDither::NodeDitherKernel::Process(	const Float32 	*inSourceP,
 		
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
 				
-		currentDither = (rand()/(double)RAND_MAX);
+		currentDither = (double(fpd)/UINT32_MAX);
 		inputSample += currentDither;
 		
 		if (phase == 1) {
@@ -242,6 +242,10 @@ void		NodeDither::NodeDitherKernel::Process(	const Float32 	*inSourceP,
 		gcount--;
 		
 		inputSample /= 8388608.0;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

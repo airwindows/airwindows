@@ -239,31 +239,31 @@ OSStatus		TPDFWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		//0-1 is now one bit, now we dither
 		
 		double ditherL = -1.0;
-		ditherL += (rand()/(double)RAND_MAX);
-		ditherL += (rand()/(double)RAND_MAX);
+		ditherL += (double(fpd)/UINT32_MAX);
+		ditherL += (double(fpd)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		double ditherR = -1.0;
-		ditherR += (rand()/(double)RAND_MAX);
-		ditherR += (rand()/(double)RAND_MAX);
+		ditherR += (double(fpd)/UINT32_MAX);
+		ditherR += (double(fpd)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (rand()/(double)RAND_MAX);
-			ditherL += (rand()/(double)RAND_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherR = -1.0;
-			ditherR += (rand()/(double)RAND_MAX);
-			ditherR += (rand()/(double)RAND_MAX);
+			ditherR += (double(fpd)/UINT32_MAX);
+			ditherR += (double(fpd)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (rand()/(double)RAND_MAX);
-			ditherL += (rand()/(double)RAND_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
 		}
 				
 		inputSampleL = floor(inputSampleL+ditherL);
@@ -271,7 +271,11 @@ OSStatus		TPDFWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		
 		inputSampleL /= outScale;
 		inputSampleR /= outScale;
-		
+
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*outputL = inputSampleL;
 		*outputR = inputSampleR;
 		//direct stereo out

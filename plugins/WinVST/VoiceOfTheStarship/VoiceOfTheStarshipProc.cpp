@@ -110,10 +110,10 @@ void VoiceOfTheStarship::processReplacing(float **inputs, float **outputs, VstIn
 			//it's a pure random walk that will generate DC.
 		}
 		
-		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
-		else noiseAL -= (rand()/(double)RAND_MAX);
-		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
-		else noiseAR -= (rand()/(double)RAND_MAX);
+		if (flipL) noiseAL += (double(fpd)/UINT32_MAX);
+		else noiseAL -= (double(fpd)/UINT32_MAX);
+		if (flipR) noiseAR += (double(fpd)/UINT32_MAX);
+		else noiseAR -= (double(fpd)/UINT32_MAX);
 		//here's the guts of the random walk
 		
 		if (filterflip)
@@ -300,10 +300,10 @@ void VoiceOfTheStarship::processDoubleReplacing(double **inputs, double **output
 			//it's a pure random walk that will generate DC.
 		}
 		
-		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
-		else noiseAL -= (rand()/(double)RAND_MAX);
-		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
-		else noiseAR -= (rand()/(double)RAND_MAX);
+		if (flipL) noiseAL += (double(fpd)/UINT32_MAX);
+		else noiseAL -= (double(fpd)/UINT32_MAX);
+		if (flipR) noiseAR += (double(fpd)/UINT32_MAX);
+		else noiseAR -= (double(fpd)/UINT32_MAX);
 		//here's the guts of the random walk
 		
 		if (filterflip)

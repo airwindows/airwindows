@@ -55,7 +55,7 @@ void FromTape::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			inputSampleR *= inputgain;
 		}		
 		
-		randy = (rand()/(double)RAND_MAX) * SoftenControl; //for soften
+		randy = (double(fpd)/UINT32_MAX) * SoftenControl; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//we've set up so that we dial in the amount of the alt sections (in pairs) with invrandy being the source section
@@ -252,7 +252,7 @@ void FromTape::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			inputSampleR *= inputgain;
 		}		
 		
-		randy = (rand()/(double)RAND_MAX) * SoftenControl; //for soften
+		randy = (double(fpd)/UINT32_MAX) * SoftenControl; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//we've set up so that we dial in the amount of the alt sections (in pairs) with invrandy being the source section

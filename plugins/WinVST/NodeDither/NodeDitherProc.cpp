@@ -43,10 +43,10 @@ void NodeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
 		
-		currentDitherL = (rand()/(double)RAND_MAX);
+		currentDitherL = (double(fpd)/UINT32_MAX);
 		inputSampleL += currentDitherL;
 
-		currentDitherR = (rand()/(double)RAND_MAX);
+		currentDitherR = (double(fpd)/UINT32_MAX);
 		inputSampleR += currentDitherR;
 
 		if (phase == 1) {
@@ -117,10 +117,10 @@ void NodeDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		if (gcount < 0 || gcount > 2450) {gcount = 2450;}
 		
-		currentDitherL = (rand()/(double)RAND_MAX);
+		currentDitherL = (double(fpd)/UINT32_MAX);
 		inputSampleL += currentDitherL;
 		
-		currentDitherR = (rand()/(double)RAND_MAX);
+		currentDitherR = (double(fpd)/UINT32_MAX);
 		inputSampleR += currentDitherR;
 		
 		if (phase == 1) {

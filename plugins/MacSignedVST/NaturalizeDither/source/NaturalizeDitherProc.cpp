@@ -36,11 +36,11 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		
 		if (inputSampleL > 0) inputSampleL += (0.3333333333);
 		if (inputSampleL < 0) inputSampleL -= (0.3333333333);
-		inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
+		inputSampleL += (double(fpd)/UINT32_MAX)*0.6666666666;
 
 		if (inputSampleR > 0) inputSampleR += (0.3333333333);
 		if (inputSampleR < 0) inputSampleR -= (0.3333333333);
-		inputSampleR += (rand()/(double)RAND_MAX)*0.6666666666;
+		inputSampleR += (double(fpd)/UINT32_MAX)*0.6666666666;
 		
 		//begin L
 		benfordize = floor(inputSampleL);
@@ -195,6 +195,10 @@ void NaturalizeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
 		
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -234,11 +238,11 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		
 		if (inputSampleL > 0) inputSampleL += (0.3333333333);
 		if (inputSampleL < 0) inputSampleL -= (0.3333333333);
-		inputSampleL += (rand()/(double)RAND_MAX)*0.6666666666;
+		inputSampleL += (double(fpd)/UINT32_MAX)*0.6666666666;
 		
 		if (inputSampleR > 0) inputSampleR += (0.3333333333);
 		if (inputSampleR < 0) inputSampleR -= (0.3333333333);
-		inputSampleR += (rand()/(double)RAND_MAX)*0.6666666666;
+		inputSampleR += (double(fpd)/UINT32_MAX)*0.6666666666;
 		
 		//begin L
 		benfordize = floor(inputSampleL);
@@ -393,6 +397,10 @@ void NaturalizeDither::processDoubleReplacing(double **inputs, double **outputs,
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;		
 		
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

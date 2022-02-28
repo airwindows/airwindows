@@ -224,7 +224,7 @@ void		TapeDither::TapeDitherKernel::Process(	const Float32 	*inSourceP,
 		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
-		currentDither = (rand()/(double)RAND_MAX);
+		currentDither = (double(fpd)/UINT32_MAX);
 		inputSample += currentDither;
 		inputSample -= previousDither4;
 		inputSample = floor(inputSample);
@@ -234,6 +234,10 @@ void		TapeDither::TapeDitherKernel::Process(	const Float32 	*inSourceP,
 		previousDither1 = currentDither;
 		
 		inputSample /= outScale;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

@@ -194,7 +194,7 @@ void		NaturalizeDither::NaturalizeDitherKernel::Process(	const Float32 	*inSourc
 		if (inputSample > 0) inputSample += (0.3333333333);
 		if (inputSample < 0) inputSample -= (0.3333333333);
 		
-		inputSample += (rand()/(double)RAND_MAX)*0.6666666666;
+		inputSample += (double(fpd)/UINT32_MAX)*0.6666666666;
 		
 		benfordize = floor(inputSample);
 		while (benfordize >= 1.0) {benfordize /= 10;}
@@ -270,6 +270,10 @@ void		NaturalizeDither::NaturalizeDitherKernel::Process(	const Float32 	*inSourc
 		byn[10] /= 2; //catchall for garbage data
 		
 		inputSample /= 8388608.0;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

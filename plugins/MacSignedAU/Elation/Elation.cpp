@@ -334,7 +334,7 @@ void		Elation::ElationKernel::Process(	const Float32 	*inSourceP,
 		
 		flip = !flip;
 		
-		randy = ((rand()/(double)RAND_MAX)*0.054);
+		randy = ((double(fpd)/UINT32_MAX)*0.054);
 		
 		outputSample = ((((inputSample*(1-randy))+(lastSample*randy))*wet)+(drySample*(1.0-wet))) * outlevel;
 		lastSample = inputSample;

@@ -41,22 +41,22 @@ void Deckwrecka::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
 
-		randyL = (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
+		randyL = (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
 		randyL /= 6.0;
 		randyL *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
 
-		randyR = (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
+		randyR = (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
 		randyR /= 6.0;
 		randyR *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
@@ -226,22 +226,22 @@ void Deckwrecka::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
 		
-		randyL = (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
-		randyL += (rand()/(double)RAND_MAX);
+		randyL = (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
+		randyL += (double(fpd)/UINT32_MAX);
 		randyL /= 6.0;
 		randyL *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
 		
-		randyR = (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
-		randyR += (rand()/(double)RAND_MAX);
+		randyR = (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
+		randyR += (double(fpd)/UINT32_MAX);
 		randyR /= 6.0;
 		randyR *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
@@ -359,12 +359,12 @@ void Deckwrecka::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleR += (HeadBumpR * wreck);
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

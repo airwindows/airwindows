@@ -195,7 +195,7 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		double randy = (rand()/(double)RAND_MAX)*0.0555; //0 to 1 the noise, may not be needed		
+		double randy = (double(fpd)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
 		{
@@ -567,7 +567,7 @@ void BassAmp::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		double randy = (rand()/(double)RAND_MAX)*0.0555; //0 to 1 the noise, may not be needed		
+		double randy = (double(fpd)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
 		{

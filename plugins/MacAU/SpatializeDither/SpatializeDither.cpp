@@ -230,7 +230,7 @@ void		SpatializeDither::SpatializeDitherKernel::Process(	const Float32 	*inSourc
 		if (inputSample > 0) inputSample += 0.383;
 		if (inputSample < 0) inputSample -= 0.383;
 		//adjusting to permit more information drug outta the noisefloor
-		contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+		contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
         contingentRnd -= contingentErr*omegaConstant; //include err
 		absSample = fabs(inputSample);
 		contingentErr = absSample - floor(absSample); //get next err
@@ -249,6 +249,10 @@ void		SpatializeDither::SpatializeDitherKernel::Process(	const Float32 	*inSourc
 		//and does a teeny parallel-compression thing when almost at digital black.
 		
 		inputSample /= outScale;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

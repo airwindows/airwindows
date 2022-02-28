@@ -119,7 +119,7 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		
 		//begin pad L
 		padFactorL += dL[dCount];
-		double randy = (rand()/(double)RAND_MAX);
+		double randy = (double(fpd)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthL) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthL += 1;
@@ -140,7 +140,7 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		
 		//begin pad R
 		padFactorR += dR[dCount];
-		randy = (rand()/(double)RAND_MAX);
+		randy = (double(fpd)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthR) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthR += 1;
@@ -258,7 +258,7 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		//we now have a big buffer to draw from, which is always positive amount of overspill
 		
 		padFactorL += dL[dCount];
-		double randy = (rand()/(double)RAND_MAX);
+		double randy = (double(fpd)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthL) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthL += 1;
@@ -319,7 +319,7 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		//we now have a big buffer to draw from, which is always positive amount of overspill
 		
 		padFactorR += dR[dCount];
-		randy = (rand()/(double)RAND_MAX);
+		randy = (double(fpd)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthR) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthR += 1;
@@ -351,12 +351,12 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		}
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
+		//int expon; frexp((double)inputSampleL, &expon);
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
-		frexp((double)inputSampleR, &expon);
+		//inputSampleL += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		//frexp((double)inputSampleR, &expon);
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
+		//inputSampleR += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

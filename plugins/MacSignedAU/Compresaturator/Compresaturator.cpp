@@ -270,7 +270,7 @@ void		Compresaturator::CompresaturatorKernel::Process(	const Float32 	*inSourceP
 		dCount--;
 		
 		padFactor += d[dCount];
-		Float64 randy = (rand()/(double)RAND_MAX);
+		Float64 randy = (double(fpd)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidth) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidth += 1;

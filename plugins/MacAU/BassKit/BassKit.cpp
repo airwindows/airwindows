@@ -303,10 +303,10 @@ OSStatus		BassKit::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 		//set up the thing to choke off oscillations- belt and suspenders affair
 		
 		if (ataLowpass > 0)
-		{if (WasNegative){SubOctave = not SubOctave;} WasNegative = false;}
+		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
 		//set up polarities for sub-bass version
-		randy = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randy = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise

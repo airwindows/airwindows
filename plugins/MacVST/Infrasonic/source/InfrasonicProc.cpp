@@ -209,12 +209,12 @@ void Infrasonic::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		biquadE[12] = biquadE[11]; biquadE[11] = inputSampleR; inputSampleR = outSampleR; biquadE[14] = biquadE[13]; biquadE[13] = inputSampleR; //DF1 right
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

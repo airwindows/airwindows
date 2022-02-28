@@ -266,7 +266,7 @@ void		Channel4::Channel4Kernel::Process(	const Float32 	*inSourceP,
 			inputSample += fpNShapeB;
 		}
 		//end noise shaping on 32 bit output
-		flip = not flip;
+		flip = !flip;
 		
 		*destP = inputSample;
 		sourceP += inNumChannels;

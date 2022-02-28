@@ -209,7 +209,7 @@ void		Slew2::Slew2Kernel::Process(	const Float32 	*inSourceP,
 		ataC = ataHalfwaySample - ataHalfDrySample;
 		if (ataFlip) {ataA *= ataDecay; ataB *= ataDecay; ataA += ataC; ataB -= ataC; ataC = ataA;}
 		else {ataB *= ataDecay; ataA *= ataDecay; ataB += ataC; ataA -= ataC; ataC = ataB;}
-		ataHalfDiffSample = (ataC * ataDecay); ataFlip = not ataFlip;
+		ataHalfDiffSample = (ataC * ataDecay); ataFlip = !ataFlip;
 		//end antialiasing section for halfway sample
 	//begin second half- inputSample and ataDrySample handled separately here
 		
@@ -226,7 +226,7 @@ void		Slew2::Slew2Kernel::Process(	const Float32 	*inSourceP,
 		ataC = inputSample - ataDrySample;
 		if (ataFlip) {ataA *= ataDecay; ataB *= ataDecay; ataA += ataC; ataB -= ataC; ataC = ataA;}
 		else {ataB *= ataDecay; ataA *= ataDecay; ataB += ataC; ataA -= ataC; ataC = ataB;}
-		ataDiffSample = (ataC * ataDecay); ataFlip = not ataFlip;
+		ataDiffSample = (ataC * ataDecay); ataFlip = !ataFlip;
 		//end antialiasing section for input sample
 		inputSample = ataDrySample; inputSample += ((ataDiffSample + ataHalfDiffSample + ataPrevDiffSample) / 0.734);
 		ataPrevDiffSample = ataDiffSample / 2.0;

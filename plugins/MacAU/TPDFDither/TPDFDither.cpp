@@ -220,12 +220,16 @@ void		TPDFDither::TPDFDitherKernel::Process(	const Float32 	*inSourceP,
 		//0-1 is now one bit, now we dither
 
 		inputSample -= 1.0;
-		inputSample += (rand()/(double)RAND_MAX);
-		inputSample += (rand()/(double)RAND_MAX);
+		inputSample += (double(fpd)/UINT32_MAX);
+		inputSample += (double(fpd)/UINT32_MAX);
 		inputSample = floor(inputSample);
 		//TPDF: two 0-1 random noises
 		
 		inputSample /= outScale;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

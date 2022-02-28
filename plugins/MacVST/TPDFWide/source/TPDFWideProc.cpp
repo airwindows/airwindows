@@ -40,31 +40,31 @@ void TPDFWide::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		//0-1 is now one bit, now we dither
 		
 		double ditherL = -1.0;
-		ditherL += (rand()/(double)RAND_MAX);
-		ditherL += (rand()/(double)RAND_MAX);
+		ditherL += (double(fpd)/UINT32_MAX);
+		ditherL += (double(fpd)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		double ditherR = -1.0;
-		ditherR += (rand()/(double)RAND_MAX);
-		ditherR += (rand()/(double)RAND_MAX);
+		ditherR += (double(fpd)/UINT32_MAX);
+		ditherR += (double(fpd)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (rand()/(double)RAND_MAX);
-			ditherL += (rand()/(double)RAND_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherR = -1.0;
-			ditherR += (rand()/(double)RAND_MAX);
-			ditherR += (rand()/(double)RAND_MAX);
+			ditherR += (double(fpd)/UINT32_MAX);
+			ditherR += (double(fpd)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (rand()/(double)RAND_MAX);
-			ditherL += (rand()/(double)RAND_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
 		}
 		
 		inputSampleL = floor(inputSampleL+ditherL);
@@ -73,6 +73,10 @@ void TPDFWide::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		inputSampleL /= outScale;
 		inputSampleR /= outScale;
 		
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
@@ -116,31 +120,31 @@ void TPDFWide::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		//0-1 is now one bit, now we dither
 		
 		double ditherL = -1.0;
-		ditherL += (rand()/(double)RAND_MAX);
-		ditherL += (rand()/(double)RAND_MAX);
+		ditherL += (double(fpd)/UINT32_MAX);
+		ditherL += (double(fpd)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		double ditherR = -1.0;
-		ditherR += (rand()/(double)RAND_MAX);
-		ditherR += (rand()/(double)RAND_MAX);
+		ditherR += (double(fpd)/UINT32_MAX);
+		ditherR += (double(fpd)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (rand()/(double)RAND_MAX);
-			ditherL += (rand()/(double)RAND_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherR = -1.0;
-			ditherR += (rand()/(double)RAND_MAX);
-			ditherR += (rand()/(double)RAND_MAX);
+			ditherR += (double(fpd)/UINT32_MAX);
+			ditherR += (double(fpd)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (rand()/(double)RAND_MAX);
-			ditherL += (rand()/(double)RAND_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpd)/UINT32_MAX);
 		}
 		
 		inputSampleL = floor(inputSampleL+ditherL);
@@ -149,6 +153,10 @@ void TPDFWide::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		inputSampleL /= outScale;
 		inputSampleR /= outScale;
 		
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//pseudorandom number updater
+
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 

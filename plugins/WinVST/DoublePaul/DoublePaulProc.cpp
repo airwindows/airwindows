@@ -33,7 +33,7 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
-		bL[1] = bL[0]; bL[0] = (rand()/(double)RAND_MAX);
+		bL[1] = bL[0]; bL[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDitherL  = (bL[0] * 0.061);
 		currentDitherL -= (bL[1] * 0.11);
@@ -56,7 +56,7 @@ void DoublePaul::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
-		bR[1] = bR[0]; bR[0] = (rand()/(double)RAND_MAX);
+		bR[1] = bR[0]; bR[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDitherR  = (bR[0] * 0.061);
 		currentDitherR -= (bR[1] * 0.11);
@@ -116,7 +116,7 @@ void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		bL[9] = bL[8]; bL[8] = bL[7]; bL[7] = bL[6]; bL[6] = bL[5];
 		bL[5] = bL[4]; bL[4] = bL[3]; bL[3] = bL[2]; bL[2] = bL[1];
-		bL[1] = bL[0]; bL[0] = (rand()/(double)RAND_MAX);
+		bL[1] = bL[0]; bL[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDitherL  = (bL[0] * 0.061);
 		currentDitherL -= (bL[1] * 0.11);
@@ -139,7 +139,7 @@ void DoublePaul::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		bR[9] = bR[8]; bR[8] = bR[7]; bR[7] = bR[6]; bR[6] = bR[5];
 		bR[5] = bR[4]; bR[4] = bR[3]; bR[3] = bR[2]; bR[2] = bR[1];
-		bR[1] = bR[0]; bR[0] = (rand()/(double)RAND_MAX);
+		bR[1] = bR[0]; bR[0] = (double(fpd)/UINT32_MAX);
 		
 		currentDitherR  = (bR[0] * 0.061);
 		currentDitherR -= (bR[1] * 0.11);

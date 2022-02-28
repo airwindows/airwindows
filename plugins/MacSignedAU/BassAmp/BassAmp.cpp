@@ -380,7 +380,7 @@ void		BassAmp::BassAmpKernel::Process(	const Float32 	*inSourceP,
 		
 		
 		//set up polarities for sub-bass version
-		Float64 randy = (rand()/(double)RAND_MAX)*0.0555; //0 to 1 the noise, may not be needed		
+		Float64 randy = (double(fpd)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
 		{

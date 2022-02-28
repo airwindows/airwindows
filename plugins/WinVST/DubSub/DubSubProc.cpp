@@ -194,11 +194,11 @@ void DubSub::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		else {WasNegativeR = true;}
 		//set up polarities for sub-bass version
 		
-		randyL = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randyL = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyL = (1.0-randyL);
 		randyL /= 2.0;
 		
-		randyR = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randyR = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyR = (1.0-randyR);
 		randyR /= 2.0;
 		//set up the noise
@@ -597,11 +597,11 @@ void DubSub::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		else {WasNegativeR = true;}
 		//set up polarities for sub-bass version
 		
-		randyL = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randyL = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyL = (1.0-randyL);
 		randyL /= 2.0;
 		
-		randyR = (rand()/(double)RAND_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randyR = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandyR = (1.0-randyR);
 		randyR /= 2.0;
 		//set up the noise

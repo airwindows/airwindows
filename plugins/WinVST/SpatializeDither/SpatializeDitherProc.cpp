@@ -51,7 +51,7 @@ void SpatializeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		if (inputSampleR < 0) inputSampleR -= 0.383;
 		//adjusting to permit more information drug outta the noisefloor
 		
-		contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+		contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
         contingentRnd -= contingentErrL*omegaConstant; //include err
 		absSample = fabs(inputSampleL);
 		contingentErrL = absSample - floor(absSample); //get next err
@@ -65,7 +65,7 @@ void SpatializeDither::processReplacing(float **inputs, float **outputs, VstInt3
 		//Contingent Dither
 		inputSampleL = floor(inputSampleL);
 		
-		contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+		contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
         contingentRnd -= contingentErrR*omegaConstant; //include err
 		absSample = fabs(inputSampleR);
 		contingentErrR = absSample - floor(absSample); //get next err
@@ -142,7 +142,7 @@ void SpatializeDither::processDoubleReplacing(double **inputs, double **outputs,
 		if (inputSampleR < 0) inputSampleR -= 0.383;
 		//adjusting to permit more information drug outta the noisefloor
 		
-		contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+		contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
         contingentRnd -= contingentErrL*omegaConstant; //include err
 		absSample = fabs(inputSampleL);
 		contingentErrL = absSample - floor(absSample); //get next err
@@ -156,7 +156,7 @@ void SpatializeDither::processDoubleReplacing(double **inputs, double **outputs,
 		//Contingent Dither
 		inputSampleL = floor(inputSampleL);
 		
-		contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+		contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
         contingentRnd -= contingentErrR*omegaConstant; //include err
 		absSample = fabs(inputSampleR);
 		contingentErrR = absSample - floor(absSample); //get next err

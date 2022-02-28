@@ -301,7 +301,7 @@ void		ToTape5::ToTape5Kernel::Process(	const Float32 	*inSourceP,
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		drySample = inputSample;
 
-		flutterrandy = (rand()/(double)RAND_MAX);
+		flutterrandy = (double(fpd)/UINT32_MAX);
 		randy = flutterrandy * tempRandy; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;

@@ -284,8 +284,8 @@ void		VoiceOfTheStarship::VoiceOfTheStarshipKernel::Process(	const Float32 	*inS
 			//it's a pure random walk that will generate DC.
 		}
 		
-		if (flip) noiseA += (rand()/(double)RAND_MAX);
-		else noiseA -= (rand()/(double)RAND_MAX);
+		if (flip) noiseA += (double(fpd)/UINT32_MAX);
+		else noiseA -= (double(fpd)/UINT32_MAX);
 		//here's the guts of the random walk
 	
 		if (filterflip)

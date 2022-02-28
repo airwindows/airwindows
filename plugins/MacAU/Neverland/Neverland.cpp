@@ -282,7 +282,7 @@ void		Neverland::NeverlandKernel::Process(	const Float32 	*inSourceP,
 			inputSample += (b[33] * (0.00555223929714115  - (0.00030319367948553*fabs(b[33]))));
 			//we apply the first samples of the Neve impulse- dynamically adjusted.
 		}
-		randy = ((rand()/(double)RAND_MAX)*0.034);
+		randy = ((double(fpd)/UINT32_MAX)*0.034);
 		inputSample = ((inputSample*(1-randy))+(lastSample*randy)) * outlevel;
 		lastSample = inputSample;
 

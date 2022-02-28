@@ -348,7 +348,7 @@ void		Energy::EnergyKernel::Process(	const Float32 	*inSourceP,
 		duoOdd = (duoOdd - ((duoOdd - duoEven)/256.0)) / 2.0;
 		duoEven = (duoEven - ((duoEven - duoOdd)/256.0)) / 2.0;
 		correction = correction + duoFactor;
-		flip = not flip;
+		flip = !flip;
 		//finished duo section
 		
 		

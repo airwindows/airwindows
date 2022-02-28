@@ -77,7 +77,7 @@ void ToTape5::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		drySampleR = inputSampleR;
 		
 		
-		flutterrandy = (rand()/(double)RAND_MAX);
+		flutterrandy = (double(fpd)/UINT32_MAX);
 		randy = flutterrandy * tempRandy; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;
@@ -406,7 +406,7 @@ void ToTape5::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		drySampleR = inputSampleR;
 		
 		
-		flutterrandy = (rand()/(double)RAND_MAX);
+		flutterrandy = (double(fpd)/UINT32_MAX);
 		randy = flutterrandy * tempRandy; //for soften
 		invrandy = (1.0-randy);
 		randy /= 2.0;

@@ -96,7 +96,7 @@ void ChromeOxide::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		
 		bridgerectifier = inputSampleL;
 		//insanity check
-		randy = bias+((rand()/(double)RAND_MAX)*noise);
+		randy = bias+((double(fpd)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleL * randy)+(secondSampleL * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleL * (randy-1.0))+(thirdSampleL * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleL * (randy-2.0))+(fourthSampleL * (3.0-randy));
@@ -112,7 +112,7 @@ void ChromeOxide::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 		bridgerectifier = inputSampleR;
 		//insanity check
-		randy = bias+((rand()/(double)RAND_MAX)*noise);
+		randy = bias+((double(fpd)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleR * randy)+(secondSampleR * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleR * (randy-1.0))+(thirdSampleR * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleR * (randy-2.0))+(fourthSampleR * (3.0-randy));
@@ -257,7 +257,7 @@ void ChromeOxide::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		bridgerectifier = inputSampleL;
 		//insanity check
-		randy = bias+((rand()/(double)RAND_MAX)*noise);
+		randy = bias+((double(fpd)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleL * randy)+(secondSampleL * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleL * (randy-1.0))+(thirdSampleL * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleL * (randy-2.0))+(fourthSampleL * (3.0-randy));
@@ -273,7 +273,7 @@ void ChromeOxide::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		bridgerectifier = inputSampleR;
 		//insanity check
-		randy = bias+((rand()/(double)RAND_MAX)*noise);
+		randy = bias+((double(fpd)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleR * randy)+(secondSampleR * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleR * (randy-1.0))+(thirdSampleR * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleR * (randy-2.0))+(fourthSampleR * (3.0-randy));
@@ -312,12 +312,12 @@ void ChromeOxide::processDoubleReplacing(double **inputs, double **outputs, VstI
 		//that simple.
 		
 		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleR += ((double(fpd)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

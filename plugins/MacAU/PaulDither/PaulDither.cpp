@@ -221,7 +221,7 @@ void		PaulDither::PaulDitherKernel::Process(	const Float32 	*inSourceP,
 		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
-		currentDither = (rand()/(double)RAND_MAX);
+		currentDither = (double(fpd)/UINT32_MAX);
 		inputSample += currentDither;
 		inputSample -= previousDither;
 		inputSample = floor(inputSample);
@@ -237,6 +237,10 @@ void		PaulDither::PaulDitherKernel::Process(	const Float32 	*inSourceP,
 		
 		
 		inputSample /= outScale;
+
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

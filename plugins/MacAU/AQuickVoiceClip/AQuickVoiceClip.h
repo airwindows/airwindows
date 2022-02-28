@@ -159,6 +159,7 @@ public:
 		Float64 iirSampleD;
 		bool flip;
 		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 

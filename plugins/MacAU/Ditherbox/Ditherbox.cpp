@@ -330,22 +330,22 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 		break;
 		
 		case 2: 
-		inputSample += (rand()/(double)RAND_MAX);
+		inputSample += (double(fpd)/UINT32_MAX);
 		inputSample -= 0.5;
 		inputSample = floor(inputSample);
 		//flat dither
 		break;
 		
 			case 3:
-				inputSample += (rand()/(double)RAND_MAX);
-				inputSample += (rand()/(double)RAND_MAX);
+				inputSample += (double(fpd)/UINT32_MAX);
+				inputSample += (double(fpd)/UINT32_MAX);
 				inputSample -= 1.0;
 				inputSample = floor(inputSample);
 				//TPDF dither
 				break;
 				
 			case 4:
-				currentDither = (rand()/(double)RAND_MAX);
+				currentDither = (double(fpd)/UINT32_MAX);
 				inputSample += currentDither;
 				inputSample -= lastSample;
 				inputSample = floor(inputSample);
@@ -356,7 +356,7 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 			case 5:
 				ns[9] = ns[8]; ns[8] = ns[7]; ns[7] = ns[6]; ns[6] = ns[5];
 				ns[5] = ns[4]; ns[4] = ns[3]; ns[3] = ns[2]; ns[2] = ns[1];
-				ns[1] = ns[0]; ns[0] = (rand()/(double)RAND_MAX);
+				ns[1] = ns[0]; ns[0] = (double(fpd)/UINT32_MAX);
 				
 				currentDither  = (ns[0] * 0.061);
 				currentDither -= (ns[1] * 0.11);
@@ -379,7 +379,7 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 				break;
 				
 			case 6:
-				currentDither = (rand()/(double)RAND_MAX);
+				currentDither = (double(fpd)/UINT32_MAX);
 				inputSample += currentDither;
 				inputSample -= ns[4];
 				inputSample = floor(inputSample);
@@ -412,37 +412,37 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 		break;
 
 		case 8:
-		absSample = ((rand()/(double)RAND_MAX) - 0.5);
+		absSample = ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[0] += absSample; ns[0] /= 2; absSample -= ns[0];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[1] += absSample; ns[1] /= 2; absSample -= ns[1];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[2] += absSample; ns[2] /= 2; absSample -= ns[2];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[3] += absSample; ns[3] /= 2; absSample -= ns[3];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[4] += absSample; ns[4] /= 2; absSample -= ns[4];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[5] += absSample; ns[5] /= 2; absSample -= ns[5];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[6] += absSample; ns[6] /= 2; absSample -= ns[6];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[7] += absSample; ns[7] /= 2; absSample -= ns[7];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[8] += absSample; ns[8] /= 2; absSample -= ns[8];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[9] += absSample; ns[9] /= 2; absSample -= ns[9];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[10] += absSample; ns[10] /= 2; absSample -= ns[10];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[11] += absSample; ns[11] /= 2; absSample -= ns[11];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[12] += absSample; ns[12] /= 2; absSample -= ns[12];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[13] += absSample; ns[13] /= 2; absSample -= ns[13];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[14] += absSample; ns[14] /= 2; absSample -= ns[14];
-		absSample += ((rand()/(double)RAND_MAX) - 0.5);
+		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
 		ns[15] += absSample; ns[15] /= 2; absSample -= ns[15];
 		//install noise and then shape it
 		absSample += inputSample;
@@ -465,7 +465,7 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 				if (inputSample > 0) inputSample += 0.383;
 				if (inputSample < 0) inputSample -= 0.383;
 				//adjusting to permit more information drug outta the noisefloor
-				contingentRnd = (((rand()/(double)RAND_MAX)+(rand()/(double)RAND_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+				contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErr*omegaConstant; //include err
 				absSample = fabs(inputSample);
 				contingentErr = absSample - floor(absSample); //get next err
@@ -487,7 +487,7 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 				if (inputSample > 0) inputSample += (0.3333333333);
 				if (inputSample < 0) inputSample -= (0.3333333333);
 				
-				inputSample += (rand()/(double)RAND_MAX)*0.6666666666;
+				inputSample += (double(fpd)/UINT32_MAX)*0.6666666666;
 				
 				benfordize = floor(inputSample);
 				while (benfordize >= 1.0) {benfordize /= 10;}
@@ -802,6 +802,9 @@ void		Ditherbox::DitherboxKernel::Process(	const Float32 	*inSourceP,
 		
 		if (dtype == 8) noiseShaping += inputSample - drySample;
 
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		//pseudorandom number updater
+		
 		*destP = inputSample;
 		destP += inNumChannels;
 	}

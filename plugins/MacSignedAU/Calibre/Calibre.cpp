@@ -281,7 +281,7 @@ void		Calibre::CalibreKernel::Process(	const Float32 	*inSourceP,
 			else inputSample = -(bridgerectifier+threshold);
 		}
 		//otherwise we leave it untouched by the overdrive stuff
-		randy = ((rand()/(double)RAND_MAX)*0.042);
+		randy = ((double(fpd)/UINT32_MAX)*0.042);
 		inputSample = ((inputSample*(1-randy))+(lastSample*randy)) * outlevel;
 		lastSample = inputSample;
 		

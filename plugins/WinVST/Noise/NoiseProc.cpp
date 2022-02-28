@@ -118,12 +118,12 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		
 		if (surgeL<fabs(inputSampleL))
 		{
-			surgeL += (rand()/(double)RAND_MAX)*(fabs(inputSampleL)-surgeL);
+			surgeL += (double(fpd)/UINT32_MAX)*(fabs(inputSampleL)-surgeL);
 			if (surgeL > 1.0) surgeL = 1.0;
 		}
 		else
 		{
-			surgeL -= ((rand()/(double)RAND_MAX)*(surgeL-fabs(inputSampleL))*decay);
+			surgeL -= ((double(fpd)/UINT32_MAX)*(surgeL-fabs(inputSampleL))*decay);
 			if (surgeL < 0.0) surgeL = 0.0;
 		}
 		
@@ -134,12 +134,12 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		
 		if (surgeR<fabs(inputSampleR))
 		{
-			surgeR += (rand()/(double)RAND_MAX)*(fabs(inputSampleR)-surgeR);
+			surgeR += (double(fpd)/UINT32_MAX)*(fabs(inputSampleR)-surgeR);
 			if (surgeR > 1.0) surgeR = 1.0;
 		}
 		else
 		{
-			surgeR -= ((rand()/(double)RAND_MAX)*(surgeR-fabs(inputSampleR))*decay);
+			surgeR -= ((double(fpd)/UINT32_MAX)*(surgeR-fabs(inputSampleR))*decay);
 			if (surgeR < 0.0) surgeR = 0.0;
 		}
 		
@@ -173,10 +173,10 @@ void Noise::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		
 		
-		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
-		else noiseAL -= (rand()/(double)RAND_MAX);
-		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
-		else noiseAR -= (rand()/(double)RAND_MAX);
+		if (flipL) noiseAL += (double(fpd)/UINT32_MAX);
+		else noiseAL -= (double(fpd)/UINT32_MAX);
+		if (flipR) noiseAR += (double(fpd)/UINT32_MAX);
+		else noiseAR -= (double(fpd)/UINT32_MAX);
 		
 		if (filterflip)
 		{
@@ -388,12 +388,12 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		
 		if (surgeL<fabs(inputSampleL))
 		{
-			surgeL += (rand()/(double)RAND_MAX)*(fabs(inputSampleL)-surgeL);
+			surgeL += (double(fpd)/UINT32_MAX)*(fabs(inputSampleL)-surgeL);
 			if (surgeL > 1.0) surgeL = 1.0;
 		}
 		else
 		{
-			surgeL -= ((rand()/(double)RAND_MAX)*(surgeL-fabs(inputSampleL))*decay);
+			surgeL -= ((double(fpd)/UINT32_MAX)*(surgeL-fabs(inputSampleL))*decay);
 			if (surgeL < 0.0) surgeL = 0.0;
 		}
 		
@@ -404,12 +404,12 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		
 		if (surgeR<fabs(inputSampleR))
 		{
-			surgeR += (rand()/(double)RAND_MAX)*(fabs(inputSampleR)-surgeR);
+			surgeR += (double(fpd)/UINT32_MAX)*(fabs(inputSampleR)-surgeR);
 			if (surgeR > 1.0) surgeR = 1.0;
 		}
 		else
 		{
-			surgeR -= ((rand()/(double)RAND_MAX)*(surgeR-fabs(inputSampleR))*decay);
+			surgeR -= ((double(fpd)/UINT32_MAX)*(surgeR-fabs(inputSampleR))*decay);
 			if (surgeR < 0.0) surgeR = 0.0;
 		}
 		
@@ -443,10 +443,10 @@ void Noise::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		
 		
-		if (flipL) noiseAL += (rand()/(double)RAND_MAX);
-		else noiseAL -= (rand()/(double)RAND_MAX);
-		if (flipR) noiseAR += (rand()/(double)RAND_MAX);
-		else noiseAR -= (rand()/(double)RAND_MAX);
+		if (flipL) noiseAL += (double(fpd)/UINT32_MAX);
+		else noiseAL -= (double(fpd)/UINT32_MAX);
+		if (flipR) noiseAR += (double(fpd)/UINT32_MAX);
+		else noiseAR -= (double(fpd)/UINT32_MAX);
 		
 		if (filterflip)
 		{

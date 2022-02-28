@@ -41,8 +41,8 @@ void TapeDither::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
-		currentDitherL = (rand()/(double)RAND_MAX);
-		currentDitherR = (rand()/(double)RAND_MAX);
+		currentDitherL = (double(fpd)/UINT32_MAX);
+		currentDitherR = (double(fpd)/UINT32_MAX);
 		
 		inputSampleL += currentDitherL;
 		inputSampleR += currentDitherR;
@@ -110,8 +110,8 @@ void TapeDither::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleR *= scaleFactor;
 		//0-1 is now one bit, now we dither
 		
-		currentDitherL = (rand()/(double)RAND_MAX);
-		currentDitherR = (rand()/(double)RAND_MAX);
+		currentDitherL = (double(fpd)/UINT32_MAX);
+		currentDitherR = (double(fpd)/UINT32_MAX);
 		
 		inputSampleL += currentDitherL;
 		inputSampleR += currentDitherR;
