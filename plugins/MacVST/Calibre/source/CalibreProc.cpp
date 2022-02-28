@@ -160,11 +160,11 @@ void Calibre::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		//otherwise we leave it untouched by the overdrive stuff
 		
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.042);
+		randy = ((double(fpdL)/UINT32_MAX)*0.042);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.042);
+		randy = ((double(fpdR)/UINT32_MAX)*0.042);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -341,11 +341,11 @@ void Calibre::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		//otherwise we leave it untouched by the overdrive stuff
 		
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.042);
+		randy = ((double(fpdL)/UINT32_MAX)*0.042);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.042);
+		randy = ((double(fpdR)/UINT32_MAX)*0.042);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		

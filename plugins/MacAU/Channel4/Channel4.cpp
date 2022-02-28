@@ -227,7 +227,6 @@ void		Channel4::Channel4Kernel::Process(	const Float32 	*inSourceP,
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (flip)
 		{

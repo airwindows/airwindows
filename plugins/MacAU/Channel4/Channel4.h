@@ -143,6 +143,7 @@ protected:
 		Float64 iirSampleB;
 		bool flip;
 		Float64 lastSample;
+		uint32_t fpd;
 	};
 };
 

@@ -163,6 +163,7 @@ public:
 		
 		private: 
 		Float64 fpNShape;
+		uint32_t fpd;
 		
 		Float64 lastSample;
 		Float64 last2Sample;

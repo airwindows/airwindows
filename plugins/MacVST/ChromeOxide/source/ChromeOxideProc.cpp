@@ -96,7 +96,7 @@ void ChromeOxide::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		
 		bridgerectifier = inputSampleL;
 		//insanity check
-		randy = bias+((double(fpd)/UINT32_MAX)*noise);
+		randy = bias+((double(fpdL)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleL * randy)+(secondSampleL * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleL * (randy-1.0))+(thirdSampleL * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleL * (randy-2.0))+(fourthSampleL * (3.0-randy));
@@ -112,7 +112,7 @@ void ChromeOxide::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 		bridgerectifier = inputSampleR;
 		//insanity check
-		randy = bias+((double(fpd)/UINT32_MAX)*noise);
+		randy = bias+((double(fpdR)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleR * randy)+(secondSampleR * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleR * (randy-1.0))+(thirdSampleR * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleR * (randy-2.0))+(fourthSampleR * (3.0-randy));
@@ -257,7 +257,7 @@ void ChromeOxide::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		bridgerectifier = inputSampleL;
 		//insanity check
-		randy = bias+((double(fpd)/UINT32_MAX)*noise);
+		randy = bias+((double(fpdL)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleL * randy)+(secondSampleL * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleL * (randy-1.0))+(thirdSampleL * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleL * (randy-2.0))+(fourthSampleL * (3.0-randy));
@@ -273,7 +273,7 @@ void ChromeOxide::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		bridgerectifier = inputSampleR;
 		//insanity check
-		randy = bias+((double(fpd)/UINT32_MAX)*noise);
+		randy = bias+((double(fpdR)/UINT32_MAX)*noise);
 		if ((randy >= 0.0)&&(randy < 1.0)) bridgerectifier = (inputSampleR * randy)+(secondSampleR * (1.0-randy));
 		if ((randy >= 1.0)&&(randy < 2.0)) bridgerectifier = (secondSampleR * (randy-1.0))+(thirdSampleR * (2.0-randy));
 		if ((randy >= 2.0)&&(randy < 3.0)) bridgerectifier = (thirdSampleR * (randy-2.0))+(fourthSampleR * (3.0-randy));
