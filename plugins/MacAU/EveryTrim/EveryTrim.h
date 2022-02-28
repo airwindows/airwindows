@@ -121,7 +121,8 @@ public:
 	virtual ComponentResult	Version() { return kEveryTrimVersion; }
 	
 	private: 
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	
 };
 

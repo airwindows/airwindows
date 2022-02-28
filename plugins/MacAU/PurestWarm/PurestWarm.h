@@ -129,7 +129,7 @@ public:
         virtual void		Reset();
 		
 		private: 
-		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 

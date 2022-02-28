@@ -243,7 +243,6 @@ void		ElectroHat::ElectroHatKernel::Process(	const Float32 	*inSourceP,
 	Float64 brighten = GetParameter( kParam_Three );
 	Float64 outputlevel = GetParameter( kParam_Four );
 	Float64 wet = GetParameter( kParam_Five );
-	Float64 dry = 1.0-wet;
 	
 	if (deSyn == 4) {deSyn = 1; increment = 0.411; brighten = 0.87;}
 	//606 preset

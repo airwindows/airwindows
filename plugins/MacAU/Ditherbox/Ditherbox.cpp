@@ -257,6 +257,8 @@ void		Ditherbox::DitherboxKernel::Reset()
 	iirSampleX = 0.0;
 	iirSampleY = 0.0;
 	iirSampleZ = 0.0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -230,7 +230,7 @@ void		SurgeTideMono::SurgeTideMonoKernel::Process(	const Float32 	*inSourceP,
 		
 		inputSample *= chaseC;
 		inputSample = drySample - (inputSample * intensity);
-		inputSample = (drySample * dry) + (inputSample * wet);
+		inputSample = (drySample * (1.0-wet)) + (inputSample * wet);
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

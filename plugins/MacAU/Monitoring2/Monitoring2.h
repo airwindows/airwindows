@@ -182,7 +182,8 @@ public:
 	Float64 iirSampleWR, iirSampleXR, iirSampleYR, iirSampleZR; // o/`
 	//SubsOnly
 	
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

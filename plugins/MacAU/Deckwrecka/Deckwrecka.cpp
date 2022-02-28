@@ -226,10 +226,15 @@ void		Deckwrecka::DeckwreckaKernel::Process(	const Float32 	*inSourceP,
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 
 		randy = (double(fpd)/UINT32_MAX);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		randy += (double(fpd)/UINT32_MAX);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		randy += (double(fpd)/UINT32_MAX);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		randy += (double(fpd)/UINT32_MAX);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		randy += (double(fpd)/UINT32_MAX);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		randy += (double(fpd)/UINT32_MAX);
 		randy /= 6.0;
 		randy *= wreck; //0 to 1 the noise, may not be needed

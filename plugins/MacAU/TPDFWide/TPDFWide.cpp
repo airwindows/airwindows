@@ -239,31 +239,36 @@ OSStatus		TPDFWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		//0-1 is now one bit, now we dither
 		
 		double ditherL = -1.0;
-		ditherL += (double(fpd)/UINT32_MAX);
-		ditherL += (double(fpd)/UINT32_MAX);
+		ditherL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		ditherL += (double(fpdL)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		double ditherR = -1.0;
-		ditherR += (double(fpd)/UINT32_MAX);
-		ditherR += (double(fpd)/UINT32_MAX);
+		ditherR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		ditherR += (double(fpdR)/UINT32_MAX);
 		//TPDF: two 0-1 random noises
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (double(fpd)/UINT32_MAX);
-			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpdL)/UINT32_MAX);
+			fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+			ditherL += (double(fpdL)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherR = -1.0;
-			ditherR += (double(fpd)/UINT32_MAX);
-			ditherR += (double(fpd)/UINT32_MAX);
+			ditherR += (double(fpdR)/UINT32_MAX);
+			fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+			ditherR += (double(fpdR)/UINT32_MAX);
 		}
 		
 		if (fabs(ditherL-ditherR) < 0.5) {
 			ditherL = -1.0;
-			ditherL += (double(fpd)/UINT32_MAX);
-			ditherL += (double(fpd)/UINT32_MAX);
+			ditherL += (double(fpdL)/UINT32_MAX);
+			fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+			ditherL += (double(fpdL)/UINT32_MAX);
 		}
 				
 		inputSampleL = floor(inputSampleL+ditherL);

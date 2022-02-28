@@ -136,7 +136,7 @@ public:
 		Float64 lastSpeed;
 		Float64 lastDepth;
 		Float64 sweep;
-		Float64 fpNShape;		
+		uint32_t fpd;		
 	};
 };
 

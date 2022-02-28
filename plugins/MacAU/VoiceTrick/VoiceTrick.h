@@ -119,7 +119,8 @@ public:
 		Float64 lowpassChase;
 		Float64 lowpassAmount;
 		Float64 lastLowpass;
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

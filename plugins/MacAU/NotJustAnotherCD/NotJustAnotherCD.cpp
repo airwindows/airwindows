@@ -188,7 +188,6 @@ void		NotJustAnotherCD::NotJustAnotherCDKernel::Process(	const Float32 	*inSourc
 	
 	while (nSampleFrames-- > 0) {
 		inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		drySample = inputSample;
 		
 		

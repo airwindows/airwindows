@@ -293,8 +293,8 @@ OSStatus		Wider::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags,
 		}
 		count -= 1;
 		
-		inputSampleL = (drySampleL * dry) + ((mid+side) * wet);
-		inputSampleR = (drySampleR * dry) + ((mid-side) * wet);
+		inputSampleL = (drySampleL * (1.0-wet)) + ((mid+side) * wet);
+		inputSampleR = (drySampleR * (1.0-wet)) + ((mid-side) * wet);
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);

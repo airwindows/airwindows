@@ -292,7 +292,7 @@ void		DrumSlam::DrumSlamKernel::Process(	const Float32 	*inSourceP,
 		inputSample = ((lowSample + midSample + highSample)/drive)*out;
 		
 		if (wet < 1.0) {
-			inputSample = (drySample * dry)+(inputSample*wet);
+			inputSample = (drySample * (1.0-wet))+(inputSample*wet);
 		}
 		fpFlip = !fpFlip;
 		

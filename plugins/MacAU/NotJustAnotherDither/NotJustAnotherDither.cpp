@@ -193,7 +193,6 @@ void		NotJustAnotherDither::NotJustAnotherDitherKernel::Reset()
 	byn[9] = 46.0;
 	byn[10] = 1000.0;
 	noiseShaping = 0.0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,8 +222,6 @@ void		NotJustAnotherDither::NotJustAnotherDitherKernel::Process(	const Float32 	
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
-		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		
 		inputSample *= scaleFactor;
 		//0-1 is now one bit, now we dither

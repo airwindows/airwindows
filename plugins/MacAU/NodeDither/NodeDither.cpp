@@ -183,6 +183,7 @@ void		NodeDither::NodeDitherKernel::Reset()
 {
 	for(int count = 0; count < 4999; count++) {d[count] = 0;}
 	gcount = 0;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

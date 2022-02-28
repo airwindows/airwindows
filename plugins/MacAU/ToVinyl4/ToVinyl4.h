@@ -209,8 +209,8 @@ private:
 	Float64 aSidePrev;
 	Float64 bMidPrev;
 	Float64 bSidePrev;
-	Float64 fpNShapeR;
-	Float64 fpNShapeL;	
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

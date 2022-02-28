@@ -116,7 +116,8 @@ public:
 	
 private: 
 
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	Float64 chase;
 	Float64 lastrectifierL;
 	Float64 lastrectifierR;

@@ -129,7 +129,8 @@ private:
 	Float64 iirSampleAM;
 	Float64 iirSampleBM;
 	Float64 iirSampleCM;
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	bool flip;
 	
 };

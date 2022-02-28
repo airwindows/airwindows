@@ -174,7 +174,7 @@ public:
 		Float64 gwA;
 		Float64 gwB;
 		
-		double fpNShape;		
+		uint32_t fpd;		
 	};
 };
 

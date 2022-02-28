@@ -235,9 +235,6 @@ void		TapeDither::TapeDitherKernel::Process(	const Float32 	*inSourceP,
 		
 		inputSample /= outScale;
 
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		//pseudorandom number updater
-		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;
 	}

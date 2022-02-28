@@ -132,7 +132,7 @@ public:
 		Float64 settingchase;
 		Float64 gainBchase;
 		Float64 chasespeed;
-		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 

@@ -592,21 +592,22 @@ OSStatus		StarChild::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		inputSampleL *= wetness;
 		inputSampleR *= wetness;
 		
-		drySampleL += inputSampleL;
-		drySampleR += inputSampleR;
+		inputSampleL += drySampleL;
+		inputSampleR += drySampleR;
 		//here we combine the tanks with the dry signal
 				
-		//stereo 32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)drySampleL, &expon);
-		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		drySampleL += (dither-fpNShapeL); fpNShapeL = dither;
-		frexpf((Float32)drySampleR, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		drySampleR += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
-
-		*outputL = drySampleL;
-		*outputR = drySampleR;
+		//begin 32 bit stereo floating point dither
+		int expon; frexpf((float)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		frexpf((float)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
+		
+		
+		*outputL = inputSampleL;
+		*outputR = inputSampleR;
 		//here we mix the reverb output with the dry input
 		
 		inputL += 1; inputR += 1; outputL += 1; outputR += 1;

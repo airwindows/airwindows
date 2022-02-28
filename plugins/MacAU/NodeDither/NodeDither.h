@@ -134,6 +134,7 @@ public:
 		private: 
 		Float64 d[5000];
 		int gcount;
+		uint32_t fpd;
 	};
 };
 

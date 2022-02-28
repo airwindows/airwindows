@@ -122,6 +122,7 @@ public:
 		
 		private: 
 		Float64 byn[13];
+		uint32_t fpd;
 	};
 };
 

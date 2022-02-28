@@ -131,8 +131,9 @@ public:
 		Float64 treblefreq;
 		Float64 bassfreq;
 		bool flip;
-		double fpNShapeL;
-		double fpNShapeR;
+	uint32_t fpdL;
+	uint32_t fpdR;
+
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

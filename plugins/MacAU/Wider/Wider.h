@@ -118,7 +118,8 @@ public:
 	
 private: 
 	Float64 p[4099];
-		uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	int count;
 };
 
