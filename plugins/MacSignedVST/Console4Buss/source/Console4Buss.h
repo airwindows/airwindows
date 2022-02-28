@@ -79,7 +79,8 @@ private:
 	double gainchase;
 	double settingchase;
 	double chasespeed;
-	
+    uint32_t fpdL;
+    uint32_t fpdR;
     float gain;
 
 

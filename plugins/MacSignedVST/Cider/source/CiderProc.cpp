@@ -158,11 +158,11 @@ void Cider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.057);
+		randy = ((double(fpdL)/UINT32_MAX)*0.057);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.057);
+		randy = ((double(fpdR)/UINT32_MAX)*0.057);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -337,11 +337,11 @@ void Cider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.057);
+		randy = ((double(fpdL)/UINT32_MAX)*0.057);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.057);
+		randy = ((double(fpdR)/UINT32_MAX)*0.057);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		

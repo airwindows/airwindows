@@ -56,6 +56,8 @@ private:
     
 	uint32_t fpdL;
 	uint32_t fpdR;
+    double fpNShapeL;
+    double fpNShapeR;
 	bool fpFlip;
 	//default stuff
 	double iirSampleLA;
