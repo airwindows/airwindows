@@ -228,7 +228,7 @@ void		PhaseNudge::PhaseNudgeKernel::Process(	const Float32 	*inSourceP,
 		if (inputSample > 0) inputSample -= bridgerectifier;
 		else inputSample += bridgerectifier;
 		inputSample *= 4.0;
-		if (wet < 1.0) inputSample = (drySample * dry)+(inputSample * wet);
+		if (wet < 1.0) inputSample = (drySample * (1.0-wet))+(inputSample * wet);
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

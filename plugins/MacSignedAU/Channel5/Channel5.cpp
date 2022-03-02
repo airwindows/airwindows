@@ -190,11 +190,11 @@ ComponentResult Channel5::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Channel5::Channel5Kernel::Reset()
 {
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
 	flip = false;
 	lastSample = 0.0;
+	fpNShape = 0.0;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -229,7 +229,6 @@ void		Channel5::Channel5Kernel::Process(	const Float32 	*inSourceP,
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		
-		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		if (flip)
 		{

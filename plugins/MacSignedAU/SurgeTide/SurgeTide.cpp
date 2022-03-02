@@ -260,11 +260,11 @@ OSStatus		SurgeTide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		
 		inputSampleL *= chaseC;
 		inputSampleL = drySampleL - (inputSampleL * intensity);
-		inputSampleL = (drySampleL * dry) + (inputSampleL * wet);
+		inputSampleL = (drySampleL * (1.0-wet)) + (inputSampleL * wet);
 
 		inputSampleR *= chaseC;
 		inputSampleR = drySampleR - (inputSampleR * intensity);
-		inputSampleR = (drySampleR * dry) + (inputSampleR * wet);
+		inputSampleR = (drySampleR * (1.0-wet)) + (inputSampleR * wet);
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);

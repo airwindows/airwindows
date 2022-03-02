@@ -176,8 +176,8 @@ ComponentResult		SideDull::Reset(AudioUnitScope inScope, AudioUnitElement inElem
 	iirSampleA = 0.0;
 	iirSampleB = 0.0;
 	flip = true;
-	fpNShapeL = 0.0;
-	fpNShapeR = 0.0;	
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
 }
 

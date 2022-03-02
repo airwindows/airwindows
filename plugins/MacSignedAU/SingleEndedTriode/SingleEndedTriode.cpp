@@ -247,7 +247,7 @@ void		SingleEndedTriode::SingleEndedTriodeKernel::Process(	const Float32 	*inSou
 			}
 		
 		if (wet < 1.0) {
-			inputSample = (drySample * dry)+(inputSample*wet);
+			inputSample = (drySample * (1.0-wet))+(inputSample*wet);
 		}
 		
 		//begin 32 bit floating point dither

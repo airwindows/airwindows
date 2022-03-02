@@ -293,9 +293,8 @@ private:
 	
 	Float64 nonlin;
 	
-	Float64 fpNShapeR;
-	Float64 fpNShapeL;
-	
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

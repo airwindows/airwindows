@@ -161,7 +161,8 @@ public:
 	int gcount;
 	int lastwidth;
 	bool flip;
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

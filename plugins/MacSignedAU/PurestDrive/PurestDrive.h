@@ -126,7 +126,7 @@ public:
 		
 		private: 
 		double previousSample;
-		double fpNShape;		
+		uint32_t fpd;		
 	};
 };
 

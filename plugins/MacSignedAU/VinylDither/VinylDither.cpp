@@ -240,39 +240,56 @@ void		VinylDither::VinylDitherKernel::Process(	const Float32 	*inSourceP,
 		//0-1 is now one bit, now we dither
 		
 		absSample = ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[0] += absSample; ns[0] /= 2; absSample -= ns[0];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[1] += absSample; ns[1] /= 2; absSample -= ns[1];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[2] += absSample; ns[2] /= 2; absSample -= ns[2];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[3] += absSample; ns[3] /= 2; absSample -= ns[3];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[4] += absSample; ns[4] /= 2; absSample -= ns[4];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[5] += absSample; ns[5] /= 2; absSample -= ns[5];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[6] += absSample; ns[6] /= 2; absSample -= ns[6];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[7] += absSample; ns[7] /= 2; absSample -= ns[7];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[8] += absSample; ns[8] /= 2; absSample -= ns[8];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[9] += absSample; ns[9] /= 2; absSample -= ns[9];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[10] += absSample; ns[10] /= 2; absSample -= ns[10];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[11] += absSample; ns[11] /= 2; absSample -= ns[11];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[12] += absSample; ns[12] /= 2; absSample -= ns[12];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[13] += absSample; ns[13] /= 2; absSample -= ns[13];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[14] += absSample; ns[14] /= 2; absSample -= ns[14];
 		absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		ns[15] += absSample; ns[15] /= 2; absSample -= ns[15];
-		//install noise and then shape it
+		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
 		absSample += inputSample;
+		//install noise and then shape it
 		
 		//NSOdd /= 1.0001; //NSDensity
 		
@@ -288,9 +305,6 @@ void		VinylDither::VinylDitherKernel::Process(	const Float32 	*inSourceP,
 		//TenNines dither
 		
 		inputSample /= outScale;
-
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		//pseudorandom number updater
 		
 		*destP = inputSample;
 		sourceP += inNumChannels; destP += inNumChannels;

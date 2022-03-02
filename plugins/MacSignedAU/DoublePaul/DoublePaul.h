@@ -121,7 +121,8 @@ public:
         virtual void		Reset();
 		
 		private:
-		Float64 b[11];		
+		Float64 b[11];	
+		uint32_t fpd;
 	};
 };
 

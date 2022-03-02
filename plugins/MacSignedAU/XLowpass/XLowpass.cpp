@@ -233,7 +233,7 @@ void		XLowpass::XLowpassKernel::Process(	const Float32 	*inSourceP,
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
 	//which lets you fall through to simpler processing at lower settings.
 	double outSample = 0.0;
-	
+		
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;

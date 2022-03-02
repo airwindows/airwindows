@@ -121,8 +121,8 @@ public:
 	
 	double rate, oldfpd;
 
-    uint32_t fpdL;
-    uint32_t fpdR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

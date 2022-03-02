@@ -206,7 +206,7 @@ void		ToTape6::ToTape6Kernel::Reset()
 	flip = false;
 	for (int temp = 0; temp < 501; temp++) {d[temp] = 0.0;}
 	gcount = 0;	
-	sweep = 3.14159265358979323846;
+	sweep = pi;
 	rateof = 0.5;
 	nextmax = 0.5;
 	lastSample = 0.0;
@@ -289,8 +289,8 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 			rateof = (rateof * (1.0-fluttertrim)) + (nextmax * fluttertrim);
 			sweep += rateof * fluttertrim;
 			
-			if (sweep >= (3.14159265358979323846*2.0)) {
-				sweep -= 3.14159265358979323846;
+			if (sweep >= (pi*2.0)) {
+				sweep -= pi;
 				nextmax = 0.24 + (flutterrandy * 0.74);
 			}
 			//apply to input signal only when flutter is present, interpolate samples

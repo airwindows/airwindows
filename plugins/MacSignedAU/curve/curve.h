@@ -105,8 +105,8 @@ public:
 	
 	private:
 	double gain;
-    uint32_t fpdL;
-    uint32_t fpdR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

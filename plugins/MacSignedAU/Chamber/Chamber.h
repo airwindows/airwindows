@@ -164,6 +164,7 @@ public:
 		Float64 previousD;
 		
 		double lastRef[10];
+		int cycle;
 		
 		int countA, delayA;
 		int countB, delayB;
@@ -177,7 +178,6 @@ public:
 		int countJ, delayJ;
 		int countK, delayK;
 		int countL, delayL;		
-		int cycle;
 		
 		uint32_t fpd;
 	};

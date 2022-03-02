@@ -194,8 +194,8 @@ ComponentResult		BrassRider::Reset(AudioUnitScope inScope, AudioUnitElement inEl
 	lastSampleR = 0.0;
 	lastSlewR = 0.0;
 	gcount = 0;
-    fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
-    fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 
 	return noErr;
 }

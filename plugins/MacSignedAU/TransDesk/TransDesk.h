@@ -123,7 +123,7 @@ public:
 		double lastSample;
 		double lastOutSample;
 		Float64 lastSlew;
-		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 

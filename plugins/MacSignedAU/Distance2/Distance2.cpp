@@ -242,7 +242,6 @@ void		Distance2::Distance2Kernel::Process(	const Float32 	*inSourceP,
 	//bring in top slider again to manage boost level for lower settings
 	Float64 wet = GetParameter( kParam_Three );
 	//this also functions as a pad for the intensely distorty deep distance mode
-	Float64 dry = 1.0-wet;
 
 	
 	while (nSampleFrames-- > 0) {

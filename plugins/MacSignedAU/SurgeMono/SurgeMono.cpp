@@ -233,7 +233,7 @@ void		SurgeMono::SurgeMonoKernel::Process(	const Float32 	*inSourceP,
 		inputSample *= chaseMax;
 				
 		inputSample = drySample - (inputSample * intensity);
-		inputSample = (drySample * dry) + (inputSample * wet);
+		inputSample = (drySample * (1.0-wet)) + (inputSample * wet);
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

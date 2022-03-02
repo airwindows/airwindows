@@ -119,8 +119,8 @@ public:
 	
 	private: 
 	double biquad[11];
-    uint32_t fpdL;
-    uint32_t fpdR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

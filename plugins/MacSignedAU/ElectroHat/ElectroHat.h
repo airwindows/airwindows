@@ -156,7 +156,7 @@ public:
 		int tik;
 		int lok;
 		bool flip;
-		Float64 fpNShape;
+		uint32_t fpd;
 	};
 };
 

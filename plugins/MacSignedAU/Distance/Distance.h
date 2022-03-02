@@ -137,7 +137,8 @@ public:
 		Float64 thirdresult;
 		Float64 prevresult;
 		Float64 last;
-		double fpNShape;		
+		double fpNShape;
+		uint32_t fpd;
 	};
 };
 

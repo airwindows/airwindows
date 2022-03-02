@@ -125,9 +125,9 @@ public:
 		Float64 muSpeedB;
 		Float64 muCoefficientA;
 		Float64 muCoefficientB;
-		double fpNShapeL;
-		double fpNShapeR;
-		bool flip;
+	uint32_t fpdL;
+	uint32_t fpdR;
+	bool flip;
 
 };
 

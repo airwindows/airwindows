@@ -132,9 +132,9 @@ private:
 	Float64 factor[11];		
 	Float64 wearLPrev;
 	Float64 wearRPrev;
-		
-	double fpNShapeR;
-	double fpNShapeL;
+	
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

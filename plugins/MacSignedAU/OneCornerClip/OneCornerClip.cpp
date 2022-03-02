@@ -229,14 +229,11 @@ void		OneCornerClip::OneCornerClipKernel::Process(	const Float32 	*inSourceP,
 	Float64 inverseHardness = 1.0 - voicing;
 	bool clipEngage = false;
 	Float64 wet = GetParameter( kParam_Five );
-	Float64 dry = 1.0-wet;
-	double inputSample;
-	Float64 drySample;
 	
 	while (nSampleFrames-- > 0) {
-		inputSample = *sourceP;
+		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
-		drySample = inputSample;		
+		double drySample = inputSample;		
 
 		if (inputGain != 1.0)
 			{

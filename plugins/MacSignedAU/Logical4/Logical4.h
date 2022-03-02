@@ -210,10 +210,9 @@ private:
 	
 	int gcount;
 	
-	double fpNShapeR;
-	double fpNShapeL;
 	bool fpFlip;
-	
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

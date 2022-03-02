@@ -161,6 +161,7 @@ void		NaturalizeDither::NaturalizeDitherKernel::Reset()
 	byn[8] = 51;
 	byn[9] = 46;
 	byn[10] = 1000;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

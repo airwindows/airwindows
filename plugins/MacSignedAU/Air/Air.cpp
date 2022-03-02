@@ -262,6 +262,8 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 		
 		sourceP += inNumChannels;
 		correction = 0.0;
+		
+		
 		if (count < 1 || count > 3) count = 1;
 		switch (count)
 		{
@@ -298,6 +300,10 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 		tripletC /= filterQ;
 		count++;
 		//finished Triplet section- 15K
+		
+		
+		
+		
 		if (flop)
 			{
 			airFactorA = airPrevA - inputSample;
@@ -341,6 +347,9 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 			correction = correction + airFactorB;
 			}
 		//11K one
+		
+		
+		
 		airFactorC = airPrevC - inputSample;
 		if (flop)
 			{
@@ -359,6 +368,9 @@ void		Air::AirKernel::Process(	const Float32 	*inSourceP,
 		airPrevC = inputSample;
 		correction = correction + airFactorC;
 		flop = !flop;
+		
+		
+		
 		
 		inputSample += correction;
 		

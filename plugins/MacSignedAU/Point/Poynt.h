@@ -135,7 +135,7 @@ public:
 		Float64 nobA;
 		Float64 nibB;
 		Float64 nobB;
-		Float64 fpNShape;
+		uint32_t fpd;
 		bool fpFlip;
 	};
 };

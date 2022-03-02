@@ -5,7 +5,7 @@
 * 
 *	Created:	1/30/17
 *	
-*	Copyright:  Copyright ï¿½ 2017 Airwindows, All Rights Reserved
+*	Copyright:  Copyright © 2017 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -231,7 +231,7 @@ ComponentResult BuildATPDF::Initialize()
 void		BuildATPDF::BuildATPDFKernel::Reset()
 {
 	for(int count = 0; count < 11; count++) {b[count] = 0.0; f[count] = 0.0;}
-    fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

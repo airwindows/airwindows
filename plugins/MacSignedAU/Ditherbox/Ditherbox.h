@@ -214,7 +214,7 @@ public:
 		double iirSampleX;
 		double iirSampleY;
 		double iirSampleZ;
-		
+		uint32_t fpd;
 	};
 };
 

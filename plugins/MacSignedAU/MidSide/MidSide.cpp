@@ -213,14 +213,16 @@ OSStatus		MidSide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags
 		mid *= midgain;
 		side *= sidegain;
 		
-		//stereo 32 bit dither, made small and tidy.
-		int expon; frexpf((Float32)mid, &expon);
-		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		mid += (dither-fpNShapeL); fpNShapeL = dither;
-		frexpf((Float32)side, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		side += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
+		
+		//begin 32 bit floating point dither
+		int expon; frexpf((float)mid, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		mid += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
+		frexpf((float)side, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		side += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
 		
 		*outputL = mid;
 		*outputR = side;
