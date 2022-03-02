@@ -57,6 +57,8 @@ private:
 	double dR[5000];
 	int gcount;
 	//default stuff
+	uint32_t fpdL;
+	uint32_t fpdR;
 
     float A;
     float B;

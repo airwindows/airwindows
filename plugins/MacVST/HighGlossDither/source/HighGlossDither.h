@@ -53,6 +53,8 @@ private:
     
 	int Position;
 	bool flip;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 #endif

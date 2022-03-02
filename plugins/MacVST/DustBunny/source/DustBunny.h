@@ -85,6 +85,9 @@ private:
 	bool LataFlip; //end defining of antialiasing variables
 	bool RataFlip; //end defining of antialiasing variables
 	
+	uint32_t fpdL;
+	uint32_t fpdR;
+	
     float A;
 };
 

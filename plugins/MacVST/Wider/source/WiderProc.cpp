@@ -99,8 +99,8 @@ void Wider::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		count -= 1;
 		
-		inputSampleL = (drySampleL * dry) + ((mid+side) * wet);
-		inputSampleR = (drySampleR * dry) + ((mid-side) * wet);
+		inputSampleL = (drySampleL * (1.0-wet)) + ((mid+side) * wet);
+		inputSampleR = (drySampleR * (1.0-wet)) + ((mid-side) * wet);
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -213,8 +213,8 @@ void Wider::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		count -= 1;
 		
-		inputSampleL = (drySampleL * dry) + ((mid+side) * wet);
-		inputSampleR = (drySampleR * dry) + ((mid-side) * wet);
+		inputSampleL = (drySampleL * (1.0-wet)) + ((mid+side) * wet);
+		inputSampleR = (drySampleR * (1.0-wet)) + ((mid-side) * wet);
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

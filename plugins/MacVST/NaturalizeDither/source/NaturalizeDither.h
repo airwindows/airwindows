@@ -53,7 +53,8 @@ private:
     
 	double bynL[13];
 	double bynR[13];
-
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 #endif
