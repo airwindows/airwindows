@@ -14,7 +14,8 @@ PaulDither::PaulDither(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 	B = 0.0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	previousDitherL = 0.0;
 	previousDitherR = 0.0;
 	//this is reset: values being initialized only once. Startup values, whatever they are.

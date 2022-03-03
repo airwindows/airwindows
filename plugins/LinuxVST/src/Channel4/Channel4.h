@@ -67,6 +67,9 @@ private:
 	double lastSampleR;
 	double iirAmount;
 	double threshold;
+	
+	uint32_t fpdL;
+	uint32_t fpdR;
 
     float consoletype;
     float drive; //parameters. Always 0-1, and we scale/alter them elsewhere.

@@ -14,7 +14,8 @@ PeaksOnly::PeaksOnly(audioMasterCallback audioMaster) :
 {
 	for(int count = 0; count < 1502; count++) {aL[count] = 0.0; bL[count] = 0.0; cL[count] = 0.0; dL[count] = 0.0;aR[count] = 0.0; bR[count] = 0.0; cR[count] = 0.0; dR[count] = 0.0;}
 	ax = 1; bx = 1; cx = 1; dx = 1;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.

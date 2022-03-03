@@ -258,12 +258,12 @@ void Elation::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		
 		flip = !flip;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.054);
+		randy = ((double(fpdL)/UINT32_MAX)*0.054);
 		outputSample = ((((inputSampleL*(1-randy))+(lastSampleL*randy))*wet)+(drySampleL*(1.0-wet))) * outlevel;		
 		lastSampleL = inputSampleL;
 		inputSampleL = outputSample;
 
-		randy = ((double(fpd)/UINT32_MAX)*0.054);
+		randy = ((double(fpdR)/UINT32_MAX)*0.054);
 		outputSample = ((((inputSampleR*(1-randy))+(lastSampleR*randy))*wet)+(drySampleR*(1.0-wet))) * outlevel;
 		lastSampleR = inputSampleR;
 		inputSampleR = outputSample;
@@ -538,12 +538,12 @@ void Elation::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		
 		flip = !flip;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.054);
+		randy = ((double(fpdL)/UINT32_MAX)*0.054);
 		outputSample = ((((inputSampleL*(1-randy))+(lastSampleL*randy))*wet)+(drySampleL*(1.0-wet))) * outlevel;		
 		lastSampleL = inputSampleL;
 		inputSampleL = outputSample;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.054);
+		randy = ((double(fpdR)/UINT32_MAX)*0.054);
 		outputSample = ((((inputSampleR*(1-randy))+(lastSampleR*randy))*wet)+(drySampleR*(1.0-wet))) * outlevel;
 		lastSampleR = inputSampleR;
 		inputSampleR = outputSample;

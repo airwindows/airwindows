@@ -57,7 +57,8 @@ private:
 	int32_t pL[25361];
 	int32_t pR[25361];
 	int gcount;
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

@@ -156,11 +156,11 @@ void Neverland::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			inputSampleR += (bR[33] * (0.00555223929714115  - (0.00030319367948553*fabs(bR[33]))));
 			//we apply the first samples of the Neve impulse- dynamically adjusted.
 		}
-		randy = ((double(fpd)/UINT32_MAX)*0.034);
+		randy = ((double(fpdL)/UINT32_MAX)*0.034);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.034);
+		randy = ((double(fpdR)/UINT32_MAX)*0.034);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -332,11 +332,11 @@ void Neverland::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			inputSampleR += (bR[33] * (0.00555223929714115  - (0.00030319367948553*fabs(bR[33]))));
 			//we apply the first samples of the Neve impulse- dynamically adjusted.
 		}
-		randy = ((double(fpd)/UINT32_MAX)*0.034);
+		randy = ((double(fpdL)/UINT32_MAX)*0.034);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.034);
+		randy = ((double(fpdR)/UINT32_MAX)*0.034);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		

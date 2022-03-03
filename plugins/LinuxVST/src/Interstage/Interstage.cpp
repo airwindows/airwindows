@@ -26,7 +26,8 @@ Interstage::Interstage(audioMasterCallback audioMaster) :
 	iirSampleER = 0.0;
 	iirSampleFR = 0.0;
 	lastSampleR = 0.0;
-	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	flip = true;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
 	

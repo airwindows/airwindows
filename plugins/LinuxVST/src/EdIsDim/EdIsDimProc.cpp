@@ -36,15 +36,17 @@ void EdIsDim::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		mid = (inputSampleL+inputSampleR)/2.0;
 		side = (inputSampleL-inputSampleR)/2.0;
 		
-		//stereo 32 bit dither, made small and tidy.
+		//begin 32 bit floating point dither
 		int expon; frexpf((float)mid, &expon);
-		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		mid += (dither-fpNShapeL); fpNShapeL = dither;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		mid += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
+		//begin 32 bit floating point dither
 		frexpf((float)side, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		side += (dither-fpNShapeR); fpNShapeR = dither;
-		//end 32 bit dither
-				
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		side += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
+		
 		*out1 = mid;
 		*out2 = side;
 
@@ -86,14 +88,14 @@ void EdIsDim::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		side = (inputSampleL-inputSampleR)/2.0;
 		
 		//stereo 64 bit dither, made small and tidy.
-		int expon; frexp((double)mid, &expon);
-		double dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		mid += (dither-fpNShapeL); fpNShapeL = dither;
-		frexp((double)side, &expon);
-		dither = (rand()/(RAND_MAX*7.737125245533627e+25))*pow(2,expon+62);
-		dither /= 536870912.0; //needs this to scale to 64 bit zone
-		side += (dither-fpNShapeR); fpNShapeR = dither;
+		//int expon; frexpf((float)mid, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//mid += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit floating point dither
+		//begin 32 bit floating point dither
+		//frexpf((float)side, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//side += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		//end 64 bit dither
 		
 		*out1 = mid;

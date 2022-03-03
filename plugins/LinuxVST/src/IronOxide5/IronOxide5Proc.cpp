@@ -76,7 +76,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
 
-		flutterrandy = (double(fpd)/UINT32_MAX);
+		flutterrandy = (double(fpdL)/UINT32_MAX);
 		//part of flutter section
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (fstoredcount < 0 || fstoredcount > 30) {fstoredcount = 30;}
@@ -347,7 +347,7 @@ void IronOxide5::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		else inputSampleR = -bridgerectifierR;
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
 		
-		randy = (0.55 + tempRandy + ((double(fpd)/UINT32_MAX)*tempRandy))*noise; //0 to 2
+		randy = (0.55 + tempRandy + ((double(fpdR)/UINT32_MAX)*tempRandy))*noise; //0 to 2
 		
 		inputSampleL *= (1.0 - randy);
 		inputSampleL += (prevInputSampleL*randy);
@@ -471,7 +471,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		drySampleL = inputSampleL;
 		drySampleR = inputSampleR;
 		
-		flutterrandy = (double(fpd)/UINT32_MAX);
+		flutterrandy = (double(fpdL)/UINT32_MAX);
 		//part of flutter section
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (fstoredcount < 0 || fstoredcount > 30) {fstoredcount = 30;}
@@ -742,7 +742,7 @@ void IronOxide5::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		else inputSampleR = -bridgerectifierR;
 		//second stage of overdrive to prevent overs and allow bloody loud extremeness		
 		
-		randy = (0.55 + tempRandy + ((double(fpd)/UINT32_MAX)*tempRandy))*noise; //0 to 2
+		randy = (0.55 + tempRandy + ((double(fpdR)/UINT32_MAX)*tempRandy))*noise; //0 to 2
 		
 		inputSampleL *= (1.0 - randy);
 		inputSampleL += (prevInputSampleL*randy);

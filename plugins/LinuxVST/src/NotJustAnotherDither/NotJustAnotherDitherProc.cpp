@@ -31,10 +31,10 @@ void NotJustAnotherDither::processReplacing(float **inputs, float **outputs, Vst
     {
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-37) inputSampleL = fpd * 1.18e-37;
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		if (fabs(inputSampleR)<1.18e-37) inputSampleR = fpd * 1.18e-37;
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		
 		inputSampleL *= scaleFactor;
 		inputSampleR *= scaleFactor;
@@ -185,10 +185,10 @@ void NotJustAnotherDither::processDoubleReplacing(double **inputs, double **outp
     {
 		double inputSampleL = *in1;
 		double inputSampleR = *in2;
-		if (fabs(inputSampleL)<1.18e-43) inputSampleL = fpd * 1.18e-43;
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		if (fabs(inputSampleR)<1.18e-43) inputSampleR = fpd * 1.18e-43;
-		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
+		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		
 		inputSampleL *= scaleFactor;
 		inputSampleR *= scaleFactor;

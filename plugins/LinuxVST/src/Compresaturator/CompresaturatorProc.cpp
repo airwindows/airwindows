@@ -119,7 +119,7 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		
 		//begin pad L
 		padFactorL += dL[dCount];
-		double randy = (double(fpd)/UINT32_MAX);
+		double randy = (double(fpdL)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthL) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthL += 1;
@@ -140,7 +140,7 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		
 		//begin pad R
 		padFactorR += dR[dCount];
-		randy = (double(fpd)/UINT32_MAX);
+		randy = (double(fpdR)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthR) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthR += 1;
@@ -172,10 +172,10 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleL += static_cast<int32_t>(fpdL) * 5.960464655174751e-36L * pow(2,expon+62);
 		frexpf((float)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleR += static_cast<int32_t>(fpdR) * 5.960464655174751e-36L * pow(2,expon+62);
 		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
@@ -258,7 +258,7 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		//we now have a big buffer to draw from, which is always positive amount of overspill
 		
 		padFactorL += dL[dCount];
-		double randy = (double(fpd)/UINT32_MAX);
+		double randy = (double(fpdL)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthL) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthL += 1;
@@ -319,7 +319,7 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		//we now have a big buffer to draw from, which is always positive amount of overspill
 		
 		padFactorR += dR[dCount];
-		randy = (double(fpd)/UINT32_MAX);
+		randy = (double(fpdR)/UINT32_MAX);
 		if ((targetWidth*randy) > lastWidthR) {
 			//we are expanding the buffer so we don't remove this trailing sample
 			lastWidthR += 1;
@@ -353,10 +353,10 @@ void Compresaturator::processDoubleReplacing(double **inputs, double **outputs, 
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleL += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
 		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleR += static_cast<int32_t>(fpd) * 1.110223024625156e-44L * pow(2,expon+62);
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

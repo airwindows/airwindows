@@ -70,7 +70,8 @@ private:
 	double lastSampleR;
 	double lastSlewR;
 	int gcount;
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

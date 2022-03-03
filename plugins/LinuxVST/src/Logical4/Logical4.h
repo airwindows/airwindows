@@ -143,10 +143,10 @@ private:
 	int gcount;
 	
     
-	double fpNShapeL;
-	double fpNShapeR;
 	bool fpFlip;
 	//default stuff
+	uint32_t fpdL;
+	uint32_t fpdR;
 
     float A;
     float B;
