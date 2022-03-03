@@ -70,11 +70,8 @@ private:
 	
 	bool flip;
 	
-	double fpNShapeLA;
-	double fpNShapeLB;
-	double fpNShapeRA;
-	double fpNShapeRB;
-	bool fpFlip;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

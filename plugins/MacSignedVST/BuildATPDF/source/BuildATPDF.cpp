@@ -22,9 +22,7 @@ BuildATPDF::BuildATPDF(audioMasterCallback audioMaster) :
 	H = 0.5;
 	I = 0.5;
 	J = 0.5;
-    fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
-    fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
-
+	
 	for(int count = 0; count < 11; count++) {bL[count] = 0.0; bR[count] = 0.0; f[count] = 0.0;}
 
 	//this is reset: values being initialized only once. Startup values, whatever they are.

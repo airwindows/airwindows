@@ -68,8 +68,8 @@ private:
 	double biquadS3[11];
 	double biquadS5[11];
 
-    uint32_t fpdL;
-    uint32_t fpdR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

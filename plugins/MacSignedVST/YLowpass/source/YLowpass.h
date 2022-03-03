@@ -82,8 +82,7 @@ private:
 		biq_total
 	}; //coefficient interpolating biquad filter, stereo
 	double biquad[biq_total];
-	//double biquadC[biq_total];
-	//double biquadD[biq_total];
+
 	double powFactorA;
 	double powFactorB;
 	double inTrimA;
@@ -107,6 +106,7 @@ private:
 	}; //fixed frequency biquad filter for ultrasonics, stereo
 	double fixA[fix_total];
 	double fixB[fix_total];
+	
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

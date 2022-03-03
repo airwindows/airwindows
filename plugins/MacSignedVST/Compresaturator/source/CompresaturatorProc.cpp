@@ -172,10 +172,10 @@ void Compresaturator::processReplacing(float **inputs, float **outputs, VstInt32
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleL += static_cast<int32_t>(fpdL) * 5.960464655174751e-36L * pow(2,expon+62);
 		frexpf((float)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleR += static_cast<int32_t>(fpdR) * 5.960464655174751e-36L * pow(2,expon+62);
 		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

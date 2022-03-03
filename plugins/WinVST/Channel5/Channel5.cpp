@@ -12,11 +12,11 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new C
 Channel5::Channel5(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
+	fpNShapeL = 0.0;
+	fpNShapeR = 0.0;
 	consoletype = 0.0;
 	drive = 0.0;
 	output = 1.0;
-	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
-	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	fpFlip = true;
 	iirSampleLA = 0.0;
 	iirSampleRA = 0.0;

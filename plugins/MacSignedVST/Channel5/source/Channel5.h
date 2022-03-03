@@ -54,10 +54,8 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	uint32_t fpdL;
-	uint32_t fpdR;
-    double fpNShapeL;
-    double fpNShapeR;
+	double fpNShapeL;
+	double fpNShapeR;
 	bool fpFlip;
 	//default stuff
 	double iirSampleLA;

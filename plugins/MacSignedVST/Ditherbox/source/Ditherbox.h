@@ -127,6 +127,9 @@ private:
 	double iirSampleYR;
 	double iirSampleZR;
 	
+	uint32_t fpdL;
+	uint32_t fpdR;
+	
     float A;
 };
 

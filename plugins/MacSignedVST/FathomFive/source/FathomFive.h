@@ -74,6 +74,8 @@ private:
     float C; //Frequency
     float D; //Dry/Wet
 	//parameters. Always 0-1, and we scale/alter them elsewhere.
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 #endif

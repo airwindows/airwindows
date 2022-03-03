@@ -17,7 +17,8 @@ BitGlitter::BitGlitter(audioMasterCallback audioMaster) :
 	C = 0.5;
 	D = 1.0;
 
-		fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+		fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 
 	ataLastSampleL = 0.0;
 	ataHalfwaySampleL = 0.0;

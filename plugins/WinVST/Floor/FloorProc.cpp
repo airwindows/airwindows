@@ -32,7 +32,6 @@ void Floor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 	if (iirAmount <= 0.0) iirAmount = 0.0;
 	if (iirAmount > 1.0) iirAmount = 1.0;
 	double wet = C;
-	double dry = 1.0-wet;
 	
     while (--sampleFrames >= 0)
     {
@@ -257,7 +256,6 @@ void Floor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 	if (iirAmount <= 0.0) iirAmount = 0.0;
 	if (iirAmount > 1.0) iirAmount = 1.0;
 	double wet = C;
-	double dry = 1.0-wet;
 	
     while (--sampleFrames >= 0)
     {

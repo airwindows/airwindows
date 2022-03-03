@@ -160,11 +160,11 @@ void Luxor::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.031);
+		randy = ((double(fpdL)/UINT32_MAX)*0.031);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.031);
+		randy = ((double(fpdR)/UINT32_MAX)*0.031);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -341,11 +341,11 @@ void Luxor::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.031);
+		randy = ((double(fpdL)/UINT32_MAX)*0.031);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.031);
+		randy = ((double(fpdR)/UINT32_MAX)*0.031);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		

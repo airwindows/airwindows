@@ -66,7 +66,7 @@ void ToTape6::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			inputSampleR *= inputgain;
 		} //gain cut before plugin		
 		
-		double flutterrandy =  fpd / (double)UINT32_MAX;
+		double flutterrandy =  (double(fpdL)/UINT32_MAX);
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (gcount < 0 || gcount > 499) {gcount = 499;}
 		dL[gcount] = inputSampleL;
@@ -400,7 +400,7 @@ void ToTape6::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			inputSampleR *= inputgain;
 		} //gain cut before plugin		
 		
-		double flutterrandy =  fpd / (double)UINT32_MAX;
+		double flutterrandy =  (double(fpdL)/UINT32_MAX);
 		//now we've got a random flutter, so we're messing with the pitch before tape effects go on
 		if (gcount < 0 || gcount > 499) {gcount = 499;}
 		dL[gcount] = inputSampleL;

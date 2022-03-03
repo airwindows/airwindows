@@ -24,7 +24,6 @@ void HardVacuum::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double aura = C*3.1415926;
 	double out = D;
 	double wet = E;
-	double dry = 1.0-wet;
 	double drive;
 	double positive;
 	double negative;
@@ -173,7 +172,6 @@ void HardVacuum::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double aura = C*3.1415926;
 	double out = D;
 	double wet = E;
-	double dry = 1.0-wet;
 	double drive;
 	double positive;
 	double negative;

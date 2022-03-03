@@ -14,7 +14,7 @@ BlockParty::BlockParty(audioMasterCallback audioMaster) :
 {
 	A = 0.0;
 	B = 1.0;
-    fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+		fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	
 	muSpeedAL = 10000;

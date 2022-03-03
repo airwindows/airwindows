@@ -70,11 +70,11 @@ void DitherFloat::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 		//begin stereo 32 bit floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
-		inputSampleL += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;	
+		fpdL ^= fpdL<<13; fpdL ^= fpdL>>17; fpdL ^= fpdL<<5;
+		inputSampleL += (fpdL*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;	
 		frexpf((float)inputSampleR, &expon);
-		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
-		inputSampleR += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;
+		fpdR ^= fpdR<<13; fpdR ^= fpdR>>17; fpdR ^= fpdR<<5;
+		inputSampleR += (fpdR*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;
 		//end stereo 32 bit floating point dither
 		
 		
@@ -155,11 +155,11 @@ void DitherFloat::processDoubleReplacing(double **inputs, double **outputs, VstI
 		
 		//begin stereo 32 bit floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
-		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
-		inputSampleL += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;	
+		fpdL ^= fpdL<<13; fpdL ^= fpdL>>17; fpdL ^= fpdL<<5;
+		inputSampleL += (fpdL*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;	
 		frexpf((float)inputSampleR, &expon);
-		fpd ^= fpd<<13; fpd ^= fpd>>17; fpd ^= fpd<<5;
-		inputSampleR += (fpd*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;
+		fpdR ^= fpdR<<13; fpdR ^= fpdR>>17; fpdR ^= fpdR<<5;
+		inputSampleR += (fpdR*3.4e-36l*pow(2,expon+62)* blend);	//remove 'blend' for real use, it's for the demo;
 		//end stereo 32 bit floating point dither
 		
 		

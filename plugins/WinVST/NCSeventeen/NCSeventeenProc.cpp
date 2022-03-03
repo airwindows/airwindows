@@ -19,9 +19,6 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	float fpTemp;
-	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;	
 
 	double IIRscaleback = 0.0004716;
 	double bassScaleback = 0.0002364;
@@ -311,25 +308,14 @@ void NCSeventeen::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		if (inputSampleR < -0.95) inputSampleR = -0.95;
 		//iron bar
 
-		//noise shaping to 32-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 32 bit output
+		//begin 32 bit stereo floating point dither
+		int expon; frexpf((float)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		frexpf((float)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//end 32 bit stereo floating point dither
 
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -353,9 +339,6 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	double fpTemp;
-	double fpOld = 0.618033988749894848204586; //golden ratio!
-	double fpNew = 1.0 - fpOld;	
 	
 	double IIRscaleback = 0.0004716;
 	double bassScaleback = 0.0002364;
@@ -644,25 +627,14 @@ void NCSeventeen::processDoubleReplacing(double **inputs, double **outputs, VstI
 		if (inputSampleR < -0.95) inputSampleR = -0.95;
 		//iron bar
 		
-		//noise shaping to 64-bit floating point
-		if (fpFlip) {
-			fpTemp = inputSampleL;
-			fpNShapeLA = (fpNShapeLA*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLA;
-			fpTemp = inputSampleR;
-			fpNShapeRA = (fpNShapeRA*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRA;
-		}
-		else {
-			fpTemp = inputSampleL;
-			fpNShapeLB = (fpNShapeLB*fpOld)+((inputSampleL-fpTemp)*fpNew);
-			inputSampleL += fpNShapeLB;
-			fpTemp = inputSampleR;
-			fpNShapeRB = (fpNShapeRB*fpOld)+((inputSampleR-fpTemp)*fpNew);
-			inputSampleR += fpNShapeRB;
-		}
-		fpFlip = !fpFlip;
-		//end noise shaping on 64 bit output
+		//begin 64 bit stereo floating point dither
+		//int expon; frexp((double)inputSampleL, &expon);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//frexp((double)inputSampleR, &expon);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;

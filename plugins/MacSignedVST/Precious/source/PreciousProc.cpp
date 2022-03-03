@@ -158,11 +158,11 @@ void Precious::processReplacing(float **inputs, float **outputs, VstInt32 sample
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.017);
+		randy = ((double(fpdL)/UINT32_MAX)*0.017);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.017);
+		randy = ((double(fpdR)/UINT32_MAX)*0.017);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		
@@ -337,11 +337,11 @@ void Precious::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 		}
 		//otherwise we leave it untouched by the overdrive stuff
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.017);
+		randy = ((double(fpdL)/UINT32_MAX)*0.017);
 		inputSampleL = ((inputSampleL*(1-randy))+(lastSampleL*randy)) * outlevel;
 		lastSampleL = inputSampleL;
 		
-		randy = ((double(fpd)/UINT32_MAX)*0.017);
+		randy = ((double(fpdR)/UINT32_MAX)*0.017);
 		inputSampleR = ((inputSampleR*(1-randy))+(lastSampleR*randy)) * outlevel;
 		lastSampleR = inputSampleR;
 		

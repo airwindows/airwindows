@@ -33,7 +33,6 @@ void ElectroHat::processReplacing(float **inputs, float **outputs, VstInt32 samp
 	double brighten = C;
 	double outputlevel = D;
 	double wet = E;
-	double dry = 1.0-wet;
 	
 	if (deSyn == 4) {deSyn = 1; increment = 0.411; brighten = 0.87;}
 	//606 preset
@@ -168,7 +167,6 @@ void ElectroHat::processDoubleReplacing(double **inputs, double **outputs, VstIn
 	double brighten = C;
 	double outputlevel = D;
 	double wet = E;
-	double dry = 1.0-wet;
 	
 	if (deSyn == 4) {deSyn = 1; increment = 0.411; brighten = 0.87;}
 	//606 preset

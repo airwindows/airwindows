@@ -42,7 +42,6 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double out;
 	double fuzz = 0.111;
 	double wet = J;
-	double dry = 1.0-wet;
 	double glitch = 0.60;
 	double tempSample;
 	
@@ -155,7 +154,7 @@ void DubCenter::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
 		//set up polarities for sub-bass version
-		randy = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randy = (double(fpdL)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise
@@ -326,7 +325,6 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double out;
 	double fuzz = 0.111;
 	double wet = J;
-	double dry = 1.0-wet;
 	double glitch = 0.60;
 	double tempSample;
 	
@@ -438,7 +436,7 @@ void DubCenter::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		{if (WasNegative){SubOctave = !SubOctave;} WasNegative = false;}
 		else {WasNegative = true;}
 		//set up polarities for sub-bass version
-		randy = (double(fpd)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
+		randy = (double(fpdL)/UINT32_MAX)*fuzz; //0 to 1 the noise, may not be needed
 		invrandy = (1.0-randy);
 		randy /= 2.0;
 		//set up the noise

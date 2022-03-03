@@ -195,7 +195,7 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		LataLowpass += LataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		RataLowpass += RataHalfwayLowpass; //and combined them. Now we make sub-octaves
 		
-		double randy = (double(fpdL)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed
+		double randy = (double(fpdL)/UINT32_MAX)*0.0555; //0 to 1 the noise, may not be needed		
 		
 		switch (bflip)
 		{
@@ -365,8 +365,8 @@ void BassAmp::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		LinputSample += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		frexpf((float)RinputSample, &expon);
-		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		RinputSample += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		RinputSample += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
 		//end 32 bit stereo floating point dither
 		
 		*out1 = LinputSample;

@@ -41,22 +41,32 @@ void Deckwrecka::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
 
-		randyL = (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
+		randyL = (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
 		randyL /= 6.0;
 		randyL *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
 
-		randyR = (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
+		randyR = (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
 		randyR /= 6.0;
 		randyR *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
@@ -226,22 +236,32 @@ void Deckwrecka::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		bflip++;
 		if (bflip < 1 || bflip > 3) bflip = 1;
 		
-		randyL = (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
-		randyL += (double(fpd)/UINT32_MAX);
+		randyL = (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
+		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+		randyL += (double(fpdL)/UINT32_MAX);
 		randyL /= 6.0;
 		randyL *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise
 		
-		randyR = (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
-		randyR += (double(fpd)/UINT32_MAX);
+		randyR = (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
+		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+		randyR += (double(fpdR)/UINT32_MAX);
 		randyR /= 6.0;
 		randyR *= wreck; //0 to 1 the noise, may not be needed
 		//set up the noise

@@ -75,11 +75,11 @@ private:
 	double gainchase;
 	double settingchase;
 	double chasespeed;
+	uint32_t fpdL;
+	uint32_t fpdR;
 
 	double fpNShapeL;
 	double fpNShapeR;
-    uint32_t fpdL;
-    uint32_t fpdR;
 	//default stuff
 	float gain;
 };

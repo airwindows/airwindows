@@ -77,7 +77,7 @@ void BuildATPDF::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-
+		
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		//pseudorandom number updater
@@ -162,7 +162,7 @@ void BuildATPDF::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		
 		inputSampleL /= 8388608.0;
 		inputSampleR /= 8388608.0;
-
+		
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		//pseudorandom number updater

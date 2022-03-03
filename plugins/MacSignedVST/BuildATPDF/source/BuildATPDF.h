@@ -65,9 +65,6 @@ private:
 	double bR[11];
 	double f[11];		
 	//default stuff
-    
-    uint32_t fpdL;
-    uint32_t fpdR;
 
     float A;
     float B;
@@ -80,7 +77,8 @@ private:
     float I;
     float J;
 	//parameters. Always 0-1, and we scale/alter them elsewhere.
-
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 #endif

@@ -70,34 +70,36 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				break;
 				
 			case 2: 
-				inputSampleL += (double(fpd)/UINT32_MAX);
+				inputSampleL += (double(fpdL)/UINT32_MAX);
 				inputSampleL -= 0.5;
 				inputSampleL = floor(inputSampleL);
-				inputSampleR += (double(fpd)/UINT32_MAX);
+				inputSampleR += (double(fpdR)/UINT32_MAX);
 				inputSampleR -= 0.5;
 				inputSampleR = floor(inputSampleR);
 				//flat dither
 				break;
 				
 			case 3:
-				inputSampleL += (double(fpd)/UINT32_MAX);
-				inputSampleL += (double(fpd)/UINT32_MAX);
+				inputSampleL += (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				inputSampleL += (double(fpdL)/UINT32_MAX);
 				inputSampleL -= 1.0;
 				inputSampleL = floor(inputSampleL);
-				inputSampleR += (double(fpd)/UINT32_MAX);
-				inputSampleR += (double(fpd)/UINT32_MAX);
+				inputSampleR += (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				inputSampleR += (double(fpdR)/UINT32_MAX);
 				inputSampleR -= 1.0;
 				inputSampleR = floor(inputSampleR);
 				//TPDF dither
 				break;
 				
 			case 4:
-				currentDitherL = (double(fpd)/UINT32_MAX);
+				currentDitherL = (double(fpdL)/UINT32_MAX);
 				inputSampleL += currentDitherL;
 				inputSampleL -= lastSampleL;
 				inputSampleL = floor(inputSampleL);
 				lastSampleL = currentDitherL;
-				currentDitherR = (double(fpd)/UINT32_MAX);
+				currentDitherR = (double(fpdR)/UINT32_MAX);
 				inputSampleR += currentDitherR;
 				inputSampleR -= lastSampleR;
 				inputSampleR = floor(inputSampleR);
@@ -108,7 +110,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			case 5:				
 				nsL[9] = nsL[8]; nsL[8] = nsL[7]; nsL[7] = nsL[6]; nsL[6] = nsL[5];
 				nsL[5] = nsL[4]; nsL[4] = nsL[3]; nsL[3] = nsL[2]; nsL[2] = nsL[1];
-				nsL[1] = nsL[0]; nsL[0] = (double(fpd)/UINT32_MAX);
+				nsL[1] = nsL[0]; nsL[0] = (double(fpdL)/UINT32_MAX);
 				
 				currentDitherL  = (nsL[0] * 0.061);
 				currentDitherL -= (nsL[1] * 0.11);
@@ -131,7 +133,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				
 				nsR[9] = nsR[8]; nsR[8] = nsR[7]; nsR[7] = nsR[6]; nsR[6] = nsR[5];
 				nsR[5] = nsR[4]; nsR[4] = nsR[3]; nsR[3] = nsR[2]; nsR[2] = nsR[1];
-				nsR[1] = nsR[0]; nsR[0] = (double(fpd)/UINT32_MAX);
+				nsR[1] = nsR[0]; nsR[0] = (double(fpdR)/UINT32_MAX);
 				
 				currentDitherR  = (nsR[0] * 0.061);
 				currentDitherR -= (nsR[1] * 0.11);
@@ -156,8 +158,8 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				break;
 				
 			case 6:
-				currentDitherL = (double(fpd)/UINT32_MAX);
-				currentDitherR = (double(fpd)/UINT32_MAX);
+				currentDitherL = (double(fpdL)/UINT32_MAX);
+				currentDitherR = (double(fpdR)/UINT32_MAX);
 				
 				inputSampleL += currentDitherL;
 				inputSampleR += currentDitherR;
@@ -202,37 +204,52 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				break;
 				
 			case 8:
-				absSample = ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample = ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[1] += absSample; nsL[1] /= 2; absSample -= nsL[1];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[2] += absSample; nsL[2] /= 2; absSample -= nsL[2];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[3] += absSample; nsL[3] /= 2; absSample -= nsL[3];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[4] += absSample; nsL[4] /= 2; absSample -= nsL[4];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[5] += absSample; nsL[5] /= 2; absSample -= nsL[5];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[6] += absSample; nsL[6] /= 2; absSample -= nsL[6];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[7] += absSample; nsL[7] /= 2; absSample -= nsL[7];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[8] += absSample; nsL[8] /= 2; absSample -= nsL[8];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[9] += absSample; nsL[9] /= 2; absSample -= nsL[9];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[10] += absSample; nsL[10] /= 2; absSample -= nsL[10];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[11] += absSample; nsL[11] /= 2; absSample -= nsL[11];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[12] += absSample; nsL[12] /= 2; absSample -= nsL[12];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[13] += absSample; nsL[13] /= 2; absSample -= nsL[13];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[14] += absSample; nsL[14] /= 2; absSample -= nsL[14];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
 				nsL[15] += absSample; nsL[15] /= 2; absSample -= nsL[15];
 				//install noise and then shape it
 				absSample += inputSampleL;
@@ -249,37 +266,52 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//TenNines dither L
 				
 				
-				absSample = ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample = ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[0] += absSample; nsR[0] /= 2; absSample -= nsR[0];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[1] += absSample; nsR[1] /= 2; absSample -= nsR[1];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[2] += absSample; nsR[2] /= 2; absSample -= nsR[2];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[3] += absSample; nsR[3] /= 2; absSample -= nsR[3];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[4] += absSample; nsR[4] /= 2; absSample -= nsR[4];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[5] += absSample; nsR[5] /= 2; absSample -= nsR[5];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[6] += absSample; nsR[6] /= 2; absSample -= nsR[6];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[7] += absSample; nsR[7] /= 2; absSample -= nsR[7];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[8] += absSample; nsR[8] /= 2; absSample -= nsR[8];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[9] += absSample; nsR[9] /= 2; absSample -= nsR[9];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[10] += absSample; nsR[10] /= 2; absSample -= nsR[10];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[11] += absSample; nsR[11] /= 2; absSample -= nsR[11];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[12] += absSample; nsR[12] /= 2; absSample -= nsR[12];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[13] += absSample; nsR[13] /= 2; absSample -= nsR[13];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[14] += absSample; nsR[14] /= 2; absSample -= nsR[14];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
 				nsR[15] += absSample; nsR[15] /= 2; absSample -= nsR[15];
 				//install noise and then shape it
 				absSample += inputSampleR;
@@ -303,7 +335,10 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				if (inputSampleR < 0) inputSampleR -= 0.383;
 				//adjusting to permit more information drug outta the noisefloor
 				
-				contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+				contingentRnd = (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				contingentRnd += ((double(fpdL)/UINT32_MAX)-1.0);
+				contingentRnd *= randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrL*omegaConstant; //include err
 				absSample = fabs(inputSampleL);
 				contingentErrL = absSample - floor(absSample); //get next err
@@ -317,7 +352,10 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				//Contingent Dither
 				inputSampleL = floor(inputSampleL);
 				
-				contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+				contingentRnd = (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				contingentRnd += ((double(fpdR)/UINT32_MAX)-1.0); 
+				contingentRnd *= randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrR*omegaConstant; //include err
 				absSample = fabs(inputSampleR);
 				contingentErrR = absSample - floor(absSample); //get next err
@@ -339,11 +377,11 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			case 10: //this one is the original Naturalize
 				if (inputSampleL > 0) inputSampleL += (0.3333333333);
 				if (inputSampleL < 0) inputSampleL -= (0.3333333333);
-				inputSampleL += (double(fpd)/UINT32_MAX)*0.6666666666;
+				inputSampleL += (double(fpdL)/UINT32_MAX)*0.6666666666;
 				
 				if (inputSampleR > 0) inputSampleR += (0.3333333333);
 				if (inputSampleR < 0) inputSampleR -= (0.3333333333);
-				inputSampleR += (double(fpd)/UINT32_MAX)*0.6666666666;
+				inputSampleR += (double(fpdR)/UINT32_MAX)*0.6666666666;
 				
 				//begin L
 				benfordize = floor(inputSampleL);
@@ -900,12 +938,13 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
 				else inputSampleL = -bridgerectifier;
 				
-				silhouette = rand()/(double)RAND_MAX;
+				silhouette = (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleL);
 				
-				smoother = rand()/(double)RAND_MAX;
+				smoother = (double(fpdL)/UINT32_MAX);
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleL);
@@ -930,12 +969,13 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 				if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
 				else inputSampleR = -bridgerectifier;
 				
-				silhouette = rand()/(double)RAND_MAX;
+				silhouette = (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleR);
 				
-				smoother = rand()/(double)RAND_MAX;
+				smoother = (double(fpdR)/UINT32_MAX);
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleR);
@@ -965,7 +1005,7 @@ void Ditherbox::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			noiseShapingL += inputSampleL - drySampleL;
 			noiseShapingR += inputSampleR - drySampleR;
 		}
-
+				
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		//pseudorandom number updater
@@ -1043,34 +1083,36 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				break;
 				
 			case 2: 
-				inputSampleL += (double(fpd)/UINT32_MAX);
+				inputSampleL += (double(fpdL)/UINT32_MAX);
 				inputSampleL -= 0.5;
 				inputSampleL = floor(inputSampleL);
-				inputSampleR += (double(fpd)/UINT32_MAX);
+				inputSampleR += (double(fpdR)/UINT32_MAX);
 				inputSampleR -= 0.5;
 				inputSampleR = floor(inputSampleR);
 				//flat dither
 				break;
 				
 			case 3:
-				inputSampleL += (double(fpd)/UINT32_MAX);
-				inputSampleL += (double(fpd)/UINT32_MAX);
+				inputSampleL += (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				inputSampleL += (double(fpdL)/UINT32_MAX);
 				inputSampleL -= 1.0;
 				inputSampleL = floor(inputSampleL);
-				inputSampleR += (double(fpd)/UINT32_MAX);
-				inputSampleR += (double(fpd)/UINT32_MAX);
+				inputSampleR += (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				inputSampleR += (double(fpdR)/UINT32_MAX);
 				inputSampleR -= 1.0;
 				inputSampleR = floor(inputSampleR);
 				//TPDF dither
 				break;
 				
 			case 4:
-				currentDitherL = (double(fpd)/UINT32_MAX);
+				currentDitherL = (double(fpdL)/UINT32_MAX);
 				inputSampleL += currentDitherL;
 				inputSampleL -= lastSampleL;
 				inputSampleL = floor(inputSampleL);
 				lastSampleL = currentDitherL;
-				currentDitherR = (double(fpd)/UINT32_MAX);
+				currentDitherR = (double(fpdR)/UINT32_MAX);
 				inputSampleR += currentDitherR;
 				inputSampleR -= lastSampleR;
 				inputSampleR = floor(inputSampleR);
@@ -1081,7 +1123,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			case 5:
 				nsL[9] = nsL[8]; nsL[8] = nsL[7]; nsL[7] = nsL[6]; nsL[6] = nsL[5];
 				nsL[5] = nsL[4]; nsL[4] = nsL[3]; nsL[3] = nsL[2]; nsL[2] = nsL[1];
-				nsL[1] = nsL[0]; nsL[0] = (double(fpd)/UINT32_MAX);
+				nsL[1] = nsL[0]; nsL[0] = (double(fpdL)/UINT32_MAX);
 				
 				currentDitherL  = (nsL[0] * 0.061);
 				currentDitherL -= (nsL[1] * 0.11);
@@ -1104,7 +1146,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				
 				nsR[9] = nsR[8]; nsR[8] = nsR[7]; nsR[7] = nsR[6]; nsR[6] = nsR[5];
 				nsR[5] = nsR[4]; nsR[4] = nsR[3]; nsR[3] = nsR[2]; nsR[2] = nsR[1];
-				nsR[1] = nsR[0]; nsR[0] = (double(fpd)/UINT32_MAX);
+				nsR[1] = nsR[0]; nsR[0] = (double(fpdR)/UINT32_MAX);
 				
 				currentDitherR  = (nsR[0] * 0.061);
 				currentDitherR -= (nsR[1] * 0.11);
@@ -1128,8 +1170,8 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				break;
 				
 			case 6:
-				currentDitherL = (double(fpd)/UINT32_MAX);
-				currentDitherR = (double(fpd)/UINT32_MAX);
+				currentDitherL = (double(fpdL)/UINT32_MAX);
+				currentDitherR = (double(fpdR)/UINT32_MAX);
 				
 				inputSampleL += currentDitherL;
 				inputSampleR += currentDitherR;
@@ -1174,37 +1216,52 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				break;
 				
 			case 8:
-				absSample = ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample = ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[0] += absSample; nsL[0] /= 2; absSample -= nsL[0];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[1] += absSample; nsL[1] /= 2; absSample -= nsL[1];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[2] += absSample; nsL[2] /= 2; absSample -= nsL[2];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[3] += absSample; nsL[3] /= 2; absSample -= nsL[3];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[4] += absSample; nsL[4] /= 2; absSample -= nsL[4];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[5] += absSample; nsL[5] /= 2; absSample -= nsL[5];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[6] += absSample; nsL[6] /= 2; absSample -= nsL[6];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[7] += absSample; nsL[7] /= 2; absSample -= nsL[7];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[8] += absSample; nsL[8] /= 2; absSample -= nsL[8];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[9] += absSample; nsL[9] /= 2; absSample -= nsL[9];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[10] += absSample; nsL[10] /= 2; absSample -= nsL[10];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[11] += absSample; nsL[11] /= 2; absSample -= nsL[11];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[12] += absSample; nsL[12] /= 2; absSample -= nsL[12];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[13] += absSample; nsL[13] /= 2; absSample -= nsL[13];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				nsL[14] += absSample; nsL[14] /= 2; absSample -= nsL[14];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdL)/UINT32_MAX) - 0.5);
 				nsL[15] += absSample; nsL[15] /= 2; absSample -= nsL[15];
 				//install noise and then shape it
 				absSample += inputSampleL;
@@ -1221,37 +1278,52 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//TenNines dither L
 				
 				
-				absSample = ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample = ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[0] += absSample; nsR[0] /= 2; absSample -= nsR[0];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[1] += absSample; nsR[1] /= 2; absSample -= nsR[1];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[2] += absSample; nsR[2] /= 2; absSample -= nsR[2];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[3] += absSample; nsR[3] /= 2; absSample -= nsR[3];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[4] += absSample; nsR[4] /= 2; absSample -= nsR[4];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[5] += absSample; nsR[5] /= 2; absSample -= nsR[5];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[6] += absSample; nsR[6] /= 2; absSample -= nsR[6];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[7] += absSample; nsR[7] /= 2; absSample -= nsR[7];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[8] += absSample; nsR[8] /= 2; absSample -= nsR[8];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[9] += absSample; nsR[9] /= 2; absSample -= nsR[9];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[10] += absSample; nsR[10] /= 2; absSample -= nsR[10];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[11] += absSample; nsR[11] /= 2; absSample -= nsR[11];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[12] += absSample; nsR[12] /= 2; absSample -= nsR[12];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[13] += absSample; nsR[13] /= 2; absSample -= nsR[13];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				nsR[14] += absSample; nsR[14] /= 2; absSample -= nsR[14];
-				absSample += ((double(fpd)/UINT32_MAX) - 0.5);
+				absSample += ((double(fpdR)/UINT32_MAX) - 0.5);
 				nsR[15] += absSample; nsR[15] /= 2; absSample -= nsR[15];
 				//install noise and then shape it
 				absSample += inputSampleR;
@@ -1275,7 +1347,10 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				if (inputSampleR < 0) inputSampleR -= 0.383;
 				//adjusting to permit more information drug outta the noisefloor
 				
-				contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+				contingentRnd = (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				contingentRnd += ((double(fpdL)/UINT32_MAX)-1.0); 
+				contingentRnd *= randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrL*omegaConstant; //include err
 				absSample = fabs(inputSampleL);
 				contingentErrL = absSample - floor(absSample); //get next err
@@ -1289,7 +1364,10 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				//Contingent Dither
 				inputSampleL = floor(inputSampleL);
 				
-				contingentRnd = (((double(fpd)/UINT32_MAX)+(double(fpd)/UINT32_MAX))-1.0) * randyConstant; //produce TPDF dist, scale
+				contingentRnd = (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				contingentRnd += ((double(fpdR)/UINT32_MAX)-1.0); 
+				contingentRnd *= randyConstant; //produce TPDF dist, scale
 				contingentRnd -= contingentErrR*omegaConstant; //include err
 				absSample = fabs(inputSampleR);
 				contingentErrR = absSample - floor(absSample); //get next err
@@ -1311,11 +1389,11 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			case 10: //this one is the original Naturalize
 				if (inputSampleL > 0) inputSampleL += (0.3333333333);
 				if (inputSampleL < 0) inputSampleL -= (0.3333333333);
-				inputSampleL += (double(fpd)/UINT32_MAX)*0.6666666666;
+				inputSampleL += (double(fpdL)/UINT32_MAX)*0.6666666666;
 				
 				if (inputSampleR > 0) inputSampleR += (0.3333333333);
 				if (inputSampleR < 0) inputSampleR -= (0.3333333333);
-				inputSampleR += (double(fpd)/UINT32_MAX)*0.6666666666;
+				inputSampleR += (double(fpdR)/UINT32_MAX)*0.6666666666;
 				
 				//begin L
 				benfordize = floor(inputSampleL);
@@ -1872,12 +1950,13 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				if (inputSampleL > 0.0) inputSampleL = bridgerectifier;
 				else inputSampleL = -bridgerectifier;
 				
-				silhouette = rand()/(double)RAND_MAX;
+				silhouette = (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleL);
 				
-				smoother = rand()/(double)RAND_MAX;
+				smoother = (double(fpdL)/UINT32_MAX);
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleL);
@@ -1902,12 +1981,13 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 				if (inputSampleR > 0.0) inputSampleR = bridgerectifier;
 				else inputSampleR = -bridgerectifier;
 				
-				silhouette = rand()/(double)RAND_MAX;
+				silhouette = (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 				silhouette -= 0.5;
 				silhouette *= 2.0;
 				silhouette *= fabs(inputSampleR);
 				
-				smoother = rand()/(double)RAND_MAX;
+				smoother = (double(fpdR)/UINT32_MAX);
 				smoother -= 0.5;
 				smoother *= 2.0;
 				smoother *= fabs(lastSampleR);
@@ -1937,7 +2017,7 @@ void Ditherbox::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			noiseShapingL += inputSampleL - drySampleL;
 			noiseShapingR += inputSampleR - drySampleR;
 		}
-
+		
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		//pseudorandom number updater

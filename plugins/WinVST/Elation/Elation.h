@@ -74,7 +74,8 @@ private:
 	double lastSampleR;
 	double bL[35];
 	double lastSampleL;
-	uint32_t fpd;
+	uint32_t fpdL;
+	uint32_t fpdR;
 	//default stuff
 
     float A;

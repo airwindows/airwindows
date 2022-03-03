@@ -15,7 +15,8 @@ Pop::Pop(audioMasterCallback audioMaster) :
 	A = 0.3;
 	B = 1.0;
 	C = 1.0;
-		fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
+		fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	
 	for(int count = 0; count < 10000; count++) {dL[count] = 0; dR[count] = 0;}
 	delay = 0;

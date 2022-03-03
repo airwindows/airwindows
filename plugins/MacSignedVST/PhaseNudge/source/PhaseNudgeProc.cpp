@@ -93,8 +93,8 @@ void PhaseNudge::processReplacing(float **inputs, float **outputs, VstInt32 samp
 		inputSampleR *= 4.0;
 
 		if (wet < 1.0) {
-			inputSampleL = (drySampleL * dry)+(inputSampleL * wet);
-			inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
+			inputSampleL = (drySampleL * (1.0-wet))+(inputSampleL * wet);
+			inputSampleR = (drySampleR * (1.0-wet))+(inputSampleR * wet);
 		}		
 		
 		//begin 32 bit stereo floating point dither
@@ -201,8 +201,8 @@ void PhaseNudge::processDoubleReplacing(double **inputs, double **outputs, VstIn
 		inputSampleR *= 4.0;
 		
 		if (wet < 1.0) {
-			inputSampleL = (drySampleL * dry)+(inputSampleL * wet);
-			inputSampleR = (drySampleR * dry)+(inputSampleR * wet);
+			inputSampleL = (drySampleL * (1.0-wet))+(inputSampleL * wet);
+			inputSampleR = (drySampleR * (1.0-wet))+(inputSampleR * wet);
 		}		
 
 		//begin 64 bit stereo floating point dither

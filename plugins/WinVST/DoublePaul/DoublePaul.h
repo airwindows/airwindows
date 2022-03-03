@@ -52,7 +52,9 @@ private:
     std::set< std::string > _canDo;
     
 	double bL[11];		
-	double bR[11];		
+	double bR[11];
+	uint32_t fpdL;
+	uint32_t fpdR;
 
 };
 
