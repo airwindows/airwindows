@@ -5,7 +5,7 @@
 * 
 *	Created:	11/30/19
 *	
-*	Copyright:  Copyright © 2019 Airwindows, All Rights Reserved
+*	Copyright:  Copyright ï¿½ 2019 Airwindows, All Rights Reserved
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -206,7 +206,7 @@ void		ToTape6::ToTape6Kernel::Reset()
 	flip = false;
 	for (int temp = 0; temp < 501; temp++) {d[temp] = 0.0;}
 	gcount = 0;	
-	sweep = pi;
+	sweep = M_PI;
 	rateof = 0.5;
 	nextmax = 0.5;
 	lastSample = 0.0;
@@ -289,8 +289,8 @@ void		ToTape6::ToTape6Kernel::Process(	const Float32 	*inSourceP,
 			rateof = (rateof * (1.0-fluttertrim)) + (nextmax * fluttertrim);
 			sweep += rateof * fluttertrim;
 			
-			if (sweep >= (pi*2.0)) {
-				sweep -= pi;
+			if (sweep >= (M_PI*2.0)) {
+				sweep -= M_PI;
 				nextmax = 0.24 + (flutterrandy * 0.74);
 			}
 			//apply to input signal only when flutter is present, interpolate samples
