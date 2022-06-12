@@ -1403,35 +1403,35 @@ void Cabs::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
-	int cycleEnd = floor(overallscale);
-	if (cycleEnd < 1) cycleEnd = 1;
-	if (cycleEnd > 4) cycleEnd = 4;
-	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
-	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
-	
-	int speaker = (int)A;
-	double colorIntensity = pow(B,4);
-	double correctboost = 1.0 + (colorIntensity*4);
-	double correctdrygain = 1.0 - colorIntensity;
-	double threshold = pow((1.0-C),5)+0.021; //room loud is slew
-	double rarefaction = cbrt(threshold);
-	double postThreshold = sqrt(rarefaction);
-	double postRarefaction = cbrt(postThreshold);
-	double postTrim = sqrt(postRarefaction);
-	double HeadBumpFreq = 0.0298+((1.0-D)/8.0);
-	double LowsPad = 0.12 + (HeadBumpFreq*12.0);
-	double dcblock = pow(HeadBumpFreq,2) / 8.0;
-	double heavy = pow(E,3); //wet of head bump
-	double output = pow(F,2);
-	double dynamicconv = 5.0;
-	dynamicconv *= pow(B,2);
-	dynamicconv *= pow(C,2);
-	//set constants for sag speed
-	int offsetA = 4+((int)(D*5.0));
-	
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    int cycleEnd = floor(overallscale);
+    if (cycleEnd < 1) cycleEnd = 1;
+    if (cycleEnd > 4) cycleEnd = 4;
+    //this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
+    if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
+    
+    int speaker = (int)(floor( A * 5.999 )+1);
+    double colorIntensity = pow(B,4);
+    double correctboost = 1.0 + (colorIntensity*4);
+    double correctdrygain = 1.0 - colorIntensity;
+    double threshold = pow((1.0-C),5)+0.021; //room loud is slew
+    double rarefaction = cbrt(threshold);
+    double postThreshold = sqrt(rarefaction);
+    double postRarefaction = cbrt(postThreshold);
+    double postTrim = sqrt(postRarefaction);
+    double HeadBumpFreq = 0.0298+((1.0-D)/8.0);
+    double LowsPad = 0.12 + (HeadBumpFreq*12.0);
+    double dcblock = pow(HeadBumpFreq,2) / 8.0;
+    double heavy = pow(E,3); //wet of head bump
+    double output = pow(F,2);
+    double dynamicconv = 5.0;
+    dynamicconv *= pow(B,2);
+    dynamicconv *= pow(C,2);
+    //set constants for sag speed
+    int offsetA = 4+((int)(D*5.0));
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;

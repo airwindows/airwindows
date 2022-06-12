@@ -1412,7 +1412,7 @@ void Cabs::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	if (cycle > cycleEnd-1) cycle = cycleEnd-1; //sanity check
 	
-	int speaker = (int)A;
+	int speaker = (int)(floor( A * 5.999 )+1);
 	double colorIntensity = pow(B,4);
 	double correctboost = 1.0 + (colorIntensity*4);
 	double correctdrygain = 1.0 - colorIntensity;
