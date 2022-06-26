@@ -4,8 +4,8 @@
  *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
  * ======================================== */
 
-#ifndef __Gain_H
-#define __Gain_H
+#ifndef __Balanced_H
+#define __Balanced_H
 
 #ifndef __audioeffect__
 #include "audioeffectx.h"
@@ -16,7 +16,8 @@
 #include <math.h>
 
 enum {
-  kNumParameters = 0
+	kParamA = 0,
+	kNumParameters = 1
 }; //
 
 const int kNumPrograms = 0;
@@ -50,7 +51,8 @@ public:
 private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
-    
+	
+	float A;
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

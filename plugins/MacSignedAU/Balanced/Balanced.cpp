@@ -59,7 +59,8 @@ Balanced::Balanced(AudioUnit component)
 {
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
-         
+    SetParameter(kParam_One, kDefaultValue_ParamOne );
+
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
 #endif
@@ -95,6 +96,13 @@ ComponentResult			Balanced::GetParameterInfo(AudioUnitScope		inScope,
     if (inScope == kAudioUnitScope_Global) {
         switch(inParameterID)
         {
+            case kParam_One:
+                AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 8.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamOne;
+                break;
            default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
@@ -183,7 +191,25 @@ OSStatus		Balanced::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	
+    
+    int bitshiftGain = GetParameter( kParam_One );
+    double gain = 1.0; //default unity gain
+    switch (bitshiftGain)
+    {
+        case 0: gain = 0.5; break;
+        case 1: gain = 1.0; break;
+        case 2: gain = 2.0; break;
+        case 3: gain = 4.0; break;
+        case 4: gain = 8.0; break;
+        case 5: gain = 16.0; break;
+        case 6: gain = 32.0; break;
+        case 7: gain = 64.0; break;
+        case 8: gain = 128.0; break;
+    }
+    //we are directly punching in the gain values rather than calculating them
+    //unlike regular BitShiftGain, we default to 0.5 for unity gain, and so on
+    //because we're combining two channels.
+    
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
 		double inputSampleR = *inputR;
@@ -194,8 +220,8 @@ OSStatus		Balanced::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		//tip is left, to add negative ring (right) to combine 'em is the same as subtracting them
 		//end result is, mono output is made up of half of each balanced input combined. Note that we don't just
 		//flip the ring input, because we need to combine them to cancel out interference.
-		inputSampleL = side/2.0;
-		inputSampleR = side/2.0;
+        inputSampleL = side*gain;
+        inputSampleR = side*gain;
 		//assign mono as result of balancing of channels
 
 		//begin 32 bit stereo floating point dither

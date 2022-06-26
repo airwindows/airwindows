@@ -53,11 +53,16 @@
 
 #pragma mark ____Balanced Parameters
 
+// parameters
+static const float kDefaultValue_ParamOne = 0.0;
+
+static CFStringRef kParameterOneName = CFSTR("Bit Shift");
 //Alter the name if desired, but using the plugin name is a start
 
 enum {
+	kParam_One =0,
 	//Add your parameters here...
-	kNumberOfParameters=0
+	kNumberOfParameters=1
 };
 
 #pragma mark ____Balanced

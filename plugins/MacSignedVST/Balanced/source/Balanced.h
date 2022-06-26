@@ -16,7 +16,8 @@
 #include <math.h>
 
 enum {
-  kNumParameters = 0
+    kParamA = 0,
+    kNumParameters = 1
 }; //
 
 const int kNumPrograms = 0;
@@ -51,6 +52,7 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
+    float A;
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff
