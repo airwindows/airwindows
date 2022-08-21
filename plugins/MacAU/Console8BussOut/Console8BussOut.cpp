@@ -181,12 +181,6 @@ void		Console8BussOut::Console8BussOutKernel::Reset()
 	overallscale *= GetSampleRate();	
 	spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
 	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16; //ADClip2
-	NSOdd = 0.0; NSEven = 0.0; prevShape = 0.0;
-	flip = true; //Ten Nines
-	for(int x = 0; x < 99; x++) darkSample[x] = 0;
-	depth = (int)(17.0*overallscale);
-	if (depth < 3) depth = 3;
-	if (depth > 98) depth = 98; //Dark
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
@@ -227,7 +221,7 @@ void		Console8BussOut::Console8BussOutKernel::Process(	const Float32 	*inSourceP
 			inputSample = outSample;
 		} //fixed biquad filtering ultrasonics
 		inputSample *= inTrim;
-		//the final output fader, before ClipOnly2 and dithering
+		//the final output fader, before ClipOnly2
 		
 		if (inputSample > 4.0) inputSample = 4.0; if (inputSample < -4.0) inputSample = -4.0;
 		if (wasPosClip) { //current will be over
@@ -245,33 +239,7 @@ void		Console8BussOut::Console8BussOutKernel::Process(	const Float32 	*inSourceP
 		for (int x = spacing; x > 0; x--) intermediate[x-1] = intermediate[x];
 		lastSample = intermediate[0]; //run a little buffer to handle this
 		//ClipOnly2
-		
-		inputSample *= 8388608.0; //0-1 is now one bit, now we dither
-		double correction = 0;
-		if (flip) {
-			NSOdd = (NSOdd * 0.9999999999) + prevShape;
-			NSEven = (NSEven * 0.9999999999) - prevShape;
-			correction = NSOdd;
-		} else {
-			NSOdd = (NSOdd * 0.9999999999) - prevShape;
-			NSEven = (NSEven * 0.9999999999) + prevShape;
-			correction = NSEven;
-		}
-		double shapedSample = inputSample+correction;
-		int quantA = floor(shapedSample);
-		int quantB = floor(shapedSample+1.0);
-		double expectedSlew = 0;
-		for(int x = 0; x < depth; x++) expectedSlew += (darkSample[x+1] - darkSample[x]);
-		expectedSlew /= depth; //we have an average of all recent slews
-		double testA = fabs((darkSample[0] - quantA) - expectedSlew);
-		double testB = fabs((darkSample[0] - quantB) - expectedSlew);
-		if (testA < testB) inputSample = quantA; else inputSample = quantB;
-		for(int x = depth; x >=0; x--) darkSample[x+1] = darkSample[x];
-		darkSample[0] = inputSample;
-		prevShape = (floor(shapedSample) - inputSample)*0.9999999999;
-		flip = !flip;
-		inputSample /= 8388608.0; //24 bit Ten Nines into Dark
-		
+				
 		*destP = inputSample;
 		
 		sourceP += inNumChannels; destP += inNumChannels;

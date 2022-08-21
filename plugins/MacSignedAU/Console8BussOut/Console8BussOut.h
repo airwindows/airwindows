@@ -147,12 +147,6 @@ public:
 		bool wasPosClip;
 		bool wasNegClip;
 		int spacing; //ClipOnly2
-		double NSOdd;
-		double NSEven;
-		double prevShape;
-		bool flip; //VinylDither
-		double darkSample[100];
-		int depth; //Dark
 		uint32_t fpd;
 	};
 };

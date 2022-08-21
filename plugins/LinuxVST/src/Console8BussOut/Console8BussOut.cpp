@@ -29,19 +29,12 @@ Console8BussOut::Console8BussOut(audioMasterCallback audioMaster) :
 	lastSampleL = 0.0; wasPosClipL = false; wasNegClipL = false;
 	lastSampleR = 0.0; wasPosClipR = false; wasNegClipR = false;
 	for (int x = 0; x < 17; x++) {intermediateL[x] = 0.0; intermediateR[x] = 0.0;} //ADClip2
-	NSOddL = 0.0; NSEvenL = 0.0; prevShapeL = 0.0; //Ten Nines
-	NSOddR = 0.0; NSEvenR = 0.0; prevShapeR = 0.0; //Ten Nines
-	for(int x = 0; x < 99; x++) {darkSampleL[x] = 0; darkSampleR[x] = 0;} //Dark
 	
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();	
 	spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
 	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16;
-	flip = true;
-	depth = (int)(17.0*overallscale);
-	if (depth < 3) depth = 3;
-	if (depth > 98) depth = 98;
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.

@@ -75,23 +75,13 @@ private:
 	double intermediateL[18];
 	bool wasPosClipL;
 	bool wasNegClipL; //ClipOnly2
-	double NSOddL;
-	double NSEvenL;
-	double prevShapeL;
-	double darkSampleL[100];
 	
 	double lastSampleR;
 	double intermediateR[18];
 	bool wasPosClipR;
 	bool wasNegClipR;
-	double NSOddR;
-	double NSEvenR;
-	double prevShapeR; //Ten Nines
-	double darkSampleR[100]; //Dark
 	
 	int spacing;
-	bool flip;
-	int depth;
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

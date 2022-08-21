@@ -26,7 +26,6 @@ void Console8BussOut::processReplacing(float **inputs, float **outputs, VstInt32
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		
 		double position = (double)sampleFrames/inFramesToProcess;
 		double inTrim = (inTrimA*position)+(inTrimB*(1.0-position));
 		//input trim smoothed to cut out zipper noise
@@ -84,54 +83,6 @@ void Console8BussOut::processReplacing(float **inputs, float **outputs, VstInt32
 		for (int x = spacing; x > 0; x--) intermediateR[x-1] = intermediateR[x];
 		lastSampleR = intermediateR[0]; //run a little buffer to handle this
 		//end ClipOnly2 stereo as a little, compressed chunk that can be dropped into code
-		
-		inputSampleL *= 8388608.0; inputSampleR *= 8388608.0; //0-1 is now one bit, now we dither
-		double correctionL = 0;
-		double correctionR = 0;
-		if (flip) {
-			NSOddL = (NSOddL * 0.9999999999) + prevShapeL;
-			NSEvenL = (NSEvenL * 0.9999999999) - prevShapeL;
-			correctionL = NSOddL;
-			NSOddR = (NSOddR * 0.9999999999) + prevShapeR;
-			NSEvenR = (NSEvenR * 0.9999999999) - prevShapeR;
-			correctionR = NSOddR;
-		} else {
-			NSOddL = (NSOddL * 0.9999999999) - prevShapeL;
-			NSEvenL = (NSEvenL * 0.9999999999) + prevShapeL;
-			correctionL = NSEvenL;
-			NSOddR = (NSOddR * 0.9999999999) - prevShapeR;
-			NSEvenR = (NSEvenR * 0.9999999999) + prevShapeR;
-			correctionR = NSEvenR;
-		}
-		double shapedSampleL = inputSampleL+correctionL;
-		int quantAL = floor(shapedSampleL);
-		int quantBL = floor(shapedSampleL+1.0);
-		double expectedSlewL = 0;
-		double shapedSampleR = inputSampleR+correctionR;
-		int quantAR = floor(shapedSampleR);
-		int quantBR = floor(shapedSampleR+1.0);
-		double expectedSlewR = 0;
-		for(int x = 0; x < depth; x++) {
-			expectedSlewL += (darkSampleL[x+1] - darkSampleL[x]);
-			expectedSlewR += (darkSampleR[x+1] - darkSampleR[x]);
-		}
-		expectedSlewL /= depth; expectedSlewR /= depth; //we have an average of all recent slews
-		double testAL = fabs((darkSampleL[0] - quantAL) - expectedSlewL);
-		double testBL = fabs((darkSampleL[0] - quantBL) - expectedSlewL);
-		if (testAL < testBL) inputSampleL = quantAL; else inputSampleL = quantBL;
-		double testAR = fabs((darkSampleR[0] - quantAR) - expectedSlewR);
-		double testBR = fabs((darkSampleR[0] - quantBR) - expectedSlewR);
-		if (testAR < testBR) inputSampleR = quantAR; else inputSampleR = quantBR;
-		for(int x = depth; x >=0; x--) {
-			darkSampleL[x+1] = darkSampleL[x];
-			darkSampleR[x+1] = darkSampleR[x];
-		}
-		darkSampleL[0] = inputSampleL; darkSampleR[0] = inputSampleR;
-		prevShapeL = (floor(shapedSampleL) - inputSampleL)*0.9999999999;
-		prevShapeR = (floor(shapedSampleR) - inputSampleR)*0.9999999999;
-		flip = !flip;
-		inputSampleL /= 8388608.0; inputSampleR /= 8388608.0; //24 bit Ten Nines into Dark
-		
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -229,55 +180,7 @@ void Console8BussOut::processDoubleReplacing(double **inputs, double **outputs, 
 		for (int x = spacing; x > 0; x--) intermediateR[x-1] = intermediateR[x];
 		lastSampleR = intermediateR[0]; //run a little buffer to handle this
 		//end ClipOnly2 stereo as a little, compressed chunk that can be dropped into code
-		
-		inputSampleL *= 8388608.0; inputSampleR *= 8388608.0; //0-1 is now one bit, now we dither
-		double correctionL = 0;
-		double correctionR = 0;
-		if (flip) {
-			NSOddL = (NSOddL * 0.9999999999) + prevShapeL;
-			NSEvenL = (NSEvenL * 0.9999999999) - prevShapeL;
-			correctionL = NSOddL;
-			NSOddR = (NSOddR * 0.9999999999) + prevShapeR;
-			NSEvenR = (NSEvenR * 0.9999999999) - prevShapeR;
-			correctionR = NSOddR;
-		} else {
-			NSOddL = (NSOddL * 0.9999999999) - prevShapeL;
-			NSEvenL = (NSEvenL * 0.9999999999) + prevShapeL;
-			correctionL = NSEvenL;
-			NSOddR = (NSOddR * 0.9999999999) - prevShapeR;
-			NSEvenR = (NSEvenR * 0.9999999999) + prevShapeR;
-			correctionR = NSEvenR;
-		}
-		double shapedSampleL = inputSampleL+correctionL;
-		int quantAL = floor(shapedSampleL);
-		int quantBL = floor(shapedSampleL+1.0);
-		double expectedSlewL = 0;
-		double shapedSampleR = inputSampleR+correctionR;
-		int quantAR = floor(shapedSampleR);
-		int quantBR = floor(shapedSampleR+1.0);
-		double expectedSlewR = 0;
-		for(int x = 0; x < depth; x++) {
-			expectedSlewL += (darkSampleL[x+1] - darkSampleL[x]);
-			expectedSlewR += (darkSampleR[x+1] - darkSampleR[x]);
-		}
-		expectedSlewL /= depth; expectedSlewR /= depth; //we have an average of all recent slews
-		double testAL = fabs((darkSampleL[0] - quantAL) - expectedSlewL);
-		double testBL = fabs((darkSampleL[0] - quantBL) - expectedSlewL);
-		if (testAL < testBL) inputSampleL = quantAL; else inputSampleL = quantBL;
-		double testAR = fabs((darkSampleR[0] - quantAR) - expectedSlewR);
-		double testBR = fabs((darkSampleR[0] - quantBR) - expectedSlewR);
-		if (testAR < testBR) inputSampleR = quantAR; else inputSampleR = quantBR;
-		for(int x = depth; x >=0; x--) {
-			darkSampleL[x+1] = darkSampleL[x];
-			darkSampleR[x+1] = darkSampleR[x];
-		}
-		darkSampleL[0] = inputSampleL; darkSampleR[0] = inputSampleR;
-		prevShapeL = (floor(shapedSampleL) - inputSampleL)*0.9999999999;
-		prevShapeR = (floor(shapedSampleR) - inputSampleR)*0.9999999999;
-		flip = !flip;
-		inputSampleL /= 8388608.0; inputSampleR /= 8388608.0; //24 bit Ten Nines into Dark
-		
-		
+				
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
