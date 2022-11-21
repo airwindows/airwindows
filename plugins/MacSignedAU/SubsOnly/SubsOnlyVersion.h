@@ -5,7 +5,7 @@
 * 
 *	Created:	8/28/11
 *	
-*	Copyright:  Copyright © 2011 Airwindows, All Rights Reserved
+*	Copyright:  Copyright © 2011 Airwindows, Airwindows uses the MIT license
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 

@@ -1,6 +1,6 @@
 /* ========================================
  *  Console8ChannelIn - Console8ChannelIn.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console8ChannelIn_H
@@ -14,6 +14,26 @@ void Console8ChannelIn::processReplacing(float **inputs, float **outputs, VstInt
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 	
+	if (getSampleRate() > 49000.0) hsr = true;
+	else hsr = false;
+	fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 0.76352112;
+	double K = tan(M_PI * fix[fix_freq]); //lowpass
+	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+	fix[fix_a0] = K * K * norm;
+	fix[fix_a1] = 2.0 * fix[fix_a0];
+	fix[fix_a2] = fix[fix_a0];
+	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+	//this is the fixed biquad distributed anti-aliasing filter
+	double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= getSampleRate();
+	cycleEnd = floor(overallscale);
+	if (cycleEnd < 1) cycleEnd = 1;
+	if (cycleEnd == 3) cycleEnd = 4;
+	if (cycleEnd > 4) cycleEnd = 4;
+	//this is going to be 2 for 88.1 or 96k, 4 for 176 or 192k
 	double iirAmountA = 12.66/getSampleRate();
 	//this is our distributed unusual highpass, which is
 	//adding subtle harmonics to the really deep stuff to define it
@@ -115,6 +135,26 @@ void Console8ChannelIn::processDoubleReplacing(double **inputs, double **outputs
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 	
+	if (getSampleRate() > 49000.0) hsr = true;
+	else hsr = false;
+	fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 0.76352112;
+	double K = tan(M_PI * fix[fix_freq]); //lowpass
+	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+	fix[fix_a0] = K * K * norm;
+	fix[fix_a1] = 2.0 * fix[fix_a0];
+	fix[fix_a2] = fix[fix_a0];
+	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+	//this is the fixed biquad distributed anti-aliasing filter
+	double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= getSampleRate();
+	cycleEnd = floor(overallscale);
+	if (cycleEnd < 1) cycleEnd = 1;
+	if (cycleEnd == 3) cycleEnd = 4;
+	if (cycleEnd > 4) cycleEnd = 4;
+	//this is going to be 2 for 88.1 or 96k, 4 for 176 or 192k
 	double iirAmountA = 12.66/getSampleRate();
 	//this is our distributed unusual highpass, which is
 	//adding subtle harmonics to the really deep stuff to define it

@@ -1,6 +1,6 @@
 /* ========================================
  *  Acceleration2 - Acceleration2.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Acceleration2_H

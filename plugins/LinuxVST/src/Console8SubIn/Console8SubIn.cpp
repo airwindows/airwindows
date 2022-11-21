@@ -1,6 +1,6 @@
 /* ========================================
  *  Console8SubIn - Console8SubIn.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console8SubIn_H
@@ -15,26 +15,6 @@ Console8SubIn::Console8SubIn(audioMasterCallback audioMaster) :
 	iirAL = 0.0; iirBL = 0.0; iirAR = 0.0; iirBR = 0.0;
 	for (int x = 0; x < fix_total; x++) fix[x] = 0.0;
 	for (int x = 0; x < 10; x++) {softL[x] = 0.0; softR[x] = 0.0;}
-	if (getSampleRate() > 49000.0) hsr = true;
-	else hsr = false;
-	fix[fix_freq] = 24000.0 / getSampleRate();
-    fix[fix_reso] = 0.59435114;
-	double K = tan(M_PI * fix[fix_freq]); //lowpass
-	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
-	fix[fix_a0] = K * K * norm;
-	fix[fix_a1] = 2.0 * fix[fix_a0];
-	fix[fix_a2] = fix[fix_a0];
-	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
-	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
-	//this is the fixed biquad distributed anti-aliasing filter
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
-	cycleEnd = floor(overallscale);
-	if (cycleEnd < 1) cycleEnd = 1;
-	if (cycleEnd == 3) cycleEnd = 4;
-	if (cycleEnd > 4) cycleEnd = 4;
-	//this is going to be 2 for 88.1 or 96k, 4 for 176 or 192k
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.

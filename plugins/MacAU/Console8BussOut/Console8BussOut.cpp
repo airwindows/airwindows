@@ -5,7 +5,7 @@
 * 
 *	Created:	6/10/22
 *	
-*	Copyright:  Copyright © 2022 Airwindows, All Rights Reserved
+*	Copyright:  Copyright © 2022 Airwindows, Airwindows uses the MIT license
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -160,27 +160,10 @@ void		Console8BussOut::Console8BussOutKernel::Reset()
 {
 	inTrimA = 0.5; inTrimB = 0.5;
 	for (int x = 0; x < fix_total; x++) fix[x] = 0.0;
-	if (GetSampleRate() > 49000.0) hsr = true;
-	else hsr = false;
-	fix[fix_freq] = 24000.0 / GetSampleRate();
-    fix[fix_reso] = 0.52110856;
-	double K = tan(M_PI * fix[fix_freq]); //lowpass
-	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
-	fix[fix_a0] = K * K * norm;
-	fix[fix_a1] = 2.0 * fix[fix_a0];
-	fix[fix_a2] = fix[fix_a0];
-	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
-	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
-	//this is the fixed biquad distributed anti-aliasing filter
 	lastSample = 0.0;
 	wasPosClip = false;
 	wasNegClip = false;
 	for (int x = 0; x < 17; x++) intermediate[x] = 0.0;
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= GetSampleRate();	
-	spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
-	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16; //ADClip2
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
@@ -201,6 +184,23 @@ void		Console8BussOut::Console8BussOutKernel::Process(	const Float32 	*inSourceP
 	//0.5 is unity gain, and we can attenuate to silence or boost slightly over 12dB
 	//into softclip and ADClip in case we need intense loudness bursts on transients.
 	//24 bit is 8388608.0, 16 bit is 32768.0
+	if (GetSampleRate() > 49000.0) hsr = true;
+	else hsr = false;
+	fix[fix_freq] = 24000.0 / GetSampleRate();
+    fix[fix_reso] = 0.52110856;
+	double K = tan(M_PI * fix[fix_freq]); //lowpass
+	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+	fix[fix_a0] = K * K * norm;
+	fix[fix_a1] = 2.0 * fix[fix_a0];
+	fix[fix_a2] = fix[fix_a0];
+	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+	//this is the fixed biquad distributed anti-aliasing filter
+	double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= GetSampleRate();	
+	spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
+	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16; //ADClip2
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;

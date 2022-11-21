@@ -1,6 +1,6 @@
 /* ========================================
  *  Tremolo - Tremolo.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Tremolo_H

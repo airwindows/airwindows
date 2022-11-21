@@ -1,6 +1,6 @@
 /* ========================================
  *  Console8ChannelOut - Console8ChannelOut.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console8ChannelOut_H
@@ -18,7 +18,18 @@ void Console8ChannelOut::processReplacing(float **inputs, float **outputs, VstIn
 	inTrimA = inTrimB; inTrimB = A*2.0;
 	//0.5 is unity gain, and we can attenuate to silence or boost slightly over 12dB
 	//into softclipping overdrive.
-	
+    if (getSampleRate() > 49000.0) hsr = true; else hsr = false;
+    fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 3.51333709;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -88,7 +99,18 @@ void Console8ChannelOut::processDoubleReplacing(double **inputs, double **output
 	inTrimA = inTrimB; inTrimB = A*2.0;
 	//0.5 is unity gain, and we can attenuate to silence or boost slightly over 12dB
 	//into softclipping overdrive.
-	
+    if (getSampleRate() > 49000.0) hsr = true; else hsr = false;
+    fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 3.51333709;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;

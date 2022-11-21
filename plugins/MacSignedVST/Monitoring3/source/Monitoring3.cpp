@@ -1,6 +1,6 @@
 /* ========================================
  *  Monitoring3 - Monitoring3.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Monitoring3_H
@@ -18,14 +18,7 @@ Monitoring3::Monitoring3(audioMasterCallback audioMaster) :
 	for(int count = 0; count < 99; count++) {
 		darkSampleL[count] = 0;
 		darkSampleR[count] = 0;
-	}
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();	
-	depth = (int)(17.0*overallscale);
-	if (depth < 3) depth = 3;
-	if (depth > 98) depth = 98; //Dark
-	
+	}	
 	for(int count = 0; count < 1502; count++) {
 		aL[count] = 0.0; bL[count] = 0.0; cL[count] = 0.0; dL[count] = 0.0;
 		aR[count] = 0.0; bR[count] = 0.0; cR[count] = 0.0; dR[count] = 0.0;

@@ -5,7 +5,7 @@
  * 
  *	Created:	2/21/22
  *	
- *	Copyright:  Copyright © 2022 Airwindows, All Rights Reserved
+ *	Copyright:  Copyright © 2022 Airwindows, Airwindows uses the MIT license
  * 
  *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
  *				consideration of your agreement to the following terms, and your use, installation, modification 

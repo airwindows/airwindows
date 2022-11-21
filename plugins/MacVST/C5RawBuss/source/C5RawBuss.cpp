@@ -1,6 +1,6 @@
 /* ========================================
  *  C5RawBuss - C5RawBuss.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __C5RawBuss_H

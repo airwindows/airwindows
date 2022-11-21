@@ -5,7 +5,7 @@
 * 
 *	Created:	4/7/22
 *	
-*	Copyright:  Copyright © 2022 Airwindows, All Rights Reserved
+*	Copyright:  Copyright © 2022 Airwindows, Airwindows uses the MIT license
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -166,23 +166,6 @@ ComponentResult Shape::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Shape::ShapeKernel::Reset()
 {
-	double cutoff = 25000.0 / GetSampleRate();
-	if (cutoff > 0.49) cutoff = 0.49; //don't crash if run at 44.1k
-	fixA[fix_freq] = cutoff;
-	fixA[fix_reso] = 0.70710678; //butterworth Q
-	double K = tan(M_PI * fixA[fix_freq]); //lowpass
-	double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
-	fixA[fix_a0] = K * K * norm;
-	fixA[fix_a1] = 2.0 * fixA[fix_a0];
-	fixA[fix_a2] = fixA[fix_a0];
-	fixA[fix_b1] = 2.0 * (K * K - 1.0) * norm;
-	fixA[fix_b2] = (1.0 - K / fixA[fix_reso] + K * K) * norm;
-	fixA[fix_sL1] = 0.0;
-	fixA[fix_sL2] = 0.0;
-	fixA[fix_sR1] = 0.0;
-	fixA[fix_sR2] = 0.0;
-	//define entire filter in instantiation, it's totally static
-
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
@@ -208,7 +191,24 @@ void		Shape::ShapeKernel::Process(	const Float32 	*inSourceP,
 		postOffset = sin(offset);
 	}
 	if (shape < 0) postOffset = asin(offset);
-	
+    double cutoff = 25000.0 / GetSampleRate();
+    if (cutoff > 0.49) cutoff = 0.49; //don't crash if run at 44.1k
+    fixA[fix_freq] = cutoff;
+    fixA[fix_reso] = 0.70710678; //butterworth Q
+    double K = tan(M_PI * fixA[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
+    fixA[fix_a0] = K * K * norm;
+    fixA[fix_a1] = 2.0 * fixA[fix_a0];
+    fixA[fix_a2] = fixA[fix_a0];
+    fixA[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fixA[fix_b2] = (1.0 - K / fixA[fix_reso] + K * K) * norm;
+    fixA[fix_sL1] = 0.0;
+    fixA[fix_sL2] = 0.0;
+    fixA[fix_sR1] = 0.0;
+    fixA[fix_sR2] = 0.0;
+    //define filters here: on VST you can't define them in reset 'cos getSampleRate isn't returning good information yet
+
+
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;

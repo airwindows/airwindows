@@ -1,6 +1,6 @@
 /* ========================================
  *  C5RawChannel - C5RawChannel.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __C5RawChannel_H

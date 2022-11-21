@@ -1,6 +1,6 @@
 /* ========================================
  *  Highpass2 - Highpass2.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Highpass2_H

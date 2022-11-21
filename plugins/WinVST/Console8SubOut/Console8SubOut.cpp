@@ -1,6 +1,6 @@
 /* ========================================
  *  Console8SubOut - Console8SubOut.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console8SubOut_H
@@ -15,17 +15,6 @@ Console8SubOut::Console8SubOut(audioMasterCallback audioMaster) :
 	A = 0.5;
 	inTrimA = 0.5; inTrimB = 0.5;
 	for (int x = 0; x < fix_total; x++) fix[x] = 0.0;
-	if (getSampleRate() > 49000.0) hsr = true; else hsr = false;
-	fix[fix_freq] = 24000.0 / getSampleRate();
-	fix[fix_reso] = 1.20361562;
-	double K = tan(M_PI * fix[fix_freq]); //lowpass
-	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
-	fix[fix_a0] = K * K * norm;
-	fix[fix_a1] = 2.0 * fix[fix_a0];
-	fix[fix_a2] = fix[fix_a0];
-	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
-	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
-	//this is the fixed biquad distributed anti-aliasing filter
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.

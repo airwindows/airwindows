@@ -1,6 +1,6 @@
 /* ========================================
  *  Console5Channel - Console5Channel.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console5Channel_H

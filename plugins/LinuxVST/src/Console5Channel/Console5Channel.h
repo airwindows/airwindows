@@ -1,7 +1,7 @@
 /* ========================================
  *  Console5Channel - Console5Channel.h
  *  Created 8/12/11 by SPIAdmin 
- *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
+ *  Copyright (c) 2011 __MyCompanyName__, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console5Channel_H

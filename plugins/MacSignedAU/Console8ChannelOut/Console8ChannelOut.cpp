@@ -5,7 +5,7 @@
 * 
 *	Created:	6/10/22
 *	
-*	Copyright:  Copyright © 2022 Airwindows, All Rights Reserved
+*	Copyright:  Copyright © 2022 Airwindows, Airwindows uses the MIT license
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -160,17 +160,6 @@ void		Console8ChannelOut::Console8ChannelOutKernel::Reset()
 {
 	inTrimA = 0.5; inTrimB = 0.5;
 	for (int x = 0; x < fix_total; x++) fix[x] = 0.0;
-	if (GetSampleRate() > 49000.0) hsr = true; else hsr = false;
-	fix[fix_freq] = 24000.0 / GetSampleRate();
-	fix[fix_reso] = 3.51333709;
-	double K = tan(M_PI * fix[fix_freq]); //lowpass
-	double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
-	fix[fix_a0] = K * K * norm;
-	fix[fix_a1] = 2.0 * fix[fix_a0];
-	fix[fix_a2] = fix[fix_a0];
-	fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
-	fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
-	//this is the fixed biquad distributed anti-aliasing filter
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
@@ -190,7 +179,18 @@ void		Console8ChannelOut::Console8ChannelOutKernel::Process(	const Float32 	*inS
 	inTrimA = inTrimB; inTrimB = GetParameter( kParam_One )*2.0;
 	//0.5 is unity gain, and we can attenuate to silence or boost slightly over 12dB
 	//into softclipping overdrive.
-	
+    if (GetSampleRate() > 49000.0) hsr = true; else hsr = false;
+    fix[fix_freq] = 24000.0 / GetSampleRate();
+    fix[fix_reso] = 3.51333709;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;

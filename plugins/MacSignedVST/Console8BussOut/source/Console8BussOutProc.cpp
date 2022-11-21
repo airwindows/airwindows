@@ -1,6 +1,6 @@
 /* ========================================
  *  Console8BussOut - Console8BussOut.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console8BussOut_H
@@ -18,7 +18,23 @@ void Console8BussOut::processReplacing(float **inputs, float **outputs, VstInt32
 	inTrimA = inTrimB; inTrimB = A*2.0;
 	//0.5 is unity gain, and we can attenuate to silence or boost slightly over 12dB
 	//into softclipping overdrive.
-	
+    if (getSampleRate() > 49000.0) hsr = true; else hsr = false;
+    fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 0.52110856;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
+    if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16;
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -114,7 +130,23 @@ void Console8BussOut::processDoubleReplacing(double **inputs, double **outputs, 
 	inTrimA = inTrimB; inTrimB = A*2.0;
 	//0.5 is unity gain, and we can attenuate to silence or boost slightly over 12dB
 	//into softclipping overdrive.
-	
+    if (getSampleRate() > 49000.0) hsr = true; else hsr = false;
+    fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 0.52110856;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
+    if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16;
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;

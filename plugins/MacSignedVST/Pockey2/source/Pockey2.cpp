@@ -1,6 +1,6 @@
 /* ========================================
  *  Pockey2 - Pockey2.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Pockey2_H

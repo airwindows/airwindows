@@ -1,6 +1,6 @@
 /* ========================================
  *  Monitoring3 - Monitoring3.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Monitoring3_H
@@ -16,7 +16,10 @@ void Monitoring3::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
+	overallscale *= getSampleRate();	
+	depth = (int)(17.0*overallscale);
+	if (depth < 3) depth = 3;
+	if (depth > 98) depth = 98; //Dark
 	
 	int depth = (int)(17.0*overallscale);
 	if (depth < 3) depth = 3;
@@ -534,7 +537,10 @@ void Monitoring3::processDoubleReplacing(double **inputs, double **outputs, VstI
 	
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
+	overallscale *= getSampleRate();	
+	depth = (int)(17.0*overallscale);
+	if (depth < 3) depth = 3;
+	if (depth > 98) depth = 98; //Dark
 	
 	int depth = (int)(17.0*overallscale);
 	if (depth < 3) depth = 3;

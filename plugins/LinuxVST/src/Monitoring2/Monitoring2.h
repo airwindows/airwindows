@@ -1,7 +1,7 @@
 /* ========================================
  *  Monitoring2 - Monitoring2.h
  *  Created 8/12/11 by SPIAdmin 
- *  Copyright (c) 2011 __MyCompanyName__, All rights reserved
+ *  Copyright (c) 2011 __MyCompanyName__, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Monitoring2_H

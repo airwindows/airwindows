@@ -1,6 +1,6 @@
 /* ========================================
  *  Console7Channel - Console7Channel.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console7Channel_H

@@ -1,6 +1,6 @@
 /* ========================================
  *  Console8BussHype - Console8BussHype.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console8BussHype_H
@@ -22,7 +22,27 @@ void Console8BussHype::processReplacing(float **inputs, float **outputs, VstInt3
 	if (fabs(iirAR)<1.18e-37) iirAR = 0.0;
 	if (fabs(iirBR)<1.18e-37) iirBR = 0.0;
 	//catch denormals early and only check once per buffer
-    
+    if (getSampleRate() > 49000.0) hsr = true;
+    else hsr = false;
+    fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 0.5;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    cycleEnd = floor(overallscale);
+    if (cycleEnd < 1) cycleEnd = 1;
+    if (cycleEnd == 3) cycleEnd = 4;
+    if (cycleEnd > 4) cycleEnd = 4;
+    //this is going to be 2 for 88.1 or 96k, 4 for 176 or 192k
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -124,7 +144,27 @@ void Console8BussHype::processDoubleReplacing(double **inputs, double **outputs,
 	if (fabs(iirAR)<1.18e-37) iirAR = 0.0;
 	if (fabs(iirBR)<1.18e-37) iirBR = 0.0;
 	//catch denormals early and only check once per buffer
-    
+    if (getSampleRate() > 49000.0) hsr = true;
+    else hsr = false;
+    fix[fix_freq] = 24000.0 / getSampleRate();
+    fix[fix_reso] = 0.5;
+    double K = tan(M_PI * fix[fix_freq]); //lowpass
+    double norm = 1.0 / (1.0 + K / fix[fix_reso] + K * K);
+    fix[fix_a0] = K * K * norm;
+    fix[fix_a1] = 2.0 * fix[fix_a0];
+    fix[fix_a2] = fix[fix_a0];
+    fix[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+    fix[fix_b2] = (1.0 - K / fix[fix_reso] + K * K) * norm;
+    //this is the fixed biquad distributed anti-aliasing filter
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    cycleEnd = floor(overallscale);
+    if (cycleEnd < 1) cycleEnd = 1;
+    if (cycleEnd == 3) cycleEnd = 4;
+    if (cycleEnd > 4) cycleEnd = 4;
+    //this is going to be 2 for 88.1 or 96k, 4 for 176 or 192k
+
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;

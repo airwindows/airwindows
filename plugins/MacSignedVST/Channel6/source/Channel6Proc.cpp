@@ -1,6 +1,6 @@
 /* ========================================
  *  Channel6 - Channel6.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Channel6_H

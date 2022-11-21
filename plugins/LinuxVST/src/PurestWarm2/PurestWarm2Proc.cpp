@@ -1,6 +1,6 @@
 /* ========================================
  *  PurestWarm2 - PurestWarm2.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Gain_H
@@ -16,7 +16,23 @@ void PurestWarm2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 
 	double pos = A;
 	double neg = B;
-    
+	double cutoff = 25000.0 / getSampleRate();
+	if (cutoff > 0.49) cutoff = 0.49; //don't crash if run at 44.1k
+	fixA[fix_freq] = cutoff;
+	fixA[fix_reso] = 0.70710678; //butterworth Q
+	double K = tan(M_PI * fixA[fix_freq]); //lowpass
+	double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
+	fixA[fix_a0] = K * K * norm;
+	fixA[fix_a1] = 2.0 * fixA[fix_a0];
+	fixA[fix_a2] = fixA[fix_a0];
+	fixA[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	fixA[fix_b2] = (1.0 - K / fixA[fix_reso] + K * K) * norm;
+	fixA[fix_sL1] = 0.0;
+	fixA[fix_sL2] = 0.0;
+	fixA[fix_sR1] = 0.0;
+	fixA[fix_sR2] = 0.0;
+	//define filters here: on VST you can't define them in reset 'cos getSampleRate isn't returning good information yet
+	
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -68,7 +84,23 @@ void PurestWarm2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	
 	double pos = A;
 	double neg = B;
-    
+	double cutoff = 25000.0 / getSampleRate();
+	if (cutoff > 0.49) cutoff = 0.49; //don't crash if run at 44.1k
+	fixA[fix_freq] = cutoff;
+	fixA[fix_reso] = 0.70710678; //butterworth Q
+	double K = tan(M_PI * fixA[fix_freq]); //lowpass
+	double norm = 1.0 / (1.0 + K / fixA[fix_reso] + K * K);
+	fixA[fix_a0] = K * K * norm;
+	fixA[fix_a1] = 2.0 * fixA[fix_a0];
+	fixA[fix_a2] = fixA[fix_a0];
+	fixA[fix_b1] = 2.0 * (K * K - 1.0) * norm;
+	fixA[fix_b2] = (1.0 - K / fixA[fix_reso] + K * K) * norm;
+	fixA[fix_sL1] = 0.0;
+	fixA[fix_sL2] = 0.0;
+	fixA[fix_sR1] = 0.0;
+	fixA[fix_sR2] = 0.0;
+	//define filters here: on VST you can't define them in reset 'cos getSampleRate isn't returning good information yet
+	
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;

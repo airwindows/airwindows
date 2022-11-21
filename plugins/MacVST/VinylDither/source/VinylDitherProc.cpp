@@ -1,6 +1,6 @@
 /* ========================================
  *  VinylDither - VinylDither.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __VinylDither_H

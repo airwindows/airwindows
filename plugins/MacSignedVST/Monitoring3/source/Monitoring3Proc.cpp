@@ -1,6 +1,6 @@
 /* ========================================
  *  Monitoring3 - Monitoring3.h
- *  Copyright (c) 2016 airwindows, All rights reserved
+ *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Monitoring3_H
@@ -14,13 +14,12 @@ void Monitoring3::processReplacing(float **inputs, float **outputs, VstInt32 sam
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 	
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
-	
-	int depth = (int)(17.0*overallscale);
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+	depth = (int)(17.0*overallscale);
 	if (depth < 3) depth = 3;
-	if (depth > 98) depth = 98; //for Dark	
+	if (depth > 98) depth = 98; //Dark
 	
 	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
@@ -532,13 +531,12 @@ void Monitoring3::processDoubleReplacing(double **inputs, double **outputs, VstI
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 	
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= getSampleRate();
-	
-	int depth = (int)(17.0*overallscale);
-	if (depth < 3) depth = 3;
-	if (depth > 98) depth = 98; //for Dark	
+    double overallscale = 1.0;
+    overallscale /= 44100.0;
+    overallscale *= getSampleRate();
+    depth = (int)(17.0*overallscale);
+    if (depth < 3) depth = 3;
+    if (depth > 98) depth = 98; //Dark
 	
 	int processing = (VstInt32)( A * 16.999 );
 	int am = (int)149.0 * overallscale;
