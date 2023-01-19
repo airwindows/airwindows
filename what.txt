@@ -7,7 +7,8 @@ Air is a different bright EQ from any other. Requires 44.1K.
 Air2 is a different bright EQ with silk tone and high sample rate support.
 Apicolypse is a re-release of my old API-style color adder, exacly as it was.
 AQuickVoiceClip softens headset mic recordings that have been super hard clipped on capture.
-Atmosphere is Console5 processing with powerful new acoustic distance effects.
+AtmosphereBuss is Console5 processing with powerful new acoustic distance effects.
+AtmosphereChannel is Console5 processing with powerful new acoustic distance effects.
 Aura is a new kind of resonant lowpass EQ.
 AutoPan is for getting some organic stereo movement into your mix.
 Average is a distinctive sort of lowpass filter.
@@ -35,10 +36,11 @@ BrightAmbience is a plugin for very bright gated reverbs.
 BrightAmbience2 is more BrightAmbience with better tone and more slapbacky effects.
 BrightAmbience3 adds undersampling for high sample rates, and better feedback.
 BuildATPDF is a dither-making toolkit.
-BussColors 4 is the Airwindows console emulations, now working up to 192K correctly.
+BussColors4 is the Airwindows console emulations, now working up to 192K correctly.
 ButterComp is my softest, smoothest compressor.
 ButterComp2 is improved ButterComp with an output control and sound upgrades.
-C5RawConsole is the original Console5 algorithm, with optional very gentle DC suppression.
+C5RawBuss is the original Console5 algorithm, with optional very gentle DC suppression.
+C5RawChannel is the original Console5 algorithm, with optional very gentle DC suppression.
 Cabs is an Airwindows guitar speaker cabinet simulator.
 Calibre is a re-release of another old Character plugin.
 Capacitor is a lowpass/highpass filter of a new type.
@@ -61,14 +63,26 @@ Coils models the types of distortion you'll find in transformers.
 Coils2 is a transformer overdrive emulator.
 Cojones is a new kind of distorty.
 Compresaturator fades between compressing and soft clipping.
-Console4 is the original Airwindows ITB mixing system, a two-plugin mix buss replacement for DAWs.
-Console5 is a richer, warmer Console system.
-Console6 is a new more intense Console that peaks at lower dB.
-Console7 adds anti-alias filtering and special saturation curves.
+Console4Buss is the original Airwindows ITB mixing system, a two-plugin mix buss replacement for DAWs.
+Console4Channel is the original Airwindows ITB mixing system, a two-plugin mix buss replacement for DAWs.
+Console5Buss is a richer, warmer Console system.
+Console5Channel is a richer, warmer Console system.
+Console5DarkCh is a richer, warmer Console system.
+Console6Buss is a new more intense Console that peaks at lower dB.
+Console6Channel is a new more intense Console that peaks at lower dB.
+Console7Buss adds anti-alias filtering and special saturation curves.
+Console7Channel adds anti-alias filtering and special saturation curves.
 Console7Cascade is a drop-in replacement for Console7Channel that allows for MUCH higher gain.
 Console7Crunch shows you Cascade but with its EQ weighted for more edge and grit.
-Console8 moves to a channel/submix/buss topology and adds analog simulation.
-Console8Hype swaps out just the In sections of Console8, for a brighter sparklier circuit.
+Console8BussIn moves to a channel/submix/buss topology and adds analog simulation.
+Console8BussOut moves to a channel/submix/buss topology and adds analog simulation.
+Console8ChannelIn moves to a channel/submix/buss topology and adds analog simulation.
+Console8ChannelOut moves to a channel/submix/buss topology and adds analog simulation.
+Console8SubIn moves to a channel/submix/buss topology and adds analog simulation.
+Console8SubOut moves to a channel/submix/buss topology and adds analog simulation.
+Console8BussHype swaps out just the In section of Console8BussIn, for a brighter sparklier circuit.
+Console8ChannelHype swaps out just the In section of Console8ChannelIn, for a brighter sparklier circuit.
+Console8SubHype swaps out just the In section of Console8SubIn, for a brighter sparklier circuit.
 CrunchyGrooveWear is a version of GrooveWear for more edge and distortion.
 Crystal is a tone shaper and buss soft-clipper.
 CStrip is an Airwindows channel strip.
@@ -93,10 +107,11 @@ Distance2 is a versatile space shaper for creating depth.
 Distortion is a slightly dark analog-style distortion with several presets, like Focus.
 Ditherbox is a switchable selection of dithers in 16 and 24 bit, plus monitoring tools.
 DitherFloat is a demo of floating point truncation: can also dither to 32 bit float output.
-DitherMeTimbers is dark deep 'dither' (includes 16 bit version, DitherMeDiskers)
+DitherMeDiskers is dark deep 'dither' in a 16 bit version.
+DitherMeTimbers is dark deep 'dither' in a 24 bit version.
 Doublelay is StereoDoubler with independent delays and feedback.
 DoublePaul is like PaulDither but more so.
-Drive: the angry distortion!
+Drive is the angry distortion!
 DrumSlam is a heavy-processing tape modeler.
 DubCenter is a version of DubSub where the bass reinforcement is purely mono.
 Dubly is a retro vibe and atmosphere maker.
@@ -130,11 +145,11 @@ Golem lets you blend a stereo track of two mics on an amp.
 GrindAmp is a heavier amp sim for many purposes.
 Gringer is a full-wave rectifier plugin, like a Green Ringer guitar effect.
 GrooveWear is for scrubbing highs off mechanically like a stylus would.
-Guitar Conditioner is like a Tube Screamer voicing without the squishiness and indistinctness.
-Hard Vacuum is tube style saturation effects.
+GuitarConditioner is like a Tube Screamer voicing without the squishiness and indistinctness.
+HardVacuum is tube style saturation effects.
 Hermepass is a mastering highpass to set by ear only.
 HermeTrim is Very Fine Adjustments, otherwise just like EveryTrim.
-High Impact is distorted grit and punch without fatness.
+HighImpact is distorted grit and punch without fatness.
 HighGlossDither is a hybrid between shiny dither and truncation! Unnatural science experiment.
 Highpass is a time warp, for retro midrangey sounds.
 Highpass2 is an unusual-sounding variable-slope highpass filter.
@@ -149,12 +164,13 @@ Infinity is a MatrixVerb specifically designed to sustain and layer sounds forev
 Infinity2 expands Infinity with more tone shaping and a much-requested kill-switch!
 Infrasonic is a very steep subsonic filter, built like Ultrasonic.
 Interstage is a subtle and sophisticated analogifier.
-Iron Oxide 5 is the old school, heavily colored Airwindows tape emulation.
-Iron Oxide Classic is the purer, simpler, early form of Iron Oxide before all the features.
+IronOxide5 is the old school, heavily colored Airwindows tape emulation.
+IronOxideClassic is the purer, simpler, early form of Iron Oxide before all the features.
 IronOxideClassic2 is my bandpassy tape sim, updated for high sample rate and aliasing control.
 Isolator is a steep highpass or lowpass filter, like you might find in a speaker crossover.
 Isolator2 is Isolator, but with control smoothing and a new resonance booster.
 LeadAmp is an amp sim with a clear, penetrating, vocal tone.
+LeftoMono copies one channel to both, losslessly.
 LilAmp is a tiny amp sim, like a little bitty practice amp without that much gain.
 Logical4 is a classic 2-buss compressor.
 Loud is distortion and demolition of air molecules, modeled.
@@ -167,6 +183,7 @@ Mackity is an emulation of the input stage of a vintage Mackie 1202!
 MatrixVerb is a wildly adjustable, strangely colorful reverb for deep and flexible spaces.
 Melt is a wobbly chorusy weird diffuse effect.
 MidAmp is a clean amp sim meant to work like a loud Twin or something of that nature.
+MidSide is the other side of the EdIsDim mid/side conversion utility plugin.
 Mojo is a biggenator that also works as a loudenator.
 Monitoring is your one-stop shop for final 2-buss work!
 Monitoring2 is Monitoring, but with Dark as the wordlength reducer.
@@ -175,18 +192,20 @@ MoNoam gives you variations on mono, mid, and side in different channels.
 MultiBandDistortion is an old weird gnarly sound wrecker :)
 MV is a dual-mono reverb based on BitShiftGain and the old Midiverbs.
 NaturalizeDither is deterministic dither that uses Benford Realness calculations for each sample.
-NC-17 is Dirty Loud!
+NCSeventeen is Dirty Loud!
 Neverland is a re-release of my old Neve-style color adder, exacly as it was.
 Nikola is an Audio Tesla Coil plugin! Note: audio tesla coils don't sound nice.
 NodeDither is adjusta-TPDF-dither, like a dither flanger. Can do Paul and Tape settings.
 Noise is the Airwindows deep noise oscillator, as a sound reinforcer.
 NonlinearSpace is a flexible reverb plugin.
-NotJustAnotherDither is a next-gen wordlength reducers (24 and 16 bit, and DeRez).
+NotJustAnotherCD is a next-gen wordlength reducers for 16 bit with DeRez.
+NotJustAnotherDither is a next-gen wordlength reducers for 24 bit with DeRez.
 OneCornerClip is an ultimate full-bandwidth clipper.
 Pafnuty is a Chebyshev filter, that adds harmonics.
 PaulDither is a highpassed TPDF dither. (quieter, airier)
 PaulWide is a highpassed TPDF wide dither. (quieter, airier AND wider)
-PDConsole: Console5 and PurestDrive, sittin’ in a tree… (i.e. both at once, on channels and buss)
+PDBuss is Console5 and PurestDrive, sittin’ in a tree… (i.e. both at once, on channels and buss)
+PDChannel is Console5 and PurestDrive, sittin’ in a tree… (i.e. both at once, on channels and buss)
 PeaksOnly is a transformative mix check tool.
 PhaseNudge is a phase rotator/allpass filter.
 PitchDelay is TapeDelay2 but with pitch shift instead of flutter.
@@ -206,8 +225,10 @@ Preponderant is Airwindows Anti-Soothe, a strange tone intensifier and balancer.
 Pressure4 is a compressor adjustable between vari-mu and ‘new york’ peak-retaining behaviors.
 Pressure5 expands Pressure4 with after-boost and built-in ClipOnly2.
 PurestAir is a brightness experiment.
-PurestConsole is the most free from coloration Console system.
-PurestConsole2 is the anti-aliasing version of PurestConsole, with special brightness and clarity!
+PurestConsoleBuss is the most free from coloration Console system.
+PurestConsoleChannel is the most free from coloration Console system.
+PurestConsole2Buss is the anti-aliasing version of PurestConsole.
+PurestConsole2Channel is the anti-aliasing version of PurestConsole.
 PurestDrive is the magic saturation plugin of subtlety and French House tone.
 PurestEcho is optimized Airwindows echo with exactly four evenly spaced taps on tap.
 PurestFade is just like PurestGain, but for LONG fades.
@@ -216,12 +237,14 @@ PurestSquish is an open-sounding compressor with bass bloom.
 PurestWarm is a subtle tone shaper and warmth adder.
 PurestWarm2 adds dual dry/wet controls for each side of the waveform.
 Pyewacket is an old school compressor for high definition transients. Adds no fatness, just energy.
+RawGlitters is just the quantization from Dither Me Timbers… and the opposite, as a brightener.
 RawTimbers is just the quantization from Dither Me Timbers… and the opposite, as a brightener.
 Recurve is a special buss compressor with no threshold point.
 Remap puts the guts back into overloudenated audio!
 ResEQ is a bank of mostly midrange resonances.
 Reverb is simplified and tuned MatrixVerb, adjusting everything for each optimum verb size.
 Righteous4 is a final output stage for targeting dynamic range.
+RightoMono copies one channel to both, losslessly.
 Shape is an asymmetrical waveshaper for peak manipulating.
 SideDull is like Sidepass, but a lowpass on the side channel. Treble-centerer.
 Sidepass is a simple utility plugin, a highpass on the side channel. Mono-maker.
@@ -257,7 +280,6 @@ TapeFat is the tone control from TapeDelay.
 Texturize is a hidden-noise plugin for adding sonic texture to things.
 TexturizeMS is a hidden-noise plugin for adding mid-side sonic texture to things.
 Thunder is a compressor that retains or exaggerates subsonic bass when you push it.
-ToMono (LeftoMono and RightoMono) copy one channel to both, losslessly.
 ToneSlant is a super-transparent ‘tilt EQ’ with very low Q.
 ToTape5 is Airwindows analog tape emulation.
 ToTape6 is Airwindows tape emulation for 2020!
@@ -271,17 +293,18 @@ TripleSpread is a stereo tripler with extra wideness and GlitchShifter processin
 Tube is a tube style SoundBetterIzer using a new algorithm for analog modeling!
 Tube2 extends Tube, with more sophisticated processing and input trim.
 TubeDesk is a tube recording console type tone coloring.
-uLaw is a Console-like encode/decode pair, but much more extreme.
+uLawDecode is a Console-like encode/decode pair, but much more extreme.
+uLawEncode is a Console-like encode/decode pair, but much more extreme.
 Ultrasonic is a very clean, plain, high quality supersonic filter, for using inside digital mixes.
 UltrasonicLite is just one stage of supersonic filter, for using inside digital mixes.
 UltrasonicMed is two stages of supersonic filter, for using inside digital mixes.
 UltrasonX is a method for rolling your own Console-type systems with total control over your ultrasonic filtering.
-Unbox is a distortion where only the harmonics that don't alias are allowed to distort.
+UnBox is a distortion where only the harmonics that don't alias are allowed to distort.
 VariMu is a more organic variation on Pressure (a compressor)
 Verbity is my new best reverb, which uses feedforward reverb topology.
 Vibrato lets you vibrato, chorus, flange, and make odd FM noises.
 VinylDither is a high-performance dither that converts digital noise to ‘groove noise’.
-Voice Of The Starship is a deep noise tone source.
+VoiceOfTheStarship is a deep noise tone source.
 VoiceTrick lets you record vocals while monitoring over speakers.
 Wider is Airwindows stereo space shaping.
 XBandpass is a distorted digital EQ, inspired by retro sampler DSP.
