@@ -121,7 +121,8 @@ This does several things. Firstly, it clips and softens those moments further an
 
 This isn’t the seriousest of plugins, but I’ve seen people ask me for it, so now it’s free and Mac/PC VST too. I think it’s best confined to its intended use, processing single voice tracks that have wildly distorted moments. If you try to use it on the 2-buss I will be very cross with you ;)
 
-############ Atmosphere is Console5 processing with powerful new acoustic distance effects.
+############ AtmosphereBuss is Console5 processing with powerful new acoustic distance effects.
+############ AtmosphereChannel is Console5 processing with powerful new acoustic distance effects.
 
 I’m pleased with this one: it’s in the Console5 family (so its parts can be interchanged with any other Console5 plugins) but it represents a few different breakthroughs, and if they work out, I’ll be keeping them.
 
@@ -417,7 +418,7 @@ To use BuildATPDF the way I used it, set the middle sliders to -1 and +1. Then a
 
 Or, you can set up the -1 and +1 taps, and then just play with the sliders to see what it sounds like!
 
-############ BussColors 4 is the Airwindows console emulations, now working up to 192K correctly.
+############ BussColors4 is the Airwindows console emulations, now working up to 192K correctly.
 
 This plugin’s a pretty huge deal: it’s been around since before console emulations were a thing, and I’ve been steadily working on it year after year. There’s not been much to do: my original algorithms, once I moved past the earliest incarnation as the ‘Character’ plugins, were so solid that it left little to do. BussColors has sold $22,445 of plugins over the years, as Audio Units alone, in spite of the fact that it has always been a 44.1K plug (due to being based on a convolution model).
 
@@ -466,6 +467,7 @@ But really what you need to do is listen to it.
 
 With the interleaved compressors fully working AND the bi-polar compression on each, there is indeed the four distinct compressors working in parallel. The whole thing is very gentle (hence the name) but you’ll get a glue and tonal reshaping out of it as it will even out the bulk of the waveform, making it balanced between positive and negative. It’ll also soak up treble detail in a characteristic way, and you’ll really hear the quality of ButterComp2 on ambiences and reverb tails. It’ll float things in space in this holographic way… I thought it made for a significant tonal improvement over the simpler ButterComp.
 
+############ C5RawBuss is the original Console5 algorithm, with optional very gentle DC suppression.
 ############ C5RawConsole is the original Console5 algorithm, with optional very gentle DC suppression.
 
 Back in December of 2017, I launched Console5. It had some innovations I’d come up with that got it to a height of sonic deliciousness I’d not reached before. I put it out Xmas morning… and immediately panicked and scrambled, because I’d been testing it with a sort of ‘choir’ and hadn’t thrown enough softsynths, etc. at it. And when you hit it with a intensely asymmetrical slew (how fast the waveform moves) it flipped out and began producing powerful DC voltages.
@@ -652,7 +654,7 @@ In general, this should be pretty approachable. Hope you like the tone: there’
 
 Here we can fill out the Airwindows palette of modulation plugins a bit… like Chorus, this is using my special slightly dark interpolation with a little pre-sparkle to get an adaptable, rich chorusing effect. But ChorusEnsemble uses a bank of chorus taps to get a more complex, textured sound that’s farther from the original. You can set it wrongly, so don’t assume all the settings are appropriate: that said, a little care should give you nice lush chorusing that’ll work great on pads and backgrounds. The reason I allow for the ‘ugly’ settings is, who’s to say you might not have a use for them, and if you find that use you’ll have a tonal element that other people don’t have on tap (generally, it’s so hard to sell plugins that can sound wrong and broken that people will tend to shun that and limit you to ‘nice’).
 
-############ Chrome Oxide is an alternate path to vibey old tape sonics.
+############ ChromeOxide is an alternate path to vibey old tape sonics.
 
 Chrome Oxide was an experiment, one that didn’t go further than this. It is a dual-band tape emulation, where the lows are a bit saturated but the highs are delayed by a random noise warble that can also be biased to delay them a bit further. My pursuits of tape emulation have always gone toward the ‘BETTER than digital’ direction, where I tried to capture the magic without diving into the audio degradation.
 
@@ -728,7 +730,10 @@ Since it’s one of those strange Airwindows algorithms, be aware you can push i
 
 In other words, classic Airwindows :) hope you like it!
 
-############ Console4 is the original Airwindows ITB mixing system, a two-plugin mix buss replacement for DAWs. This was also the release plugin for my switch to Patreon, and the announcement that Kagi had gone out of business owing me hundreds of dollars, so for this AirwindowsPedia entry from August 3, 2016, I'm including the Patreon blurbs and explanation of what my business was going to do. Turns out everything I promised, I delivered on, and now everything is MIT-licensed open source. Over to the 2016 post!
+############ Console4Buss is the original Airwindows ITB mixing system.
+############ Console4Channel is the original Airwindows ITB mixing system.
+
+Console4 is a two-plugin mix buss replacement for DAWs. This was also the release plugin for my switch to Patreon, and the announcement that Kagi had gone out of business owing me hundreds of dollars, so for this Airwindopedia entry from August 3, 2016, I'm including the Patreon blurbs and explanation of what my business was going to do. Turns out everything I promised, I delivered on, and now everything is MIT-licensed open source. Over to the 2016 post!
 
 Console 4 is the most recent version of basically my flagship Airwindows plugin. It works through a channel plugin on every sound source, feeding at unity gain into the buss plugin which overrides the digital summing with Airwindows summing (more internal space, more depth, and with Console 4 it now has glue making the top-end more listenable).
 
@@ -758,7 +763,9 @@ Oh, and the VST versions do ‘double replacing’, which means they noise shape
 
 Consider Console 4 an advance on this new concept. If it works, and if I can live for five or twenty years doing it, every possible Airwindows plugin will be part of everyone’s toolbox and the code will be out there making people’s products better.
 
-############ Console5 is a richer, warmer Console system.
+############ Console5Buss is a richer, warmer Console system.
+############ Console5Channel is a richer, warmer Console system.
+############ Console5DarkCh is a richer, warmer Console system.
 
 Console5 uses some more ‘expensive’ math operations, where previous Consoles tried to do their thing while keeping the Channel component as low-CPU as they possibly could. This might mean a heavier CPU cost, or it might be not that much of a difference. It’s a change (the math here more closely resembles Density or PurestDrive).
 
@@ -772,7 +779,8 @@ If you have that mastered, you can start playing with stuff like putting things 
 
 This is the Console version that can generate DC offset from sawtooth waveforms due to its interaction with slew rate handling, and the final Console5 you can get attempts to accomodate that. For the launch version (with a different DC-block strategy in place), use C5RawConsole.
 
-############ Console6 is a new more intense Console that peaks at lower dB.
+############ Console6Buss is a new more intense Console that peaks at lower dB.
+############ Console6Channel is a new more intense Console that peaks at lower dB.
 
 A little while ago I got a note from veteran GSposter torridgristle, entitled “Simple Encode/Decode (Inverse Square)”. It was a very simple little note.
 
@@ -790,7 +798,8 @@ But the whole is greater than the sum of its parts, and without either of us bei
 
 So the bottom line here is simply usability: mix into this like it’s an analog mixing console that can be overstressed. You can still put full scale single tracks through there, losslessly, because that’s what any Console does. You can mix into it provided you don’t stress the buss too hard (or don’t mind the distortion you get). Gain stage before hitting the Channel plugins, one Console6Channel plugin on each sound source with unity gain through the mix structure into the Console6Buss plugin. If you need to slam stuff louder afterward you must do it AFTER the Console6Buss plugin, in whatever way you like. Console is always a digital mix buss replacement without an EQ-style sound of its own, so if you want further color you need to use other plugins outside Console. If you’re daring or just curious you can use things between the plugins (‘inside’ Console) such as a DAW EQ, echoes, subtle reverb etc. If you choose wrongly, it’ll distort or be weird, and things like EQs will be much more sensitive than usual to boosts and cuts.
 
-############ Console7 adds anti-alias filtering and special saturation curves tied to the slider position.
+############ Console7Buss adds anti-alias filtering and special saturation curves tied to the slider position.
+############ Console7Channel adds anti-alias filtering and special saturation curves tied to the slider position.
 
 If you don’t already know what Console is: it’s the Airwindows digital mix buss. You put the channel plugin on every channel, feeding directly (at unity gain) into the 2-buss where the buss plugin lives. It applies saturation and anti-saturation functions so that, for individual sounds, there is no change, but when there’s two signals interfering with each other, it makes the channels saturate easier if the buss’s ‘input impedance’ is fluctuating based on other signals coming in. You set it up, and then mix with gain trim controls or the controls on the plugins because to change the faders would violate the need for unity gain between the plugins.
 
@@ -822,7 +831,12 @@ Console7Crunch is a variation on Console7Cascade, to experiment with something. 
 
 The result is a Console7Cascade that’s more crunchy, with more obvious clipping and an additional ability to deliver distorted punch in the extreme highs: Console7Crunch. It’s not wildly different (all this is meant to be ultrasonic! But of course it affects everything anyhow) but it’s a noticeably different color for when you’re looking for higher gain in the Console7 system. I hope you like it, and I found the experiment interesting.
 
-############ Console8 moves to a channel/submix/buss topology and adds analog simulation.
+############ Console8BussIn moves to a channel/submix/buss topology and adds analog simulation.
+############ Console8BussOut moves to a channel/submix/buss topology and adds analog simulation.
+############ Console8ChannelIn moves to a channel/submix/buss topology and adds analog simulation.
+############ Console8ChannelOut moves to a channel/submix/buss topology and adds analog simulation.
+############ Console8SubIn moves to a channel/submix/buss topology and adds analog simulation.
+############ Console8SubOut moves to a channel/submix/buss topology and adds analog simulation.
 
 Yep. Told you I had stuff in the works! ;)
 
@@ -852,7 +866,9 @@ It’s not really intended for ‘everything is louder than everything else’ o
 
 Again, ‘In’ goes first. ‘Out’ goes last. All Channels go to a Sub, all Subs go to the Buss, and you’re done. Easy to explain :)
 
-############ Console8Hype swaps out just the In sections of Console8, for a brighter sparklier circuit.
+############ Console8BussHype swaps out for Console8BussIn, for a brighter sparklier circuit.
+############ Console8ChannelHype swaps out for Console8ChannelIn, for a brighter sparklier circuit.
+############ Console8SubHype swaps out for Console8SubIn, for a brighter sparklier circuit.
 
 The original Console8 had a treble soften that was too weird to let people have. Used in every stage, it shaped the sound plenty, but it let through this weird airy brightness and hyper-focus that was far too extreme to have as the base Console sound. I tried reining it in with a dry/wet and that only created bizarre cancellations and other problems, and so I dug deeper and came up with a treble softening that played better at widely varying audio levels and gave the impact and solidity I needed. And the weird airy first version was gone forever.
 
@@ -1245,7 +1261,8 @@ It’s not complicated but it’s my own code and it’ll work: it’s even pret
 
 If they don’t, they will just continue adding a little truncation with every single plugin, every single calculation, and now none of MY plugins do that :)
 
-############ DitherMeTimbers is dark deep 'dither' (includes 16 bit version, DitherMeDiskers)
+############ DitherMeDiskers is dark deep 'dither' in 16 bit version.
+############ DitherMeTimbers is dark deep 'dither' in 24 bit version.
 
 What is a dither? Dither is a way of changing one type of noise, quantization, to a different type, just plain noise. It’s all about manipulating a situation where your waveform must decide between two options, ‘up’ or ‘down’, and pick one of a very limited number of positions in a lower-resolution space. In the strictest sense, dither is adding two sources of calibrated noise in order to make the resulting noise floor completely unrelated to the audio signal.
 
@@ -1289,7 +1306,7 @@ I wanted to give Bob (and anyone else selecting traditional TPDF) something fanc
 
 It’s TPDF highpassed dither, just like PaulDither. But, I’m also using some adjacent samples to skew the noise profile even further into the highs. It’s just a redistribution of energy, and it leaves the key pair of full-intensity noise samples to stay as TPDF dither. I just doctored the way you hear the noise, to push it a little farther into the highs. I’ve also backed off the teeny DC offset, and shaped every filter tap by ear. If you liked PaulDither, try DoublePaul and see if you like taking the PaulDither concept just a teeny bit farther, with no penalty to how the TPDF works. It’s just like a little sinc interpolation, a thing that’s trying to hide the TPDF energy by pushing it farther into the extreme highs. If you don’t trust NotJustAnotherDither, but you’d like something even quieter than PaulDither, try this.
 
-############ Drive: the angry distortion!
+############ Drive is the angry distortion!
 
 If you know how to use Airwindows Density, you know how to use this. It’s exactly the same layout, except that it doesn’t go to negative values: this one’s just for slam.
 
@@ -1406,6 +1423,7 @@ Highpass is your secret weapon for when you use it as a guitar amp: get the rest
 Output and Dry/Wet are for use when you’re just making it be a hard clipper. It’s never going to be exactly a hard clip because of all the stages and the way the EQ interacts with the sound, but between the highpass, lowpass and the gain on tap you’ll get many sounds out of this one. Unlike stuff like ‘Tube’ this is never intended to be smooth. It’s just edgy in a distinctive way that might come in handy.
 
 ############ EdIsDim is mid/side conversion utility plugins.
+############ MidSide is mid/side conversion utility plugins.
 
 It’s always nice to expand one’s horizons! You don’t have to run the latest Logic to be able to use any plugin in mid/side mode… though you might need to do a little fiddling with settings.
 
@@ -1667,7 +1685,7 @@ So, you can adjust the intensity control that specifies how much slew averaging 
 
 (Followup: this technique of stepping through wet/dry stages was also used for the Z series filters)
 
-############ Guitar Conditioner is like a Tube Screamer voicing without the squishiness and indistinctness.
+############ GuitarConditioner is like a Tube Screamer voicing without the squishiness and indistinctness.
 
 I designed this plugin when I saw what Slew was capable of. It uses a combination of Slew and Highpass in a sort of parallel matrix arrangement, with heavy use of my Highpass’s unusual tone shaping features (extreme lows get Tight tone shaping behavior, and a boosted mids circuit is set to Loose rolloff for the proper texture). Both aspects hit their own Slew at different levels and with different voicings, causing a distinct tone quality.
 
@@ -1675,7 +1693,7 @@ This is not a Tube Screamer plugin at all. It’s an alternate tone for doing si
 
 The reason Slew is relevant to a Tube Screamer effect is, the guitar pedal uses op-amps that can be limited in their ability to deliver slew and bass. Therefore, they don't only distort and make louder, they also restrict treble and bass in a nonlinear way, and that's the same thing my Slew effect does. So Guitar Conditioner is Airwindows techniques addressing the same purpose.
 
-############ Hard Vacuum is tube style saturation effects.
+############ HardVacuum is tube style saturation effects.
 
 Time to revisit an Airwindows classic!
 
@@ -1929,7 +1947,7 @@ No, I am NOT making that up. That’s literally what it does, you can see the co
 
 What does it sound like? It sounds like running through an optimal analog stage. The lows are reshaped in a characteristic way for a capacitor-coupled circuit that still allows extended lows: this doesn’t suppress much if any extreme bass. It just massages it a bit. The highs run into active component electronic limits, but unlike other approaches (Channel for a bit of grit, Acceleration for ultra-clear) this is restricting treble slews based on the general amount of energy in the circuit. So it goes darker in a peculiarly analog-like way I’ve not done before, sounding still clear and trebly for most audio, but confining the craziest most digital-sounding treble swings into a zone that sounds like hardware. And this is without thousands of math operations of heavy processing: unlike overprocessed analog modeling, this one nails the ‘energy coming out of analog circuitry’ without blurring or thinning the audio at all. If you don’t need what it’s doing you’ll hear no change at all. Only when ‘excessively digital bass and treble’ show up to interfere, does Interstage kick in.
 
-############ Iron Oxide 5 is the old school, heavily colored Airwindows tape emulation.
+############ IronOxide5 is the old school, heavily colored Airwindows tape emulation.
 
 The legacy of this plugin goes way back. Many years ago, I was coding some of my first AU plugins, and some friends of mine were having bad experiences with a company that sold the big tape emulation plugin of the day. Outraged, I charged into the fray: I would code a replacement for them, one that did the same things and sounded better and sold for $60 (later $50). And that was Iron Oxide. It had one ‘ips’ control, a Drive, and an output level.
 
@@ -1941,7 +1959,7 @@ Iron Oxide 4 added something else that (come to find out) is also present in the
 
 Iron Oxide 5 is all of this, plus lessons from the ‘Purest’ line of plugins (mostly still in line to be released later) to produce the same thing as Iron Oxide 4, but even more pure and resonant and intense. None of these are really ‘mix buss’ plugins (though I’m not the boss of you): they’re far too intensely colored and distorted. They’re more about ‘make that snare really bark’ and so on. Though of course, since I’m not the boss of you, I can’t prevent you from trying to use it on the full mix. All I can do is say that ToTape is coming, and that’s the MODERN tape emulation. This is the old school, rowdy, obvious tape emulation, full of grunge and bark :)
 
-############ Iron Oxide Classic is the purer, simpler, early form of Iron Oxide before all the features.
+############ IronOxideClassic is the purer, simpler, early form of Iron Oxide before all the features.
 
 As promised, here is the 2017-ized version of the pure, sweet, original Iron Oxide. No more grit or tape flutter or noise!
 
@@ -1981,7 +1999,20 @@ Isolator2 is Isolator, my very steep lowpass or highpass or shelf filter, but no
 
 LeadAmp acts like one of the ‘normal’ ampsims, but leaning more towards the vocal, fluid, Vox-y side of things. It’s a distinctive voice and even though they’re all pretty simple and direct, it’s really obvious how LeadAmp isn’t the same flavor as FireAmp or GrindAmp: distinctly different vibe even though they are all cut from the Airwindows super-direct amp sim cloth.
 
-The Airwindows amp sims are all fairly simple designs: highpass, cascading gain stages with ultrasonic filtering between them (often tuneable so you can suppress aliasing even at low sample rates, but they're meant for 96k use) and a cab simulator on the end that's dynamically convolved but also a truncated, brief section of tone color
+The Airwindows amp sims are all fairly simple designs: highpass, cascading gain stages with ultrasonic filtering between them (often tuneable so you can suppress aliasing even at low sample rates, but they're meant for 96k use) and a cab simulator on the end that's dynamically convolved but also a truncated, brief section of tone color.
+
+############ LeftoMono copies one channel to both, losslessly.
+############ RightoMono copies one channel to both, losslessly.
+
+Time for another tiny utility plugin or two!
+
+LeftoMono or RightoMono exist for only one purpose: if your input is either left or right, it’s coming in on a stereo channel, and you have no use for the other side.
+
+No, worse: you’re coming off some kind of camera or camcorder and the other side is not only ‘nothing’, it shows some noise or interference that’s actively bad. In those situations you are often given the option, ‘Convert to mono?’ but doing that will combine the real signal with the garbage, interference, not-really-clean-silence signal.
+
+And so, ToMono. They do exactly what the name suggests. There’s nothing to them, no controls or UI of any kind, you don’t need to open any interface or do anything. Instantiate the one you need and boom: you are now copying the input data words from the side you want, to the side you don’t. Pure cloned mono of the highest possible quality in a single plugin. And since it’s so simple it’ll work in places like OBS where maybe sometimes they don’t handle generic VSTs properly or generate controls: hey, none needed!
+
+This is a super boring plugin… except when you need it most. Hope you like it. (I no longer need it as I’m running my lav into the real mixing board… but I used LeftoMono last week, before putting it out. It can’t save the camera from other issues like robot-voice over HDMI, but it rescued me from the ‘interference and bad silence’ extra stereo channel. :)
 
 ############ LilAmp is a tiny amp sim, like a little bitty practice amp without that much gain.
 
@@ -2213,7 +2244,7 @@ This works on a statistical basis, to produce a collection of sample values that
 
 (followup: Naturalize is the first example of what then became NJAD and went through a couple of revisions: the most current and best version of NJAD/Naturalize is the NJAD that is in the plugin Monitoring.
 
-############ NC-17 is Dirty Loud!
+############ NCSeventeen is Dirty Loud!
 
 NC-17 was designed as the loudenator-killer. It uses the same technology as ADClip’s energy redistribution stuff, but on a soft-clipper, and instead of just feeding the energy back in, it uses it to modulate a Chebyshev filter: sort of complicated, but it’s definitely one of those Airwindows things. First to use such a soft clipper as the primary loudness maximizer, and secondly to use such a weird technology after it. Why a Chebyshev? To produce second harmonic. Why do that? To feed deep bass back in despite the loudenating. Okay, so the whole idea is pretty strange.
 
@@ -2267,7 +2298,8 @@ It’s also got a nonlinearity control, which besides the easter egg polymorph d
 
 The sample rate thing really just tells it what buffer lengths to use: shorter buffers make tighter spaces. It should give a roughly consistent sound if you use the buffer corresponding to your sample rate, but then you can also be at 44.1K and set it to 96K just to have a huge stadium soundscape. Half the fun here is using it inappropriately, so I wouldn’t dream of telling you how to use Nonlinear Space: I hope it’s easy to get normal sounds with, and for everything else, just have fun.
 
-############ NotJustAnotherDither is a next-gen wordlength reducers (24 and 16 bit, and DeRez).
+############ NotJustAnotherCD is a next-gen wordlength reducer at 16 bit, with DeRez.
+############ NotJustAnotherDither is a next-gen wordlength reducer at 24 bit, with DeRez.
 
 The votes are in, and the Internet has spoken. We’ve got a name for the new noise shaping variant on Naturalize, after a January of wild suggestions. Seems most people simply wanted to emphasize that this was not your ordinary dither, not your daddy’s TPDF.
 
@@ -2329,7 +2361,8 @@ So this is your ‘hot-rod’ industry-standard dither. If you need TPDF and fan
 
 Enjoy the most boutique, decked-out, hot-rod ‘regular ordinary dither’ you’re ever likely to see. I’m not sure what else can be even done here without ceasing to be TPDF anymore.
 
-############ PDConsole: Console5 and PurestDrive, sittin’ in a tree… (i.e. both at once, on channels and buss)
+############ PDBuss is Console5 and PurestDrive, sittin’ in a tree… (i.e. both at once, on channels and buss)
+############ PDChannel is Console5 and PurestDrive, sittin’ in a tree… (i.e. both at once, on channels and buss)
 
 What can I even say? This is pretty much just what you’d think it is. Console5 (PurestConsole version) with a PurestDrive stage in every channel and on the buss. There’s a dedicated control for each PurestDrive, and since it’s implemented as a single plugin it saves you having to go out to the 32-bit floating point buss (not applicable to the 64-bit buss VST, in that case it saves you having to go out to that buss)
 
@@ -2559,7 +2592,10 @@ Anyway, it’s yours if you want it. There are many odd ways to do EQ code. This
 
 Me, I’m more interested in dark reverbs and deeper spaces and bass, so this was never my pet plugin: maybe it can be yours :)
 
-############ PurestConsole is the most free from coloration Console system. This is also a historical reference of how I was posting on New Year's, 2018, after the death of my Mom, so I've left the post in its entirety. As follows:
+############ PurestConsoleBuss is the most free from coloration Console system.
+############ PurestConsoleChannel is the most free from coloration Console system.
+
+This is also a historical reference of how I was posting on New Year's, 2018, after the death of my Mom, so I've left the post in its entirety. As follows:
 
 So. I think things may improve around here, as far as me reviewing the Console5 launch, and making sense of what the heck went on there. If I can, I’ll also give it the lushness of that original release while preventing the DC offset stuff… and there’s something to do with the AU/VST identities that needs examining. After this, ToVinyl is up for January, and I’ve got some useful variations on Console 5, and PurestDrive is February (I’m entertaining notions of a C5Drive that steals the technique from PurestDrive instead of doing the original C5 slew thing. It would be just ‘darker’, not encode/decode)
 
@@ -2582,7 +2618,8 @@ You can use PurestConsole in its capacity for ‘expanding’ verbs, delays, and
 
 I hope this simpler one is good right out of the gate, because I AM going to be sick for a while, but it might be something else to chew on, and if it is in fact so simple as to be flawless, you can work with this one right away :)
 
-############ PurestConsole2 is the anti-aliasing version of PurestConsole, with special brightness and clarity!
+############ PurestConsole2Buss is the anti-aliasing version of PurestConsole.
+############ PurestConsole2Channel is the anti-aliasing version of PurestConsole.
 
 Meet PurestConsole2.
 
@@ -2694,6 +2731,7 @@ But Pyewacket is important, because it’s the sort of thing I can do when suppo
 
 I really, really, really like this one, and maybe you will too :)
 
+############ RawGlitters is just the quantization from Dither Me Timbers… and the opposite, as a brightener.
 ############ RawTimbers is just the quantization from Dither Me Timbers… and the opposite, as a brightener.
 
 So, Dither Me Timbers isn’t really a dither. I keep saying that even though it’s got noise shaping and gets a sound that stands up to comparison with Not Just Another Dither: it’s different, but good.
@@ -3292,18 +3330,6 @@ The range of adjustment starts with gentle ‘glue’ compression as the subsoni
 
 Remember, the low Thunder settings are useful too as a glue comp, for a buss compressor that’s extremely transparent and true to the tone of the mix! The middle settings are just as functional. All of these settings have their own usefulness. Choose wisely (or unwisely, if you prefer).
 
-############ ToMono (LeftoMono and RightoMono) copy one channel to both, losslessly.
-
-Time for another tiny utility plugin or two!
-
-LeftoMono or RightoMono exist for only one purpose: if your input is either left or right, it’s coming in on a stereo channel, and you have no use for the other side.
-
-No, worse: you’re coming off some kind of camera or camcorder and the other side is not only ‘nothing’, it shows some noise or interference that’s actively bad. In those situations you are often given the option, ‘Convert to mono?’ but doing that will combine the real signal with the garbage, interference, not-really-clean-silence signal.
-
-And so, ToMono. They do exactly what the name suggests. There’s nothing to them, no controls or UI of any kind, you don’t need to open any interface or do anything. Instantiate the one you need and boom: you are now copying the input data words from the side you want, to the side you don’t. Pure cloned mono of the highest possible quality in a single plugin. And since it’s so simple it’ll work in places like OBS where maybe sometimes they don’t handle generic VSTs properly or generate controls: hey, none needed!
-
-This is a super boring plugin… except when you need it most. Hope you like it. (I no longer need it as I’m running my lav into the real mixing board… but I used LeftoMono last week, before putting it out. It can’t save the camera from other issues like robot-voice over HDMI, but it rescued me from the ‘interference and bad silence’ extra stereo channel. :)
-
 ############ ToneSlant is a super-transparent ‘tilt EQ’ with very low Q.
 
 This is a new plugin, not a port from an existing Audio Unit. It’s based on a variation on the Average concept. Turns out, it’s the tail end of the ‘averaged samples block’ that causes the cancellation node. ToneSlant implements a much bigger sample block (100 taps) but linearly fades the samples off between the first and last sample in the block.
@@ -3440,7 +3466,7 @@ So, the key distinction between this and StereoDoubler is that TripleSpread push
 
 ############ Tube is a tube style SoundBetterIzer using a new algorithm for analog modeling!
 
-ntroducing… Airwindows TUBE.
+Introducing… Airwindows TUBE.
 
 This is your new go-to soundbetterizer! It will make anything you put it on HUGE, and is a new algorithm that’s going to inform everything I do going forward, as well as building on everything I’ve learned to date!
 
@@ -3486,7 +3512,8 @@ Like the other Desk plugins, it’s got a kind of saturation going on, a distinc
 
 You have a distinct ‘analog modeling’ tone then, which is no specific console, no arbitrary color: just sort of retro vibe, generalized. It’s not calibrated to work with Console (that’s the for-pay version of Desk that consolidated these and calibrated them all) and it doesn’t have special requirements for where it should go. Place it where you want that style of tone coloring: like Desk, you can use it on auxes and submixes (including ones ‘inside’ Console) to better emulate running through a lot of circuitry.
 
-############ uLaw is a Console-like encode/decode pair, but much more extreme.
+############ uLawDecode is a Console-like encode/decode pair, but much more extreme.
+############ uLawEncode is a Console-like encode/decode pair, but much more extreme.
 
 Sometimes you do a plugin that’s not all that sensible.
 
@@ -3567,7 +3594,7 @@ To do that, construct a Console system, using an earlier Console or PurestConsol
 
 Or, you could use it anywhere, or on one single channel (that didn’t have ultrasonic filtering) as long as you’ve got room to fit five individual filter plugins. Bottom line is, if your audio goes through ABCDE and comes out the other end, it should be correct. The rest is up to you :)
 
-############ Unbox is a distortion where only the harmonics that don't alias are allowed to distort.
+############ UnBox is a distortion where only the harmonics that don't alias are allowed to distort.
 
 While I’m putting out my library of plugins according to plan, sometimes I need to take a detour into new stuff. UnBox is one example.
 
@@ -3639,7 +3666,7 @@ VinylDither is the result of pursuing those ideas. It’s a dither/noise shaper 
 
 So, if you want ‘vinyl’ effects added to your mix so it sounds like a retro vinyl record coming off the computer, this is the single subtlest way you can do that, plus you could combine it with other things (like the Audio Unit ‘ToVinyl’ which does elliptical EQ and has an amazing groove wear emulation built in) and get a completely different vibe. Wrecking your sounds with heavy overprocessing isn’t necessary! You can just pick specific things to give a more subtle vinyl feel, and VinylDither is the perfect dither choice for it. Yes, it’s got more depth and warmth and vibe than plain old TPDF (or truncation), but I think the interesting part is examining the faults of VinylDither (crackling noises, not smooth noise) and understanding how they can be turned into advantages (crackling noises OK, do not correct! As it says on my vinyl copy of Live At Leeds cooge )
 
-############ Voice Of The Starship is a deep noise tone source.
+############ VoiceOfTheStarship is a deep noise tone source.
 
 This is the core of Noise, in maybe a more approachable form. The algorithm works like this: you do a random noise wander, where the audio output drifts around randomly with random amounts being added and subtracted from it. This is known as a random walk, and even if the amounts are equally positive and negative, the result will do two things: it'll give you more of a bassy rumble, and the loudest part of this bass will be a DC component. In other words, you can't use this directly for audio, because it won't make frequencies.
 
