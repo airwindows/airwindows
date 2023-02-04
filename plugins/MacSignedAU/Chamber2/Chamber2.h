@@ -3,9 +3,9 @@
 *	
 *	Version:	1.0
 * 
-*	Created:	8/26/22
+*	Created:	2/1/23
 *	
-*	Copyright:  Copyright © 2022 Airwindows, Airwindows uses the MIT license
+*	Copyright:  Copyright © 2023 Airwindows, Airwindows uses the MIT license
 * 
 *	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc. ("Apple") in 
 *				consideration of your agreement to the following terms, and your use, installation, modification 
@@ -83,8 +83,13 @@ public:
 	virtual ~Chamber2 () { delete mDebugDispatcher; }
 #endif
 	
-	virtual AUKernelBase *		NewKernel() { return new Chamber2Kernel(this); }
-	
+	virtual ComponentResult Reset(AudioUnitScope inScope, AudioUnitElement inElement);
+
+	virtual OSStatus ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags, 
+						const AudioBufferList & inBuffer, AudioBufferList & outBuffer, 
+						UInt32 inFramesToProcess);
+	virtual UInt32 SupportedNumChannels(const AUChannelInfo ** outInfo);
+
 	virtual	ComponentResult		GetParameterValueStrings(AudioUnitScope			inScope,
 														 AudioUnitParameterID		inParameterID,
 														 CFArrayRef *			outStrings);
@@ -103,7 +108,7 @@ public:
 											AudioUnitScope 		inScope,
 											AudioUnitElement 		inElement,
 											void *			outData);
-	
+
 	virtual ComponentResult    Initialize();
 	virtual bool				SupportsTail () { return true; }
     virtual Float64				GetTailTime() {return (1.0/GetSampleRate())*0.0;} //in SECONDS! gsr * a number = in samples
@@ -112,70 +117,75 @@ public:
 	/*! @method Version */
 	virtual ComponentResult		Version() { return kChamber2Version; }
 	
-    
-	
-protected:
-		class Chamber2Kernel : public AUKernelBase		// most of the real work happens here
-	{
-public:
-		Chamber2Kernel(AUEffectBase *inAudioUnit )
-		: AUKernelBase(inAudioUnit)
-	{
-	}
-		
-		// *Required* overides for the process method for this effect
-		// processes one channel of interleaved samples
-        virtual void 		Process(	const Float32 	*inSourceP,
-										Float32		 	*inDestP,
-										UInt32 			inFramesToProcess,
-										UInt32			inNumChannels,
-										bool			&ioSilence);
-		
-        virtual void		Reset();
-		
 		private: 
-		Float64 aE[10000];
-		Float64 aF[10000];
-		Float64 aG[10000];
-		Float64 aH[10000];
-		Float64 aA[10000];
-		Float64 aB[10000];
-		Float64 aC[10000];
-		Float64 aD[10000];
-		Float64 aI[10000];
-		Float64 aJ[10000];
-		Float64 aK[10000];
-		Float64 aL[10000];
-		Float64 aM[10000];
-		
-		Float64 feedbackA;
-		Float64 feedbackB;
-		Float64 feedbackC;
-		Float64 feedbackD;
-		Float64 previousA;
-		Float64 previousB;
-		Float64 previousC;
-		Float64 previousD;
-		
-		double lastRef[10];
-		int cycle;
-		
-		int countA, delayA;
-		int countB, delayB;
-		int countC, delayC;
-		int countD, delayD;
-		int countE, delayE;
-		int countF, delayF;
-		int countG, delayG;
-		int countH, delayH;
-		int countI, delayI;
-		int countJ, delayJ;
-		int countK, delayK;
-		int countL, delayL;		
-		int countM, delayM;
-		
-		uint32_t fpd;
-	};
+    
+	double aEL[10000];
+	double aFL[10000];
+	double aGL[10000];
+	double aHL[10000];
+	double aAL[10000];
+	double aBL[10000];
+	double aCL[10000];
+	double aDL[10000];
+	double aIL[10000];
+	double aJL[10000];
+	double aKL[10000];
+	double aLL[10000];
+	double aML[10000];
+	
+	double feedbackAL;
+	double feedbackBL;
+	double feedbackCL;
+	double feedbackDL;
+	double previousAL;
+	double previousBL;
+	double previousCL;
+	double previousDL;
+	
+	double lastRefL[10];
+	
+	double aER[10000];
+	double aFR[10000];
+	double aGR[10000];
+	double aHR[10000];
+	double aAR[10000];
+	double aBR[10000];
+	double aCR[10000];
+	double aDR[10000];
+	double aIR[10000];
+	double aJR[10000];
+	double aKR[10000];
+	double aLR[10000];
+	double aMR[10000];
+	
+	double feedbackAR;
+	double feedbackBR;
+	double feedbackCR;
+	double feedbackDR;
+	double previousAR;
+	double previousBR;
+	double previousCR;
+	double previousDR;
+	
+	double lastRefR[10];
+	
+	int countA, delayA;
+	int countB, delayB;
+	int countC, delayC;
+	int countD, delayD;
+	int countE, delayE;
+	int countF, delayF;
+	int countG, delayG;
+	int countH, delayH;
+	int countI, delayI;
+	int countJ, delayJ;
+	int countK, delayK;
+	int countL, delayL;
+	int countM, delayM;
+	int cycle; //all these ints are shared across channels, not duplicated	
+	
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

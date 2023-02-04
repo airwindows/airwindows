@@ -25,7 +25,7 @@ void Chamber2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	
 	double size = (A*0.9)+0.1;
 	double regen = (1.0-(pow(1.0-B,2)))*0.123;
-	double echoScale = 1.0-(pow(C,3));
+	double echoScale = 1.0-C;
 	double echo = 0.618033988749894848204586+((1.0-0.618033988749894848204586)*echoScale);
 	double interpolate = (1.0-echo)*0.381966011250105;
 	//this now goes from Chamber, to all the reverb delays being exactly the same
@@ -41,7 +41,8 @@ void Chamber2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	//that's so it can be on submixes without cutting back dry channel when adjusted:
 	//unless you go super heavy, you are only adjusting the added verb loudness.
 	
-	delayE = delayM = 9900*size;
+	delayM = sqrt(9900*size);
+	delayE = 9900*size;
 	delayF = delayE*echo; 
 	delayG = delayF*echo;
 	delayH = delayG*echo;
@@ -159,13 +160,13 @@ void Chamber2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			double outHR = aHR[countH-((countH > delayH)?delayH+1:0)];
 			//third block: final outputs
 			
-			feedbackAL = (outEL - (outFL + outGL + outHL));
+			feedbackAR = (outEL - (outFL + outGL + outHL));
 			feedbackBL = (outFL - (outEL + outGL + outHL));
-			feedbackCL = (outGL - (outEL + outFL + outHL));
+			feedbackCR = (outGL - (outEL + outFL + outHL));
 			feedbackDL = (outHL - (outEL + outFL + outGL));
-			feedbackAR = (outER - (outFR + outGR + outHR));
+			feedbackAL = (outER - (outFR + outGR + outHR));
 			feedbackBR = (outFR - (outER + outGR + outHR));
-			feedbackCR = (outGR - (outER + outFR + outHR));
+			feedbackCL = (outGR - (outER + outFR + outHR));
 			feedbackDR = (outHR - (outER + outFR + outGR));
 			//which we need to feed back into the input again, a bit
 			
@@ -280,7 +281,7 @@ void Chamber2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
 	double size = (A*0.9)+0.1;
 	double regen = (1.0-(pow(1.0-B,2)))*0.123;
-	double echoScale = 1.0-(pow(C,3));
+	double echoScale = 1.0-C;
 	double echo = 0.618033988749894848204586+((1.0-0.618033988749894848204586)*echoScale);
 	double interpolate = (1.0-echo)*0.381966011250105;
 	//this now goes from Chamber, to all the reverb delays being exactly the same
@@ -296,7 +297,8 @@ void Chamber2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	//that's so it can be on submixes without cutting back dry channel when adjusted:
 	//unless you go super heavy, you are only adjusting the added verb loudness.
 	
-	delayE = delayM = 9900*size;
+	delayM = sqrt(9900*size);
+	delayE = 9900*size;
 	delayF = delayE*echo; 
 	delayG = delayF*echo;
 	delayH = delayG*echo;
@@ -414,13 +416,13 @@ void Chamber2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			double outHR = aHR[countH-((countH > delayH)?delayH+1:0)];
 			//third block: final outputs
 			
-			feedbackAL = (outEL - (outFL + outGL + outHL));
+			feedbackAR = (outEL - (outFL + outGL + outHL));
 			feedbackBL = (outFL - (outEL + outGL + outHL));
-			feedbackCL = (outGL - (outEL + outFL + outHL));
+			feedbackCR = (outGL - (outEL + outFL + outHL));
 			feedbackDL = (outHL - (outEL + outFL + outGL));
-			feedbackAR = (outER - (outFR + outGR + outHR));
+			feedbackAL = (outER - (outFR + outGR + outHR));
 			feedbackBR = (outFR - (outER + outGR + outHR));
-			feedbackCR = (outGR - (outER + outFR + outHR));
+			feedbackCL = (outGR - (outER + outFR + outHR));
 			feedbackDR = (outHR - (outER + outFR + outGR));
 			//which we need to feed back into the input again, a bit
 			

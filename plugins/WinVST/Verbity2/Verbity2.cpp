@@ -23,7 +23,7 @@ Verbity2::Verbity2(audioMasterCallback audioMaster) :
 	iirAR = 0.0;
 	iirBR = 0.0;
 	
-	for(int count = 0; count < 5190; count++) {aZL[count] = 0.0; aZR[count] = 0.0;}
+	//for(int count = 0; count < 5190; count++) {aZL[count] = 0.0; aZR[count] = 0.0;}
 	
 	for(int count = 0; count < 5004; count++) {aAL[count] = 0.0; aAR[count] = 0.0;} //AFKPU
 	for(int count = 0; count < 4952; count++) {aFL[count] = 0.0; aFR[count] = 0.0;}

@@ -3631,7 +3631,7 @@ That’s really the essence of all these Airwindows compressors (perhaps more th
 
 But this time, I don’t think I’ll be making excuses like that. VariMu has a good sound to it. I hope you like it :)
 
-############ Verbity is my new best reverb, which uses feedforward reverb topology.
+############ Verbity is a dual-mono reverb, which uses feedforward reverb topology.
 
 Late nights of reverb hacking (ok, Monday mornings?) give rise to a new best reverb. At least, best for me. Perhaps it’ll count as ‘best’ in general, we shall see, that is rather a matter of taste but it’s my new favorite and is inspiring me a lot.
 
@@ -3648,6 +3648,28 @@ The Wetness control is not exactly a traditional Dry/Wet, so I’m using Wetness
 This is a dual mono verb, so for now you don’t gain anything adding Srsly2 unless you have actual stereo content going in. Centered stuff is going to stay centered. You might not notice right off since it’s so deep, so I’m telling you. This is consistent with my other reverbs, except that MatrixVerb and Reverb are able to add stereo pitch bending which will spread center content. Verbity is your basic Airwindows Bricasti-style reverb, which also means it doesn’t have pitch shifting: Casey doesn’t like it, and this is an exploration into the things Casey’s talked about publically, to see if his wisdom leads to better reverbs.
 
 Signs point to yes :)
+
+############ Verbity2 adds stereo crossmodulation and expands Verbity's feedforward reverb topology.
+
+Firstly, listen. Verbity2 might beat Galactic, for you, for deep reverbs. There are specific reasons why that might be. Listen and see if Verbity2 is the best reverb you can have… because you can have it, it's open source plugins supported by Patreon. If you can't do without it, you won't have to, it's yours. If you would have paid for a reverb this good, throw an additional $50 this year onto my Patreon, and we'll see if I can make another plugin by the year after that, working on these as my full-time job.
+
+So, how is it different from Verbity? You do still have Verbity, after all.
+
+First, Verbity2 is an expansion. These are what's called Householder matrix reverbs, with a feedforward topology. Verbity, and Galactic, and Chamber, use blocks of reverb elements all of which feed directly into all the other elements, in a four-by-four matrix. A Householder matrix that's four-by-four lets you do infinite reverb while having all the elements either be unity gain, or inverted unity gain, and all my Householder stuff thus far has been like this.
+
+Until now!
+
+Verbity2 uses a five-by-five matrix for each stage, and where Verbity has three banks of matrices, Verbity2 has five banks of matrices. So where Verbity uses its twelve echo banks to make four thousand distinct echoes… Verbity2 uses its twenty-five echo banks to make NINE MILLION distinct echoes… before feedback. That's not automatically 'better', but it's different, like more than three orders of magnitude different. That's going to affect the reverb texture.
+
+About that feedback… there's a change. So, Galactic is stereo: it applies a subtle offset vibrato to both sides on input making mono things stereo (come to think of it, would anybody like this as standalone?) and then it feeds back in a ping-pong fashion for maximum width from any source. All left reverb has to go through the entire right reverb in order to reach the left again.
+
+Verbity is the opposite: dual mono. It was designed from the start to be an ambience-maker, filling out space around individual elements wherever they are in the stereo field. People used to buy dual hardware reverbs specifically to do this in mixes: it's a secret mix trick, putting the verb only where it's needed. That's what Verbity does. And if you use NO feedback at all, Verbity2 will still do this.
+
+But if you extend the reverb tail in Verbity2, it's a hybrid. For each channel, two out of three of the output echo banks will stay put, and three will cross over. Half stereo spread, half keeping stuff where it is. For very long reverb tails this will always end up as a totally stereo wash. For really short ambiences, it'll act dual mono. But for moderate reverb tails, what happens is that you get a giant room picture behind your sounds. Stuff on one side blooms out, then washes across to the other side, and back again. I'm looking forward to experimenting with this for future designs :)
+
+There are also adjustments to tone control: the Darkness control is replaced with a control for Mulch. This is meant to be a kind of naturalness factor: Verbity, like Galactic, tends to hang on to thunderous bass, as if it expands into huge caverns. Mulch means the sound can darken, but it can also absorb some of the extreme lows, mimicking a physical room made out of wood and plaster, not stone or concrete. I should be able to expand on this a lot.
+
+So Verbity2 is a new level of reverb realism from me. Looking forward to further developments of this!
 
 ############ Vibrato lets you vibrato, chorus, flange, and make odd FM noises.
 

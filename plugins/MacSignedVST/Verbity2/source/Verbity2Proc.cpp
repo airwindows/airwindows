@@ -26,10 +26,10 @@ void Verbity2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	//mulch is tone control, darken to obscure the Chrome Oxide, not as much highpass
 	double size = (pow(A,2.0)*0.9)+0.1;
 	double regen = (1.0-pow(1.0-B,3.0))*0.00032;
-	double mulchSetting = 1.0-pow(1.0-C,2); //modify taper
-	double lowpass = (1.0-(pow(mulchSetting,2)*0.75))/sqrt(overallscale);
-	double highpass = (0.01+(mulchSetting*0.05))/sqrt(overallscale);
-	double interpolateMax = 0.06+(mulchSetting*0.3);
+	double mulchSetting = C;
+	double lowpass = (1.0-(mulchSetting*0.75))/sqrt(overallscale);
+	double highpass = (0.007+(mulchSetting*0.022))/sqrt(overallscale);
+	double interpolateMax = 0.07+(mulchSetting*0.4);
 	double wet = D*2.0;
 	double dry = 2.0 - wet;
 	if (wet > 1.0) wet = 1.0;
@@ -40,7 +40,7 @@ void Verbity2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	//that's so it can be on submixes without cutting back dry channel when adjusted:
 	//unless you go super heavy, you are only adjusting the added verb loudness.
 	
-	delayZ = 5189.0*size; //z can be predelay
+	//delayZ = 5189.0*size; //z can be predelay
 	
 	delayA = 5003.0*size;
 	delayF = 4951.0*size;
@@ -56,7 +56,7 @@ void Verbity2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 	
 	delayC = 3323.0*size;
 	delayH = 2791.0*size;
-	delayM= 2767.0*size;
+	delayM = 2767.0*size;
 	delayR = 2389.0*size;
 	delayW = 2347.0*size;
 	
@@ -104,12 +104,11 @@ void Verbity2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			feedbackDR = (feedbackDR*(1.0-interpolateR))+(previousDR*interpolateR); previousDR = feedbackDR;
 			feedbackER = (feedbackER*(1.0-interpolateR))+(previousER*interpolateR); previousER = feedbackER;
 			
-			aZL[countZ] = inputSampleL;
-			countZ++; if (countZ < 0 || countZ > delayZ) countZ = 0;
-			inputSampleL = aZL[countZ-((countZ > delayZ)?delayZ+1:0)];
-			aZR[countZ] = inputSampleR;
-			countZ++; if (countZ < 0 || countZ > delayZ) countZ = 0;
-			inputSampleR = aZR[countZ-((countZ > delayZ)?delayZ+1:0)];
+		//	aZL[countZ] = inputSampleL;
+		//	aZR[countZ] = inputSampleR;
+		//	countZ++; if (countZ < 0 || countZ > delayZ) countZ = 0;
+		//	inputSampleL = aZL[countZ-((countZ > delayZ)?delayZ+1:0)];
+		//	inputSampleR = aZR[countZ-((countZ > delayZ)?delayZ+1:0)];
 			//predelay 
 			
 			aAL[countA] = inputSampleL + (feedbackAL * (regen*(1.0-fabs(feedbackAL*regen))));
@@ -273,17 +272,17 @@ void Verbity2::processReplacing(float **inputs, float **outputs, VstInt32 sample
 			//-------- five
 			
 			
-			feedbackAL = ((outUL*3.0) - ((outVL + outWL + outXL + outYL)*2.0));
+			feedbackAR = ((outUL*3.0) - ((outVL + outWL + outXL + outYL)*2.0));
 			feedbackBL = ((outVL*3.0) - ((outUL + outWL + outXL + outYL)*2.0));
-			feedbackCL = ((outWL*3.0) - ((outUL + outVL + outXL + outYL)*2.0));
+			feedbackCR = ((outWL*3.0) - ((outUL + outVL + outXL + outYL)*2.0));
 			feedbackDL = ((outXL*3.0) - ((outUL + outVL + outWL + outYL)*2.0));
-			feedbackEL = ((outYL*3.0) - ((outUL + outVL + outWL + outXL)*2.0));
+			feedbackER = ((outYL*3.0) - ((outUL + outVL + outWL + outXL)*2.0));
 			
-			feedbackAR = ((outUR*3.0) - ((outVR + outWR + outXR + outYR)*2.0));
+			feedbackAL = ((outUR*3.0) - ((outVR + outWR + outXR + outYR)*2.0));
 			feedbackBR = ((outVR*3.0) - ((outUR + outWR + outXR + outYR)*2.0));
-			feedbackCR = ((outWR*3.0) - ((outUR + outVR + outXR + outYR)*2.0));
+			feedbackCL = ((outWR*3.0) - ((outUR + outVR + outXR + outYR)*2.0));
 			feedbackDR = ((outXR*3.0) - ((outUR + outVR + outWR + outYR)*2.0));
-			feedbackER = ((outYR*3.0) - ((outUR + outVR + outWR + outXR)*2.0));
+			feedbackEL = ((outYR*3.0) - ((outUR + outVR + outWR + outXR)*2.0));
 			//which we need to feed back into the input again, a bit
 			
 			inputSampleL = (outUL + outVL + outWL + outXL + outYL)*0.0016;
@@ -382,10 +381,10 @@ void Verbity2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	//mulch is tone control, darken to obscure the Chrome Oxide, not as much highpass
 	double size = (pow(A,2.0)*0.9)+0.1;
 	double regen = (1.0-pow(1.0-B,3.0))*0.00032;
-	double mulchSetting = 1.0-pow(1.0-C,2); //modify taper
-	double lowpass = (1.0-(pow(mulchSetting,2)*0.75))/sqrt(overallscale);
-	double highpass = (0.01+(mulchSetting*0.05))/sqrt(overallscale);
-	double interpolateMax = 0.06+(mulchSetting*0.3);
+	double mulchSetting = C;
+	double lowpass = (1.0-(mulchSetting*0.75))/sqrt(overallscale);
+	double highpass = (0.007+(mulchSetting*0.022))/sqrt(overallscale);
+	double interpolateMax = 0.07+(mulchSetting*0.4);
 	double wet = D*2.0;
 	double dry = 2.0 - wet;
 	if (wet > 1.0) wet = 1.0;
@@ -396,7 +395,7 @@ void Verbity2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	//that's so it can be on submixes without cutting back dry channel when adjusted:
 	//unless you go super heavy, you are only adjusting the added verb loudness.
 	
-	delayZ = 5189.0*size; //z can be predelay
+	//delayZ = 5189.0*size; //z can be predelay
 	
 	delayA = 5003.0*size;
 	delayF = 4951.0*size;
@@ -412,7 +411,7 @@ void Verbity2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 	
 	delayC = 3323.0*size;
 	delayH = 2791.0*size;
-	delayM= 2767.0*size;
+	delayM = 2767.0*size;
 	delayR = 2389.0*size;
 	delayW = 2347.0*size;
 	
@@ -460,12 +459,11 @@ void Verbity2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			feedbackDR = (feedbackDR*(1.0-interpolateR))+(previousDR*interpolateR); previousDR = feedbackDR;
 			feedbackER = (feedbackER*(1.0-interpolateR))+(previousER*interpolateR); previousER = feedbackER;
 			
-			aZL[countZ] = inputSampleL;
-			countZ++; if (countZ < 0 || countZ > delayZ) countZ = 0;
-			inputSampleL = aZL[countZ-((countZ > delayZ)?delayZ+1:0)];
-			aZR[countZ] = inputSampleR;
-			countZ++; if (countZ < 0 || countZ > delayZ) countZ = 0;
-			inputSampleR = aZR[countZ-((countZ > delayZ)?delayZ+1:0)];
+		//	aZL[countZ] = inputSampleL;
+		//	aZR[countZ] = inputSampleR;
+		//	countZ++; if (countZ < 0 || countZ > delayZ) countZ = 0;
+		//	inputSampleL = aZL[countZ-((countZ > delayZ)?delayZ+1:0)];
+		//	inputSampleR = aZR[countZ-((countZ > delayZ)?delayZ+1:0)];
 			//predelay 
 			
 			aAL[countA] = inputSampleL + (feedbackAL * (regen*(1.0-fabs(feedbackAL*regen))));
