@@ -627,17 +627,17 @@ void Verbity2::processDoubleReplacing(double **inputs, double **outputs, VstInt3
 			//-------- five
 			
 			
-			feedbackAL = ((outUL*3.0) - ((outVL + outWL + outXL + outYL)*2.0));
+			feedbackAR = ((outUL*3.0) - ((outVL + outWL + outXL + outYL)*2.0));
 			feedbackBL = ((outVL*3.0) - ((outUL + outWL + outXL + outYL)*2.0));
-			feedbackCL = ((outWL*3.0) - ((outUL + outVL + outXL + outYL)*2.0));
+			feedbackCR = ((outWL*3.0) - ((outUL + outVL + outXL + outYL)*2.0));
 			feedbackDL = ((outXL*3.0) - ((outUL + outVL + outWL + outYL)*2.0));
-			feedbackEL = ((outYL*3.0) - ((outUL + outVL + outWL + outXL)*2.0));
+			feedbackER = ((outYL*3.0) - ((outUL + outVL + outWL + outXL)*2.0));
 			
-			feedbackAR = ((outUR*3.0) - ((outVR + outWR + outXR + outYR)*2.0));
+			feedbackAL = ((outUR*3.0) - ((outVR + outWR + outXR + outYR)*2.0));
 			feedbackBR = ((outVR*3.0) - ((outUR + outWR + outXR + outYR)*2.0));
-			feedbackCR = ((outWR*3.0) - ((outUR + outVR + outXR + outYR)*2.0));
+			feedbackCL = ((outWR*3.0) - ((outUR + outVR + outXR + outYR)*2.0));
 			feedbackDR = ((outXR*3.0) - ((outUR + outVR + outWR + outYR)*2.0));
-			feedbackER = ((outYR*3.0) - ((outUR + outVR + outWR + outXR)*2.0));
+			feedbackEL = ((outYR*3.0) - ((outUR + outVR + outWR + outXR)*2.0));
 			//which we need to feed back into the input again, a bit
 			
 			inputSampleL = (outUL + outVL + outWL + outXL + outYL)*0.0016;
