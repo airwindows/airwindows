@@ -30,7 +30,7 @@ Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, Butter
 
 Effects: Dubly, PitchNasty, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: Capacitor2, Isolator2, Holt2, Baxandall2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
+Filter: Capacitor2, Isolator2, Holt2, Weight, Baxandall2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
 
 Lo-Fi: Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -3728,6 +3728,20 @@ This is all the more important in the age of DAWs, because if you’re monitorin
 This One Weird (Voice)Trick is free. It’s real simple, it’s a convenience plugin. Please don’t master through it or everyone will be sad :) if you’d like to support my ability to do this and more, please jump on my Patreon as that is why you still have me here doing this a couple years later. I’ll scale this operation up as much as I can: that depends on you, and I suppose internet virality. In the complete absence of internet virality, I’m happy to say I’m still here and able to give you the proverbial One Weird Trick for vocal tracking. Hope it makes your life better. :)
 
 VoiceTrick is in current versions of Monitoring as one of the monitoring options.
+
+############ Weight is a very accurate sub-bass boost based on Holt.
+
+Weight is a plugin I made for me. Especially when I record live drums to simple stereo mics, or a DI bass, or indeed a guitar through an iso cab, I'll often want a little extra deep sub-bass. There's plenty of EQs I could reach for, to do that.
+
+Recently I worked on Holt2, which Weight is based on, and I found it had an ability to bring up a really vivid, resonant bass boost. It's a somewhat nonlinear algorithm, and with Holt2 I added a bunch of stages, more poles of filtering, with controls for how much resonance you wanted to get to.
+
+Weight just focuses on the 'very resonant' zone. I tuned it using Voxengo SPAN (as there's no specific formula for tuning this to any particular frequency, I had to discover what produced the right tunings) and set it up to gently go from pretty resonant, to very resonant at full crank. Weight can be tuned from 20 hz to 120 hz, which should cover a good range of sub-bass. The boost is to be applied by ear, and in many situations will be a change in character, not a big jump in overall bass level. The Weight control goes from 0 to 1, and unlike Holt it's not a dry/wet: it's added to what is otherwise a totally untouched signal, dry to dry-plus.
+
+To use this, you should have extremely good subwoofers. I'm not convinced even the best headphones can really represent what this does. The Q of the filtering (zero latency, nonlinear, unusual) comes out so sharp that you can really hunt down finely grained distinctions of bass frequencies. My Monitoring plugins set to 'Subs' or the plugin SubsOnly, can help, by focusing in on the subs in a way that overdrives them and brings the harmonics up into the audible range. But you have to be able to hear what's being done because it's very specific.
+
+The concept here is sub-bass boosting in 'areas of power' rather than just 'areas of preponderant energy' (thanks to 'Slipperman' for these concepts). To work with Weight, you will end up finding distinct frequencies for each instrument, in order to bring up subsonic weight in places where it is NOT already obvious. You'll not want to reinforce muddy deep stuff that's already there, Weight is for being able to focus in on spots where the muscle is, not just the rumble.
+
+It's a specialty tool, though variations on it are very likely to appear in other things, perhaps alongside a much broader, more easy to hear bass control. You can have Weight now: hope you like it :)
 
 ############ Wider is Airwindows stereo space shaping.
 
