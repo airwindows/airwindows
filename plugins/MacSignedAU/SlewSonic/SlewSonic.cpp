@@ -101,8 +101,8 @@ ComponentResult			SlewSonic::GetParameterInfo(AudioUnitScope		inScope,
                 AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
  				outParameterInfo.unitName = kParameterOneUnit;
-                outParameterInfo.minValue = 10.0;
-                outParameterInfo.maxValue = 30.0;
+                outParameterInfo.minValue = 5.0;
+                outParameterInfo.maxValue = 25.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
                 break;
 			case kParam_Two:
@@ -194,7 +194,7 @@ void		SlewSonic::SlewSonicKernel::Process(	const Float32 	*inSourceP,
 	double freq = (GetParameter( kParam_One )*1000.0) / GetSampleRate();
 	if (freq > 0.499) freq = 0.499;
 	biquadD[0] = biquadC[0] = biquadB[0] = biquadA[0] = freq;
-	biquadA[1] = 2.24697960; //tenth order Butterworth out of five biquads
+	biquadA[1] = 2.24697960;
 	biquadB[1] = 0.80193774;
 	biquadC[1] = 0.55495813;
 	biquadD[1] = 0.5;
@@ -233,11 +233,11 @@ void		SlewSonic::SlewSonicKernel::Process(	const Float32 	*inSourceP,
 	
 	Float64 aWet = 0.0;
 	Float64 bWet = 0.0;
-	Float64 cWet = GetParameter( kParam_Two );
+	Float64 cWet = GetParameter( kParam_Two )*3.0;
 	//eight-stage wet/dry control using progressive stages that bypass when not engaged
 	if (cWet < 1.0) {aWet = cWet; cWet = 0.0;}
 	else if (cWet < 2.0) {bWet = cWet - 1.0; aWet = 1.0; cWet = 0.0;}
-	else {cWet -= 7.0; cWet = bWet = aWet = 1.0;}
+	else {cWet -= 2.0; bWet = aWet = 1.0;}
 	//this is one way to make a little set of dry/wet stages that are successively added to the
 	//output as the control is turned up. Each one independently goes from 0-1 and stays at 1
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
@@ -248,6 +248,9 @@ void		SlewSonic::SlewSonicKernel::Process(	const Float32 	*inSourceP,
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
+		double dryStageA = 0.0;
+		double dryStageB = 0.0;
+		double dryFinalBiquad = 0.0;
 		double tempSample = 0.0;
 		double outputSample = 0.0;
 		
@@ -257,7 +260,7 @@ void		SlewSonic::SlewSonicKernel::Process(	const Float32 	*inSourceP,
 			biquadA[10] = biquadA[9]; biquadA[9] = inputSample; //DF1
 			outputSample = (inputSample - lastSampleA)*trim;
 			lastSampleA = inputSample; inputSample = outputSample;
-			inputSample = (inputSample * aWet) + (drySample * (1.0-aWet));
+			dryStageA = inputSample = (inputSample * aWet) + (drySample * (1.0-aWet));
 			//first stage always runs, dry/wet between raw signal and this
 		}
 		
@@ -267,7 +270,7 @@ void		SlewSonic::SlewSonicKernel::Process(	const Float32 	*inSourceP,
 			biquadB[10] = biquadB[9]; biquadB[9] = inputSample; //DF1
 			outputSample = (inputSample - lastSampleB)*trim;
 			lastSampleB = inputSample; inputSample = outputSample;
-			inputSample = (inputSample * bWet) + (lastSampleA * (1.0-bWet));
+			dryStageB = inputSample = (inputSample * bWet) + (dryStageA * (1.0-bWet));
 			//second stage adds upon first stage, crossfade between them
 		}
 		
@@ -277,14 +280,20 @@ void		SlewSonic::SlewSonicKernel::Process(	const Float32 	*inSourceP,
 			biquadC[10] = biquadC[9]; biquadC[9] = inputSample; //DF1
 			outputSample = (inputSample - lastSampleC)*trim;
 			lastSampleC = inputSample; inputSample = outputSample;
-			inputSample = (inputSample * cWet) + (lastSampleB * (1.0-cWet));
+			inputSample = (inputSample * cWet) + (dryStageB * (1.0-cWet));
 			//third stage adds upon second stage, crossfade between them
 		}
 		
-		tempSample = biquadD[2]*inputSample+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
-		biquadD[8] = biquadD[7]; biquadD[7] = inputSample; inputSample = tempSample; 
-		biquadD[10] = biquadD[9]; biquadD[9] = inputSample; //DF1
-		//final post-slew-only stage always runs, minimum of one stage on dry and two on single slew-only
+		if (aWet > 0.0) {
+			dryFinalBiquad = inputSample;
+			tempSample = biquadD[2]*inputSample+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
+			biquadD[8] = biquadD[7]; biquadD[7] = inputSample; inputSample = tempSample; 
+			biquadD[10] = biquadD[9]; biquadD[9] = inputSample; //DF1
+			//final post-slew-only stage always runs, minimum of one stage on dry and two on single slew-only
+			inputSample = (inputSample * aWet) + (dryFinalBiquad * (1.0-aWet));
+		}
+		
+		
 		
 		if (inputSample > 1.0) inputSample = 1.0;
 		if (inputSample < -1.0) inputSample = -1.0;

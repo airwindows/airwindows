@@ -54,10 +54,10 @@
 #pragma mark ____SlewSonic Parameters
 
 // parameters
-static const float kDefaultValue_ParamOne = 20.0;
+static const float kDefaultValue_ParamOne = 15.0;
 static const float kDefaultValue_ParamTwo = 0.0;
 
-static CFStringRef kParameterOneName = CFSTR("Frequency");
+static CFStringRef kParameterOneName = CFSTR("Mute");
 static CFStringRef kParameterOneUnit = CFSTR("kHz");
 static CFStringRef kParameterTwoName = CFSTR("Bright");
 //Alter the name if desired, but using the plugin name is a start

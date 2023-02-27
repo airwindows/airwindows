@@ -15,7 +15,7 @@ void SlewSonic::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out2 = outputs[1];
 	
 	double trim = 2.302585092994045684017991; //natural logarithm of 10
-	double freq = ((A*20000.0)+10000.0) / getSampleRate();
+	double freq = ((A*20000.0)+5000.0) / getSampleRate();
 	if (freq > 0.499) freq = 0.499;
 	biquadD[0] = biquadC[0] = biquadB[0] = biquadA[0] = freq;
 	biquadA[1] = 2.24697960; //tenth order Butterworth out of five biquads
@@ -57,11 +57,11 @@ void SlewSonic::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	
 	double aWet = 0.0;
 	double bWet = 0.0;
-	double cWet = B;
+	double cWet = B * 3.0;
 	//eight-stage wet/dry control using progressive stages that bypass when not engaged
 	if (cWet < 1.0) {aWet = cWet; cWet = 0.0;}
 	else if (cWet < 2.0) {bWet = cWet - 1.0; aWet = 1.0; cWet = 0.0;}
-	else {cWet -= 7.0; cWet = bWet = aWet = 1.0;}
+	else {cWet -= 2.0; bWet = aWet = 1.0;}
 	//this is one way to make a little set of dry/wet stages that are successively added to the
 	//output as the control is turned up. Each one independently goes from 0-1 and stays at 1
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
@@ -75,6 +75,12 @@ void SlewSonic::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
+		double dryStageAL = 0.0;
+		double dryStageBL = 0.0;
+		double dryStageAR = 0.0;
+		double dryStageBR = 0.0;
+		double dryFinalBiquadL = 0.0;
+		double dryFinalBiquadR = 0.0;
 		double outSampleL = 0.0;
 		double outSampleR = 0.0;
 		
@@ -85,11 +91,11 @@ void SlewSonic::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 			outSampleL = (inputSampleL - lastSampleAL)*trim;
 			lastSampleAL = inputSampleL; inputSampleL = outSampleL;
-			inputSampleL = (inputSampleL * aWet) + (drySampleL * (1.0-aWet));
+			dryStageAL = inputSampleL = (inputSampleL * aWet) + (drySampleL * (1.0-aWet));
 			//first stage always runs, dry/wet between raw signal and this
 			outSampleR = (inputSampleR - lastSampleAR)*trim;
 			lastSampleAR = inputSampleR; inputSampleR = outSampleR;
-			inputSampleR = (inputSampleR * aWet) + (drySampleR * (1.0-aWet));
+			dryStageAR = inputSampleR = (inputSampleR * aWet) + (drySampleR * (1.0-aWet));
 			//first stage always runs, dry/wet between raw signal and this
 		}
 		
@@ -100,11 +106,11 @@ void SlewSonic::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			biquadB[12] = biquadB[11]; biquadB[11] = inputSampleR; inputSampleR = outSampleR; biquadB[14] = biquadB[13]; biquadB[13] = inputSampleR; //DF1 right
 			outSampleL = (inputSampleL - lastSampleBL)*trim;
 			lastSampleBL = inputSampleL; inputSampleL = outSampleL;
-			inputSampleL = (inputSampleL * bWet) + (lastSampleAL * (1.0-bWet));
+			dryStageBL = inputSampleL = (inputSampleL * bWet) + (dryStageAL * (1.0-bWet));
 			//second stage adds upon first stage, crossfade between them
 			outSampleR = (inputSampleR - lastSampleBR)*trim;
 			lastSampleBR = inputSampleR; inputSampleR = outSampleR;
-			inputSampleR = (inputSampleR * bWet) + (lastSampleAR * (1.0-bWet));
+			dryStageBR = inputSampleR = (inputSampleR * bWet) + (dryStageAR * (1.0-bWet));
 			//second stage adds upon first stage, crossfade between them
 		}
 		
@@ -115,20 +121,26 @@ void SlewSonic::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			biquadC[12] = biquadC[11]; biquadC[11] = inputSampleR; inputSampleR = outSampleR; biquadC[14] = biquadC[13]; biquadC[13] = inputSampleR; //DF1 right
 			outSampleL = (inputSampleL - lastSampleCL)*trim;
 			lastSampleCL = inputSampleL; inputSampleL = outSampleL;
-			inputSampleL = (inputSampleL * cWet) + (lastSampleBL * (1.0-cWet));
+			inputSampleL = (inputSampleL * cWet) + (dryStageBL * (1.0-cWet));
 			//third stage adds upon second stage, crossfade between them
 			outSampleR = (inputSampleR - lastSampleCR)*trim;
 			lastSampleCR = inputSampleR; inputSampleR = outSampleR;
-			inputSampleR = (inputSampleR * cWet) + (lastSampleBR * (1.0-cWet));
+			inputSampleR = (inputSampleR * cWet) + (dryStageBR * (1.0-cWet));
 			//third stage adds upon second stage, crossfade between them
 		}
 		
 		
-		outSampleL = biquadD[2]*inputSampleL+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
-		biquadD[8] = biquadD[7]; biquadD[7] = inputSampleL; inputSampleL = outSampleL; biquadD[10] = biquadD[9]; biquadD[9] = inputSampleL; //DF1 left
-		outSampleR = biquadD[2]*inputSampleR+biquadD[3]*biquadD[11]+biquadD[4]*biquadD[12]-biquadD[5]*biquadD[13]-biquadD[6]*biquadD[14];
-		biquadD[12] = biquadD[11]; biquadD[11] = inputSampleR; inputSampleR = outSampleR; biquadD[14] = biquadD[13]; biquadD[13] = inputSampleR; //DF1 right
-		//final post-slew-only stage always runs, minimum of one stage on dry and two on single slew-only
+		if (aWet > 0.0) {
+			dryFinalBiquadL = inputSampleL;
+			dryFinalBiquadR = inputSampleR;
+			outSampleL = biquadD[2]*inputSampleL+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
+			biquadD[8] = biquadD[7]; biquadD[7] = inputSampleL; inputSampleL = outSampleL; biquadD[10] = biquadD[9]; biquadD[9] = inputSampleL; //DF1 left
+			outSampleR = biquadD[2]*inputSampleR+biquadD[3]*biquadD[11]+biquadD[4]*biquadD[12]-biquadD[5]*biquadD[13]-biquadD[6]*biquadD[14];
+			biquadD[12] = biquadD[11]; biquadD[11] = inputSampleR; inputSampleR = outSampleR; biquadD[14] = biquadD[13]; biquadD[13] = inputSampleR; //DF1 right
+			//final post-slew-only stage always runs, minimum of one stage on dry and two on single slew-only
+			inputSampleL = (inputSampleL * aWet) + (dryFinalBiquadL * (1.0-aWet));
+			inputSampleR = (inputSampleR * aWet) + (dryFinalBiquadR * (1.0-aWet));
+		}
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
@@ -162,7 +174,7 @@ void SlewSonic::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* out2 = outputs[1];
 	
 	double trim = 2.302585092994045684017991; //natural logarithm of 10
-	double freq = ((A*20000.0)+10000.0) / getSampleRate();
+	double freq = ((A*20000.0)+5000.0) / getSampleRate();
 	if (freq > 0.499) freq = 0.499;
 	biquadD[0] = biquadC[0] = biquadB[0] = biquadA[0] = freq;
 	biquadA[1] = 2.24697960; //tenth order Butterworth out of five biquads
@@ -204,11 +216,11 @@ void SlewSonic::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	
 	double aWet = 0.0;
 	double bWet = 0.0;
-	double cWet = B;
+	double cWet = B * 3.0;
 	//eight-stage wet/dry control using progressive stages that bypass when not engaged
 	if (cWet < 1.0) {aWet = cWet; cWet = 0.0;}
 	else if (cWet < 2.0) {bWet = cWet - 1.0; aWet = 1.0; cWet = 0.0;}
-	else {cWet -= 7.0; cWet = bWet = aWet = 1.0;}
+	else {cWet -= 2.0; bWet = aWet = 1.0;}
 	//this is one way to make a little set of dry/wet stages that are successively added to the
 	//output as the control is turned up. Each one independently goes from 0-1 and stays at 1
 	//beyond that point: this is a way to progressively add a 'black box' sound processing
@@ -222,6 +234,12 @@ void SlewSonic::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
+		double dryStageAL = 0.0;
+		double dryStageBL = 0.0;
+		double dryStageAR = 0.0;
+		double dryStageBR = 0.0;
+		double dryFinalBiquadL = 0.0;
+		double dryFinalBiquadR = 0.0;
 		double outSampleL = 0.0;
 		double outSampleR = 0.0;
 		
@@ -232,11 +250,11 @@ void SlewSonic::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			biquadA[12] = biquadA[11]; biquadA[11] = inputSampleR; inputSampleR = outSampleR; biquadA[14] = biquadA[13]; biquadA[13] = inputSampleR; //DF1 right
 			outSampleL = (inputSampleL - lastSampleAL)*trim;
 			lastSampleAL = inputSampleL; inputSampleL = outSampleL;
-			inputSampleL = (inputSampleL * aWet) + (drySampleL * (1.0-aWet));
+			dryStageAL = inputSampleL = (inputSampleL * aWet) + (drySampleL * (1.0-aWet));
 			//first stage always runs, dry/wet between raw signal and this
 			outSampleR = (inputSampleR - lastSampleAR)*trim;
 			lastSampleAR = inputSampleR; inputSampleR = outSampleR;
-			inputSampleR = (inputSampleR * aWet) + (drySampleR * (1.0-aWet));
+			dryStageAR = inputSampleR = (inputSampleR * aWet) + (drySampleR * (1.0-aWet));
 			//first stage always runs, dry/wet between raw signal and this
 		}
 		
@@ -247,11 +265,11 @@ void SlewSonic::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			biquadB[12] = biquadB[11]; biquadB[11] = inputSampleR; inputSampleR = outSampleR; biquadB[14] = biquadB[13]; biquadB[13] = inputSampleR; //DF1 right
 			outSampleL = (inputSampleL - lastSampleBL)*trim;
 			lastSampleBL = inputSampleL; inputSampleL = outSampleL;
-			inputSampleL = (inputSampleL * bWet) + (lastSampleAL * (1.0-bWet));
+			dryStageBL = inputSampleL = (inputSampleL * bWet) + (dryStageAL * (1.0-bWet));
 			//second stage adds upon first stage, crossfade between them
 			outSampleR = (inputSampleR - lastSampleBR)*trim;
 			lastSampleBR = inputSampleR; inputSampleR = outSampleR;
-			inputSampleR = (inputSampleR * bWet) + (lastSampleAR * (1.0-bWet));
+			dryStageBR = inputSampleR = (inputSampleR * bWet) + (dryStageAR * (1.0-bWet));
 			//second stage adds upon first stage, crossfade between them
 		}
 		
@@ -262,20 +280,26 @@ void SlewSonic::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			biquadC[12] = biquadC[11]; biquadC[11] = inputSampleR; inputSampleR = outSampleR; biquadC[14] = biquadC[13]; biquadC[13] = inputSampleR; //DF1 right
 			outSampleL = (inputSampleL - lastSampleCL)*trim;
 			lastSampleCL = inputSampleL; inputSampleL = outSampleL;
-			inputSampleL = (inputSampleL * cWet) + (lastSampleBL * (1.0-cWet));
+			inputSampleL = (inputSampleL * cWet) + (dryStageBL * (1.0-cWet));
 			//third stage adds upon second stage, crossfade between them
 			outSampleR = (inputSampleR - lastSampleCR)*trim;
 			lastSampleCR = inputSampleR; inputSampleR = outSampleR;
-			inputSampleR = (inputSampleR * cWet) + (lastSampleBR * (1.0-cWet));
+			inputSampleR = (inputSampleR * cWet) + (dryStageBR * (1.0-cWet));
 			//third stage adds upon second stage, crossfade between them
 		}
 		
 		
-		outSampleL = biquadD[2]*inputSampleL+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
-		biquadD[8] = biquadD[7]; biquadD[7] = inputSampleL; inputSampleL = outSampleL; biquadD[10] = biquadD[9]; biquadD[9] = inputSampleL; //DF1 left
-		outSampleR = biquadD[2]*inputSampleR+biquadD[3]*biquadD[11]+biquadD[4]*biquadD[12]-biquadD[5]*biquadD[13]-biquadD[6]*biquadD[14];
-		biquadD[12] = biquadD[11]; biquadD[11] = inputSampleR; inputSampleR = outSampleR; biquadD[14] = biquadD[13]; biquadD[13] = inputSampleR; //DF1 right
-		//final post-slew-only stage always runs, minimum of one stage on dry and two on single slew-only
+		if (aWet > 0.0) {
+			dryFinalBiquadL = inputSampleL;
+			dryFinalBiquadR = inputSampleR;
+			outSampleL = biquadD[2]*inputSampleL+biquadD[3]*biquadD[7]+biquadD[4]*biquadD[8]-biquadD[5]*biquadD[9]-biquadD[6]*biquadD[10];
+			biquadD[8] = biquadD[7]; biquadD[7] = inputSampleL; inputSampleL = outSampleL; biquadD[10] = biquadD[9]; biquadD[9] = inputSampleL; //DF1 left
+			outSampleR = biquadD[2]*inputSampleR+biquadD[3]*biquadD[11]+biquadD[4]*biquadD[12]-biquadD[5]*biquadD[13]-biquadD[6]*biquadD[14];
+			biquadD[12] = biquadD[11]; biquadD[11] = inputSampleR; inputSampleR = outSampleR; biquadD[14] = biquadD[13]; biquadD[13] = inputSampleR; //DF1 right
+			//final post-slew-only stage always runs, minimum of one stage on dry and two on single slew-only
+			inputSampleL = (inputSampleL * aWet) + (dryFinalBiquadL * (1.0-aWet));
+			inputSampleR = (inputSampleR * aWet) + (dryFinalBiquadR * (1.0-aWet));
+		}
 		
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		if (inputSampleL < -1.0) inputSampleL = -1.0;

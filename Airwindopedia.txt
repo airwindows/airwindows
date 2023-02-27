@@ -15,7 +15,7 @@ Bass: Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
 Biquads: BiquadPlus, Biquad, BiquadDouble, BiquadOneHalf, BiquadTriple, Biquad2
 
-Brightness: DeBess, Acceleration2, DeEss, Smooth, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
+Brightness: SlewSonic, DeBess, Acceleration2, DeEss, Smooth, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
 
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
@@ -2973,6 +2973,20 @@ SlewOnly gives you what it says on the tin: only the difference between samples,
 SubsOnly does the same thing for subsonic bass. It sounds a little like a house party from an adjacent house. You can tweak sub-bass elements and really hear how they’re balancing against each other, and if you’re packing too much into the subs you’ll hear that as well. Get things thumping properly through SubsOnly and it should translate well to all manner of bassbins and subwoofers.
 
 Lastly, these are calibrated (in SlewOnly quite literally: pink noise will be about the same amplitude with or without it, though the tone will be way different) so that you can switch them in and out, and expect roughly the same loudnesses. It’s okay if SubsOnly is louder for fullbodied bass: with that, it’s not so much about level-matching, it’s about getting your sound (at whatever desired loudness) and then having the bass still make sense through SubsOnly. If you’re madly overloading it, there won’t be groove, just a lot of thunder and noise, at elevated levels. These go on at the end of your master buss, so you can hear what your 2-buss chain did to the sound. Especially if you try and go for ‘commercially loud’ volumes, sanity checking with these tools can be a real silver bullet.
+
+############ SlewSonic combines SlewOnly with ultrasonic filtering to solo brightness.
+
+This plugin was a journey! The video isn't even its final form. The idea was to find out whether SlewOnly aliases. Could you filter out ultrasonics and get a smoother SlewOnly?
+
+The answer is 'kinda', but then things got out of hand…
+
+SlewSonic lets you stack up as many as three instances of SlewOnly, each with ultrasonic filtering around them to resist aliasing. Except it's not always ultrasonic, because now you can set it from 25k all the way down to 5k. When you do that, you get the smoothest, darkest SlewOnly ever!
+
+But what even is SlewOnly? It's a monitoring plugin, very simple, that shows only the extreme treble, and balances the levels in a calibrated way to help you mix. SlewOnly is in all versions of Airwindows Monitoring, alongside SubsOnly and PeakOnly. It's there to show you stuff you wouldn't hear off just the regular mix. So if you switch over to SlewOnly, it should still be a mix, still about the same volume, still about the same density.
+
+The thing is, when you stack those up, the calibrated volume adjustment gets more and more extreme. So mega-boosts can create really LOUD super-treble. And this could be useful highlighting cymbals, whispers… anything where you want to solo those frequencies. The Bright control fades between the direct sound and one, two or three stages of SlewOnly, and the Mute control specifies the highest frequencies you keep, so it could fight aliasing even at lower sample rates.
+
+I'm imagining this as a tool for dedicated hi-hat tracks, stuff like that. You should be able to get exactly what you want. Hope you like SlewSonic!
 
 ############ Smooth can tame pointy sounds or make drums explode.
 
