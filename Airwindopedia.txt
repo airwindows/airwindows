@@ -36,7 +36,7 @@ Lo-Fi: Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitt
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: Verbity2, Galactic, Verbity, Chamber, Infinity2, NonlinearSpace, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: Verbity2, Galactic, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -578,6 +578,28 @@ Hope you like it. Oh, and one more thing: in working on this, I found a bug that
 So now (as of right now: redownload what you need) Verbity, Galactic, IronOxideClassic2, and Chamber are FIXED. Go back and redownload them, or get them out of the collections for various different platforms. They have all had the ultrasonic noise cleaned up: there is still a touch of audio there as part of the algorithm, but it turns out it’s much less than I thought and that’s reflected in cleaner sound. It should not change saved mixes significantly as it is entirely supersonic, but if it did it would only help as the traces of noise weren’t useful for any purpose, they were a bug, samples being slightly out of order at 96 and 192k. No change at 44.1 or 48k.
 
 Chamber actually goes a step farther, in that I added more code that subtly averages the supersonic samples… that can apply to new plugins going forward, but Verbity, Galactic, and IronOxideClassic2 don’t have that as it could work like a tone change. So, compare the new Verbity to Chamber if you’d like to check out the tiny amount of added depth we’ll have going forward.
+
+############ Chamber2 is a feedforward reverb, a blur delay, and a glitch topping!
+
+Sometimes you just want to watch the glitch BURN…
+
+So here's what happened. I wanted to try a modification to Chamber. It's a reverb where every delay time inside the feedforward network was exactly the golden ratio of the next. Why? Why not, I thought. What happened with that was, I got a sort of oddly-colored echo, but one that turned into very seamless reverb as long as you had some regeneration in there. Interesting! And so I coded a reverb where some of the delay taps were quite tiny, and that's Chamber.
+
+But what would happen if it wasn't always the golden ratio? What if you tried other ratios?
+
+Well, nothing for it but to try it, right? And I had to take ALL the delays inside, and make them potentially full length echoes, meaning the amount of memory it takes is WAY larger than what original Chamber wants. You can get the original tones out of it, but in doing that you're wasting huge amounts of delay buffer. The plugin just doesn't see them at all, and they sit there doing nothing. So, don't use Chamber2 where Chamber will do.
+
+What happens when you have the 'thick' control at 0? You have the most expensive, wasteful, CPU and memory hogging delay ever. You've got over 4000 delays, all precisely the same. So don't do that either (note: if it were only that simple)
+
+But what if you put 'thick' slightly off 0? You now have a blur echo. You've got a delay which is also a Chamber reverb in which all the echoes are ALMOST the same. And you can dial in the blurriness of this echo. Not only that, regeneration will further blur the echo. So you can take the no-blur setting, and sweep the 'thick' control higher while regenerating. And it'll (somewhat glitchily: you are buffer smashing) blur its way from direct echo into a chamber reverb, which will also make the echo happen faster (your internal delays are getting shorter, all in synchronization).
+
+And then you can let the regenerations fade away. And then… what if you snap the 'thick' control back to 0 again?
+
+Suddenly you have a full-on glitch buffer effect, from audio you had in the sample buffers when you went to the chamber reverb effect. Boom, there it is, at whatever delay rate you have set on the 'size' control at top.
+
+Obviously this is extremely nasty. But it's also a shocking, bold effect with a tinge of the accidental. And when the effect turns up in the VCV Rack dailies, or is used in Bespoke or wherever… it's an open invitation to throw crazy LFOs and sample-and-hold on the 'thick' control, and just use Chamber2 as a glitchy noise generator. It'll grab buffer snippets from its delay mode, it'll blur them into reverb, it'll throw other echo bits on top of that: a proper mad scientist laboratory for sonic mayhem, from your friendly neighborhood Chris.
+
+You can dial in nice verb/echo hybrid sounds and use those too, I won't stop you. I'm just making sure everyone understands the possibilities of this one. Chamber2 glitches in very special ways. Hope youu like it :)
 
 ############ Channel4 is a tone coloring plugin that gives more of an analog feel.
 
