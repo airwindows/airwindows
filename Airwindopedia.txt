@@ -599,7 +599,7 @@ Suddenly you have a full-on glitch buffer effect, from audio you had in the samp
 
 Obviously this is extremely nasty. But it's also a shocking, bold effect with a tinge of the accidental. And when the effect turns up in the VCV Rack dailies, or is used in Bespoke or wherever… it's an open invitation to throw crazy LFOs and sample-and-hold on the 'thick' control, and just use Chamber2 as a glitchy noise generator. It'll grab buffer snippets from its delay mode, it'll blur them into reverb, it'll throw other echo bits on top of that: a proper mad scientist laboratory for sonic mayhem, from your friendly neighborhood Chris.
 
-You can dial in nice verb/echo hybrid sounds and use those too, I won't stop you. I'm just making sure everyone understands the possibilities of this one. Chamber2 glitches in very special ways. Hope youu like it :)
+You can dial in nice verb/echo hybrid sounds and use those too, I won't stop you. I'm just making sure everyone understands the possibilities of this one. Chamber2 glitches in very special ways. Hope you like it :)
 
 ############ Channel4 is a tone coloring plugin that gives more of an analog feel.
 
@@ -961,6 +961,22 @@ The whole idea with CStrip was to do the channel strip, but take it out into str
 CStrip also uses a technique I came to rely on, where if a component of the plugin isn’t being used (for instance, the lowpass and highpass when set to their extremes switch off) then it gets completely bypassed, and not even the math of the component is used: this is sort of like how ‘unity gain’ in code isn’t the same as ‘bypass’. (if you’re in floating point and you’re multiplying by 1.0, you’re also doing a math operation at a given exponent and this can wipe out floating point values at very different levels of detail)
 
 But that’s getting too wonky: I hope you enjoy CStrip.
+
+############ CStrip2 refines and optimizes CStrip, by request!
+
+It's been a while since we've seen an Airwindows channel strip! Here's why CStrip2 is here.
+
+First, I was asked to do it. Specifically, I was asked to take the delay-trim and gate out of CStrip, and also to replace the highpass and lowpass with Capacitor, and keep the compressor exactly as it is, and also could I put a saturation effect on the end? That sort of thing doesn't always click with me, but hang on a moment, there's more.
+
+Second, we've got an Airwindows port to VCV Rack (which might expand to a CLAP, or more, along the same lines) but it's limited to ten controls. There are only two Airwindows plugins with more than ten controls. One is Pafnuty (which would be well suited to Rack or Rack-like environments). The other… is CStrip.
+
+Or WAS, because CStrip2 is here!
+
+There are also related things. It seems to me the EQ technique I use might fit in future versions of Console that include built-in EQ, and model famous recording desks, especially old ones. That's not to say the CStrip EQ is designed to do that, because it's not: but it covers some interesting bases, like saturating boosts to bring them forward and unsaturating cuts to drop them back, and the relatively shallow slopes lend themselves to fixed-frequency built in EQ bands. There are classic desk topologies where the channels and busses have idiosyncratic choices for the EQ bands, and to model that would tend to bring outputs into the realms of classic albums done on those desks. I've got more Console summing algorithms in the works to support this exploration.
+
+Oh, and that output saturation goes like this: 0 to 1/3 is dry signal, 1/3 to 2/3 crossfades into Spiral like it is on the plugin Channel (versions 7, 8 and 9 have this) and 2/3 to 1 crossfades into the Density algorithm for maximum fatness and drive. This is probably going to be fun for people to play with, or leave it below 1/3 if you want clean output.
+
+That's CStrip2! I hope you like it :)
 
 ############ curve is the simplest, purest form of Recurve with no extra boosts.
 
