@@ -7,7 +7,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 # Categories
 
-Ambience: TapeDelay2, Doublelay, PitchDelay, BrightAmbience3, TripleSpread, Melt, MV, ADT, StereoChorus, PurestEcho, TapeDelay, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
+Ambience: TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV, ADT, StereoChorus, PurestEcho, TapeDelay, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
 Amp Sims: GrindAmp, FireAmp, LeadAmp, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
@@ -2891,6 +2891,25 @@ The audible clipping happens when you push your LUFS levels beyond the target. A
 What’s happening is, the saturation from the Spiral algorithm is being fed into ShortBuss, which fills the energy back into the mix in the form of second harmonic. This is what gives Righteous4 its tone and extra warmth, and it’s a nice fullness and bloom UNLESS you’re slamming it (it’s calibrated using the slider, where you select your target). If you are too loud, you’ll hear it. Your peak energy will still be going up to the real clipping threshold, just as before, but your RMS energy will tell you how loud you should go.
 
 It’s that simple. You don’t have to use it to hit LUFS targets, but since it’s got Spiral in there it also broadens the heck out of the ‘target range’ so you can pick whatever seems right to you, and it’ll guide you. If you find you need to push louder, you can set Righteous4 for a higher target, and that will clean it right up and let you push harder into the internal ADClip. If you’re looking for big dynamic range, you can set Righteous4’s target lower, or simply set it for Apple or YouTube loudnesses and then just don’t push into it very hard: this will give you dynamics, but the replay-gain services will be kinder to the result because it’s somewhat saturated and compressed, just in a very gentle way if you’re hitting it that gently. And of course the output’s optimized for whatever bit depth you’ve selected, so you can directly target CD or 24/96 or ’32 bit file to send to further mastering’ if you still need to mix into something more organic than a hard, brittle digital mix buss with all the charm of math :)
+
+
+############ SampleDelay is three delays combined: millisecond, sample and subsample.
+
+SampleDelay is a very simple thing, implemented in a particular way. It's not exactly an echo (though it can be), not exactly a timing adjustment tool, not exactly a sound shaper… more like, a little of all of those things.
+
+You've got up to 100 milliseconds of delay on the first control. On the second, you have 0 to 10 samples of delay, exactly. And on the third control, you have zero to one sample: you have a subsample trim. They all work separately and combine into a single delay, with an inverse/dry/wet control on the fourth slider.
+
+Why? Why like this?
+
+Sure, you can use part-dry and part-wet for a single slapback echo. Sure, you could set it to half-inverse and have total cancellation and make a comb-filter effect, or set it full wet… or full inverse… for a small timing adjustment on a multimiked setup.
+
+But let's consider that multimike setup. Suppose we're trying to get a snare mike in phase with nearby overheads. Well, one thing we could do is isolate the snare mic with an overhead, and set the snare to fully inverse (assuming the mic's phase isn't also flipped…) and dial in the timing to cancel as much as possible. Then, go to the opposite (inverse or wet) and you have your fully in phase signal.
+
+Same with multimiked guitar cabs. Find the beef by canceling it and then flipping from inverse to wet (or vice versa)
+
+Or, go for effect and have the spot mike stay inverted and don't bring it up as much, and it'll make things more bright and complex… or put it slightly off for a tonal shift. Three separately adjustable delay ranges down to the finest you could have, and the one inv/wet control to let you quickly do whatever you want.
+
+There's a reason I've been asked to bring this one back. Hope you like it. For some this will be a very boring effect. For others… not :)
 
 ############ Shape is an asymmetrical waveshaper for peak manipulating.
 
