@@ -217,7 +217,7 @@ void		SampleDelay::SampleDelayKernel::Process(	const Float32 	*inSourceP,
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double drySample = inputSample;
 
-		if (gcount < 1 || gcount > maxtime) {gcount = maxtime;}
+		if (gcount < 0 || gcount > maxtime) {gcount = maxtime;}
 		int count = gcount;
 		p[count] = inputSample;
 		count += offset;
