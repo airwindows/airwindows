@@ -170,8 +170,8 @@ void		Console0Buss::Console0BussKernel::Process(	const Float32 	*inSourceP,
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
-		if (inputSample > 2.8274333882308) inputSample = 2.8274333882308;
-		if (inputSample < -2.8274333882308) inputSample = -2.8274333882308;
+		if (inputSample > 2.8) inputSample = 2.8;
+		if (inputSample < -2.8) inputSample = -2.8;
 		if (inputSample > 0.0) inputSample = (inputSample*2.0)/(2.8274333882308-inputSample);
 		else inputSample = -(inputSample*-2.0)/(2.8274333882308+inputSample);
 		//BigFastArcSin output stage.

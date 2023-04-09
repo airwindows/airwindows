@@ -21,12 +21,12 @@ void Console0Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		if (inputSampleL > 2.8274333882308) inputSampleL = 2.8274333882308;
-		if (inputSampleL < -2.8274333882308) inputSampleL = -2.8274333882308;
+		if (inputSampleL > 2.8) inputSampleL = 2.8;
+		if (inputSampleL < -2.8) inputSampleL = -2.8;
 		if (inputSampleL > 0.0) inputSampleL = (inputSampleL*2.0)/(2.8274333882308-inputSampleL);
 		else inputSampleL = -(inputSampleL*-2.0)/(2.8274333882308+inputSampleL);
-		if (inputSampleR > 2.8274333882308) inputSampleR = 2.8274333882308;
-		if (inputSampleR < -2.8274333882308) inputSampleR = -2.8274333882308;
+		if (inputSampleR > 2.8) inputSampleR = 2.8;
+		if (inputSampleR < -2.8) inputSampleR = -2.8;
 		if (inputSampleR > 0.0) inputSampleR = (inputSampleR*2.0)/(2.8274333882308-inputSampleR);
 		else inputSampleR = -(inputSampleR*-2.0)/(2.8274333882308+inputSampleR);
 		//BigFastArcSin output stage.
@@ -64,12 +64,12 @@ void Console0Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		if (inputSampleL > 2.8274333882308) inputSampleL = 2.8274333882308;
-		if (inputSampleL < -2.8274333882308) inputSampleL = -2.8274333882308;
+		if (inputSampleL > 2.8) inputSampleL = 2.8;
+		if (inputSampleL < -2.8) inputSampleL = -2.8;
 		if (inputSampleL > 0.0) inputSampleL = (inputSampleL*2.0)/(2.8274333882308-inputSampleL);
 		else inputSampleL = -(inputSampleL*-2.0)/(2.8274333882308+inputSampleL);
-		if (inputSampleR > 2.8274333882308) inputSampleR = 2.8274333882308;
-		if (inputSampleR < -2.8274333882308) inputSampleR = -2.8274333882308;
+		if (inputSampleR > 2.8) inputSampleR = 2.8;
+		if (inputSampleR < -2.8) inputSampleR = -2.8;
 		if (inputSampleR > 0.0) inputSampleR = (inputSampleR*2.0)/(2.8274333882308-inputSampleR);
 		else inputSampleR = -(inputSampleR*-2.0)/(2.8274333882308+inputSampleR);
 		//BigFastArcSin output stage.
