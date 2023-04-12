@@ -258,7 +258,7 @@ void		NaturalizeDither::NaturalizeDitherKernel::Process(	const Float32 	*inSourc
 		
 		totalA = byn[1] + byn[2] + byn[3] + byn[4] + byn[5] + byn[6] + byn[7] + byn[8] + byn[9];
 		totalA /= 1000;
-		if (totalA = 0) totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
+		totalA = 1; // spotted by Laserbat: this 'scaling back' code doesn't. It always divides by the fallback of 1. Old NJAD doesn't scale back the things we're comparing against. Kept to retain known behavior, use the one in StudioTan and Monitoring for a tuned-as-intended NJAD.
 		byn[1] /= totalA;
 		byn[2] /= totalA;
 		byn[3] /= totalA;

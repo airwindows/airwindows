@@ -693,7 +693,7 @@ void		CStrip::CStripKernel::Process(	const Float32 	*inSourceP,
 		//end EQ
 		
 		//begin Timing
-		if (engageTiming = true)
+		if (engageTiming)
 		{
 			if (count < 1 || count > 2048) {count = 2048;}
 			p[count+2048] = p[count] = inputSample;

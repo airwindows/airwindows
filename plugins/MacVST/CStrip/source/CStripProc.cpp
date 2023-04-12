@@ -607,7 +607,7 @@ void CStrip::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		//end EQ
 		
 		//begin Timing
-		if (engageTiming = true)
+		if (engageTiming)
 		{
 			if (count < 1 || count > 2048) count = 2048;
 			
@@ -1309,7 +1309,7 @@ void CStrip::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		//end EQ
 		
 		//begin Timing
-		if (engageTiming = true)
+		if (engageTiming)
 		{
 			if (count < 1 || count > 2048) count = 2048;
 			
