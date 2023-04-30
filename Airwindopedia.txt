@@ -38,7 +38,7 @@ Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat,
 
 Reverb: kPlateD, kPlateB, kPlateA, kPlateC, Verbity2, Galactic, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, Infinity, MatrixVerb, PocketVerbs, Reverb
 
-Saturation: NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
+Saturation: Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
 Stereo: Srsly, Srsly2, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, Sidepass, SideDull
 
@@ -1888,6 +1888,22 @@ If you’re playing with super-short echoes, you’re reinforcing the lows. Unle
 I’m not Billy and Terry. Since I’m Chris, I’ll fess up: that’s exactly what I did, and you can have it in Hombre. It’s two calibrated delay taps, which you can tweak a little, and if you bring them in you’ll thicken and diffuse your tones without altering where the lows sit, or adding much in the way of extra sustain. It’ll be punchy and get out of the way like reverb won’t, but it’ll be fatter and juicier than the dry signal. This is my interpretation of the ZZ Top secret sauce, or at least one of ’em, implemented in software rather than acoustics.
 
 I’ll never know how close I came, because them Texas boys don’t tell tales out of school. But Hombre is my humble offering for a simple plugin that brings a little mojo to what would otherwise be a dry voice or guitar… and it won’t muddy things up, just grease ’em a little.
+
+############ Huge is a dirty, dirty loudenator.
+
+So the idea here was to explore a trick people are doing with Pafnuty: adding just a few odd harmonics, to get really smooth and mellow saturation. You can keep going, and the more harmonics you add the closer you get to a square wave (or just really intense saturation), but when you intentionally pick just a couple it means all your lower frequencies are totally free of aliasing, since you're not really saturating: just doing a transform that gives you only the added harmonics. If those are below the Nyquist frequency, you automatically have zero aliasing.
+
+But what do you get if you do this, and then magically omit all the frequencies that are so high that they'd be aliasing?
+
+Probably wonderful ultimate loudenation. And Huge is not that.
+
+Instead, it's tracking the slew rates of all the outputs and just watches to see if those high frequencies are wiggling too fast… and cuts them off if they are. So in theory it's doing the wonderful clean ultimate high saturation with never an aliasing frequency.
+
+And in practice it's just STUPID LOUD with extra bassiness and a level of dirt and grunge you wouldn't believe, from all those harmonics switching on and off. Clearly there are still some bugs in the system. This is not the lovely pure pristine loudenator, it's a kind of monster, unlike anything I've heard.
+
+There is one control apart from the boost control (that's roughly unity gain at about 0.2: it's simply an input trim, that's all it does). The other control is Nasty. You could also call it Placebo, as damn if I can work out whether it's doing much: I find it, too, seems good at around 0.2 but I could be wrong. It's controlling how aggressively the plugin cuts off harmonics, so when you increase Nasty, it should allow the harmonics to go closer to aliasing. That said, if you send test tones through this, you'll get a confusing mess, and if you send clean sounds through it, you'll get a rude shock.
+
+If you send loud aggressive sounds through it you will level buildings. Choose wisely, and enjoy :)
 
 ############ Hull is an alternate form of highpass/lowpass filter.
 
