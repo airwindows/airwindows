@@ -3,7 +3,7 @@
 *	
 *	Version:	1.0
 * 
-*	Created:	2/27/23
+*	Created:	5/10/23
 *	
 *	Copyright:  Copyright © 2023 Airwindows, Airwindows uses the MIT license
 * 
@@ -54,9 +54,18 @@
 #pragma mark ____Console0Channel Parameters
 
 // parameters
+static const float kDefaultValue_ParamOne = 0.5;
+static const float kDefaultValue_ParamTwo = 0.5;
+
+static CFStringRef kParameterOneName = CFSTR("Vol");
+static CFStringRef kParameterTwoName = CFSTR("Pan");
+//Alter the name if desired, but using the plugin name is a start
 
 enum {
-	kNumberOfParameters=0
+	kParam_One =0,
+	kParam_Two =1,
+	//Add your parameters here...
+	kNumberOfParameters=2
 };
 
 #pragma mark ____Console0Channel
@@ -68,8 +77,13 @@ public:
 	virtual ~Console0Channel () { delete mDebugDispatcher; }
 #endif
 	
-	virtual AUKernelBase *		NewKernel() { return new Console0ChannelKernel(this); }
-	
+	virtual ComponentResult Reset(AudioUnitScope inScope, AudioUnitElement inElement);
+
+	virtual OSStatus ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags, 
+						const AudioBufferList & inBuffer, AudioBufferList & outBuffer, 
+						UInt32 inFramesToProcess);
+	virtual UInt32 SupportedNumChannels(const AUChannelInfo ** outInfo);
+
 	virtual	ComponentResult		GetParameterValueStrings(AudioUnitScope			inScope,
 														 AudioUnitParameterID		inParameterID,
 														 CFArrayRef *			outStrings);
@@ -88,7 +102,7 @@ public:
 											AudioUnitScope 		inScope,
 											AudioUnitElement 		inElement,
 											void *			outData);
-	
+
 	virtual ComponentResult    Initialize();
 	virtual bool				SupportsTail () { return true; }
     virtual Float64				GetTailTime() {return (1.0/GetSampleRate())*0.0;} //in SECONDS! gsr * a number = in samples
@@ -97,30 +111,14 @@ public:
 	/*! @method Version */
 	virtual ComponentResult		Version() { return kConsole0ChannelVersion; }
 	
-    
+	private:
 	
-protected:
-		class Console0ChannelKernel : public AUKernelBase		// most of the real work happens here
-	{
-public:
-		Console0ChannelKernel(AUEffectBase *inAudioUnit )
-		: AUKernelBase(inAudioUnit)
-	{
-	}
-		
-		// *Required* overides for the process method for this effect
-		// processes one channel of interleaved samples
-        virtual void 		Process(	const Float32 	*inSourceP,
-										Float32		 	*inDestP,
-										UInt32 			inFramesToProcess,
-										UInt32			inNumChannels,
-										bool			&ioSilence);
-		
-        virtual void		Reset();
-		
-		private: 
-		uint32_t fpd;
-	};
+	double avgAL;
+	double avgAR;
+	double avgBL;
+	double avgBR;
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
