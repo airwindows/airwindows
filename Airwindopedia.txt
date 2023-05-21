@@ -48,7 +48,7 @@ Tape: ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxide
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: Monitoring3, Monitoring2, Monitoring, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick
+Utility: Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YHighpass, YLowpass, YNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -360,6 +360,30 @@ And when it does, all the bits shift neatly to the side inside your audio, and w
 Perfection, at exclusively increments of 6 dB. That’s the catch. You probably can’t mix with gain changes that coarse (though it’s tempting to try!) but here’s what you can do: you can take 24-bit dithers, gain down 8 bits in front and 8 bits up after, and have a perfect 16 bit dither. Or a 17 bit, if that pleases you… or shift 16 bits down so you can hear what your dither’s noise floor acts like (we’ll be doing lots of that when I start bringing out the dithers). +-16 bits of gain trim is a very big boost or cut. The overall range of BitShiftGain is huge. But the real magic of BitShiftGain is the sheer simplicity of the concept. Provided your math is truly, rigorously accurate and your implementation’s perfect, gain trim with bit shift is the only way in digital (fixed OR floating point) where you can apply a change, and the word length of your audio doesn’t have to expand, AND every sample which remains in your audio continues to be in exactly the same relation to all the others.
 
 Digital audio is like some crystalline structure: it’s fragile, brittle, and suffers tiny fractures at the tiniest alterations. There’s almost nothing you can do in digital audio that’s not going to cause some damage. But as long as you stick to 6 dB steps and rigidly control the implementation (BitShiftGain doesn’t even store the audio in a temporary variable!), you can chip away at that least significant bit, and the whole minutes-or-hours-long crystalline structure of digital bits can remain perfectly intact above it.
+
+############ BitShiftPan gives you a gain and a pan control that are ONLY done using bit shifts.
+
+This is a request from YouTube comments, but I had no idea how well it'd work out! BitShiftGain is a long-standing secret weapon of mine. On almost every video, I'm losslessly dropping 6dB using BitShiftGain. But what would to get if you applied this to pan?
+
+You'd get a pan where center was quite a bit louder than sides (there's no 3 dB pan law from bit shifts), but the first steps to left and right are QUITE a lot to the side. It's not at all LCR panning, but if something's center you know it, and if something's to the side it's WAY to the side. Then, you have a succession of further-to-the-side positions that are progressively quieter, all the way to hard L and R. If that was all it was, this would seem really pointless and arbitrary.
+
+BUT.
+
+If you can construct a mix this way, you can construct a mix where every single gain setting, every pan position, every location in the mix, is Bit Shift Gain: utterly and completely lossless. No requantization, just like with BitShiftGain itself, but in full stereo (within these constraints). You're picking locations, but they're not LCR locations, they're a range of potential locations.
+
+There's more. Mixing with BitShiftGain in mono is impossibly crude. 6dB increments are seemingly impossible to mix with, absurd, insulting to even consider. But if you tick a track one step over to the side… that's now 3dB down, not 6. You've losslessly cut one side 6dB while leaving the other one unaltered.
+
+If you had two tracks, a doubletrack, and did this with just one of them, your 'track' (that's really two tracks) can shift 1.5 dB down, to the ear. Starting to sound more interesting? If you had four tracks and shifted just one of them, that's an apparent shift of 0.75 dB.
+
+Mixing isn't just about taking a single track and making it perfect. Mixing is how tracks sit relative to other tracks. If you have a full mix, and a track 40 dB down steps closer to the center bringing it up 3 dB in total, that makes all the other tracks seem just a tiny bit quieter in contrast. At every step, your ability to fiddle with 0.1dB adjustments is completely hobbled… but the framing of the TOTAL mix can take a whole new form.
+
+And at every point, across every track, at every position in the stereo field, the mantissa of every audio sample is EXACTLY as captured by the converter. Once it's mixed, you'll get a composite, but everything being fed to the mix buss at every level in every position is exactly the raw sample… scaled to fit.
+
+If you liked BitShiftGain for its utterly uncompromising transparency, beyond anything else even possible… now you have it, but with panning.
+
+If this approach, so ruthless in the desire to hang on to raw unprocessed intensity from the original digital captures, seems interesting… next week is Console Zero, built from the ground up to work using almost entirely bit shifts even inside the saturation/antisaturation calculations and anti-alias filtering. BitShiftPan is an ultimately clean gain trim, and apart from the 'steppy' positioning and lack of pan law, it's very normal and approachable. Console Zero… is radical.
+
+Thanks for the suggestion to try applying this to panning. Who knew so much would happen as a result?
 
 ############ BlockParty is like a moderately saturated analog limiter.
 
