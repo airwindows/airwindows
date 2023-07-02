@@ -28,7 +28,7 @@ Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither,
 
 Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
-Effects: Fracture2, Dubly, Pafnuty2, PitchNasty, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
+Effects: GalacticVibe, Fracture2, Dubly, Pafnuty2, PitchNasty, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
 Filter: Baxandall2, Capacitor2, CStrip2, Weight, Isolator2, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
 
@@ -1759,6 +1759,20 @@ I keep saying it's like the kPlate reverbs, but I checked the code and it's stil
 What this means is, if you put stuff in the left, it makes a sort of cloud of reverb sound that's also mostly on the left. If you put stuff in on the right, likewise: you'll get 'space' happening mix right.
 
 And if you put stuff in mono… you get WIDE center content. The whole texture is wider than what original Galactic can do, without use of chorusing or pitch shifting to widen it. That gives it a completely different character, which is why you've still got original Galactic to use if you want. This is a second bite of the apple. It's about trying to get even deeper into space, and I hope you enjoy it :)
+
+############ GalacticVibe is the stereo vibrato from the original Galactic reverb.
+
+GalacticVibe is about taking the code I used to make the Galactic reverb super wide, and breaking it out into a chorus-like effect… at which it turns out to be great!
+
+Used in Galactic, it's always full wet. It's a dual vibrato that's 'quadrature', meaning the channels are two different offsets on the same LFO. Except it's not exactly an LFO in the sense of low frequency oscillator, because it's slightly irregular. You don't hear it as being super off, but it's a somewhat organic quality whatever speed you choose.
+
+This produces two stereo outputs (even if you're just giving it mono) and the way they modulate is a bit like a miked-up Leslie: the pitch wavers across both channels. But then, if you add dry (which isn't part of Galactic's modulation) that blends against both stereo channels… and you end up with a nice little vibey chorus, with definite Leslie-like qualities, but without any of the speaker emulation and without an accurate pitch modulation on what would be the treble horns (instead, it's something else, a little smoother).
+
+So it turns out the modulation inside Galactic (Galactic2 is different) is quite nice just by itself! In particular, it seems very nice giving slow swirly effects, and ramping up to a quicker speed has a really striking 'leslie, but not leslie' quality. A happy accident that is now yours, because this is an open source, free plugin, so enjoy adding this tool to your stereo toolkit.
+
+All this is paid for by my Patreon, and the better that does the more I can do with it: as promised, the Bricasti reverb is here. Like I said I am not going to make a clone, but I am certain I can both get some useful k-series reverbs inspired by classic Bricasti patches, and design future reverb algorithms that incorporate more Bricast-isms, just from being able to hear it properly and make use of it in the studio. There's also the new Console versions coming along, currently in study mode as I explore a world of classic vinyl records heard in the fullest fidelity, and develop channel EQs that will go along with the new Console versions.
+
+Thanks, and hope you like GalacticVibe!
 
 ############ Gatelope is a special gate that applies filters.
 
