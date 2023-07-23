@@ -15,7 +15,7 @@ Bass: OrbitKick, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, Fatho
 
 Biquads: BiquadPlus, Biquad, BiquadDouble, BiquadOneHalf, BiquadTriple, Biquad2
 
-Brightness: DeBess, GoldenSlew, SlewSonic, Acceleration2, DeEss, Smooth, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
+Brightness: PlatinumSlew, DeBess, GoldenSlew, SlewSonic, Acceleration2, DeEss, Smooth, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
 
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
@@ -2738,6 +2738,22 @@ But then PitchNasty goes way beyond, in that Airwindows way. You've got two pitc
 And then the whole thing's followed by a Dry/Wet, and you can see that PitchNasty sticks so tightly to the underlying sound that you can get it acting like a giant flanger or strange overtone generator. And that's the other secret of the crude old Akai-like time/pitch processing: when you don't have any RAM or CPU to work with, you can only do naive primitive things that happen to sound really immediate, direct, alive. It doesn't lose the impact of a drum track. If you set it up to thicken a snare by applying, Eventide-like, a 30% layer of pitch up (or down, with feedback), there is no flam or hesitation to the sound like more sophisticated algorithms would have to do.  Instead, it's just THERE in the sound, with a hefty dose of digital gnarliness, but woven right in to make a very 80s composite sound that's huge and fierce.
 
 If you would like to use this as a time stretch, what you should do is open the source sound in an editor, change the sample rate without resampling until you have the new pitch you want and apply that, resample it back to what your working sample rate is (use a good resampling method, you don't need to use a bad one), THEN use PitchNasty to re-pitch it to what the target pitch is. That'll give you the time-stretch artifacts, because they are really just pitch-change artifacts used in a different light. Hope you like PitchNasty!
+
+############ PlatinumSlew is the best easy-to-use slew clipper.
+
+This is something I've specialized in for a while: types of processing that aren't common. Slew clipping is like what you see out of certain op-amps, circuits that can't keep up with high frequencies and are given semi-magical qualities having to do with just the right IC and so on. And you can program that, and I have (for instance my Channel plugins, or Guitar Conditioner).
+
+And then I discovered, in GoldenSlew, that you could cascade slew clippings and it'd actually give you a unique sound, unlike just using one slew clipping.
+
+And then it went beyond, as I tried to incorporate another previous sample and bring in the rate of change of the direction of the slew, and ran into strange audio bugs that were the digital equivalent of my circuits blowing up or short-circuiting, unable to handle what I was asking of them…
+
+…and came out the other end with PlatinumSlew (and a plan for a more complicated, control-laden plugin where I can get really detailed control over everything that happens in the plugin).
+
+The original Slew, and GoldenSlew after it, is a bit of an audio chainsaw. For instance, if you slam it to full crank it acts as a sample and hold, because that's literally what you get when you cut slew to 0.0: permanent holding of whatever voltage you had. Good for use in the VCV Rack port, not so good for subwoofers. So, don't use those for swooping the audio down to bass and then silence, especially not fast, or you'll trap energy.
+
+PlatinumSlew explores a new space in slew clipping where its algorithms don't hold energy in the same way. But what does it sound like? It sounds like a record. It sounds retro. What happens is, you can control the transients of the high-end, but then as you push further, as it gets darker, it also begins to alter the subsonics, the bass… which is something I've never been able to do, not like this. It's not a filter, this is a clipper. But it's not clipping the bass… it's hard to explain.
+
+Crank it way up and hear the odd things it does when you push it way too far… and know that you can bring in just tiny amounts of that very unusual, very retro, very vibey flavor. This tech is central to where I'm going with the new Console designs, as I come up with stuff that really truly sounds like classic desks. It immediately found its way into my music, taking my legit analog gear that last little distance it needed as post processing. It's mastering friendly if your tweeters and ears are good enough to hear its subtlest effects. And unlike the swiss army knife version I'm still developing, this one is one slider which can't be set wrong, and it's free and open source, and it's yours. Hope you like it :)
 
 ############ PocketVerbs is my popular old special effects reverbs plugin!
 

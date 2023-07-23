@@ -49,19 +49,18 @@ void PlatinumSlew::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		for (int x = 0; x < gslew_total; x += 5) {
-			
-			if (((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.381966011250105)) + gslew[x+4];
-			if (-((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.381966011250105)) - gslew[x+4];
-			gslew[x+2] = gslew[x];
+			if (((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.156)) + (gslew[x+4]*0.844);
+			if (-((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.2)) - (gslew[x+4]*0.8);
+			gslew[x+2] = gslew[x]*0.844;
 			gslew[x] = inputSampleL;
 			
-			if (((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.381966011250105)) + gslew[x+4];
-			if (-((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.381966011250105)) - gslew[x+4];
-			gslew[x+3] = gslew[x+1];
+			if (((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.156)) + (gslew[x+4]*0.844);
+			if (-((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.2)) - (gslew[x+4]*0.8);
+			gslew[x+3] = gslew[x+1]*0.844;
 			gslew[x+1] = inputSampleR;
 		}
 		
@@ -126,19 +125,18 @@ void PlatinumSlew::processDoubleReplacing(double **inputs, double **outputs, Vst
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
 		for (int x = 0; x < gslew_total; x += 5) {
-			
-			if (((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.381966011250105)) + gslew[x+4];
-			if (-((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.381966011250105)) - gslew[x+4];
-			gslew[x+2] = gslew[x];
+			if (((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.156)) + (gslew[x+4]*0.844);
+			if (-((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.2)) - (gslew[x+4]*0.8);
+			gslew[x+2] = gslew[x]*0.844;
 			gslew[x] = inputSampleL;
 			
-			if (((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.381966011250105)) + gslew[x+4];
-			if (-((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.381966011250105)) - gslew[x+4];
-			gslew[x+3] = gslew[x+1];
+			if (((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.156)) + (gslew[x+4]*0.844);
+			if (-((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
+				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.2)) - (gslew[x+4]*0.8);
+			gslew[x+3] = gslew[x+1]*0.844;
 			gslew[x+1] = inputSampleR;
 		}
 		
