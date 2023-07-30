@@ -15,7 +15,7 @@ Bass: OrbitKick, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, Fatho
 
 Biquads: BiquadPlus, Biquad, BiquadDouble, BiquadOneHalf, BiquadTriple, Biquad2
 
-Brightness: PlatinumSlew, DeBess, GoldenSlew, SlewSonic, Acceleration2, DeEss, Smooth, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
+Brightness: PlatinumSlew, DeBess, GoldenSlew, SlewSonic, Acceleration2, DeEss, Smooth, EverySlew, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
 
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
@@ -1607,6 +1607,21 @@ This work is supported by my Patreon, and I’m happy to say I’m back in the t
 Other stuff I’m working on is Atmosphere, DeRez, and the latest Righteous, Righteous4. Also, if anybody wants to meet me, and also enjoy a rather special academic experience, I’m attending a scholarly lecture by a certain Doctor Bill Bruford in Albany NY this Tuesday, which I’m very excited for. I have no idea how well this’ll go over but I have a smaller version of the famous bent cymbal he discovered (the real one tragically broke after much use), and I mean to give it to him as a gift in honor of his creativity in the field of timbre. Anyway, wild horses wouldn’t keep me away from there, so if my car behaves itself you can meet both me and a REAL great person ;)
 
 (as a follow-up, by 2022 I'm hanging down just above 100 in the global Patreon music rankings, and I did in fact get to Albany and the lecture by Bill Bruford. I got in late, and confused him with my cymbal gift after the lecture (Bruford: 'but it's not the one!' which, true, it was not, and I got quite flustered. I hope he understood in some way that I just wanted to give him something, somehow. And no Airwindows people were there, which simplified things I guess)
+
+
+############ EverySlew is a wide variety of unique sound processing tools.
+
+Where to even begin? This is the Swiss Army Chainsaw of treble processing plugins. It'll do Slew, GoldenSlew, PlatinumSlew, or any combination of them, forwards, backwards and inside out. I hesitate even to recommend it as there is no real introduction to it, or any other plugin or processor that will really teach you how to use it. If you'd like to just tame unruly high frequencies, you can still use GoldenSlew or PlatinumSlew, and as long as you can still hear audio coming out you're fine (don't crank up Slew or GoldenSlew all the way to 1.0 unless you want to sample and hold, because they will do what you asked).
+
+But if you're still reading, here's what you get extra in EverySlew, which is mainly for me to use developing versions of Console that sound like real analog desks.
+
+Firstly, the Depth control gives you number of stages, with full crank being the equivalent of GoldenSlew or PlatinumSlew. For many sounds there will be no difference between the full ten stages those have, and much fewer. It'll be hard to hear. Fewer stages means lighter CPU load, so I'll be finding optimal settings here, but it also means less of the 'golden' effect when given extreme inputs. When used to take off only the brightest highs (more on that later) you can use fewer stages with no penalty. Two or three should suffice: 0.2 or 0.3 or so.
+
+Secondly, the Halo control gives you a terrifying, industrial meltdown of a sound that also introduces attenuation into the deep bass. I called it Halo because it brings in an odd sparkliness and energy that could come in handy. It uses another level of previous-sample to try and identify actual corners, changes in the angle of the wave, like my DeEss and Acceleration plugins do. I've never got this algorithm to work until now: having made it work, it's a strange and unruly thing. Realistic settings will all be rather low, especially if Slew is anything like obvious. HIgh Halo settings are a kind of terrible distortion I've never quite heard before: I expect this to be used in anger to make some very aggressive noises not quite like any other (which is always handy, right?)
+
+Lastly, you've now got a dry/wet. But not JUST a dry/wet, an Inv/Dry/Wet. Dry is 0.5 on the control. Crank it up and you have full wet… but set it to Inv, and you can make it cancel out the dry signal. When you do that, it shows you only the bits that are slew clipping, and silences everything else. So, for the first time, it's a slew clipper where you can monitor the clipping only, and directly hear exactly what the thing is doing. And this is handy, because the effect is very hard to hear at the levels it should be used! It will tend to make things sound exactly like they already did, except with glue and space in the mix, combing over the stray edges and points. Setting it to Inv means you can hear the points being put into place. Also, if you're using Halo, you can hear when that begins to reshape the effect, bringing in lows and so on.
+
+EverySlew isn't for everybody. I made it because I'll need it. I share it because that's what I do. If you're the sort of person to like this sort of thing, I hope you like it :)
 
 ############ EveryTrim is Left/Right, Mid/Side, and Master in one plugin.
 
