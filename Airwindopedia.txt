@@ -19,7 +19,7 @@ Brightness: PlatinumSlew, DeBess, GoldenSlew, SlewSonic, Acceleration2, DeEss, S
 
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
-Consoles: Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole2Buss, PurestConsole2Channel,Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, 
+Consoles: Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, 
 Console4Buss, Console4Channel
 
 Distortion: Distortion, Edge, Dirt, Mackity, Density2, Density, Drive, Loud, Hard Vacuum, HighImpact, MultiBandDistortion
@@ -2964,8 +2964,8 @@ You can use PurestConsole in its capacity for ‘expanding’ verbs, delays, and
 
 I hope this simpler one is good right out of the gate, because I AM going to be sick for a while, but it might be something else to chew on, and if it is in fact so simple as to be flawless, you can work with this one right away :)
 
-############ PurestConsole2Buss is the anti-aliasing version of PurestConsole.
-############ PurestConsole2Channel is the anti-aliasing version of PurestConsole.
+############ PurestConsole2Buss is the distributed filter version of PurestConsole.
+############ PurestConsole2Channel is the distributed filter version of PurestConsole.
 
 Meet PurestConsole2.
 
@@ -2974,6 +2974,25 @@ This serves a special purpose in modern Airwindows Console mixes. I’ve got Con
 PurestConsole was always the ‘colorless, transparent’ take on any Console system, but with PurestConsole2 we’re stepping just a bit away from that, to serve as a complement to Console7. PurestConsole2 does the same ‘filter the super-highs to prevent aliasing’ thing that Console7 does. BUT, not quite the same. It starts higher (run it at 44 or 48k and it won’t even attempt to filter) to extend to 30k before filtering. But then it filters SHARPER… to roll off quicker. And in doing that, it gives you a presence peak beyond hearing. Not a huge one, but it’s there: it’s also on the end of the system, not (like Console7) going into the system. So PurestConsole2 gives you a sprinkling of treble glitter even while it rolls off the aliasing-prone frequencies more effectively.
 
 The end result is the same kind of analog warmth… except it’s a cool, airy clarity that resolves absolutely EVERYTHING. If you’re shooting for super-clear this is the one you want. And since Console mixes can drive submixes which then use another Console system to sum the stems to the 2-buss… you can sneak it in on your harmony vocal beds, or orchestral stems, or you could use Console7 for everything and then sum only the stems to the 2-buss using PurestConsole2. Instead of mixing and matching within the summing busses, design your mix structure by figuring out where you want analog fatness and slam, and where you want clarity and resolution.
+
+############ PurestConsole3Buss is an alternate algorithm for minimalist Console.
+############ PurestConsole3Channel is an alternate algorithm for minimalist Console.
+
+Instead of immediately doing EveryConsole, how about the final Console version it'll contain?
+
+This serves two purposes. First, it's an extension of the work I was doing in ConsoleZero: this is a custom sin()/asin() implementation along Airwindows lines, making it a little unusual. It uses a simple sin() approximation, but instead of being mathematically correct it applies all the multiplications and divides only in factors of two: bit shifts, in other words.
+
+This is what ConsoleZero did, but more simply. This extends that to improve the sin()/asin() calculation, but then it's not doing that correctly, it's another approximation to make every calculation preserve the mantissas of the numbers as much as possible, every step of the way. Doesn't matter if it seems like a ridiculous thing to do, that's the experiment, and you already have this in mathematically perfect sin()/asin() form anyway: the original PurestConsole is just that.
+
+The thing is, there are other gains. These new algorithms do so much with bit shifts that they're blazingly fast. Both this and ConsoleZero run fifteen tracks of mix on my M1 Macbook Pro at about 5% CPU, with a couple bonus plugins in there.
+
+And that means if you're running something like current Reaper, as I am… with chain and individual FX oversampling… you can do that. And so I've made a video where I'm demonstrating a 96k project mixed in PurestConsole3, with ALL the Console plugins oversampled to 768k. (unless, because it's starting at 96k, the 16x oversampling is actually giving me 1.536 megaherz oversampling?)
+
+And it went from 5% CPU, with presumably 16x oversampling on all Console tracks and the buss, at base 96k sampling rate, to 30% CPU. I could've doubled the project and it would still have run. (probably the original PurestConsole would not be able to do this)
+
+And it sounds… different! You'll hear it. You surely can do it. It's got its own sound. Not an Airwindows sound, I think. Sort of smoothed off and glossy. In the video I demonstrate this output, versus non-oversampled PurestConsole3, versus ConsoleZero. And, having heard all the original sounds off my instruments and modular, I think ConsoleZero is rawer and more accurate (that's sort of the idea). But now, if you have a great love for oversampled nonlinear plugins, PurestConsole3 is my little gift, an Airwindows Console version that's designed to work with, not against, what you like.
+
+Have fun, and I'll keep new stuff coming as well as I can!
 
 ############ PurestDrive is the magic saturation plugin of subtlety and French House tone.
 
