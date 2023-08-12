@@ -20,7 +20,7 @@ Brightness: PlatinumSlew, DeBess, GoldenSlew, SlewSonic, Acceleration2, DeEss, S
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
 Consoles: Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, 
-Console4Buss, Console4Channel
+Console4Buss, Console4Channel, EveryConsole
 
 Distortion: Distortion, Edge, Dirt, Mackity, Density2, Density, Drive, Loud, Hard Vacuum, HighImpact, MultiBandDistortion
 
@@ -1609,6 +1609,26 @@ Other stuff I’m working on is Atmosphere, DeRez, and the latest Righteous, Rig
 (as a follow-up, by 2022 I'm hanging down just above 100 in the global Patreon music rankings, and I did in fact get to Albany and the lecture by Bill Bruford. I got in late, and confused him with my cymbal gift after the lecture (Bruford: 'but it's not the one!' which, true, it was not, and I got quite flustered. I hope he understood in some way that I just wanted to give him something, somehow. And no Airwindows people were there, which simplified things I guess)
 
 
+############ EveryConsole is mix-and-match Airwindows Console.
+
+Sometimes I give people tools AS I am working on them…
+
+EveryConsole contains the original Console algorithm, Console6, Console7, the sin()/asin() routine that's the guts of Console8 and PurestConsoles 1 and 2, BShifty which is the near-sin() approximation that's in PurestConsole3 from last week, and Console Zero.
+
+All of these algorithms are stripped of all the tone shaping parts and ultrasonic filterings to be the bare-minimum functions for their purposes. That doesn't mean they are every Airwindows saturation routine: Distortion has more. But these are all the ones designed to encode and then decode on the buss.
+
+And, EveryConsole includes both the Channel functions, and the Buss functions, under one hood. So you basically select the version you want, and whether it's channel or buss.
+
+Because there's no filtering or tone shaping these lend themselves to oversampling, for instance Reaper's new oversampling. That doesn't mean it'll be better: I think it kinda won't, but if you have oversampling capacity this is now yours to fool with. EveryConsole gives you access to the raw encode/decode functions without making you use them in an Airwindows way.
+
+That's not why I made it, though. I'm working on modeling the sound of big classic consoles, and I've got a lot of audio reference, and I needed to do a lot of study of how different Console versions combined. I'm already working on doing tone shaping to get closer to the target, and I wondered whether mismatching Console versions got you types of presentations that reminded the listener of specific big consoles.
+
+That would be a YES.
+
+So I'm busily at work using this plugin to monitor a lot of variations on Console and compare them to classic records, and if I get to have a tool then so do you! So, here is EveryConsole. If you'd like to combine it with the distributed ultrasonic filtering I like to use, then load up UltrasonX or HypersonX and arrange the instances of those so they're in the right places around the EveryConsole instances. If you'd like more like Console7's ability to bring elements forward and back in mix, or Console8's tone, you have to use those as there's extra stuff built into the plugins. But if you want more basic building blocks to assemble your own Airwindows big console… this is for you as much as it is for me.
+
+Hope you like it!
+
 ############ EverySlew is a wide variety of unique sound processing tools.
 
 Where to even begin? This is the Swiss Army Chainsaw of treble processing plugins. It'll do Slew, GoldenSlew, PlatinumSlew, or any combination of them, forwards, backwards and inside out. I hesitate even to recommend it as there is no real introduction to it, or any other plugin or processor that will really teach you how to use it. If you'd like to just tame unruly high frequencies, you can still use GoldenSlew or PlatinumSlew, and as long as you can still hear audio coming out you're fine (don't crank up Slew or GoldenSlew all the way to 1.0 unless you want to sample and hold, because they will do what you asked).
@@ -2986,7 +3006,7 @@ This is what ConsoleZero did, but more simply. This extends that to improve the 
 
 The thing is, there are other gains. These new algorithms do so much with bit shifts that they're blazingly fast. Both this and ConsoleZero run fifteen tracks of mix on my M1 Macbook Pro at about 5% CPU, with a couple bonus plugins in there.
 
-And that means if you're running something like current Reaper, as I am… with chain and individual FX oversampling… you can do that. And so I've made a video where I'm demonstrating a 96k project mixed in PurestConsole3, with ALL the Console plugins oversampled to 768k. (unless, because it's starting at 96k, the 16x oversampling is actually giving me 1.536 megaherz oversampling?)
+And that means if you're running something like current Reaper, as I am… with chain and individual FX oversampling… you can do that. And so I've made a video where I'm demonstrating a 96k project mixed in PurestConsole3, with ALL the Console plugins oversampled to 768k. (unless, because it's starting at 96k, the 16x oversampling is actually giving me 1.536 megahertz oversampling?)
 
 And it went from 5% CPU, with presumably 16x oversampling on all Console tracks and the buss, at base 96k sampling rate, to 30% CPU. I could've doubled the project and it would still have run. (probably the original PurestConsole would not be able to do this)
 
