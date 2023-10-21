@@ -18,36 +18,16 @@ void ConsoleMCBuss::processReplacing(float **inputs, float **outputs, VstInt32 s
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
-	double source = 0.814/overallscale;	
-	gslew[threshold10] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold9] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold8] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold7] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold6] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold5] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold4] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold3] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold2] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold1] = source;
-	source *= 1.618033988749894848204586;
-	
+		
 	gainA = gainB;
 	gainB = sqrt(A); //smoothed master fader from Z2 filters
 	//this will be applied three times: this is to make the various tone alterations
 	//hit differently at different master fader drive levels.
 	//in particular, backing off the master fader tightens the super lows
-	//but opens up the EverySlew, because more of the attentuation happens before
+	//but opens up the modified Sinew, because more of the attentuation happens before
 	//you even get to slew clipping :) and if the fader is not active, it bypasses completely.
+	
+	double threshSinew = 0.5171104/overallscale;
 	
     while (--sampleFrames >= 0)
     {
@@ -120,23 +100,22 @@ void ConsoleMCBuss::processReplacing(float **inputs, float **outputs, VstInt32 s
 		//after C7Buss but before EverySlew: allow highs to come out a bit more
 		//when pulling back master fader. Less drive equals more open
 		
-		//begin EverySlew
-		for (int x = 20; x < gslew_total; x += 5) { //gslew_total is 50
-			
-			if (((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.141)) + (gslew[x+4]*(1.0-0.141));
-			if (-((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.141*0.78)) - (gslew[x+4]*(1.0-(0.141*0.78)));
-			gslew[x+2] = gslew[x]*(1.0-0.141);
-			gslew[x] = inputSampleL;
-			
-			if (((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.141)) + (gslew[x+4]*(1.0-0.141));
-			if (-((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.141*0.78)) - (gslew[x+4]*(1.0-(0.141*0.78)));
-			gslew[x+3] = gslew[x+1]*(1.0-0.141);
-			gslew[x+1] = inputSampleR;
-		}
+		temp = inputSampleL;
+		double clamp = inputSampleL - lastSinewL;
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
+		double sinew = threshSinew * cos(lastSinewL);
+		if (clamp > sinew) temp = lastSinewL + sinew;
+		if (-clamp > sinew) temp = lastSinewL - sinew;
+		inputSampleL = lastSinewL = temp;
+		temp = inputSampleR;
+		clamp = inputSampleR - lastSinewR;
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
+		sinew = threshSinew * cos(lastSinewR);
+		if (clamp > sinew) temp = lastSinewR + sinew;
+		if (-clamp > sinew) temp = lastSinewR - sinew;
+		inputSampleR = lastSinewR = temp;
 		
 		if (gain < 1.0) {
 			inputSampleL *= gain;
@@ -174,36 +153,16 @@ void ConsoleMCBuss::processDoubleReplacing(double **inputs, double **outputs, Vs
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-	
-	double source = 0.814/overallscale;	
-	gslew[threshold10] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold9] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold8] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold7] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold6] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold5] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold4] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold3] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold2] = source;
-	source *= 1.618033988749894848204586;
-	gslew[threshold1] = source;
-	source *= 1.618033988749894848204586;
-	
+		
 	gainA = gainB;
 	gainB = sqrt(A); //smoothed master fader from Z2 filters
 	//this will be applied three times: this is to make the various tone alterations
 	//hit differently at different master fader drive levels.
 	//in particular, backing off the master fader tightens the super lows
-	//but opens up the EverySlew, because more of the attentuation happens before
+	//but opens up the modified Sinew, because more of the attentuation happens before
 	//you even get to slew clipping :) and if the fader is not active, it bypasses completely.
+	
+	double threshSinew = 0.5171104/overallscale;
 	
     while (--sampleFrames >= 0)
     {
@@ -276,23 +235,22 @@ void ConsoleMCBuss::processDoubleReplacing(double **inputs, double **outputs, Vs
 		//after C7Buss but before EverySlew: allow highs to come out a bit more
 		//when pulling back master fader. Less drive equals more open
 		
-		//begin EverySlew
-		for (int x = 20; x < gslew_total; x += 5) { //gslew_total is 50
-			
-			if (((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.141)) + (gslew[x+4]*(1.0-0.141));
-			if (-((inputSampleL-gslew[x])-((gslew[x]-gslew[x+2])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleL = (gslew[x]-((gslew[x]-gslew[x+2])*0.141*0.78)) - (gslew[x+4]*(1.0-(0.141*0.78)));
-			gslew[x+2] = gslew[x]*(1.0-0.141);
-			gslew[x] = inputSampleL;
-			
-			if (((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.141)) + (gslew[x+4]*(1.0-0.141));
-			if (-((inputSampleR-gslew[x+1])-((gslew[x+1]-gslew[x+3])*0.618033988749894848204586)) > gslew[x+4])
-				inputSampleR = (gslew[x+1]-((gslew[x+1]-gslew[x+3])*0.141*0.78)) - (gslew[x+4]*(1.0-(0.141*0.78)));
-			gslew[x+3] = gslew[x+1]*(1.0-0.141);
-			gslew[x+1] = inputSampleR;
-		}
+		temp = inputSampleL;
+		double clamp = inputSampleL - lastSinewL;
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
+		double sinew = threshSinew * cos(lastSinewL);
+		if (clamp > sinew) temp = lastSinewL + sinew;
+		if (-clamp > sinew) temp = lastSinewL - sinew;
+		inputSampleL = lastSinewL = temp;
+		temp = inputSampleR;
+		clamp = inputSampleR - lastSinewR;
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
+		sinew = threshSinew * cos(lastSinewR);
+		if (clamp > sinew) temp = lastSinewR + sinew;
+		if (-clamp > sinew) temp = lastSinewR - sinew;
+		inputSampleR = lastSinewR = temp;
 		
 		if (gain < 1.0) {
 			inputSampleL *= gain;

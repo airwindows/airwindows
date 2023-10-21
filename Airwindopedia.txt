@@ -50,7 +50,7 @@ Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cide
 
 Utility: Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick
 
-XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
+XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
 
 
@@ -4362,11 +4362,17 @@ YBandpass has various uses. One I was trying out in the video, was setting it up
 
 One day I’ll tell you all about all the things that have been going on behind the scenes here. For now, accept my next Y series filter, and I hope you enjoy it. I feel like the Z2 series (I’m leaving the original Z filters as they are because there’s uses for that too and they’re lower CPU, but will be doing V2 versions with the good coefficient interpolation for folks who craved absence of zipper noise) will be what folks are really excited about, but I do think these Y filters will have their place. They all give you the same characteristics with ResEdge, plus they all give you that slightly warm, unusual texture when you put ResEdge to 0 (a setting of 0.1 is what will give you closest to a traditional biquad, while still not quite being one)
 
+############ YNotBandpass is soft and smooth to nasty, edgy texture-varying filtering, no control smoothing.
+
+YNotBandpass has various uses. One I was trying out in the original video, was setting it up as a ‘walkie-talkie’ sort of tone on my voice, and then turning up ResEdge to really trash the hell out of the audio in a characteristic way that’s not easily found anywhere else.
+
+In the video for YNotBandpass, the version without control smoothing, I demoed it on a bunch of huge reverb, alternating between a Bricasti Cathedral and my version of that same sound… and the more rapid switching between Freq settings turns out to sound pretty nice! Except when the ResEdge control is used to give a mean, electrical, circuit-bendy quality that still retains a lot of the depth of the underlying sound.
+
 ############ YHighpass is soft and smooth to nasty, edgy texture-varying filtering.
 
 See YLowpass, except it’s a highpass :) but there are several ‘one more things’, most notably an upgrade to what I’ve been using for denormalization. I ran into issues with YLowpass munching too much CPU. The fixes I came up with, worked so well, that I’ve applied them to Console7, Console7Cascade, Chamber, Galactic, and several plugins that haven’t come out yet :) As a result, my previous video using YLowpass crept up to 70% CPU at times, and this video using the exact same setup and plugins idles around 35%. I call that a good day (OK, week) of work.
 
-############ YNotHighpass is soft and smooth to nasty, edgy texture-varying filtering.
+############ YNotHighpass is soft and smooth to nasty, edgy texture-varying filtering, no control smoothing.
 
 See YNotLowpass, except it’s a highpass :) interestingly, the original YHighpass saw some significant improvements in CPU usage. Turns out that going to YNot mode, with no control smoothing, boosts performance even more.
 

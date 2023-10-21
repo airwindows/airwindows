@@ -14,7 +14,7 @@ ConsoleMCBuss::ConsoleMCBuss(audioMasterCallback audioMaster) :
 {
 	A = 1.0;
 
-	for (int x = 0; x < gslew_total; x++) gslew[x] = 0.0;
+	lastSinewL = lastSinewR = 0.0;
 	subAL = subAR = subBL = subBR = subCL = subCR = subDL = subDR = 0.0;
 	gainA = gainB = 1.0;	
 	

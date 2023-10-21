@@ -107,62 +107,10 @@ public:
 	/*! @method Version */
 	virtual ComponentResult		Version() { return kConsoleMCBussVersion; }
 	
-	private: 
-	enum {
-		prevSampL1,
-		prevSampR1,
-		invSampL1,
-		invSampR1,
-		threshold1,
-		prevSampL2,
-		prevSampR2,
-		invSampL2,
-		invSampR2,
-		threshold2,
-		prevSampL3,
-		prevSampR3,
-		invSampL3,
-		invSampR3,
-		threshold3,
-		prevSampL4,
-		prevSampR4,
-		invSampL4,
-		invSampR4,
-		threshold4,
-		prevSampL5,
-		prevSampR5,
-		invSampL5,
-		invSampR5,
-		threshold5,
-		prevSampL6,
-		prevSampR6,
-		invSampL6,
-		invSampR6,
-		threshold6,
-		prevSampL7,
-		prevSampR7,
-		invSampL7,
-		invSampR7,
-		threshold7,
-		prevSampL8,
-		prevSampR8,
-		invSampL8,
-		invSampR8,
-		threshold8,
-		prevSampL9,
-		prevSampR9,
-		invSampL9,
-		invSampR9,
-		threshold9,
-		prevSampL10,
-		prevSampR10,
-		invSampL10,
-		invSampR10,
-		threshold10,
-		gslew_total
-	}; //fixed frequency pear filter for ultrasonics, stereo
-	double gslew[gslew_total]; //probably worth just using a number here
-	
+	private:	
+	double lastSinewL;
+	double lastSinewR;
+
 	double subAL;
 	double subAR;
 	double subBL;
