@@ -19,8 +19,7 @@ Brightness: PlatinumSlew, DeBess, GoldenSlew, Sinew, SlewSonic, Acceleration2, D
 
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
-Consoles: Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, 
-Console4Buss, Console4Channel, EveryConsole
+Consoles: ConsoleMCBuss, ConsoleMCChannel, Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, Console4Buss, Console4Channel, EveryConsole
 
 Distortion: Distortion, Edge, Dirt, Mackity, Density2, Density, Drive, Loud, Hard Vacuum, HighImpact, MultiBandDistortion
 
@@ -982,6 +981,25 @@ It's designed from the ground up to bring all the Console8 features but in simpl
 When using it, set it up like any pre-8 version of Console. Use it as a replacement for Console8, though each plugin is roughly equivalent to a Console8 stage's In and Out run in series: if you mix and match it with Console8 full version it'll function but the ultrasonic filtering will no longer be calibrated.
 
 Hope you like the new, simpler and more direct Console8Lite :)
+
+############ ConsoleMCBuss goes for the tone shaping of the classic MCI console!
+############ ConsoleMCChannel goes for the tone shaping of the classic MCI console!
+
+This has been a real journey, to get to this point.
+
+ConsoleMC is replacing my fully analog mixing system, which I'm now looking to sell off. Technically, just the mixer, as I can re-use the Lavry for tracking, where I used to have it dedicated to re-capturing the mixdown from the Heritage Audio mixer. This is what it took, to retire that glorious beast.
+
+It's a channel strip that functions like a normal Console Channel, except it's got treble, a sweepable mid that only boosts (like the classic MCI mid boost), bass, a fader that runs before the EQ section like the classic MCI, and a special pan switching network that's like an evil cousin of LCR panning. And it's a summing buss that brings the summing character of the big MCI desks with a gnarly analog dirtiness that's not simply 'add a distortion box' but is actually a modification of other recent and unique work I've put out.
+
+ConsoleMC draws on the following recent plugins: Creature. SubTight. Sinew. ResEQ2. Pear. BitShiftPan. There is not a single normal DSP algorithm in this thing unless you count sin() and asin() functions. It is ALL built out of current, 2023 Airwindows plugins that have all been pretty well received, sometimes with a fair bit of excitement. I told you all this was working up to something. This is it.
+
+Specifically, this is the first 'it' to come together: I've got at least five other big console concepts that deserve this treatment, but ConsoleMC is right here for you to jump into, right now. There's a couple reverbs in the demo, including kCathedral which is a call-out to the corresponding Bricasti patch. Those are for later.
+
+ConsoleMC is designed around running at 96k (or possibly 192k if you're so inclined) but ought to work at 44.1k. If you're at low sample rate and seek to oversample it 2x or 4x it shouldn't do it any harm but try running it at 1x to see if you get more immediacy, as it learns from Console Zero and can put across a very clean signal path.
+
+All of the EQ options are designed to be pristine when flat (mids, being boost only, are flat at 0.0 boost, not 0.5) and bring in multiple stages as you crank them harder and harder, whether it's the highs and mids getting increasingly saturated or the mids getting increasingly high-Q, allowing for everything from clarity to tonal extremeness thoroughly beyond what any real MCI console would do. This is not a clone, it's a tone in its own right, that tries to do the same job as some of the greatest big analog consoles ever to exist, but does it by the unforgiving and touchy rules of digital.
+
+I hope it brings you joy, and helps you get your sound as it helps me get mine.
 
 ############ Creature is a soft slew saturator, a new class of noisechanger.
 
