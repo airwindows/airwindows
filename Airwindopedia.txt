@@ -19,7 +19,7 @@ Brightness: PlatinumSlew, DeBess, GoldenSlew, Sinew, SlewSonic, Acceleration2, D
 
 Clipping: ClipOnly2, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly
 
-Consoles: ConsoleMCBuss, ConsoleMCChannel, Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, Console4Buss, Console4Channel, EveryConsole
+Consoles: ConsoleMDBuss, ConsoleMDChannel, Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, ConsoleMCBuss, ConsoleMCChannel, Console4Buss, Console4Channel, EveryConsole
 
 Distortion: Distortion, Edge, Dirt, Mackity, Density2, Density, Drive, Loud, Hard Vacuum, HighImpact, MultiBandDistortion
 
@@ -982,20 +982,31 @@ When using it, set it up like any pre-8 version of Console. Use it as a replacem
 
 Hope you like the new, simpler and more direct Console8Lite :)
 
-############ ConsoleMCBuss goes for the tone shaping of the classic MCI console!
-############ ConsoleMCChannel goes for the tone shaping of the classic MCI console!
+############ ConsoleMCBuss is the initial, bright take on the MCI console.
+############ ConsoleMCChannel is the initial, bright take on the MCI console.
 
-This has been a real journey, to get to this point.
+ConsoleMC is the pre-zero-day-patch of what became ConsoleMD. ConsoleMC was designed to sound like the classic MCI console, but some of my more nefarious algorithms got together and got out of control on me. Specifically, the whole thing worked except that SubTight, which I was using to put a special kind of highpass on channels and the 2-buss, threw me a curveball. It wasn't just cutting subs: it threw a huge tilt EQ on everything, and people were asking 'that's great, but isn't it kind of bright?'
 
-ConsoleMC is replacing my fully analog mixing system, which I'm now looking to sell off. Technically, just the mixer, as I can re-use the Lavry for tracking, where I used to have it dedicated to re-capturing the mixdown from the Heritage Audio mixer. This is what it took, to retire that glorious beast.
+It sure was. And it was delivering a fierce, hot intensity that was in line with what I'd been trying to accomplish… but not at that much of a cost! And so, ConsoleMD was out the very next day, after far too many espressos and frantic code-hackings, and I could rest, swearing that the zero-day patch of ConsoleMD counted as next Sunday's plugin and that I was going to go sleep.
+
+But you never know… so you can still have and use ConsoleMC, as it came out. Maybe its ferocity works for some unusual project. And ConsoleMD becomes 'what I Meant to Do', one more in the list of what D might stand for (Deep, Dense, Dynamic, Devastating, Dude-that's-awesome, Desperately-hacking-on-into-the-night, or indeed Done) if it's no longer M C (i) to represent the big analog console of so many famed hit records.
+
+Love you all, talk to you later.
+
+############ ConsoleMDBuss goes for the tone shaping of the classic MCI console!
+############ ConsoleMDChannel goes for the tone shaping of the classic MCI console!
+
+This has been a real journey, to get to this point. (see 'ConsoleMC' for more on that subject)
+
+ConsoleMD is replacing my fully analog mixing system, which I'm now looking to sell off. Technically, just the mixer, as I can re-use the Lavry for tracking, where I used to have it dedicated to re-capturing the mixdown from the Heritage Audio mixer. This is what it took, to retire that glorious beast.
 
 It's a channel strip that functions like a normal Console Channel, except it's got treble, a sweepable mid that only boosts (like the classic MCI mid boost), bass, a fader that runs before the EQ section like the classic MCI, and a special pan switching network that's like an evil cousin of LCR panning. And it's a summing buss that brings the summing character of the big MCI desks with a gnarly analog dirtiness that's not simply 'add a distortion box' but is actually a modification of other recent and unique work I've put out.
 
-ConsoleMC draws on the following recent plugins: Creature. SubTight. Sinew. ResEQ2. Pear. BitShiftPan. There is not a single normal DSP algorithm in this thing unless you count sin() and asin() functions. It is ALL built out of current, 2023 Airwindows plugins that have all been pretty well received, sometimes with a fair bit of excitement. I told you all this was working up to something. This is it.
+ConsoleMC draws on the following recent plugins: Creature. NOT SubTight. Sinew. ResEQ2. Pear. BitShiftPan. There is not a single normal DSP algorithm in this thing unless you count sin() and asin() functions. It is ALL built out of current, 2023 Airwindows plugins that have all been pretty well received, sometimes with a fair bit of excitement. I told you all this was working up to something. This is it.
 
-Specifically, this is the first 'it' to come together: I've got at least five other big console concepts that deserve this treatment, but ConsoleMC is right here for you to jump into, right now. There's a couple reverbs in the demo, including kCathedral which is a call-out to the corresponding Bricasti patch. Those are for later.
+Specifically, this is the first 'it' to come together: I've got at least five other big console concepts that deserve this treatment, but ConsoleMD is right here for you to jump into, right now. There's a couple reverbs in the demo, including kCathedral which is a call-out to the corresponding Bricasti patch. Those are for later.
 
-ConsoleMC is designed around running at 96k (or possibly 192k if you're so inclined) but ought to work at 44.1k. If you're at low sample rate and seek to oversample it 2x or 4x it shouldn't do it any harm but try running it at 1x to see if you get more immediacy, as it learns from Console Zero and can put across a very clean signal path.
+ConsoleMD is designed around running at 96k (or possibly 192k if you're so inclined) but ought to work at 44.1k. If you're at low sample rate and seek to oversample it 2x or 4x it shouldn't do it any harm.
 
 All of the EQ options are designed to be pristine when flat (mids, being boost only, are flat at 0.0 boost, not 0.5) and bring in multiple stages as you crank them harder and harder, whether it's the highs and mids getting increasingly saturated or the mids getting increasingly high-Q, allowing for everything from clarity to tonal extremeness thoroughly beyond what any real MCI console would do. This is not a clone, it's a tone in its own right, that tries to do the same job as some of the greatest big analog consoles ever to exist, but does it by the unforgiving and touchy rules of digital.
 
