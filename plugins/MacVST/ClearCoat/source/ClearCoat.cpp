@@ -116,6 +116,8 @@ ClearCoat::ClearCoat(audioMasterCallback audioMaster) :
 	shortP = 2366;
 	prevclearcoat = -1;
 	
+	subAL = subAR = subBL = subBR = subCL = subCR = subDL = subDR = 0.0;
+	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.

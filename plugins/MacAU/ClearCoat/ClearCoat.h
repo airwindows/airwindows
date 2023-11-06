@@ -251,6 +251,15 @@ public:
 		
 	int prevclearcoat;
 	
+	double subAL;
+	double subAR;
+	double subBL;
+	double subBR;
+	double subCL;
+	double subCR;
+	double subDL;
+	double subDR;	
+	
 	uint32_t fpdL;
 	uint32_t fpdR;
 };

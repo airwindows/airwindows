@@ -194,6 +194,15 @@ private:
 	int shortP;
 	
 	int prevclearcoat;
+	
+	double subAL;
+	double subAR;
+	double subBL;
+	double subBR;
+	double subCL;
+	double subCR;
+	double subDL;
+	double subDR;	
 		
     float A;
     float B;

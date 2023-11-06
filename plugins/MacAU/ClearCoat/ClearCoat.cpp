@@ -282,6 +282,8 @@ ComponentResult		ClearCoat::Reset(AudioUnitScope inScope, AudioUnitElement inEle
 	shortP = 2366;
 	prevclearcoat = -1;
 	
+	subAL = subAR = subBL = subBR = subCL = subCR = subDL = subDR = 0.0;
+	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
@@ -419,6 +421,7 @@ OSStatus		ClearCoat::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		prevclearcoat = clearcoat;
 	}
 	
+	double subRate = 0.001 / overallscale;
 	double wet = GetParameter( kParam_Two )*2.0;
 	double dry = 2.0 - wet;
 	if (wet > 1.0) wet = 1.0;
@@ -627,6 +630,42 @@ OSStatus		ClearCoat::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 			inputSampleR = lastRefR[cycle];
 			//we are going through our references now
 		}
+		
+		//begin SubTight section
+		double subSampleL = inputSampleL * subRate;
+		double subSampleR = inputSampleR * subRate;
+		
+		double scale = 0.5+fabs(subSampleL*0.5);
+		subSampleL = (subAL+(sin(subAL-subSampleL)*scale));
+		subAL = subSampleL*scale;
+		scale = 0.5+fabs(subSampleR*0.5);
+		subSampleR = (subAR+(sin(subAR-subSampleR)*scale));
+		subAR = subSampleR*scale;
+		scale = 0.5+fabs(subSampleL*0.5);
+		subSampleL = (subBL+(sin(subBL-subSampleL)*scale));
+		subBL = subSampleL*scale;
+		scale = 0.5+fabs(subSampleR*0.5);
+		subSampleR = (subBR+(sin(subBR-subSampleR)*scale));
+		subBR = subSampleR*scale;
+		scale = 0.5+fabs(subSampleL*0.5);
+		subSampleL = (subCL+(sin(subCL-subSampleL)*scale));
+		subCL = subSampleL*scale;
+		scale = 0.5+fabs(subSampleR*0.5);
+		subSampleR = (subCR+(sin(subCR-subSampleR)*scale));
+		subCR = subSampleR*scale;
+		scale = 0.5+fabs(subSampleL*0.5);
+		subSampleL = (subDL+(sin(subDL-subSampleL)*scale));
+		subDL = subSampleL*scale;
+		scale = 0.5+fabs(subSampleR*0.5);
+		subSampleR = (subDR+(sin(subDR-subSampleR)*scale));
+		subDR = subSampleR*scale;
+		if (subSampleL > 0.25) subSampleL = 0.25;
+		if (subSampleL < -0.25) subSampleL = -0.25;
+		if (subSampleR > 0.25) subSampleR = 0.25;
+		if (subSampleR < -0.25) subSampleR = -0.25;
+		inputSampleL -= (subSampleL*16.0);
+		inputSampleR -= (subSampleR*16.0);
+		//end SubTight section		
 		
 		if (cycleEnd > 1) {
 			double outSample = (inputSampleL + tailL)*0.5;
