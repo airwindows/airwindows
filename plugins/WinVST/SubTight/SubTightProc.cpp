@@ -14,11 +14,13 @@ void SubTight::processReplacing(float **inputs, float **outputs, VstInt32 sample
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
+	double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= getSampleRate();
 	int subStages = pow(B,2)*16.0;
 	if (subStages < 1) subStages = 1;
-	double subTrim = pow((A*0.3)+(pow(B,2)*0.2),subStages);
+	double subTrim = pow((A*0.3)+(pow(B,2)*0.2),subStages)/overallscale;
 	//to use this as an analog modeler for restricting digital lows, find set values that still show bass
-	//when used on subsonics, this routine does NOT use overallscale to tune by sample rate
 	//Note that this is best used sparingly, on the 'not enough subtraction' side of the node.
 
     while (--sampleFrames >= 0)
@@ -84,11 +86,13 @@ void SubTight::processDoubleReplacing(double **inputs, double **outputs, VstInt3
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 	
+	double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= getSampleRate();
 	int subStages = pow(B,2)*16.0;
 	if (subStages < 1) subStages = 1;
-	double subTrim = pow((A*0.3)+(pow(B,2)*0.2),subStages);
+	double subTrim = pow((A*0.3)+(pow(B,2)*0.2),subStages)/overallscale;
 	//to use this as an analog modeler for restricting digital lows, find set values that still show bass
-	//when used on subsonics, this routine does NOT use overallscale to tune by sample rate
 	//Note that this is best used sparingly, on the 'not enough subtraction' side of the node.
 	
     while (--sampleFrames >= 0)

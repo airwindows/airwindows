@@ -207,6 +207,7 @@ OSStatus		ConsoleMCBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	//you even get to slew clipping :) and if the fader is not active, it bypasses completely.
 
 	double threshSinew = 0.5171104/overallscale;
+	double subTrim = 0.001 / overallscale;
 
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
@@ -219,8 +220,8 @@ OSStatus		ConsoleMCBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		//setting up smoothed master fader
 		
 		//begin SubTight section
-		double subSampleL = inputSampleL * 0.001;
-		double subSampleR = inputSampleR * 0.001;
+		double subSampleL = inputSampleL * subTrim;
+		double subSampleR = inputSampleR * subTrim;
 		
 		double scale = 0.5+fabs(subSampleL*0.5);
 		subSampleL = (subAL+(sin(subAL-subSampleL)*scale));

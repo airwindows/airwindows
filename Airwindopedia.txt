@@ -1003,13 +1003,18 @@ Hope you like the new, simpler and more direct Console8Lite :)
 ############ ConsoleMCBuss is the initial, bright take on the MCI console.
 ############ ConsoleMCChannel is the initial, bright take on the MCI console.
 
-ConsoleMC is the pre-zero-day-patch of what became ConsoleMD. ConsoleMC was designed to sound like the classic MCI console, but some of my more nefarious algorithms got together and got out of control on me. Specifically, the whole thing worked except that SubTight, which I was using to put a special kind of highpass on channels and the 2-buss, threw me a curveball. It wasn't just cutting subs: it threw a huge tilt EQ on everything, and people were asking 'that's great, but isn't it kind of bright?'
+ConsoleMC is replacing my fully analog mixing system, which I'm now looking to sell off. Technically, just the mixer, as I can re-use the Lavry for tracking, where I used to have it dedicated to re-capturing the mixdown from the Heritage Audio mixer. This is what it took, to retire that glorious beast.
 
-It sure was. And it was delivering a fierce, hot intensity that was in line with what I'd been trying to accomplish… but not at that much of a cost! And so, ConsoleMD was out the very next day, after far too many espressos and frantic code-hackings, and I could rest, swearing that the zero-day patch of ConsoleMD counted as next Sunday's plugin and that I was going to go sleep.
+It's a channel strip that functions like a normal Console Channel, except it's got treble, a sweepable mid that only boosts (like the classic MCI mid boost), bass, a fader that runs before the EQ section like the classic MCI, and a special pan switching network that's like an evil cousin of LCR panning. And it's a summing buss that brings the summing character of the big MCI desks with a gnarly analog dirtiness that's not simply 'add a distortion box' but is actually a modification of other recent and unique work I've put out.
 
-But you never know… so you can still have and use ConsoleMC, as it came out. Maybe its ferocity works for some unusual project. And ConsoleMD becomes 'what I Meant to Do', one more in the list of what D might stand for (Deep, Dense, Dynamic, Devastating, Dude-that's-awesome, Desperately-hacking-on-into-the-night, or indeed Done) if it's no longer M C (i) to represent the big analog console of so many famed hit records.
+ConsoleMC draws on the following recent plugins: Creature. SubTight. Sinew. ResEQ2. Pear. BitShiftPan. There is not a single normal DSP algorithm in this thing unless you count sin() and asin() functions. It is ALL built out of current, 2023 Airwindows plugins that have all been pretty well received, sometimes with a fair bit of excitement. I told you all this was working up to something. This is it.
 
-Love you all, talk to you later.
+Specifically, this is the first 'it' to come together: I've got at least five other big console concepts that deserve this treatment, but ConsoleMC is right here for you to jump into, right now. There's a couple reverbs in the demo, including kCathedral which is a call-out to the corresponding Bricasti patch. Those are for later.
+
+ConsoleMC is designed around running at 96k (or possibly 192k if you're so inclined) but ought to work at 44.1k. If you're at low sample rate and seek to oversample it 2x or 4x it shouldn't do it any harm.
+
+ConsoleMC is NOT flat when set neutrally: use ConsoleMD for that. ConsoleMC, in its debugged form, uses the technique from SubTight to rein in subsonic bass, and this ends up applying a touch of very high-frequency 'air' that was unexpected. The original release also didn't scale this effect to sample rate (it's a very new algorithm that didn't seem to work that way at first) but the Redux version, which becomes the go-to version of ConsoleMC, does scale to high sample rates without losing additional bass. Again, for a DAWlike flat response use ConsoleMD, which has those 'inter-stage' highpasses stripped out. If you're okay with mixing into a slight presence lift and would like extra personality go with ConsoleMC.
+
 
 ############ ConsoleMDBuss goes for the tone shaping of the classic MCI console!
 ############ ConsoleMDChannel goes for the tone shaping of the classic MCI console!
@@ -1020,7 +1025,7 @@ ConsoleMD is replacing my fully analog mixing system, which I'm now looking to s
 
 It's a channel strip that functions like a normal Console Channel, except it's got treble, a sweepable mid that only boosts (like the classic MCI mid boost), bass, a fader that runs before the EQ section like the classic MCI, and a special pan switching network that's like an evil cousin of LCR panning. And it's a summing buss that brings the summing character of the big MCI desks with a gnarly analog dirtiness that's not simply 'add a distortion box' but is actually a modification of other recent and unique work I've put out.
 
-ConsoleMC draws on the following recent plugins: Creature. NOT SubTight. Sinew. ResEQ2. Pear. BitShiftPan. There is not a single normal DSP algorithm in this thing unless you count sin() and asin() functions. It is ALL built out of current, 2023 Airwindows plugins that have all been pretty well received, sometimes with a fair bit of excitement. I told you all this was working up to something. This is it.
+ConsoleMD draws on the following recent plugins: Creature. NOT SubTight. Sinew. ResEQ2. Pear. BitShiftPan. There is not a single normal DSP algorithm in this thing unless you count sin() and asin() functions. It is ALL built out of current, 2023 Airwindows plugins that have all been pretty well received, sometimes with a fair bit of excitement. I told you all this was working up to something. This is it.
 
 Specifically, this is the first 'it' to come together: I've got at least five other big console concepts that deserve this treatment, but ConsoleMD is right here for you to jump into, right now. There's a couple reverbs in the demo, including kCathedral which is a call-out to the corresponding Bricasti patch. Those are for later.
 
@@ -4453,7 +4458,7 @@ And then either soften or sharpen the hell out of the edge, to get tones that do
 
 ############ YNotNotch is soft and smooth to nasty, edgy texture-varying filtering, no control smoothing.
 
-YNotch is the final incarnation of the Y series plugins, done to give me more experience with smoothing plugin controls. It’s got a smoothed biquad filter with more than a little extra: the Y filters all have a ResEdge control. This defaults to 0.1 (like the gain control) but it can be lowered to 0 for a softer, somewhat more organic tone… or, turned up and up and up until the filter begins to distort and act weird in very unusual ways.
+YNotNotch is the final incarnation of the Y series plugins, done to give me more experience with smoothing plugin controls. It’s got a biquad filter with more than a little extra: the Y filters all have a ResEdge control. This defaults to 0.1 (like the gain control) but it can be lowered to 0 for a softer, somewhat more organic tone… or, turned up and up and up until the filter begins to distort and act weird in very unusual ways.
 
 This is NOT like a sampler model. It’s a whole other algorithm, putting weird edges on the way the filter resonates when the Resonance is turned up. You can basically dial in the sharpness of the edge, like with the other Y filters. But unlike the other Y filters, the Resonance control goes a little further. Not in sharpness, but in dullness… you can drop resonance down to where it’s basically an ultra-shallow slope cut, put the frequency to either extreme, and use the very first hints of the Resonance control to dial in an extreme low or high cut.
 

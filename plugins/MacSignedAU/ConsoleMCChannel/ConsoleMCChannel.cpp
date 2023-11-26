@@ -344,6 +344,8 @@ OSStatus		ConsoleMCChannel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAc
 	gainB = GetParameter( kParam_Six )*2.0; //smoothed master fader from Z2 filters
 	//BitShiftGain pre gain trim goes here
 	
+	double subTrim = 0.0046999 / overallscale;
+	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
 		double inputSampleR = *inputR;
@@ -513,8 +515,8 @@ OSStatus		ConsoleMCChannel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAc
 		//the sin() is further restricting output when fully attenuated
 		
 		//begin SubTight section
-		double subSampleL = bassL * 0.0046999;
-		double subSampleR = bassR * 0.0046999;
+		double subSampleL = bassL * subTrim;
+		double subSampleR = bassR * subTrim;
 		double scale = 0.5+fabs(subSampleL*0.5);
 		subSampleL = (subAL+(sin(subAL-subSampleL)*scale));
 		subAL = subSampleL*scale;

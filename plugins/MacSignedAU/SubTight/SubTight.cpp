@@ -182,12 +182,14 @@ void		SubTight::SubTightKernel::Process(	const Float32 	*inSourceP,
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
+	double overallscale = 1.0;
+	overallscale /= 44100.0;
+	overallscale *= GetSampleRate();
 	
 	int subStages = pow(GetParameter( kParam_Two ),2)*16.0;
 	if (subStages < 1) subStages = 1;
-	double subTrim = pow((GetParameter( kParam_One )*0.3)+(pow(GetParameter( kParam_Two ),2)*0.2),subStages);
+	double subTrim = pow((GetParameter( kParam_One )*0.3)+(pow(GetParameter( kParam_Two ),2)*0.2),subStages)/overallscale;
 	//to use this as an analog modeler for restricting digital lows, find set values that still show bass
-	//when used on subsonics, this routine does NOT use overallscale to tune by sample rate
 	//Note that this is best used sparingly, on the 'not enough subtraction' side of the node.
 	
 	while (nSampleFrames-- > 0) {
