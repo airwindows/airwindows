@@ -3730,11 +3730,15 @@ Creature has a special mode where you can set the dry/wet to 'inverse', cancelli
 
 So, in theory, you could use it as an increasingly steep lowpass… and subtract it from dry, to make something that acts like a highpass.
 
-What happens when you use a distorted lowpass to take out bass?  It's not able to soak up all the lows, as if it was a simple filter. What happens when multiple stages of it cause the deepest bass to go unstable and wild? That part cancels first, or ends up overcanceling and making a sort of 'node' in the midbass that's totally cancelled, while distorted sub-bass gets through inverted.
+The thing is, it's not really increasingly steep, not at all. And it's not even a lowpass, because its behavior is so dynamics-dependent. But it's not a saturation (or anti-saturation) either, because it's slew that's being softclipped, not amplitude. This is why I initially released it believing it shouldn't be scaled by sample rate: it's a very odd sort of processing.
 
-All right. That said, what if you just keep the number of stages in check, and only bring in enough of it to cancel out the super lows, or simply cut them back a little? That would be a sub-bass conditioner with the following qualities: it'll give you an increasingly steep cutoff, it'll emphasize dynamics and impact, and it will resist totally removing bass content in favor of reshaping it, tightening it, highlighting impact and punch.
+Having put out a Redux version that applies corrections to make it consistent across sample rates, what do we get? SubTight does NOT get steeper as you increase the 'steep' control, unless you think of it as 'low settings are pretty weak tea, and cranking it up gets you a much stronger and more intense brew'.
 
-That's why this plugin is called SubTight. It's not exactly a filter, much less a sharp and accurate filter. It's optimized so that you can hear where bass really starts to cancel out, and the idea is you can go up to that point, and then pull back. To do a clean steep low cut, use something else. This is a subs conditioner, that'll give a different foundation on things.
+What you'll get is a behavior: as you increase the trim on SubTight, the weakness and flabbiness will get sucked out of the bass. With very low Steep settings it's pretty across the board, really. It's not hyping the highs so much as it is pulling softness and 'glue' out of all the frequencies, more as it goes lower. Super nonlinear, super tricky to interpret, but dramatic and energetic.
+
+As you increase Steepness, it gets more aggressive about this. It's like you're defining a little 'nega-zone' inside the bass and the solidness of the sound, and then making it vanish, so the transients hit with full power from a more silent, empty backdrop. Probably handy on spot drum mics in general, where you'd use gating to make them punch more! The farther you push Steep, the more it tries to refine that 'empty space' down into a tiny intense core at the center of the sub-bass… but it will continue to affect everything, because it's not a filter and Steep isn't a crossover. It's sort of a strength control. I've generally got my use out of it between 0.2 and 0.4, but I provide more extreme settings because of course I do that, you should know me by now ;)
+
+I admit this is still a strange plugin, but hopefully it is both more adaptable and better explained now. If it's no use to you directly, you may still appreciate the way it brings a distinct lifelike sound to ConsoleMC, and other things like that :)
 
 ############ Surge is a compressor for accentuating beats and pulses.
 
