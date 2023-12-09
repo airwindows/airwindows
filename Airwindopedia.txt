@@ -2335,6 +2335,20 @@ Except I can beat those in one very Airwindows detail: if you are using it as a 
 
 Isolator2 is Isolator, my very steep lowpass or highpass or shelf filter, but now it’s got smoothed coefficients so you can automate it and make it move better. Also, it’s even steeper. Also, it now has the power to give you added resonance! So you can put an edge on your filter/isolator sweeps, for a really narrow high-resonance sound that’s very striking as a ‘synth filter’ tone.
 
+############ kCathedral is a giant reverby space.
+
+Here's a neat little experiment! As always with the K reverbs, it's a dedicated sound space with its own unique algorithm… but there are some new twists making kCathedral a step along an interesting path. This is the first of the Bricasti-inspired reverbs!
+
+It uses a 5x5 Householder matrix, and a built-in crossover (a SubTight filter, so it's not even a normal type of filter) to allow for extra delay on the lows. The internal reverb filtering is Pear filters rather than the biquads used on the kPlates. (the reverb is undersampled at high sample rates, so the SubTight crossover will work the same whether at 1x, 2x, or 4x.)
+
+And for all that trouble… kCathedral does NOT sound the same as the Bricasti Cathedral preset. You won't find a clone here.
+
+But… it will produce largely the same depth and spatiality, with a different texture that is less 'rich and soft' and more 'stark and vibey'. It should be used similarly: for realism, hide it behind other sounds by keeping it quiet. There are no controls other than a dry/wet: for use on an aux, go full wet, and if you're using it inline you might end up adding just the tiniest amount (in the video, I'm using 0.03 of it on my voice, and you'll barely notice it until it switches to similarly faint ClearCoat 7, just for a sentence, after having mentioned ClearCoat.)
+
+My hope for these is distinctness, and kCathedral might not be the one to reach for as an 'all-purpose' reverb, because it's just a first steo into a larger, more echoey new world. The thing I like about it is, while it has a distinct sound, the spatiality sits in the mix roughly the same way a real Bricasti might, even while the texture is different (will be interesting to see if I can get closer to that butter tone, in future).
+
+All in all, a good day at work (okay, months) and I hope you enjoy kCathedral :)
+
 ############ kChamberAR is a take on tape echo into chamber echo.
 
 While I'm working on other stuff, here's a wild little toy!
@@ -3198,11 +3212,11 @@ That’s a surprising amount to say about a gain plugin, but that’s Airwindows
 
 ############ PurestSquish is an open-sounding compressor with bass bloom.
 
-PurestSquish is a compressor, with its own sound. In the video I compare it to Pressure4, Logical4, and SurgeTide, and also show how it can be used in conjunction with SurgeTide (a real ‘sleeper’ plugin not easily understood) to produce amazingly transparent dynamics control.
+PurestSquish is a compressor, with its own sound. In the video I compare it to Pressure4, Logical4, and SurgeTide, and also show how it can be used in conjunction with SurgeTide (a real ‘sleeper’ plugin not easily understood) to produce amazingly transparent dynamics control. That said, this is not at all a normal compressor plugin and won't act normal.
 
-I also spend some time torturing it with sine sweeps, showing how Pressure and Logical are more like ‘analog emulations’ and produce harmonics, while PurestSquish instead does a weird thing when you turn off and on signal generators. So if you’re looking for ways to say ‘this is broken forever!’ watch those parts of the video :)
+I also spent some time torturing it with sine sweeps, showing how Pressure and Logical are more like ‘analog emulations’ and produce harmonics, while PurestSquish instead does a weird thing when you turn off and on signal generators. So if you’re looking for ways to say ‘this is broken forever!’ watch those parts of the video :)
 
-If this doesn’t worry you, PurestSquish also has a bass bloom control that lets you pass subsonics or bass notes through uncompressed, to taste. If it does worry you, chalk it up to PurestSquish running simultaneous two-and-three-sample-interleaved compressors, much like Capacitor runs two-and-three-sample-interleaved filters, and use one of the other compressors I’ve put out, perhaps one of the three also featured in this video.
+If this doesn’t worry you, PurestSquish also has a bass bloom control that lets you pass subsonics or bass notes through uncompressed, to taste. If it does worry you, chalk it up to PurestSquish running simultaneous two-and-three-sample-interleaved compressors, much like Capacitor runs two-and-three-sample-interleaved filters, and use one of the other compressors I’ve put out, perhaps one of the three also featured in the PurestSquish video.
 
 ############ PurestWarm is a subtle tone shaper and warmth adder.
 
