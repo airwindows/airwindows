@@ -21,7 +21,7 @@ void ZOutputStage::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	//opamp stuff
 	double inTrim = A*10.0;
 	inTrim *= inTrim; inTrim *= inTrim;
-	double outPad = B*10.0;
+	double outPad = B;
 	double iirAmountA = 0.00069/overallscale;
 	biquadF[0] = biquadE[0] = 15500.0 / getSampleRate();
     biquadF[1] = biquadE[1] = 0.935;
@@ -105,7 +105,7 @@ void ZOutputStage::processDoubleReplacing(double **inputs, double **outputs, Vst
 	//opamp stuff
 	double inTrim = A*10.0;
 	inTrim *= inTrim; inTrim *= inTrim;
-	double outPad = B*10.0;
+	double outPad = B;
 	double iirAmountA = 0.00069/overallscale;
 	biquadF[0] = biquadE[0] = 15500.0 / getSampleRate();
     biquadF[1] = biquadE[1] = 0.935;
