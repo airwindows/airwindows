@@ -39,7 +39,7 @@ Reverb: kPlateD, kPlateB, kPlateA, kPlateC, Verbity2, Galactic, Galactic2, kCath
 
 Saturation: Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
-Stereo: Srsly, Srsly2, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, Sidepass, SideDull
+Stereo: Srsly, Srsly2, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTimer, Sidepass, SideDull
 
 Subtlety: Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
 
@@ -2659,6 +2659,12 @@ You see, the new Monitoring is getting ‘Aurat’ settings that give you that b
 
 So, MoNoam (almost symmetrical, like a palindrome) gives you mono/mid and side (directly) in such a way that you could sum them to get the stereo back again. But it also gives you mono in either one or the other channel, to come out of only one speaker. And it gives you ‘mono-ized’ side: this will be fuller-sounding than the true side, because the true side is out of phase between channels. And you can put the mono-ized side in one or the other channel if you want. If you’re recombining things it’ll get weird, but if you just want to hear it then this is your chance. And maybe you might have tricky situations having to do with mid/side, or you’re doing odd things in Blue Cat Patchwork, or just making complicated signal routings, and need one of these options. They’re odd enough to require a lot of fiddling if you were doing them just in the DAW. Now they’re one simple plugin :)
 
+############ MSFlipTimer is a utility that swaps stereo with mono every few (1-10) minutes.
+
+Here's a request I got, a variation on one that's in the utility category. While I ramp up to more interesting stuff I can do some of the background work while putting out the thing that someone asked me to make :)
+
+Every few minutes (as in, one minute to ten minutes) MSFlipTimer switches from stereo to mono. It does this in about a tenth of a second, to prevent any sort of pop or anything. When it’s in stereo it is 100% direct pass-through of the audio data word, so this is as clean as stuff like LeftToMono: it’s one of those ones that just copies the data over, not even touching it. That said, this doesn’t belong in your mix: the idea is that if you’re mixing and you tend to screw up the mono mix by doing too much crazy stuff with stereo, this'll repeatedly force you to grapple with it in its mono form.
+
 ############ MultiBandDistortion is an old weird gnarly sound wrecker :)
 
 Some plugins just want to watch the world burn :)
@@ -3415,7 +3421,6 @@ What’s happening is, the saturation from the Spiral algorithm is being fed int
 
 It’s that simple. You don’t have to use it to hit LUFS targets, but since it’s got Spiral in there it also broadens the heck out of the ‘target range’ so you can pick whatever seems right to you, and it’ll guide you. If you find you need to push louder, you can set Righteous4 for a higher target, and that will clean it right up and let you push harder into the internal ADClip. If you’re looking for big dynamic range, you can set Righteous4’s target lower, or simply set it for Apple or YouTube loudnesses and then just don’t push into it very hard: this will give you dynamics, but the replay-gain services will be kinder to the result because it’s somewhat saturated and compressed, just in a very gentle way if you’re hitting it that gently. And of course the output’s optimized for whatever bit depth you’ve selected, so you can directly target CD or 24/96 or ’32 bit file to send to further mastering’ if you still need to mix into something more organic than a hard, brittle digital mix buss with all the charm of math :)
 
-
 ############ SampleDelay is three delays combined: millisecond, sample and subsample.
 
 SampleDelay is a very simple thing, implemented in a particular way. It's not exactly an echo (though it can be), not exactly a timing adjustment tool, not exactly a sound shaper… more like, a little of all of those things.
@@ -3433,6 +3438,20 @@ Same with multimiked guitar cabs. Find the beef by canceling it and then flippin
 Or, go for effect and have the spot mike stay inverted and don't bring it up as much, and it'll make things more bright and complex… or put it slightly off for a tonal shift. Three separately adjustable delay ranges down to the finest you could have, and the one inv/wet control to let you quickly do whatever you want.
 
 There's a reason I've been asked to bring this one back. Hope you like it. For some this will be a very boring effect. For others… not :)
+
+############ SampleUndelay is AU-only SampleDelay featuring negative delay.
+
+By request, here's something from the retro bin, brought up to date as well as I could :)
+
+The original SampleDelay offered millisecond, sample and subsample delays, but it also offered negative delay. The thing is, it did that through declaring a bunch of latency and then delaying to match it. There's a couple problems with that. Firstly, it kills your ability to track into the mixing system: everything gets the maximum added latency, and then more delay to get to whatever the target delay time is. So you're always getting thousands of samples delay no matter what: it's only OK for mixing. Even recording automation that will interfere with you being able to interact with the mix.
+
+Secondly, I've had trouble making it work reliably with different programs. Generally at 44.1k it does what it means to do. I've seen 96k recordings mysteriously try to use 88.1k for a latency, throwing off the calibration of the ms control. Never mind trying to do a VST port: I've not seen documentation on how that's meant to be done though I understand the JUCE folks try to make it work, yet even they seem to sometimes run into incompatibilities. I'm running into incompatibilities even just on Audio Unit. For the time being I am not liking the results of trying to declare latency, even just on AU where it's part of the basic plugin format.
+
+But I was asked to bring this back anyhow… so here it is, as-is. It's January and I'm mostly trying to get other stuff up to speed, such as the reverbs: in my video I asked whether people are interested in a 'redux' of kCathedral, because I'm interested in revising it to address criticisms (I'd keep the original one available, but replace it with a newer version) and to take advantage of a lot of woodshedding I've been doing on the subject of reverbs.
+
+I've got a lot of things coming out in February, I just wanted to drop a thing or two that are not as big as full plugin releases, or things like this where there's a couple people who want it, and limited scope for it. For VST users (of which I'm one, on Mac Reaper, because it runs a 64-bit buss) or indeed anybody, I'd also recommend just sliding the track earlier in the DAW, and then if you want a plugin, finetune it with the regular SampleDelay which will do exactly the same thing in the end, except you can track into it because you're running a zero latency system (outside of whatever your DAW and converters impose).
+
+For those of you that asked for exactly this, hope it will do :)
 
 ############ Shape is an asymmetrical waveshaper for peak manipulating.
 
