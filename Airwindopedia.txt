@@ -27,7 +27,7 @@ Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither,
 
 Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
-Effects: GalacticVibe, Fracture2, Dubly, Pafnuty2, PitchNasty, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
+Effects: GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
 Filter: Baxandall2, Capacitor2, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
 
@@ -767,6 +767,34 @@ So what we have here, basically, is a control-less (like ClipOnly and ClipOnly2)
 You'd use something like ClipOnly2 in mastering specifically because it won't touch the values of any unclipped samples. ClipSoftly is different: it will touch the values of ALL samples, reshaping the whole sound to make it bigger, fatter, tubier.
 
 I hope you like it, and the way it'll affect my plugins going forward :)
+
+############ CloudCoat is an array of blur effects with a taste for evil.
+
+Welcome back to the dark side of Airwindows!
+
+CloudCoat starts as an experiment. What if there was ClearCoat (a bank of small reverbs) except all the delays were allpasses?
+
+Okay, so a bit of explanation: allpasses are like reverb parts, but they make stuff sound smeary and blurred, like bloom reverbs. I've got a bloom reverb, MV, which is just a stack of allpasses. Most of my recent work is about avoiding allpasses completely by using reverb matrixes that give me LOTS of echo returns, impossible numbers, so I don't have to cheat with allpasses. This kind of works and kind of doesn't (work in progress, see my recent livestreams). But what would happen if you took what was clearly a reverb, and just replaced all the delays with allpasses?
+
+That's ClearCoat and CloudCoat. The idea was I could give a completely different texture, but using literally all the same reverb constants, and then I could hear what it was like. I expected it to be more a cloudy, diffuse texture, hence 'cloudcoat'.
+
+You might notice one difference right away: ClearCoat sounds a lot roomier. That's because it's designed with a little bit of feedback to fill it out. Sustain, if you will. It's also way more spacious, and way more metallic and ringy. This is in line with how it only uses delays, and is all part of the research.
+
+CloudCoat with sustain all the way off, is quite different. Depth and spaciousness is almost gone, but there's no metallicness either. It's like essence of fake artificial reverb blur. Remember, this too is a 4x4 Householder matrix: it's a complicated pile of allpasses, not something primitive like MV. I think it might find uses on pads or ambient sounds, or could be used to feed into ClearCoat at the same 'select' setting to create a more powerful room sound. With sustain all the way off, you can do many polite and nice things with CloudCoat.
+
+Then, throw it on some drums and turn the sustain up and ALL HELL BREAKS LOOSE :)
+
+CloudCoat is applying a kind of nonlinear reverb, like your classic 'nonlin' gated verb settings, but Airwindowsized. I'm allowing feedback, but of the four 'channels' of Householder feedback, each is also modulated by the output of the one next to it (a totally different sound)… WITHOUT smoothing. So the feedback is broken up by four banks of allpass output and cranked up to the point of meltdown, and that's CloudCoat. It disrupts the signal wildly and fiercely.
+
+Why?
+
+Because I tried it, on a livestream, and the drums absolutely exploded like nothing I've ever heard. There's rasp and rattle and an effect much like extreme compression while in a stone drum room, but there's no compression and no stone room. It just makes that sound. Instead of making it out of compressed, flat-topped compression smash, it's making the madness happen INSIDE the sound, meaning you can make it brutal and unbearable with ClearCoat and THEN loudenate it, unlike any other sort of compression or distortion. CloudCoat adds a whole new type of trash that is dynamic with your sound (again, nonlin) and automatically dials itself back if the source energy level does. It's a huge, nasty, energy-laden meltdown that can be escalated to pretty much any degree… and then dialed back down again, to pretty much any level of controllability, so long as you're using it on noisy percussion and as long as you're okay with its signature trash-sound, which is not like anything else and which is independent of added compression and distortion.
+
+And then you can do blur/texture effects with the sustain on 0. Just don't bother trying to make it work with tiny amounts of sustain: it basically can't. 0 or trash are your only options, and then there is a universe of trash and meltdown if trash you choose.
+
+But seriously, why?
+
+Because it makes me laugh with delight when snares go off like something out of the imagination of Trent Reznor. I don't know what to tell you. Enjoy CloudCoat, if it's the kind of thing you enjoy.
 
 ############ Coils models the types of distortion you'll find in transformers.
 
