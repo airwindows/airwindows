@@ -170,7 +170,10 @@ kCathedral2::kCathedral2(audioMasterCallback audioMaster) :
 	
 	for (int x = 0; x < pear_total; x++) {pearA[x] = 0.0; pearB[x] = 0.0; pearC[x] = 0.0; pearD[x] = 0.0; pearE[x] = 0.0; pearF[x] = 0.0;}
 	//from PearEQ
-	
+
+	vibratoL = vibAL = vibAR = vibBL = vibBR = 0.0;
+	vibratoR = M_PI_4;
+
 	subAL = subAR = subBL = subBR = subCL = subCR = 0.0;
 	sbAL = sbAR = sbBL = sbBR = sbCL = sbCR = 0.0;
 	//from SubTight

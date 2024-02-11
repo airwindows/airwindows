@@ -373,7 +373,13 @@ public:
 	double pearE[pear_total]; //probably worth just using a number here
 	double pearF[pear_total]; //probably worth just using a number here
 	
-		
+	double vibratoL;
+	double vibratoR;
+	double vibAL;
+	double vibAR;
+	double vibBL;
+	double vibBR;
+	
 	double subAL;
 	double subAR;
 	double subBL;

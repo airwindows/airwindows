@@ -420,6 +420,19 @@ void kCathedral2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			outUR += aUR[countUR-((countUR > delayU)?delayU+1:0)];
 			//the 11-length delay slot becomes a sole allpass
 			
+			vibBL = vibAL; vibAL = outUL;
+			vibBR = vibAR; vibAR = outUR; //tiny two sample delay chains
+			vibratoL += fpdL * 0.5e-13; if (vibratoL > M_PI*2.0) vibratoL -= M_PI*2.0;
+			vibratoR += fpdR * 0.5e-13; if (vibratoR > M_PI*2.0) vibratoR -= M_PI*2.0;
+			double quadL = sin(vibratoL)+1.0;
+			double quadR = sin(vibratoR)+1.0;
+			//quadrature delay points play back from a position in delay chains
+			if (quadL < 1.0) outUL = (outUL*(1.0-quadL))+(vibAL*quadL);
+			else outUL = (vibAL*(1.0-(quadL-1.0)))+(vibBL*(quadL-1.0));
+			if (quadR < 1.0) outUR = (outUR*(1.0-quadR))+(vibAR*quadR);
+			else outUR = (vibAR*(1.0-(quadR-1.0)))+(vibBR*(quadR-1.0));
+			//also, pitch drift this allpass slot for very subtle motion
+			
 			countVL++; if (countVL < 0 || countVL > delayV) countVL = 0;
 			countWL++; if (countWL < 0 || countWL > delayW) countWL = 0;
 			countXL++; if (countXL < 0 || countXL > delayX) countXL = 0;
@@ -1024,6 +1037,19 @@ void kCathedral2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			outUL += aUL[countUL-((countUL > delayU)?delayU+1:0)];
 			outUR += aUR[countUR-((countUR > delayU)?delayU+1:0)];
 			//the 11-length delay slot becomes a sole allpass
+			
+			vibBL = vibAL; vibAL = outUL;
+			vibBR = vibAR; vibAR = outUR; //tiny two sample delay chains
+			vibratoL += fpdL * 0.5e-13; if (vibratoL > M_PI*2.0) vibratoL -= M_PI*2.0;
+			vibratoR += fpdR * 0.5e-13; if (vibratoR > M_PI*2.0) vibratoR -= M_PI*2.0;
+			double quadL = sin(vibratoL)+1.0;
+			double quadR = sin(vibratoR)+1.0;
+			//quadrature delay points play back from a position in delay chains
+			if (quadL < 1.0) outUL = (outUL*(1.0-quadL))+(vibAL*quadL);
+			else outUL = (vibAL*(1.0-(quadL-1.0)))+(vibBL*(quadL-1.0));
+			if (quadR < 1.0) outUR = (outUR*(1.0-quadR))+(vibAR*quadR);
+			else outUR = (vibAR*(1.0-(quadR-1.0)))+(vibBR*(quadR-1.0));
+			//also, pitch drift this allpass slot for very subtle motion
 			
 			countVL++; if (countVL < 0 || countVL > delayV) countVL = 0;
 			countWL++; if (countWL < 0 || countWL > delayW) countWL = 0;
