@@ -241,7 +241,7 @@ void		ADClip8::ADClip8Kernel::Process(	const Float32 	*inSourceP,
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		double overshoot = 0.0;
-		inputSample *= 2.0;
+		inputSample *= 1.618033988749894;
 		
 		for (int stage = 0; stage < stageSetting; stage++) {
 			if (inputGain != 1.0) {

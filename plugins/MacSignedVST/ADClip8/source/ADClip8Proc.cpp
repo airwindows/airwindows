@@ -42,8 +42,8 @@ void ADClip8::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double overshootL = 0.0;
 		double overshootR = 0.0;
-		inputSampleL *= 2.0;
-		inputSampleR *= 2.0;
+		inputSampleL *= 1.618033988749894;
+		inputSampleR *= 1.618033988749894;
 		
 		for (int stage = 0; stage < stageSetting; stage++) {
 			if (inputGain != 1.0) {
@@ -168,8 +168,8 @@ void ADClip8::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		double overshootL = 0.0;
 		double overshootR = 0.0;
-		inputSampleL *= 2.0;
-		inputSampleR *= 2.0;
+		inputSampleL *= 1.618033988749894;
+		inputSampleR *= 1.618033988749894;
 		
 		for (int stage = 0; stage < stageSetting; stage++) {
 			if (inputGain != 1.0) {
