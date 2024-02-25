@@ -192,6 +192,8 @@ void		Discontinuity::DiscontinuityKernel::Process(	const Float32 	*inSourceP,
 	
 	topdB = 0.000000064 * pow(10.0,topdB/20.0) * overallscale;
 	double dBpos;
+	//dBpos = pow((inputSample-1.0)*0.5,2) is the original formulation
+	//dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5)) from 'Herbie'	
 	double dBi;
 	int dBdly;
 	
@@ -202,28 +204,28 @@ void		Discontinuity::DiscontinuityKernel::Process(	const Float32 	*inSourceP,
 		inputSample *= topdB;
 		if (inputSample < -0.999) inputSample = -0.999; if (inputSample > 0.999) inputSample = 0.999;
 		//Air Discontinuity A begin
-		dBaL[dBaX] = inputSample; dBpos = pow((inputSample-1.0)*0.5,2);
+		dBaL[dBaX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSample = dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSample += dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*dBi;
 		dBaX++; if (dBaX < 0 || dBaX > predelay) dBaX = 0;
 		//Air Discontinuity A end
 		//Air Discontinuity B begin
-		dBbL[dBbX] = inputSample; dBpos = pow((inputSample-1.0)*0.5,2);
+		dBbL[dBbX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSample = dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSample += dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*dBi;
 		dBbX++; if (dBbX < 0 || dBbX > predelay) dBbX = 0;
 		//Air Discontinuity B end
 		//Air Discontinuity C begin
-		dBcL[dBcX] = inputSample; dBpos = pow((inputSample-1.0)*0.5,2);
+		dBcL[dBcX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSample = dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSample += dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*dBi;
 		dBcX++; if (dBcX < 0 || dBcX > predelay) dBcX = 0;
 		//Air Discontinuity C end
 		//Air Discontinuity D begin
-		dBdL[dBdX] = inputSample; dBpos = pow((inputSample-1.0)*0.5,2);
+		dBdL[dBdX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSample = dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSample += dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*dBi;

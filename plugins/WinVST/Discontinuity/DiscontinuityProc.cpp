@@ -22,6 +22,8 @@ void Discontinuity::processReplacing(float **inputs, float **outputs, VstInt32 s
 	
 	topdB = 0.000000064 * pow(10.0,topdB/20.0) * overallscale;
 	double dBpos;
+	//dBpos = pow((inputSampleL-1.0)*0.5,2) is the original formulation
+	//dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5)) from 'Herbie'	
 	double dBi;
 	int dBdly;
 	
@@ -36,44 +38,44 @@ void Discontinuity::processReplacing(float **inputs, float **outputs, VstInt32 s
 		if (inputSampleL < -0.999) inputSampleL = -0.999; if (inputSampleL > 0.999) inputSampleL = 0.999;
 		if (inputSampleR < -0.999) inputSampleR = -0.999; if (inputSampleR > 0.999) inputSampleR = 0.999;
 		//Air Discontinuity A begin
-		dBaL[dBaX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBaL[dBaX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*dBi;
-		dBaR[dBaX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBaR[dBaX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBaR[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBaR[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*dBi;
 		dBaX++; if (dBaX < 0 || dBaX > predelay) dBaX = 0;
 		//Air Discontinuity A end
 		//Air Discontinuity B begin
-		dBbL[dBbX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBbL[dBbX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*dBi;
-		dBbR[dBbX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBbR[dBbX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBbR[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBbR[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*dBi;
 		dBbX++; if (dBbX < 0 || dBbX > predelay) dBbX = 0;
 		//Air Discontinuity B end
 		//Air Discontinuity C begin
-		dBcL[dBcX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBcL[dBcX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*dBi;
-		dBcR[dBcX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBcR[dBcX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBcR[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBcR[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*dBi;
 		dBcX++; if (dBcX < 0 || dBcX > predelay) dBcX = 0;
 		//Air Discontinuity C end
 		//Air Discontinuity D begin
-		dBdL[dBdX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBdL[dBdX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*dBi;
-		dBdR[dBdX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBdR[dBdX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBdR[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBdR[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*dBi;
@@ -115,6 +117,8 @@ void Discontinuity::processDoubleReplacing(double **inputs, double **outputs, Vs
 	
 	topdB = 0.000000064 * pow(10.0,topdB/20.0) * overallscale;
 	double dBpos;
+	//dBpos = pow((inputSampleL-1.0)*0.5,2) is the original formulation
+	//dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5)) from 'Herbie'	
 	double dBi;
 	int dBdly;
 	
@@ -129,44 +133,44 @@ void Discontinuity::processDoubleReplacing(double **inputs, double **outputs, Vs
 		if (inputSampleL < -0.999) inputSampleL = -0.999; if (inputSampleL > 0.999) inputSampleL = 0.999;
 		if (inputSampleR < -0.999) inputSampleR = -0.999; if (inputSampleR > 0.999) inputSampleR = 0.999;
 		//Air Discontinuity A begin
-		dBaL[dBaX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBaL[dBaX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*dBi;
-		dBaR[dBaX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBaR[dBaX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBaR[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBaR[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*dBi;
 		dBaX++; if (dBaX < 0 || dBaX > predelay) dBaX = 0;
 		//Air Discontinuity A end
 		//Air Discontinuity B begin
-		dBbL[dBbX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBbL[dBbX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*dBi;
-		dBbR[dBbX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBbR[dBbX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBbR[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBbR[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*dBi;
 		dBbX++; if (dBbX < 0 || dBbX > predelay) dBbX = 0;
 		//Air Discontinuity B end
 		//Air Discontinuity C begin
-		dBcL[dBcX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBcL[dBcX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*dBi;
-		dBcR[dBcX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBcR[dBcX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBcR[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBcR[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*dBi;
 		dBcX++; if (dBcX < 0 || dBcX > predelay) dBcX = 0;
 		//Air Discontinuity C end
 		//Air Discontinuity D begin
-		dBdL[dBdX] = inputSampleL; dBpos = pow((inputSampleL-1.0)*0.5,2);
+		dBdL[dBdX] = inputSampleL; dBpos = 0.25+(inputSampleL*((inputSampleL*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleL = dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleL += dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*dBi;
-		dBdR[dBdX] = inputSampleR; dBpos = pow((inputSampleR-1.0)*0.5,2);
+		dBdR[dBdX] = inputSampleR; dBpos = 0.25+(inputSampleR*((inputSampleR*0.25)-0.5));
 		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
 		inputSampleR = dBdR[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*(1.0-dBi);
 		dBdly++; inputSampleR += dBdR[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*dBi;
