@@ -143,6 +143,8 @@ public:
 			pvAL4,
 			pvSL4,
 			gndavgL,
+			outAL,
+			gainAL,
 			air_total
 		};
 		double air[air_total];

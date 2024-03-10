@@ -61,7 +61,6 @@ Kalman::Kalman(AudioUnit component)
 	Globals()->UseIndexedParameters(kNumberOfParameters);
 	SetParameter(kParam_One, kDefaultValue_ParamOne );
 	SetParameter(kParam_Two, kDefaultValue_ParamTwo );
-	SetParameter(kParam_Three, kDefaultValue_ParamThree );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -111,13 +110,6 @@ ComponentResult			Kalman::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamTwo;
-                break;
-            case kParam_Three:
-                AUBase::FillInParameterName (outParameterInfo, kParameterThreeName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamThree;
                 break;
            default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -194,12 +186,10 @@ void		Kalman::KalmanKernel::Process(	const Float32 	*inSourceP,
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
-	double kalman = 1.0-pow(1.0-GetParameter( kParam_One ),2);
-	double kaldrive = GetParameter( kParam_Two );
-	double kalgain = kalman*8.0;
-	double kalthresh = kalman*0.5;
-	double kalDryTrim = 1.0 - (0.68+(kalthresh*0.314));
-	double wet = GetParameter( kParam_Three );
+	double kalman = 1.0-pow(GetParameter( kParam_One ),2);
+	double wet = (GetParameter( kParam_Two )*2.0)-1.0; //inv-dry-wet for highpass
+	double dry = 2.0-(GetParameter( kParam_Two )*2.0);
+	if (dry > 1.0) dry = 1.0; //full dry for use with inv, to 0.0 at full wet
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
@@ -207,7 +197,7 @@ void		Kalman::KalmanKernel::Process(	const Float32 	*inSourceP,
 		double drySample = inputSample;
 		
 		//begin Kalman Filter
-		double dryKal = inputSample = inputSample*(1.0-kalman)*kaldrive;
+		double dryKal = inputSample = inputSample*(1.0-kalman)*0.777;
 		inputSample *= (1.0-kalman);
 		//set up gain levels to control the beast
 		kal[prevSlewL3] += kal[prevSampL3] - kal[prevSampL2]; kal[prevSlewL3] *= 0.5;
@@ -221,11 +211,11 @@ void		Kalman::KalmanKernel::Process(	const Float32 	*inSourceP,
 		//entering the abyss, what even is this
 		kal[kalOutL] += kal[prevSampL1] + kal[prevSlewL2] + kal[accSlewL3]; kal[kalOutL] *= 0.5;
 		//resynthesizing predicted result (all iir smoothed)
-		kal[kalGainL] += fabs(dryKal-kal[kalOutL])*kalgain; kal[kalGainL] *= 0.5;
+		kal[kalGainL] += fabs(dryKal-kal[kalOutL])*kalman*8.0; kal[kalGainL] *= 0.5;
 		//madness takes its toll. Kalman Gain: how much dry to retain
-		if (kal[kalGainL] > kalthresh) kal[kalGainL] = kalthresh;
+		if (kal[kalGainL] > kalman*0.5) kal[kalGainL] = kalman*0.5;
 		//attempts to avoid explosions
-		kal[kalOutL] += (dryKal*kalDryTrim);	
+		kal[kalOutL] += (dryKal*(1.0-(0.68+(kalman*0.157))));	
 		//this is for tuning a really complete cancellation up around Nyquist
 		kal[prevSampL3] = kal[prevSampL2];
 		kal[prevSampL2] = kal[prevSampL1];
@@ -233,9 +223,8 @@ void		Kalman::KalmanKernel::Process(	const Float32 	*inSourceP,
 		//feed the chain of previous samples
 		if (kal[prevSampL1] > 1.0) kal[prevSampL1] = 1.0;
 		if (kal[prevSampL1] < -1.0) kal[prevSampL1] = -1.0;
-		//end Kalman Filter, except for kaldrive trim on output		
-		
-		inputSample = (drySample*(1.0-wet))+(kal[kalOutL]*wet*kaldrive);
+		//end Kalman Filter, except for trim on output		
+		inputSample = (drySample*dry)+(kal[kalOutL]*wet*0.777);
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

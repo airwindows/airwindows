@@ -20,12 +20,11 @@ enum {
   kNumParameters = 1
 }; //
 
-const int predelay = 420;
-
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'disc';    //Change this to what the AU identity is!
+const int dscBuf = 90;
 
 class Discontinuity : 
     public AudioEffectX 
@@ -58,22 +57,30 @@ private:
 	uint32_t fpdR;
 	//default stuff
 	
-	double dBaL[predelay+5];
-	double dBaR[predelay+5];
-	int dBaX;		
+	double dBaL[dscBuf+5];
+	double dBaPosL;
+	int dBaXL;
 	
-	double dBbL[predelay+5];
-	double dBbR[predelay+5];
-	int dBbX;		
+	double dBbL[dscBuf+5];
+	double dBbPosL;
+	int dBbXL;
 	
-	double dBcL[predelay+5];
-	double dBcR[predelay+5];
-	int dBcX;		
+	double dBcL[dscBuf+5];
+	double dBcPosL;
+	int dBcXL;
+
+	double dBaR[dscBuf+5];
+	double dBaPosR;
+	int dBaXR;
 	
-	double dBdL[predelay+5];
-	double dBdR[predelay+5];
-	int dBdX;		
+	double dBbR[dscBuf+5];
+	double dBbPosR;
+	int dBbXR;
 	
+	double dBcR[dscBuf+5];
+	double dBcPosR;
+	int dBcXR;
+
     float A;
 };
 

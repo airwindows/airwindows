@@ -54,7 +54,7 @@
 #pragma mark ____Discontinuity Parameters
 
 // parameters
-static const float kDefaultValue_ParamOne = 95.0;
+static const float kDefaultValue_ParamOne = 100.0;
 
 static CFStringRef kParameterOneName = CFSTR("Top dB");
 //Alter the name if desired, but using the plugin name is a start
@@ -65,7 +65,7 @@ enum {
 	kNumberOfParameters=1
 };
 
-const int predelay = 420;
+const int dscBuf = 90;
 
 #pragma mark ____Discontinuity
 class Discontinuity : public AUEffectBase
@@ -128,18 +128,18 @@ public:
 		
 		private: 
 		
-		double dBaL[predelay+5];
-		int dBaX;		
+		double dBaL[dscBuf+5];
+		double dBaPosL;
+		int dBaXL;		
 		
-		double dBbL[predelay+5];
-		int dBbX;		
+		double dBbL[dscBuf+5];
+		double dBbPosL;
+		int dBbXL;		
 		
-		double dBcL[predelay+5];
-		int dBcX;		
-		
-		double dBdL[predelay+5];
-		int dBdX;		
-		
+		double dBcL[dscBuf+5];
+		double dBcPosL;
+		int dBcXL;		
+				
 		uint32_t fpd;
 	};
 };

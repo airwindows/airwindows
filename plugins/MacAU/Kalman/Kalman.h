@@ -55,20 +55,17 @@
 
 // parameters
 static const float kDefaultValue_ParamOne = 0.5;
-static const float kDefaultValue_ParamTwo = 0.5;
-static const float kDefaultValue_ParamThree = 0.0;
+static const float kDefaultValue_ParamTwo = 1.0;
 
 static CFStringRef kParameterOneName = CFSTR("Kalman");
-static CFStringRef kParameterTwoName = CFSTR("Drive");
-static CFStringRef kParameterThreeName = CFSTR("Dry/Wet");
+static CFStringRef kParameterTwoName = CFSTR("Inv/Wet");
 //Alter the name if desired, but using the plugin name is a start
 
 enum {
 	kParam_One =0,
 	kParam_Two =1,
-	kParam_Three =2,
 	//Add your parameters here...
-	kNumberOfParameters=3
+	kNumberOfParameters=2
 };
 
 #pragma mark ____Kalman
@@ -145,7 +142,7 @@ public:
 			kalOutL,
 			kal_total
 		};
-		double kal[kal_total];	
+		double kal[kal_total];
 
 		uint32_t fpd;
 	};

@@ -207,14 +207,17 @@ void		Air3::Air3Kernel::Process(	const Float32 	*inSourceP,
 		air[acc2SL2] = air[accSL3] - air[accSL2];
 		air[acc2SL1] = air[accSL2] - air[accSL1];		
 		
-		inputSample = -(air[pvAL1] + air[pvSL3] + air[acc2SL2] - ((air[acc2SL2] + air[acc2SL1])*0.5));
+		air[outAL] = -(air[pvAL1] + air[pvSL3] + air[acc2SL2] - ((air[acc2SL2] + air[acc2SL1])*0.5));
 		
+		air[gainAL] *= 0.5; 
+		air[gainAL] += fabs(drySample-air[outAL])*0.5;
+		if (air[gainAL] > 0.3*sqrt(overallscale)) air[gainAL] = 0.3*sqrt(overallscale);
 		air[pvAL4] = air[pvAL3];
 		air[pvAL3] = air[pvAL2];
-		air[pvAL2] = air[pvAL1];
-		air[pvAL1] = drySample;
+		air[pvAL2] = air[pvAL1];		
+		air[pvAL1] = (air[gainAL] * air[outAL]) + drySample;
 		
-		double gnd = (drySample - ((inputSample+drySample)*0.5));
+		double gnd = drySample - ((air[outAL]*0.5)+(drySample*(0.457-(0.017*overallscale))));
 		double temp = (gnd + air[gndavgL])*0.5; air[gndavgL] = gnd; gnd = temp;
 		
 		inputSample = ((drySample-gnd)*airGain)+(gnd*gndGain);

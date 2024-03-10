@@ -13,11 +13,10 @@ Kalman::Kalman(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.5;
-	B = 0.5;
-	C = 0.0;
-	
+	B = 1.0;
+
 	for (int x = 0; x < kal_total; x++) kal[x] = 0.0;
-	
+
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
@@ -53,7 +52,6 @@ VstInt32 Kalman::getChunk (void** data, bool isPreset)
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
 	chunkData[1] = B;
-	chunkData[2] = C;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -67,7 +65,6 @@ VstInt32 Kalman::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
-	C = pinParameter(chunkData[2]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -79,7 +76,6 @@ void Kalman::setParameter(VstInt32 index, float value) {
     switch (index) {
         case kParamA: A = value; break;
         case kParamB: B = value; break;
-        case kParamC: C = value; break;
         default: throw; // unknown parameter, shouldn't happen!
     }
 }
@@ -88,7 +84,6 @@ float Kalman::getParameter(VstInt32 index) {
     switch (index) {
         case kParamA: return A; break;
         case kParamB: return B; break;
-        case kParamC: return C; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
@@ -96,8 +91,7 @@ float Kalman::getParameter(VstInt32 index) {
 void Kalman::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Kalman", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Drive", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "Dry/Wet", kVstMaxParamStrLen); break;
+		case kParamB: vst_strncpy (text, "Inv/Wet", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -106,7 +100,6 @@ void Kalman::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
         case kParamB: float2string (B, text, kVstMaxParamStrLen); break;
-        case kParamC: float2string (C, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -115,7 +108,6 @@ void Kalman::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamC: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }

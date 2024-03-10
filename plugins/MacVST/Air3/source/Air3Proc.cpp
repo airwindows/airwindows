@@ -17,11 +17,11 @@ void Air3::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
-
+	
 	double airGain = A*2.0;
 	if (airGain > 1.0) airGain = pow(airGain,3.0+sqrt(overallscale));
 	double gndGain = B*2.0;
-    
+	
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -31,33 +31,59 @@ void Air3::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
-		air[pvSL4] = air[pvAL4] - air[pvAL3]; air[pvSR4] = air[pvAR4] - air[pvAR3];
-		air[pvSL3] = air[pvAL3] - air[pvAL2]; air[pvSR3] = air[pvAR3] - air[pvAR2];
-		air[pvSL2] = air[pvAL2] - air[pvAL1]; air[pvSR2] = air[pvAR2] - air[pvAR1];
-		air[pvSL1] = air[pvAL1] - inputSampleL; air[pvSR1] = air[pvAR1] - inputSampleR;
+		air[pvSL4] = air[pvAL4] - air[pvAL3];
+		air[pvSL3] = air[pvAL3] - air[pvAL2];
+		air[pvSL2] = air[pvAL2] - air[pvAL1];
+		air[pvSL1] = air[pvAL1] - inputSampleL;
 		
-		air[accSL3] = air[pvSL4] - air[pvSL3]; air[accSR3] = air[pvSR4] - air[pvSR3];
-		air[accSL2] = air[pvSL3] - air[pvSL2]; air[accSR2] = air[pvSR3] - air[pvSR2];
-		air[accSL1] = air[pvSL2] - air[pvSL1]; air[accSR1] = air[pvSR2] - air[pvSR1];
+		air[accSL3] = air[pvSL4] - air[pvSL3];
+		air[accSL2] = air[pvSL3] - air[pvSL2];
+		air[accSL1] = air[pvSL2] - air[pvSL1];
 		
-		air[acc2SL2] = air[accSL3] - air[accSL2]; air[acc2SR2] = air[accSR3] - air[accSR2];
-		air[acc2SL1] = air[accSL2] - air[accSL1]; air[acc2SR1] = air[accSR2] - air[accSR1];		
+		air[acc2SL2] = air[accSL3] - air[accSL2];
+		air[acc2SL1] = air[accSL2] - air[accSL1];		
 		
-		inputSampleL = -(air[pvAL1] + air[pvSL3] + air[acc2SL2] - ((air[acc2SL2] + air[acc2SL1])*0.5));
-		inputSampleR = -(air[pvAR1] + air[pvSR3] + air[acc2SR2] - ((air[acc2SR2] + air[acc2SR1])*0.5));
+		air[outAL] = -(air[pvAL1] + air[pvSL3] + air[acc2SL2] - ((air[acc2SL2] + air[acc2SL1])*0.5));
 		
-		air[pvAL4] = air[pvAL3]; air[pvAR4] = air[pvAR3];
-		air[pvAL3] = air[pvAL2]; air[pvAR3] = air[pvAR2];
-		air[pvAL2] = air[pvAL1]; air[pvAR2] = air[pvAR1];
-		air[pvAL1] = drySampleL; air[pvAR1] = drySampleR;
+		air[gainAL] *= 0.5; 
+		air[gainAL] += fabs(drySampleL-air[outAL])*0.5;
+		if (air[gainAL] > 0.3*sqrt(overallscale)) air[gainAL] = 0.3*sqrt(overallscale);
+		air[pvAL4] = air[pvAL3];
+		air[pvAL3] = air[pvAL2];
+		air[pvAL2] = air[pvAL1];		
+		air[pvAL1] = (air[gainAL] * air[outAL]) + drySampleL;
 		
-		double gndL = (drySampleL - ((inputSampleL+drySampleL)*0.5));
-		double gndR = (drySampleR - ((inputSampleR+drySampleR)*0.5));
-		double temp = (gndL + air[gndavgL])*0.5; air[gndavgL] = gndL; gndL = temp;
-		temp = (gndR + air[gndavgR])*0.5; air[gndavgR] = gndR; gndR = temp;
+		double gnd = drySampleL - ((air[outAL]*0.5)+(drySampleL*(0.457-(0.017*overallscale))));
+		double temp = (gnd + air[gndavgL])*0.5; air[gndavgL] = gnd; gnd = temp;
 		
-		inputSampleL = ((drySampleL-gndL)*airGain)+(gndL*gndGain);
-		inputSampleR = ((drySampleR-gndR)*airGain)+(gndR*gndGain);
+		inputSampleL = ((drySampleL-gnd)*airGain)+(gnd*gndGain);
+		
+		air[pvSR4] = air[pvAR4] - air[pvAR3];
+		air[pvSR3] = air[pvAR3] - air[pvAR2];
+		air[pvSR2] = air[pvAR2] - air[pvAR1];
+		air[pvSR1] = air[pvAR1] - inputSampleR;
+		
+		air[accSR3] = air[pvSR4] - air[pvSR3];
+		air[accSR2] = air[pvSR3] - air[pvSR2];
+		air[accSR1] = air[pvSR2] - air[pvSR1];
+		
+		air[acc2SR2] = air[accSR3] - air[accSR2];
+		air[acc2SR1] = air[accSR2] - air[accSR1];		
+		
+		air[outAR] = -(air[pvAR1] + air[pvSR3] + air[acc2SR2] - ((air[acc2SR2] + air[acc2SR1])*0.5));
+		
+		air[gainAR] *= 0.5; 
+		air[gainAR] += fabs(drySampleR-air[outAR])*0.5;
+		if (air[gainAR] > 0.3*sqrt(overallscale)) air[gainAR] = 0.3*sqrt(overallscale);
+		air[pvAR4] = air[pvAR3];
+		air[pvAR3] = air[pvAR2];
+		air[pvAR2] = air[pvAR1];		
+		air[pvAR1] = (air[gainAR] * air[outAR]) + drySampleR;
+		
+		gnd = drySampleR - ((air[outAR]*0.5)+(drySampleR*(0.457-(0.017*overallscale))));
+		temp = (gnd + air[gndavgR])*0.5; air[gndavgR] = gnd; gnd = temp;
+		
+		inputSampleR = ((drySampleR-gnd)*airGain)+(gnd*gndGain);
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -92,7 +118,7 @@ void Air3::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 	double airGain = A*2.0;
 	if (airGain > 1.0) airGain = pow(airGain,3.0+sqrt(overallscale));
 	double gndGain = B*2.0;
-    
+	
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -102,33 +128,59 @@ void Air3::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
-		air[pvSL4] = air[pvAL4] - air[pvAL3]; air[pvSR4] = air[pvAR4] - air[pvAR3];
-		air[pvSL3] = air[pvAL3] - air[pvAL2]; air[pvSR3] = air[pvAR3] - air[pvAR2];
-		air[pvSL2] = air[pvAL2] - air[pvAL1]; air[pvSR2] = air[pvAR2] - air[pvAR1];
-		air[pvSL1] = air[pvAL1] - inputSampleL; air[pvSR1] = air[pvAR1] - inputSampleR;
+		air[pvSL4] = air[pvAL4] - air[pvAL3];
+		air[pvSL3] = air[pvAL3] - air[pvAL2];
+		air[pvSL2] = air[pvAL2] - air[pvAL1];
+		air[pvSL1] = air[pvAL1] - inputSampleL;
 		
-		air[accSL3] = air[pvSL4] - air[pvSL3]; air[accSR3] = air[pvSR4] - air[pvSR3];
-		air[accSL2] = air[pvSL3] - air[pvSL2]; air[accSR2] = air[pvSR3] - air[pvSR2];
-		air[accSL1] = air[pvSL2] - air[pvSL1]; air[accSR1] = air[pvSR2] - air[pvSR1];
+		air[accSL3] = air[pvSL4] - air[pvSL3];
+		air[accSL2] = air[pvSL3] - air[pvSL2];
+		air[accSL1] = air[pvSL2] - air[pvSL1];
 		
-		air[acc2SL2] = air[accSL3] - air[accSL2]; air[acc2SR2] = air[accSR3] - air[accSR2];
-		air[acc2SL1] = air[accSL2] - air[accSL1]; air[acc2SR1] = air[accSR2] - air[accSR1];		
+		air[acc2SL2] = air[accSL3] - air[accSL2];
+		air[acc2SL1] = air[accSL2] - air[accSL1];		
 		
-		inputSampleL = -(air[pvAL1] + air[pvSL3] + air[acc2SL2] - ((air[acc2SL2] + air[acc2SL1])*0.5));
-		inputSampleR = -(air[pvAR1] + air[pvSR3] + air[acc2SR2] - ((air[acc2SR2] + air[acc2SR1])*0.5));
+		air[outAL] = -(air[pvAL1] + air[pvSL3] + air[acc2SL2] - ((air[acc2SL2] + air[acc2SL1])*0.5));
 		
-		air[pvAL4] = air[pvAL3]; air[pvAR4] = air[pvAR3];
-		air[pvAL3] = air[pvAL2]; air[pvAR3] = air[pvAR2];
-		air[pvAL2] = air[pvAL1]; air[pvAR2] = air[pvAR1];
-		air[pvAL1] = drySampleL; air[pvAR1] = drySampleR;
+		air[gainAL] *= 0.5; 
+		air[gainAL] += fabs(drySampleL-air[outAL])*0.5;
+		if (air[gainAL] > 0.3*sqrt(overallscale)) air[gainAL] = 0.3*sqrt(overallscale);
+		air[pvAL4] = air[pvAL3];
+		air[pvAL3] = air[pvAL2];
+		air[pvAL2] = air[pvAL1];		
+		air[pvAL1] = (air[gainAL] * air[outAL]) + drySampleL;
 		
-		double gndL = (drySampleL - ((inputSampleL+drySampleL)*0.5));
-		double gndR = (drySampleR - ((inputSampleR+drySampleR)*0.5));
-		double temp = (gndL + air[gndavgL])*0.5; air[gndavgL] = gndL; gndL = temp;
-		temp = (gndR + air[gndavgR])*0.5; air[gndavgR] = gndR; gndR = temp;
+		double gnd = drySampleL - ((air[outAL]*0.5)+(drySampleL*(0.457-(0.017*overallscale))));
+		double temp = (gnd + air[gndavgL])*0.5; air[gndavgL] = gnd; gnd = temp;
 		
-		inputSampleL = ((drySampleL-gndL)*airGain)+(gndL*gndGain);
-		inputSampleR = ((drySampleR-gndR)*airGain)+(gndR*gndGain);
+		inputSampleL = ((drySampleL-gnd)*airGain)+(gnd*gndGain);
+		
+		air[pvSR4] = air[pvAR4] - air[pvAR3];
+		air[pvSR3] = air[pvAR3] - air[pvAR2];
+		air[pvSR2] = air[pvAR2] - air[pvAR1];
+		air[pvSR1] = air[pvAR1] - inputSampleR;
+		
+		air[accSR3] = air[pvSR4] - air[pvSR3];
+		air[accSR2] = air[pvSR3] - air[pvSR2];
+		air[accSR1] = air[pvSR2] - air[pvSR1];
+		
+		air[acc2SR2] = air[accSR3] - air[accSR2];
+		air[acc2SR1] = air[accSR2] - air[accSR1];		
+		
+		air[outAR] = -(air[pvAR1] + air[pvSR3] + air[acc2SR2] - ((air[acc2SR2] + air[acc2SR1])*0.5));
+		
+		air[gainAR] *= 0.5; 
+		air[gainAR] += fabs(drySampleR-air[outAR])*0.5;
+		if (air[gainAR] > 0.3*sqrt(overallscale)) air[gainAR] = 0.3*sqrt(overallscale);
+		air[pvAR4] = air[pvAR3];
+		air[pvAR3] = air[pvAR2];
+		air[pvAR2] = air[pvAR1];		
+		air[pvAR1] = (air[gainAR] * air[outAR]) + drySampleR;
+		
+		gnd = drySampleR - ((air[outAR]*0.5)+(drySampleR*(0.457-(0.017*overallscale))));
+		temp = (gnd + air[gndavgR])*0.5; air[gndavgR] = gnd; gnd = temp;
+		
+		inputSampleR = ((drySampleR-gnd)*airGain)+(gnd*gndGain);
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

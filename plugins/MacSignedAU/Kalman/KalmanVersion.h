@@ -51,7 +51,7 @@
 
 //~~~~~~~~~~~~~~  Change!!! ~~~~~~~~~~~~~~~~~~~~~//
 #define Kalman_COMP_MANF			'Dthr'
-#define Kalman_COMP_SUBTYPE		'klmn'
+#define Kalman_COMP_SUBTYPE			'klmn'
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 #endif

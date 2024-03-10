@@ -13,21 +13,26 @@ Discontinuity::Discontinuity(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.5;
-
-	for(int count = 0; count < predelay+2; count++) {
+	for(int count = 0; count < dscBuf+2; count++) {
 		dBaL[count] = 0.0;
-		dBaR[count] = 0.0;
 		dBbL[count] = 0.0;
-		dBbR[count] = 0.0;
 		dBcL[count] = 0.0;
+		dBaR[count] = 0.0;
+		dBbR[count] = 0.0;
 		dBcR[count] = 0.0;
-		dBdL[count] = 0.0;
-		dBdR[count] = 0.0;
 	}
-	dBaX = 1;
-	dBbX = 1;
-	dBcX = 1;
-	dBdX = 1;
+	dBaPosL = 0.0;
+	dBbPosL = 0.0;
+	dBcPosL = 0.0;
+	dBaPosR = 0.0;
+	dBbPosR = 0.0;
+	dBcPosR = 0.0;
+	dBaXL = 1;
+	dBbXL = 1;
+	dBcXL = 1;
+	dBaXR = 1;
+	dBbXR = 1;
+	dBcXR = 1;
 	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
@@ -105,7 +110,7 @@ void Discontinuity::getParameterName(VstInt32 index, char *text) {
 
 void Discontinuity::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: float2string (80.0+(A*40.0), text, kVstMaxParamStrLen); break;
+        case kParamA: float2string ((A*70.0)+70.0, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }

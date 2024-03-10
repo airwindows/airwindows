@@ -18,12 +18,10 @@ void Kalman::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	double kalman = 1.0-pow(1.0-A,2);
-	double kaldrive = B;
-	double kalgain = kalman*8.0;
-	double kalthresh = kalman*0.5;
-	double kalDryTrim = 1.0 - (0.68+(kalthresh*0.314));
-	double wet = C;
+	double kalman = 1.0-pow(A,2);
+	double wet = (B*2.0)-1.0; //inv-dry-wet for highpass
+	double dry = 2.0-(B*2.0);
+	if (dry > 1.0) dry = 1.0; //full dry for use with inv, to 0.0 at full wet
 	
     while (--sampleFrames >= 0)
     {
@@ -35,49 +33,63 @@ void Kalman::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		double drySampleR = inputSampleR;
 		
 		//begin Kalman Filter
-		double dryKalL = inputSampleL = inputSampleL*(1.0-kalman)*kaldrive;
-		double dryKalR = inputSampleR = inputSampleR*(1.0-kalman)*kaldrive;
-		inputSampleL *= (1.0-kalman); inputSampleR *= (1.0-kalman);
+		double dryKal = inputSampleL = inputSampleL*(1.0-kalman)*0.777;
+		inputSampleL *= (1.0-kalman);
 		//set up gain levels to control the beast
 		kal[prevSlewL3] += kal[prevSampL3] - kal[prevSampL2]; kal[prevSlewL3] *= 0.5;
-		kal[prevSlewR3] += kal[prevSampR3] - kal[prevSampR2]; kal[prevSlewR3] *= 0.5;
 		kal[prevSlewL2] += kal[prevSampL2] - kal[prevSampL1]; kal[prevSlewL2] *= 0.5;
-		kal[prevSlewR2] += kal[prevSampR2] - kal[prevSampR1]; kal[prevSlewR2] *= 0.5;
 		kal[prevSlewL1] += kal[prevSampL1] - inputSampleL; kal[prevSlewL1] *= 0.5;
-		kal[prevSlewR1] += kal[prevSampR1] - inputSampleR; kal[prevSlewR1] *= 0.5;
 		//make slews from each set of samples used
 		kal[accSlewL2] += kal[prevSlewL3] - kal[prevSlewL2]; kal[accSlewL2] *= 0.5;
-		kal[accSlewR2] += kal[prevSlewR3] - kal[prevSlewR2]; kal[accSlewR2] *= 0.5;
 		kal[accSlewL1] += kal[prevSlewL2] - kal[prevSlewL1]; kal[accSlewL1] *= 0.5;
-		kal[accSlewR1] += kal[prevSlewR2] - kal[prevSlewR1]; kal[accSlewR1] *= 0.5;
 		//differences between slews: rate of change of rate of change
 		kal[accSlewL3] += (kal[accSlewL2] - kal[accSlewL1]); kal[accSlewL3] *= 0.5;
-		kal[accSlewR3] += (kal[accSlewR2] - kal[accSlewR1]); kal[accSlewR3] *= 0.5;
 		//entering the abyss, what even is this
 		kal[kalOutL] += kal[prevSampL1] + kal[prevSlewL2] + kal[accSlewL3]; kal[kalOutL] *= 0.5;
-		kal[kalOutR] += kal[prevSampR1] + kal[prevSlewR2] + kal[accSlewR3]; kal[kalOutR] *= 0.5;
 		//resynthesizing predicted result (all iir smoothed)
-		kal[kalGainL] += fabs(dryKalL-kal[kalOutL])*kalgain; kal[kalGainL] *= 0.5;
-		kal[kalGainR] += fabs(dryKalR-kal[kalOutR])*kalgain; kal[kalGainR] *= 0.5;
+		kal[kalGainL] += fabs(dryKal-kal[kalOutL])*kalman*8.0; kal[kalGainL] *= 0.5;
 		//madness takes its toll. Kalman Gain: how much dry to retain
-		if (kal[kalGainL] > kalthresh) kal[kalGainL] = kalthresh;
-		if (kal[kalGainR] > kalthresh) kal[kalGainR] = kalthresh;
+		if (kal[kalGainL] > kalman*0.5) kal[kalGainL] = kalman*0.5;
 		//attempts to avoid explosions
-		kal[kalOutL] += (dryKalL*kalDryTrim); kal[kalOutR] += (dryKalR*kalDryTrim);		
+		kal[kalOutL] += (dryKal*(1.0-(0.68+(kalman*0.157))));	
 		//this is for tuning a really complete cancellation up around Nyquist
-		kal[prevSampL3] = kal[prevSampL2]; kal[prevSampR3] = kal[prevSampR2];
-		kal[prevSampL2] = kal[prevSampL1]; kal[prevSampR2] = kal[prevSampR1];
-		kal[prevSampL1] = (kal[kalGainL] * kal[kalOutL]) + ((1.0-kal[kalGainL])*dryKalL);
-		kal[prevSampR1] = (kal[kalGainR] * kal[kalOutR]) + ((1.0-kal[kalGainR])*dryKalR);
+		kal[prevSampL3] = kal[prevSampL2];
+		kal[prevSampL2] = kal[prevSampL1];
+		kal[prevSampL1] = (kal[kalGainL] * kal[kalOutL]) + ((1.0-kal[kalGainL])*dryKal);
 		//feed the chain of previous samples
 		if (kal[prevSampL1] > 1.0) kal[prevSampL1] = 1.0;
 		if (kal[prevSampL1] < -1.0) kal[prevSampL1] = -1.0;
+		//end Kalman Filter, except for trim on output		
+		inputSampleL = (drySampleL*dry)+(kal[kalOutL]*wet*0.777);
+		//now the right channel
+		dryKal = inputSampleR = inputSampleR*(1.0-kalman)*0.777;
+		inputSampleR *= (1.0-kalman);
+		//set up gain levels to control the beast
+		kal[prevSlewR3] += kal[prevSampR3] - kal[prevSampR2]; kal[prevSlewR3] *= 0.5;
+		kal[prevSlewR2] += kal[prevSampR2] - kal[prevSampR1]; kal[prevSlewR2] *= 0.5;
+		kal[prevSlewR1] += kal[prevSampR1] - inputSampleR; kal[prevSlewR1] *= 0.5;
+		//make slews from each set of samples used
+		kal[accSlewR2] += kal[prevSlewR3] - kal[prevSlewR2]; kal[accSlewR2] *= 0.5;
+		kal[accSlewR1] += kal[prevSlewR2] - kal[prevSlewR1]; kal[accSlewR1] *= 0.5;
+		//differences between slews: rate of change of rate of change
+		kal[accSlewR3] += (kal[accSlewR2] - kal[accSlewR1]); kal[accSlewR3] *= 0.5;
+		//entering the abyss, what even is this
+		kal[kalOutR] += kal[prevSampR1] + kal[prevSlewR2] + kal[accSlewR3]; kal[kalOutR] *= 0.5;
+		//resynthesizing predicted result (all iir smoothed)
+		kal[kalGainR] += fabs(dryKal-kal[kalOutR])*kalman*8.0; kal[kalGainR] *= 0.5;
+		//madness takes its toll. Kalman Gain: how much dry to retain
+		if (kal[kalGainR] > kalman*0.5) kal[kalGainR] = kalman*0.5;
+		//attempts to avoid explosions
+		kal[kalOutR] += (dryKal*(1.0-(0.68+(kalman*0.157))));	
+		//this is for tuning a really complete cancellation up around Nyquist
+		kal[prevSampR3] = kal[prevSampR2];
+		kal[prevSampR2] = kal[prevSampR1];
+		kal[prevSampR1] = (kal[kalGainR] * kal[kalOutR]) + ((1.0-kal[kalGainR])*dryKal);
+		//feed the chain of previous samples
 		if (kal[prevSampR1] > 1.0) kal[prevSampR1] = 1.0;
 		if (kal[prevSampR1] < -1.0) kal[prevSampR1] = -1.0;
-		//end Kalman Filter, except for kaldrive trim on output		
-		
-		inputSampleL = (drySampleL*(1.0-wet))+(kal[kalOutL]*wet*kaldrive);
-		inputSampleR = (drySampleR*(1.0-wet))+(kal[kalOutR]*wet*kaldrive);
+		//end Kalman Filter, except for trim on output		
+		inputSampleR = (drySampleR*dry)+(kal[kalOutR]*wet*0.777);
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -109,12 +121,10 @@ void Kalman::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	double kalman = 1.0-pow(1.0-A,2);
-	double kaldrive = B;
-	double kalgain = kalman*8.0;
-	double kalthresh = kalman*0.5;
-	double kalDryTrim = 1.0 - (0.68+(kalthresh*0.314));
-	double wet = C;
+	double kalman = 1.0-pow(A,2);
+	double wet = (B*2.0)-1.0; //inv-dry-wet for highpass
+	double dry = 2.0-(B*2.0);
+	if (dry > 1.0) dry = 1.0; //full dry for use with inv, to 0.0 at full wet
 	
     while (--sampleFrames >= 0)
     {
@@ -126,49 +136,63 @@ void Kalman::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		double drySampleR = inputSampleR;
 		
 		//begin Kalman Filter
-		double dryKalL = inputSampleL = inputSampleL*(1.0-kalman)*kaldrive;
-		double dryKalR = inputSampleR = inputSampleR*(1.0-kalman)*kaldrive;
-		inputSampleL *= (1.0-kalman); inputSampleR *= (1.0-kalman);
+		double dryKal = inputSampleL = inputSampleL*(1.0-kalman)*0.777;
+		inputSampleL *= (1.0-kalman);
 		//set up gain levels to control the beast
 		kal[prevSlewL3] += kal[prevSampL3] - kal[prevSampL2]; kal[prevSlewL3] *= 0.5;
-		kal[prevSlewR3] += kal[prevSampR3] - kal[prevSampR2]; kal[prevSlewR3] *= 0.5;
 		kal[prevSlewL2] += kal[prevSampL2] - kal[prevSampL1]; kal[prevSlewL2] *= 0.5;
-		kal[prevSlewR2] += kal[prevSampR2] - kal[prevSampR1]; kal[prevSlewR2] *= 0.5;
 		kal[prevSlewL1] += kal[prevSampL1] - inputSampleL; kal[prevSlewL1] *= 0.5;
-		kal[prevSlewR1] += kal[prevSampR1] - inputSampleR; kal[prevSlewR1] *= 0.5;
 		//make slews from each set of samples used
 		kal[accSlewL2] += kal[prevSlewL3] - kal[prevSlewL2]; kal[accSlewL2] *= 0.5;
-		kal[accSlewR2] += kal[prevSlewR3] - kal[prevSlewR2]; kal[accSlewR2] *= 0.5;
 		kal[accSlewL1] += kal[prevSlewL2] - kal[prevSlewL1]; kal[accSlewL1] *= 0.5;
-		kal[accSlewR1] += kal[prevSlewR2] - kal[prevSlewR1]; kal[accSlewR1] *= 0.5;
 		//differences between slews: rate of change of rate of change
 		kal[accSlewL3] += (kal[accSlewL2] - kal[accSlewL1]); kal[accSlewL3] *= 0.5;
-		kal[accSlewR3] += (kal[accSlewR2] - kal[accSlewR1]); kal[accSlewR3] *= 0.5;
 		//entering the abyss, what even is this
 		kal[kalOutL] += kal[prevSampL1] + kal[prevSlewL2] + kal[accSlewL3]; kal[kalOutL] *= 0.5;
-		kal[kalOutR] += kal[prevSampR1] + kal[prevSlewR2] + kal[accSlewR3]; kal[kalOutR] *= 0.5;
 		//resynthesizing predicted result (all iir smoothed)
-		kal[kalGainL] += fabs(dryKalL-kal[kalOutL])*kalgain; kal[kalGainL] *= 0.5;
-		kal[kalGainR] += fabs(dryKalR-kal[kalOutR])*kalgain; kal[kalGainR] *= 0.5;
+		kal[kalGainL] += fabs(dryKal-kal[kalOutL])*kalman*8.0; kal[kalGainL] *= 0.5;
 		//madness takes its toll. Kalman Gain: how much dry to retain
-		if (kal[kalGainL] > kalthresh) kal[kalGainL] = kalthresh;
-		if (kal[kalGainR] > kalthresh) kal[kalGainR] = kalthresh;
+		if (kal[kalGainL] > kalman*0.5) kal[kalGainL] = kalman*0.5;
 		//attempts to avoid explosions
-		kal[kalOutL] += (dryKalL*kalDryTrim); kal[kalOutR] += (dryKalR*kalDryTrim);		
+		kal[kalOutL] += (dryKal*(1.0-(0.68+(kalman*0.157))));	
 		//this is for tuning a really complete cancellation up around Nyquist
-		kal[prevSampL3] = kal[prevSampL2]; kal[prevSampR3] = kal[prevSampR2];
-		kal[prevSampL2] = kal[prevSampL1]; kal[prevSampR2] = kal[prevSampR1];
-		kal[prevSampL1] = (kal[kalGainL] * kal[kalOutL]) + ((1.0-kal[kalGainL])*dryKalL);
-		kal[prevSampR1] = (kal[kalGainR] * kal[kalOutR]) + ((1.0-kal[kalGainR])*dryKalR);
+		kal[prevSampL3] = kal[prevSampL2];
+		kal[prevSampL2] = kal[prevSampL1];
+		kal[prevSampL1] = (kal[kalGainL] * kal[kalOutL]) + ((1.0-kal[kalGainL])*dryKal);
 		//feed the chain of previous samples
 		if (kal[prevSampL1] > 1.0) kal[prevSampL1] = 1.0;
 		if (kal[prevSampL1] < -1.0) kal[prevSampL1] = -1.0;
+		//end Kalman Filter, except for trim on output		
+		inputSampleL = (drySampleL*dry)+(kal[kalOutL]*wet*0.777);
+		//now the right channel
+		dryKal = inputSampleR = inputSampleR*(1.0-kalman)*0.777;
+		inputSampleR *= (1.0-kalman);
+		//set up gain levels to control the beast
+		kal[prevSlewR3] += kal[prevSampR3] - kal[prevSampR2]; kal[prevSlewR3] *= 0.5;
+		kal[prevSlewR2] += kal[prevSampR2] - kal[prevSampR1]; kal[prevSlewR2] *= 0.5;
+		kal[prevSlewR1] += kal[prevSampR1] - inputSampleR; kal[prevSlewR1] *= 0.5;
+		//make slews from each set of samples used
+		kal[accSlewR2] += kal[prevSlewR3] - kal[prevSlewR2]; kal[accSlewR2] *= 0.5;
+		kal[accSlewR1] += kal[prevSlewR2] - kal[prevSlewR1]; kal[accSlewR1] *= 0.5;
+		//differences between slews: rate of change of rate of change
+		kal[accSlewR3] += (kal[accSlewR2] - kal[accSlewR1]); kal[accSlewR3] *= 0.5;
+		//entering the abyss, what even is this
+		kal[kalOutR] += kal[prevSampR1] + kal[prevSlewR2] + kal[accSlewR3]; kal[kalOutR] *= 0.5;
+		//resynthesizing predicted result (all iir smoothed)
+		kal[kalGainR] += fabs(dryKal-kal[kalOutR])*kalman*8.0; kal[kalGainR] *= 0.5;
+		//madness takes its toll. Kalman Gain: how much dry to retain
+		if (kal[kalGainR] > kalman*0.5) kal[kalGainR] = kalman*0.5;
+		//attempts to avoid explosions
+		kal[kalOutR] += (dryKal*(1.0-(0.68+(kalman*0.157))));	
+		//this is for tuning a really complete cancellation up around Nyquist
+		kal[prevSampR3] = kal[prevSampR2];
+		kal[prevSampR2] = kal[prevSampR1];
+		kal[prevSampR1] = (kal[kalGainR] * kal[kalOutR]) + ((1.0-kal[kalGainR])*dryKal);
+		//feed the chain of previous samples
 		if (kal[prevSampR1] > 1.0) kal[prevSampR1] = 1.0;
 		if (kal[prevSampR1] < -1.0) kal[prevSampR1] = -1.0;
-		//end Kalman Filter, except for kaldrive trim on output		
-		
-		inputSampleL = (drySampleL*(1.0-wet))+(kal[kalOutL]*wet*kaldrive);
-		inputSampleR = (drySampleR*(1.0-wet))+(kal[kalOutR]*wet*kaldrive);
+		//end Kalman Filter, except for trim on output		
+		inputSampleR = (drySampleR*dry)+(kal[kalOutR]*wet*0.777);
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

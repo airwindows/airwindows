@@ -99,8 +99,8 @@ ComponentResult			Discontinuity::GetParameterInfo(AudioUnitScope		inScope,
 			case kParam_One:
                 AUBase::FillInParameterName (outParameterInfo, kParameterOneName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 80.0;
-                outParameterInfo.maxValue = 120.0;
+                outParameterInfo.minValue = 70.0;
+                outParameterInfo.maxValue = 140.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamOne;
                 break;
 			default:
@@ -158,16 +158,17 @@ ComponentResult Discontinuity::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Discontinuity::DiscontinuityKernel::Reset()
 {
-	for(int count = 0; count < predelay+2; count++) {
+	for(int count = 0; count < dscBuf+2; count++) {
 		dBaL[count] = 0.0;
 		dBbL[count] = 0.0;
 		dBcL[count] = 0.0;
-		dBdL[count] = 0.0;
 	}
-	dBaX = 1;
-	dBbX = 1;
-	dBcX = 1;
-	dBdX = 1;
+	dBaPosL = 0.0;
+	dBbPosL = 0.0;
+	dBcPosL = 0.0;
+	dBaXL = 1;
+	dBbXL = 1;
+	dBcXL = 1;
 	
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
@@ -188,49 +189,37 @@ void		Discontinuity::DiscontinuityKernel::Process(	const Float32 	*inSourceP,
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
-	double topdB = GetParameter( kParam_One );
-	
-	topdB = 0.000000064 * pow(10.0,topdB/20.0) * overallscale;
-	double dBpos;
-	//dBpos = pow((inputSample-1.0)*0.5,2) is the original formulation
-	//dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5)) from 'Herbie'	
-	double dBi;
-	int dBdly;
+	double refdB = GetParameter( kParam_One );
+	double topdB = 0.000000075 * pow(10.0,refdB/20.0) * overallscale;
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
 		inputSample *= topdB;
-		if (inputSample < -0.999) inputSample = -0.999; if (inputSample > 0.999) inputSample = 0.999;
+		if (inputSample < -0.222) inputSample = -0.222; if (inputSample > 0.222) inputSample = 0.222;
 		//Air Discontinuity A begin
-		dBaL[dBaX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
-		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
-		inputSample = dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*(1.0-dBi);
-		dBdly++; inputSample += dBaL[dBaX-dBdly +((dBaX-dBdly < 0)?predelay:0)]*dBi;
-		dBaX++; if (dBaX < 0 || dBaX > predelay) dBaX = 0;
+		dBaL[dBaXL] = inputSample; dBaPosL *= 0.5; dBaPosL += fabs((inputSample*((inputSample*0.25)-0.5))*0.5);
+		int dBdly = floor(dBaPosL*dscBuf);
+		double dBi = (dBaPosL*dscBuf)-dBdly;
+		inputSample = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSample += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
+		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
 		//Air Discontinuity A end
 		//Air Discontinuity B begin
-		dBbL[dBbX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
-		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
-		inputSample = dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*(1.0-dBi);
-		dBdly++; inputSample += dBbL[dBbX-dBdly +((dBbX-dBdly < 0)?predelay:0)]*dBi;
-		dBbX++; if (dBbX < 0 || dBbX > predelay) dBbX = 0;
+		dBbL[dBbXL] = inputSample;  dBbPosL *= 0.5; dBbPosL += fabs((inputSample*((inputSample*0.25)-0.5))*0.5);
+		dBdly = floor(dBbPosL*dscBuf); dBi = (dBbPosL*dscBuf)-dBdly;
+		inputSample = dBbL[dBbXL-dBdly +((dBbXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSample += dBbL[dBbXL-dBdly +((dBbXL-dBdly < 0)?dscBuf:0)]*dBi;
+		dBbXL++; if (dBbXL < 0 || dBbXL >= dscBuf) dBbXL = 0;
 		//Air Discontinuity B end
 		//Air Discontinuity C begin
-		dBcL[dBcX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
-		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
-		inputSample = dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*(1.0-dBi);
-		dBdly++; inputSample += dBcL[dBcX-dBdly +((dBcX-dBdly < 0)?predelay:0)]*dBi;
-		dBcX++; if (dBcX < 0 || dBcX > predelay) dBcX = 0;
+		dBcL[dBcXL] = inputSample;  dBcPosL *= 0.5; dBcPosL += fabs((inputSample*((inputSample*0.25)-0.5))*0.5);
+		dBdly = floor(dBcPosL*dscBuf); dBi = (dBcPosL*dscBuf)-dBdly;
+		inputSample = dBcL[dBcXL-dBdly +((dBcXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSample += dBcL[dBcXL-dBdly +((dBcXL-dBdly < 0)?dscBuf:0)]*dBi;
+		dBcXL++; if (dBcXL < 0 || dBcXL >= dscBuf) dBcXL = 0;
 		//Air Discontinuity C end
-		//Air Discontinuity D begin
-		dBdL[dBdX] = inputSample; dBpos = 0.25+(inputSample*((inputSample*0.25)-0.5));
-		if (dBpos>1.0) dBpos=1.0; dBdly = floor(dBpos*predelay); dBi = (dBpos*predelay)-dBdly;
-		inputSample = dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*(1.0-dBi);
-		dBdly++; inputSample += dBdL[dBdX-dBdly +((dBdX-dBdly < 0)?predelay:0)]*dBi;
-		dBdX++; if (dBdX < 0 || dBdX > predelay) dBdX = 0;
-		//Air Discontinuity D end
 		inputSample /= topdB;
 		
 		//begin 32 bit floating point dither

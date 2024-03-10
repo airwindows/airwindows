@@ -18,8 +18,7 @@
 enum {
 	kParamA = 0,
 	kParamB = 1,
-	kParamC = 2,
-  kNumParameters = 3
+  kNumParameters = 2
 }; //
 
 const int kNumPrograms = 0;
@@ -54,40 +53,39 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	enum {
-		prevSampL1,
-		prevSlewL1,
-		accSlewL1,
-		prevSampR1,
-		prevSlewR1,
-		accSlewR1,
-		prevSampL2,
-		prevSlewL2,
-		accSlewL2,
-		prevSampR2,
-		prevSlewR2,
-		accSlewR2,
-		prevSampL3,
-		prevSlewL3,
-		accSlewL3,
-		prevSampR3,
-		prevSlewR3,
-		accSlewR3,
-		kalGainL,
-		kalGainR,
-		kalOutL,
-		kalOutR,
-		kal_total
-	};
-	double kal[kal_total];	
-
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff
 
+	enum {
+		prevSampL1,
+		prevSlewL1,
+		accSlewL1,
+		prevSampL2,
+		prevSlewL2,
+		accSlewL2,
+		prevSampL3,
+		prevSlewL3,
+		accSlewL3,
+		kalGainL,
+		kalOutL,
+		prevSampR1,
+		prevSlewR1,
+		accSlewR1,
+		prevSampR2,
+		prevSlewR2,
+		accSlewR2,
+		prevSampR3,
+		prevSlewR3,
+		accSlewR3,
+		kalGainR,
+		kalOutR,
+		kal_total
+	};
+	double kal[kal_total];
+	
     float A;
     float B;
-    float C;
 };
 
 #endif
