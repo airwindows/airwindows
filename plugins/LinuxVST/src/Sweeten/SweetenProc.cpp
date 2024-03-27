@@ -22,10 +22,11 @@ void Sweeten::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	if (cycleEnd > 4) cycleEnd = 4;
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	
-	int sweetBits = 10-floor(A*10.0);
+	int sweetBits = 12-floor(A*13.0);
 	double sweet = 1.0;
 	switch (sweetBits)
 	{
+		case 12: sweet = 0.0; break;
 		case 11: sweet = 0.00048828125; break;
 		case 10: sweet = 0.0009765625; break;
 		case 9: sweet = 0.001953125; break;
@@ -114,10 +115,11 @@ void Sweeten::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	if (cycleEnd > 4) cycleEnd = 4;
 	//this is going to be 2 for 88.1 or 96k, 3 for silly people, 4 for 176 or 192k
 	
-	int sweetBits = 10-floor(A*10.0);
+	int sweetBits = 12-floor(A*13.0);
 	double sweet = 1.0;
 	switch (sweetBits)
 	{
+		case 12: sweet = 0.0; break;
 		case 11: sweet = 0.00048828125; break;
 		case 10: sweet = 0.0009765625; break;
 		case 9: sweet = 0.001953125; break;
