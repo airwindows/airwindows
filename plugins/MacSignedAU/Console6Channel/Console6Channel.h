@@ -124,6 +124,8 @@ public:
         virtual void		Reset();
 		
 		private: 
+		double inTrimA;
+		double inTrimB;
 		uint32_t fpd;
 	};
 };

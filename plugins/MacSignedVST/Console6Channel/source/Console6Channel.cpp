@@ -1,6 +1,6 @@
 /* ========================================
  *  Console6Channel - Console6Channel.h
- *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
+ *  Copyright (c) airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console6Channel_H
@@ -13,6 +13,9 @@ Console6Channel::Console6Channel(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 1.0;
+
+	inTrimA = 1.0; inTrimB = 1.0;
+	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	//this is reset: values being initialized only once. Startup values, whatever they are.
@@ -89,7 +92,7 @@ void Console6Channel::getParameterName(VstInt32 index, char *text) {
 
 void Console6Channel::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: float2string (A, text, kVstMaxParamStrLen); break;			
+        case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }

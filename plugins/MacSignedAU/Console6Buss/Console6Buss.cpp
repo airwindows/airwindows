@@ -48,7 +48,7 @@
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-AUDIOCOMPONENT_ENTRY(AUBaseFactory, Console6Buss)
+COMPONENT_ENTRY(Console6Buss)
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,12 +185,13 @@ void		Console6Buss::Console6BussKernel::Process(	const Float32 	*inSourceP,
 		
 		//encode/decode courtesy of torridgristle under the MIT license
 		//Inverse Square 1-(1-x)^2 and 1-(1-x)^0.5
+		//Reformulated using 'Herbie' for better accuracy near zero
 		
 		if (inputSample > 1.0) inputSample = 1.0;
-		else if (inputSample > 0.0) inputSample = 1.0 - pow(1.0-inputSample,0.5);
+		else if (inputSample > 0.0) inputSample = inputSample / (1.0 + sqrt(1.0 - inputSample));
 		
 		if (inputSample < -1.0) inputSample = -1.0;
-		else if (inputSample < 0.0) inputSample = -1.0 + pow(1.0+inputSample,0.5);
+		else if (inputSample < 0.0) inputSample = inputSample / (sqrt((inputSample + 1.0)) + 1.0);
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

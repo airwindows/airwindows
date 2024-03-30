@@ -158,6 +158,7 @@ ComponentResult Console6Channel::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void		Console6Channel::Console6ChannelKernel::Reset()
 {
+	inTrimA = 1.0; inTrimB = 1.0;
 	fpd = 1.0; while (fpd < 16386) fpd = rand()*UINT32_MAX;
 }
 
@@ -173,24 +174,29 @@ void		Console6Channel::Console6ChannelKernel::Process(	const Float32 	*inSourceP
 	UInt32 nSampleFrames = inFramesToProcess;
 	const Float32 *sourceP = inSourceP;
 	Float32 *destP = inDestP;
-	Float64 gain = GetParameter( kParam_One );
+	inTrimA = inTrimB;
+	inTrimB = GetParameter( kParam_One );
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
-		if (gain != 1.0) {
-			inputSample *= gain;
+		double temp = (double)nSampleFrames/inFramesToProcess;
+		double inTrim = (inTrimA*temp)+(inTrimB*(1.0-temp));
+		
+		if (inTrim != 1.0) {
+			inputSample *= inTrim;
 		}
 		
 		//encode/decode courtesy of torridgristle under the MIT license
 		//Inverse Square 1-(1-x)^2 and 1-(1-x)^0.5
+		//Reformulated using 'Herbie' for better accuracy near zero
 		
 		if (inputSample > 1.0) inputSample = 1.0;
-		else if (inputSample > 0.0) inputSample = 1.0 - pow(1.0-inputSample,2.0);
+		else if (inputSample > 0.0) inputSample = inputSample * (2.0 - inputSample);
 		
 		if (inputSample < -1.0) inputSample = -1.0;
-		else if (inputSample < 0.0) inputSample = -1.0 + pow(1.0+inputSample,2.0);
+		else if (inputSample < 0.0) inputSample = inputSample * (inputSample + 2.0);
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);

@@ -1,6 +1,6 @@
 /* ========================================
  *  Console6Buss - Console6Buss.h
- *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
+ *  Copyright (c) airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console6Buss_H
@@ -13,9 +13,9 @@ void Console6Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
     float* in2  =  inputs[1];
     float* out1 = outputs[0];
     float* out2 = outputs[1];
-	
+
 	double gain = A;
-	
+    
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -23,27 +23,26 @@ void Console6Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		
 		if (gain != 1.0) {
 			inputSampleL *= gain;
 			inputSampleR *= gain;
-		}		
+		}
 		
 		//encode/decode courtesy of torridgristle under the MIT license
 		//Inverse Square 1-(1-x)^2 and 1-(1-x)^0.5
+		//Reformulated using 'Herbie' for better accuracy near zero
 		
-		if (inputSampleL > 1.0) inputSampleL= 1.0;
-		else if (inputSampleL > 0.0) inputSampleL = 1.0 - pow(1.0-inputSampleL,0.5);
+		if (inputSampleL > 1.0) inputSampleL = 1.0;
+		else if (inputSampleL > 0.0) inputSampleL = inputSampleL / (1.0 + sqrt(1.0 - inputSampleL));
 		
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		else if (inputSampleL < 0.0) inputSampleL = -1.0 + pow(1.0+inputSampleL,0.5);
+		else if (inputSampleL < 0.0) inputSampleL = inputSampleL / (sqrt((inputSampleL + 1.0)) + 1.0);
 		
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
-		else if (inputSampleR > 0.0) inputSampleR = 1.0 - pow(1.0-inputSampleR,0.5);
+		else if (inputSampleR > 0.0) inputSampleR = inputSampleR / (1.0 + sqrt(1.0 - inputSampleR));
 		
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		else if (inputSampleR < 0.0) inputSampleR = -1.0 + pow(1.0+inputSampleR,0.5);
-		
+		else if (inputSampleR < 0.0) inputSampleR = inputSampleR / (sqrt((inputSampleR + 1.0)) + 1.0);
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -57,10 +56,10 @@ void Console6Buss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+		in1++;
+		in2++;
+		out1++;
+		out2++;
     }
 }
 
@@ -70,7 +69,7 @@ void Console6Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-	
+
 	double gain = A;
 	
     while (--sampleFrames >= 0)
@@ -80,27 +79,26 @@ void Console6Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		
 		if (gain != 1.0) {
 			inputSampleL *= gain;
 			inputSampleR *= gain;
-		}		
+		}
 		
 		//encode/decode courtesy of torridgristle under the MIT license
 		//Inverse Square 1-(1-x)^2 and 1-(1-x)^0.5
+		//Reformulated using 'Herbie' for better accuracy near zero
 		
-		if (inputSampleL > 1.0) inputSampleL= 1.0;
-		else if (inputSampleL > 0.0) inputSampleL = 1.0 - pow(1.0-inputSampleL,0.5);
+		if (inputSampleL > 1.0) inputSampleL = 1.0;
+		else if (inputSampleL > 0.0) inputSampleL = inputSampleL / (1.0 + sqrt(1.0 - inputSampleL));
 		
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		else if (inputSampleL < 0.0) inputSampleL = -1.0 + pow(1.0+inputSampleL,0.5);
+		else if (inputSampleL < 0.0) inputSampleL = inputSampleL / (sqrt((inputSampleL + 1.0)) + 1.0);
 		
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
-		else if (inputSampleR > 0.0) inputSampleR = 1.0 - pow(1.0-inputSampleR,0.5);
+		else if (inputSampleR > 0.0) inputSampleR = inputSampleR / (1.0 + sqrt(1.0 - inputSampleR));
 		
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		else if (inputSampleR < 0.0) inputSampleR = -1.0 + pow(1.0+inputSampleR,0.5);
-		
+		else if (inputSampleR < 0.0) inputSampleR = inputSampleR / (sqrt((inputSampleR + 1.0)) + 1.0);
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);
@@ -114,9 +112,9 @@ void Console6Buss::processDoubleReplacing(double **inputs, double **outputs, Vst
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
 
-		*in1++;
-		*in2++;
-		*out1++;
-		*out2++;
+		in1++;
+		in2++;
+		out1++;
+		out2++;
     }
 }

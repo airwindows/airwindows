@@ -1,6 +1,6 @@
 /* ========================================
  *  Console6Buss - Console6Buss.h
- *  Copyright (c) 2016 airwindows, Airwindows uses the MIT license
+ *  Copyright (c) airwindows, Airwindows uses the MIT license
  * ======================================== */
 
 #ifndef __Console6Buss_H
