@@ -29,7 +29,7 @@ Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, Butter
 
 Effects: GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: Kalman, Baxandall2, Capacitor2, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
+Filter: Stonefire, Baxandall2, Capacitor2, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
 
 Lo-Fi: Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -3930,6 +3930,32 @@ Mono Bass is simply a highpass on the side channel: adjust to taste, by ear. It�
 Center Squish is a neat twist on ‘widening’. Instead of touching the side channel, it does a simple sine-based saturation or distortion (Density style, not Spiral style) on the mid channel only. If you engage it, it progressively steps on the output of the mid channel but leaves side untouched. That means you can squash a stereo track slightly, giving it a little distortion, and let it squirt out to the sides a bit. You can combine this with a touch of the Stereo Wide, which works on a different algorithm. So it’s some unique tone colorings and techniques to serve the purpose of stereo widening. I hope you like it.
 
 I got a new video light (well, a $30 lightbox to go on one of my existing LED lightbulbs) so I’m kind of excited to make more videos and stuff, and I’ve got a backlog of plugins to try, but understandably (see the DrumSlam post) I’m a little distracted. I want to bring my best for you guys but I also want to honor your kind wishes, so I will post StereoFX and then see if anything comes to mind that I can do, if not immediately for the end of July, then early August: I am also doing the occasional music livestreaming and find that I can express my feelings that way, even if it’s ‘skronk guitar over techno’. So I won’t try and force the plugins (they won’t run out, I promise) and soon I’ll be back in the swing of things. Oh, and the Patreon is doing OK, I won’t worry about that right now but that too is appreciated. If not for that, I wouldn’t have been able to go and support my sister when all this went down, because it made me able to drop everything and zip off to Pennsylvania: without the Patreon, I would struggle to have that much gas covered, and I wouldn’t have been free to go right then, and then I wouldn’t have seen my Dad alive for the last time. So I owe you guys things that can’t be expressed in software or money: thank you.
+
+############ Stonefire is the non-EQ EQ designed for ConsoleX.
+
+There's a reason people have never turned to using Kalman filters for audio purposes.
+
+They're tricky little buggers, unpredictable, with a 'filter slope' that makes no sense at all. They'll take the crossover point and bounce it around wildly, they'll throw in weird gatey behaviors, they'll turn what's supposed to be a 'smooth' 'filtered' sound into an edgy growl and sputter. They're meant to pull real data out of a pile of noise, not to take real audio and give you anything sensible. Nobody would want a Kalman filter for audio purposes.
+
+Stonefire uses two different kinds of Kalman filters for audio, as crossovers. The top crossover is the same as what's in Air3. The bottom crossover comes with a range control (even though that won't give you a 'frequency') and is the same as what's in Kalman.
+
+And when used properly, Stonefire gives you unprecedented levels of tonal control over the texture and presentation of your sound, in a way that almost doesn't even have to do with frequency.
+
+There's three bands, plus the Range control. Air, Fire, and Stone. Each can be cut back to zero, or boosted (Fire and Stone match, while Air has a lot more gain on tap but will match from 0.5 down to 0.0.) If you cut them back to zero you'll get the weird Kalman behavior, but it'll help you set the Range control appropriately. You can set it so Stone covers the lowest lows (never JUST those, it will always do other stuff too) or up to the high mids and lower treble.
+
+Then, if you keep everything balanced and make smaller adjustments, the secret of the Kalman filter emerges. You have to use it as a crossover, and let it apply its incredibly strong character to texture, not frequency. It utterly fails to be a 'filter', but it's an extraordinary texture-shaper, and it's what I'm going to be building the upcoming ConsoleX system around.
+
+Use the Air control like you would in Air3. You can cut back super-highs while seeming to not affect the brightness at all, with a strikingly natural effect. Or, boost it to bring that sparkly aura and light up the sound. It's a custom algorithm that deals with high sample rates by just ramping up the boost: treat it with respect, but it's there to serve your needs for glitter or lack of same.
+
+Use the Fire control like it was an attitude knob, as much as a midrange. You can get a lot of wildness out of this one with careful settings of Range. Between Fire and Stone, only one can be louder: it's a crossover. If you're boosting Fire, that means you want your sound to command attention.
+
+Use the Stone control like it's the bedrock of your sound. If you lean entirely on it and kill all the Fire, you'll get a monumentally heavy, sputtering, gatey foundation that zeroes in on the lowest lows, but also tries to put backbone behind anything it thinks is heavy and powerful. This includes lower midrange. Cutting it can control unwieldy bass, but adding it isn't the same as adding a 'bass boost': it'll zero in on things like kick weight and try to present them with unnatural isolation. The secret to adding weight with the Stone control is to let it not seem to be that much of a boost: you can transform the feel of a sound well before you hear 'added bass'. You can also dial the Range up and use the same effect up into the midrange, for an intensely solid punchy character anywhere a sound seems flimsy.
+
+God help you if you try to measure this thing with PluginDoctor or SPAN. I don't even have any idea what will happen. It's all made out of Kalman filters, which are not for use with audio.
+
+Except… when they are ;)
+
+Enjoy the new tone shaping. If it's too ugly, use way less, see how it treats you :)
 
 ############ StudioTan is all the 'non-dither' dithers, up to date and convenient.
 
