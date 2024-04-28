@@ -29,7 +29,7 @@ Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, Butter
 
 Effects: GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: Stonefire, Baxandall2, Capacitor2, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
+Filter: Stonefire, Baxandall2, Pear2, Capacitor2, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance2, Distance, Lowpass, Highpass
 
 Lo-Fi: Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -3101,6 +3101,26 @@ I'm not sure what the frequencies are, partly because the transition point is an
 Another part of the big-console sound is saturation, and this filter does not include that: expect what I do with this to be more intense as far as sounding like real big consoles. I'll need to configure that to suit the target console, as some are famously dirty: so often, people restoring these desks are told how to replace the dead capacitors and the original inductors, on the grounds that the original ones had no headroom (HMMMM…) but for now, Pear is very pure in tone, and it doesn't distort on its own.
 
 It's going to be a lot of work doing what I'm going to do with this tech, and that's not even counting the changes to my reverbs that will come about as I learn from the Bricasti: sure enough, I've identified stuff that I can probably do, and the result should be worth it. I'll try not to bog down and keep plugins coming out as I dig into all this! Stay tuned :)
+
+############ Pear2 is my Pear filter plus nonlinearity.
+
+Turns out I got more use out of Pear than anybody else… until now.
+
+Pear (as a plugin) is real experimental. It's got fixed cutoff points based on bit shifting, to see what that was like and whether it would maximize tone purity. Maybe it did (you've got it already so you're free to check it out). It's got a Poles control, but it's not meant to be a sweepy synth filter, it was purely an experiment on things I could do with the Holt algorithm.
+
+Turns out you can have a lot more fun with it when you turn it loose.
+
+Pear2 doesn't restrict the frequencies. In fact it smooths the control, specifically so you can sweep it. You can sweep everything except Poles: there's a switch on that, but you get to add WAY more poles than before.
+
+And then there's the Nonlin control… and now it's time to get gnarly.
+
+This doesn't have a distortion circuit! As filthy as it can get, none of that is from distortion or saturation. It's purely from the same nonlinearity calculation present in Capacitor2, in BiquadNonlin, and so on. That is applied here to a completely different algorithm based on Holt, and the more poles you add to the gnarly brew, the weirder it gets. You can use this for a really vibey analog-style EQ (high or low shelf: I'll be using it as a crossover) or you can push it until it's making a sound that has not been heard before.
+
+So if you liked weirdness like the Y series filters, this is your new toy. Back next week with…
+
+…more.
+
+Yeah, let's just call it 'more' ;)
 
 ############ PhaseNudge is a phase rotator/allpass filter.
 
