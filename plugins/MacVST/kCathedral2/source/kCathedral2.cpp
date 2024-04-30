@@ -165,6 +165,7 @@ kCathedral2::kCathedral2(audioMasterCallback audioMaster) :
 	countYR = 1;
 	
 	countZ = 1;
+	countVLF = 1;
 	
 	cycle = 0;
 	

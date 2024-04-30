@@ -324,6 +324,7 @@ ComponentResult		kCathedral2::Reset(AudioUnitScope inScope, AudioUnitElement inE
 	countYR = 1;
 	
 	countZ = 1;
+	countVLF = 1;
 	
 	cycle = 0;
 	
