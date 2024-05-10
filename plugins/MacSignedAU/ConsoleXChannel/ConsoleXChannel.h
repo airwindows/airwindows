@@ -54,36 +54,125 @@
 #pragma mark ____ConsoleXChannel Parameters
 
 // parameters
-static const float kDefaultValue_ParamOne = 0.5;
-static const float kDefaultValue_ParamTwo = 0.5;
-static const float kDefaultValue_ParamThree = 0.5;
-static const float kDefaultValue_ParamFour = 0.5;
-static const float kDefaultValue_ParamFive = 0.5;
-static const float kDefaultValue_ParamSix = 100.0;
-static const float kDefaultValue_ParamSeven = 0.5;
-static const float kDefaultValue_ParamEight = 0.5;
-
-static CFStringRef kParameterOneName = CFSTR("Air");
-static CFStringRef kParameterTwoName = CFSTR("Fire");
-static CFStringRef kParameterThreeName = CFSTR("Stone");
-static CFStringRef kParameterFourName = CFSTR("Reso");
-static CFStringRef kParameterFiveName = CFSTR("Range");
-static CFStringRef kParameterSixName = CFSTR("Top dB");
-static CFStringRef kParameterSevenName = CFSTR("Pan");
-static CFStringRef kParameterEightName = CFSTR("Fader");
-//Alter the name if desired, but using the plugin name is a start
+static const float kDefaultValue_ParamHIP = 0.0;
+static const float kDefaultValue_ParamLOP = 0.0;
+static CFStringRef kParameterHIPName = CFSTR("Highpas");
+static CFStringRef kParameterLOPName = CFSTR("Lowpass");
+//distributed highpass and lowpass
+static const float kDefaultValue_ParamAIR = 0.5;
+static const float kDefaultValue_ParamFIR = 0.5;
+static const float kDefaultValue_ParamSTO = 0.5;
+static const float kDefaultValue_ParamRNG = 0.5;
+static const float kDefaultValue_ParamFCT = 1.0;
+static const float kDefaultValue_ParamSCT = 1.0;
+static const float kDefaultValue_ParamFCR = 1.0;
+static const float kDefaultValue_ParamSCR = 1.0;
+static const float kDefaultValue_ParamFCA = 0.5;
+static const float kDefaultValue_ParamSCA = 0.5;
+static const float kDefaultValue_ParamFCL = 0.5;
+static const float kDefaultValue_ParamSCL = 0.5;
+static const float kDefaultValue_ParamFGT = 0.0;
+static const float kDefaultValue_ParamSGT = 0.0;
+static const float kDefaultValue_ParamFGR = 1.0;
+static const float kDefaultValue_ParamSGR = 1.0;
+static const float kDefaultValue_ParamFGS = 0.5;
+static const float kDefaultValue_ParamSGS = 0.5;
+static const float kDefaultValue_ParamFGL = 0.5;
+static const float kDefaultValue_ParamSGL = 0.5;
+static CFStringRef kParameterAIRName = CFSTR("Air");
+static CFStringRef kParameterFIRName = CFSTR("Fire");
+static CFStringRef kParameterSTOName = CFSTR("Stone");
+static CFStringRef kParameterRNGName = CFSTR("Range");
+static CFStringRef kParameterFCTName = CFSTR("FC Thrs");
+static CFStringRef kParameterSCTName = CFSTR("SC Thrs");
+static CFStringRef kParameterFCRName = CFSTR("FC Rati");
+static CFStringRef kParameterSCRName = CFSTR("SC Rati");
+static CFStringRef kParameterFCAName = CFSTR("FC Atk");
+static CFStringRef kParameterSCAName = CFSTR("SC Atk");
+static CFStringRef kParameterFCLName = CFSTR("FC Rls");
+static CFStringRef kParameterSCLName = CFSTR("SC Rls");
+static CFStringRef kParameterFGTName = CFSTR("FG Thrs");
+static CFStringRef kParameterSGTName = CFSTR("SG Thrs");
+static CFStringRef kParameterFGRName = CFSTR("FG Rati");
+static CFStringRef kParameterSGRName = CFSTR("SG Rati");
+static CFStringRef kParameterFGSName = CFSTR("FG Sust");
+static CFStringRef kParameterSGSName = CFSTR("SG Sust");
+static CFStringRef kParameterFGLName = CFSTR("FG Rls");
+static CFStringRef kParameterSGLName = CFSTR("SG Rls");
+//Stonefire Compression and Gate
+static const float kDefaultValue_ParamTRF = 0.5;
+static const float kDefaultValue_ParamTRG = 0.5;
+static const float kDefaultValue_ParamTRR = 0.5;
+static const float kDefaultValue_ParamHMF = 0.5;
+static const float kDefaultValue_ParamHMG = 0.5;
+static const float kDefaultValue_ParamHMR = 0.5;
+static const float kDefaultValue_ParamLMF = 0.5;
+static const float kDefaultValue_ParamLMG = 0.5;
+static const float kDefaultValue_ParamLMR = 0.5;
+static const float kDefaultValue_ParamBSF = 0.5;
+static const float kDefaultValue_ParamBSG = 0.5;
+static const float kDefaultValue_ParamBSR = 0.5;
+static CFStringRef kParameterTRFName = CFSTR("Tr Freq");
+static CFStringRef kParameterTRGName = CFSTR("Treble");
+static CFStringRef kParameterTRRName = CFSTR("Tr Reso");
+static CFStringRef kParameterHMFName = CFSTR("HM Freq");
+static CFStringRef kParameterHMGName = CFSTR("HighMid");
+static CFStringRef kParameterHMRName = CFSTR("HM Reso");
+static CFStringRef kParameterLMFName = CFSTR("LM Freq");
+static CFStringRef kParameterLMGName = CFSTR("LowMid");
+static CFStringRef kParameterLMRName = CFSTR("LM Reso");
+static CFStringRef kParameterBSFName = CFSTR("Bs Freq");
+static CFStringRef kParameterBSGName = CFSTR("Bass");
+static CFStringRef kParameterBSRName = CFSTR("Bs Reso");
+//Parametric
+static const float kDefaultValue_ParamDSC = 100.0;
+static const float kDefaultValue_ParamPAN = 0.5;
+static const float kDefaultValue_ParamFAD = 0.5;
+static CFStringRef kParameterDSCName = CFSTR("Top dB");
+static CFStringRef kParameterPANName = CFSTR("Pan");
+static CFStringRef kParameterFADName = CFSTR("Fader");
+//Discontinuity, Pan, Fader
 
 enum {
-	kParam_One =0,
-	kParam_Two =1,
-	kParam_Three =2,
-	kParam_Four =3,
-	kParam_Five =4,
-	kParam_Six =5,
-	kParam_Seven =6,
-	kParam_Eight =7,
+	kParam_HIP = 0,
+	kParam_LOP = 1,
+	kParam_AIR = 2,
+	kParam_FIR = 3,
+	kParam_STO = 4,
+	kParam_RNG = 5,
+	kParam_FCT = 6,
+	kParam_SCT = 7,
+	kParam_FCR = 8,
+	kParam_SCR = 9,
+	kParam_FCA = 10,
+	kParam_SCA = 11,
+	kParam_FCL = 12,
+	kParam_SCL = 13,
+	kParam_FGT = 14,
+	kParam_SGT = 15,
+	kParam_FGR = 16,
+	kParam_SGR = 17,
+	kParam_FGS = 18,
+	kParam_SGS = 19,
+	kParam_FGL = 20,
+	kParam_SGL = 21,	
+	kParam_TRF = 22,
+	kParam_TRG = 23,
+	kParam_TRR = 24,
+	kParam_HMF = 25,
+	kParam_HMG = 26,
+	kParam_HMR = 27,
+	kParam_LMF = 28,
+	kParam_LMG = 29,
+	kParam_LMR = 30,
+	kParam_BSF = 31,
+	kParam_BSG = 32,
+	kParam_BSR = 33,
+	kParam_DSC = 34,
+	kParam_PAN = 35,
+	kParam_FAD = 36,
 	//Add your parameters here...
-	kNumberOfParameters=8
+	kNumberOfParameters=37
 };
 const int dscBuf = 90;
 
@@ -131,94 +220,76 @@ public:
 	/*! @method Version */
 	virtual ComponentResult		Version() { return kConsoleXChannelVersion; }
 	
-	private: 
+	private:
 	
 	enum {
-		biq_freq,
-		biq_reso,
-		biq_a0,
-		biq_a1,
-		biq_a2,
-		biq_b1,
-		biq_b2,
-		biq_sL1,
-		biq_sL2,
-		biq_sR1,
-		biq_sR2,
-		biq_total
+		hilp_freq, hilp_temp,
+		hilp_a0, hilp_a1, hilp_b1, hilp_b2,
+		hilp_c0, hilp_c1, hilp_d1, hilp_d2,
+		hilp_e0, hilp_e1, hilp_f1, hilp_f2,
+		hilp_aL1, hilp_aL2, hilp_aR1, hilp_aR2,
+		hilp_cL1, hilp_cL2, hilp_cR1, hilp_cR2,
+		hilp_eL1, hilp_eL2, hilp_eR1, hilp_eR2,
+		hilp_total
 	};
-	double biquad[biq_total];
+	double highpass[hilp_total];
+	double lowpass[hilp_total];
 	
 	enum {
-		pvAL1,
-		pvSL1,
-		accSL1,
-		acc2SL1,
-		pvAL2,
-		pvSL2,
-		accSL2,
-		acc2SL2,
-		pvAL3,
-		pvSL3,
-		accSL3,
-		pvAL4,
-		pvSL4,
-		gndavgL,
-		outAL,
-		gainAL,
-		pvAR1,
-		pvSR1,
-		accSR1,
-		acc2SR1,
-		pvAR2,
-		pvSR2,
-		accSR2,
-		acc2SR2,
-		pvAR3,
-		pvSR3,
-		accSR3,
-		pvAR4,
-		pvSR4,
-		gndavgR,
-		outAR,
-		gainAR,
+		pvAL1, pvSL1, accSL1, acc2SL1,
+		pvAL2, pvSL2, accSL2, acc2SL2,
+		pvAL3, pvSL3, accSL3,
+		pvAL4, pvSL4,
+		gndavgL, outAL, gainAL,
+		pvAR1, pvSR1, accSR1, acc2SR1,
+		pvAR2, pvSR2, accSR2, acc2SR2,
+		pvAR3, pvSR3, accSR3,
+		pvAR4, pvSR4,
+		gndavgR, outAR, gainAR,
 		air_total
 	};
 	double air[air_total];
 	
 	enum {
-		prevSampL1,
-		prevSlewL1,
-		accSlewL1,
-		prevSampL2,
-		prevSlewL2,
-		accSlewL2,
-		prevSampL3,
-		prevSlewL3,
-		accSlewL3,
-		kalGainL,
-		kalOutL,
-		prevSampR1,
-		prevSlewR1,
-		accSlewR1,
-		prevSampR2,
-		prevSlewR2,
-		accSlewR2,
-		prevSampR3,
-		prevSlewR3,
-		accSlewR3,
-		kalGainR,
-		kalOutR,
+		prevSampL1, prevSlewL1, accSlewL1,
+		prevSampL2, prevSlewL2, accSlewL2,
+		prevSampL3, prevSlewL3, accSlewL3,
+		kalGainL, kalOutL,
+		prevSampR1, prevSlewR1, accSlewR1,
+		prevSampR2, prevSlewR2, accSlewR2,
+		prevSampR3, prevSlewR3, accSlewR3,
+		kalGainR, kalOutR,
 		kal_total
 	};
 	double kal[kal_total];
+	double fireCompL;
+	double fireCompR;
+	double fireGate;
+	double stoneCompL;
+	double stoneCompR;
+	double stoneGate;
+	double airGainA;
+	double airGainB;
+	double fireGainA;
+	double fireGainB;
+	double stoneGainA;
+	double stoneGainB;
 	
-	double mpkL[2005];
-	double mpkR[2005];
-	double f[66];
-	double prevfreqMPeak;
-	double prevamountMPeak;
-	int mpc;
+	enum { 
+		biqs_freq, biqs_reso, biqs_level,
+		biqs_nonlin, biqs_temp, biqs_dis,
+		biqs_a0, biqs_a1, biqs_b1, biqs_b2,
+		biqs_c0, biqs_c1, biqs_d1, biqs_d2,
+		biqs_e0, biqs_e1, biqs_f1, biqs_f2,
+		biqs_aL1, biqs_aL2, biqs_aR1, biqs_aR2,
+		biqs_cL1, biqs_cL2, biqs_cR1, biqs_cR2,
+		biqs_eL1, biqs_eL2, biqs_eR1, biqs_eR2,
+		biqs_outL, biqs_outR, biqs_total
+	};
+	double high[biqs_total];
+	double hmid[biqs_total];
+	double lmid[biqs_total];
+	double bass[biqs_total];
 	
 	double dBaL[dscBuf+5];
 	double dBaR[dscBuf+5];
@@ -227,14 +298,6 @@ public:
 	int dBaXL;
 	int dBaXR;
 	
-	double trebleGainA;
-	double trebleGainB;
-	double midGainA;
-	double midGainB;
-	double mPeakA;
-	double mPeakB;
-	double bassGainA;
-	double bassGainB;
 	double panA;
 	double panB;
 	double inTrimA;

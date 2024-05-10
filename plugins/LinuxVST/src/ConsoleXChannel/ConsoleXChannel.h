@@ -16,15 +16,44 @@
 #include <math.h>
 
 enum {
-	kParamA = 0,
-	kParamB = 1,
-	kParamC = 2,
-	kParamD = 3,
-	kParamE = 4,
-	kParamF = 5,
-	kParamG = 6,
-	kParamH = 7,
-  kNumParameters = 8
+	kParamHIP = 0,
+	kParamLOP = 1,
+	kParamAIR = 2,
+	kParamFIR = 3,
+	kParamSTO = 4,
+	kParamRNG = 5,
+	kParamFCT = 6,
+	kParamSCT = 7,
+	kParamFCR = 8,
+	kParamSCR = 9,
+	kParamFCA = 10,
+	kParamSCA = 11,
+	kParamFCL = 12,
+	kParamSCL = 13,
+	kParamFGT = 14,
+	kParamSGT = 15,
+	kParamFGR = 16,
+	kParamSGR = 17,
+	kParamFGS = 18,
+	kParamSGS = 19,
+	kParamFGL = 20,
+	kParamSGL = 21,	
+	kParamTRF = 22,
+	kParamTRG = 23,
+	kParamTRR = 24,
+	kParamHMF = 25,
+	kParamHMG = 26,
+	kParamHMR = 27,
+	kParamLMF = 28,
+	kParamLMG = 29,
+	kParamLMR = 30,
+	kParamBSF = 31,
+	kParamBSG = 32,
+	kParamBSR = 33,
+	kParamDSC = 34,
+	kParamPAN = 35,
+	kParamFAD = 36,
+	kNumParameters = 37
 }; //
 const int dscBuf = 90;
 
@@ -60,96 +89,112 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-	uint32_t fpdL;
-	uint32_t fpdR;
-	//default stuff
-
-	enum {
-		biq_freq,
-		biq_reso,
-		biq_a0,
-		biq_a1,
-		biq_a2,
-		biq_b1,
-		biq_b2,
-		biq_sL1,
-		biq_sL2,
-		biq_sR1,
-		biq_sR2,
-		biq_total
-	};
-	double biquad[biq_total];
+	float HIP;
+	float LOP;
+	float AIR;
+	float FIR;
+	float STO;
+	float RNG;
+	float FCT;
+	float SCT;
+	float FCR;
+	float SCR;
+	float FCA;
+	float SCA;
+	float FCL;
+	float SCL;
+	float FGT;
+	float SGT;
+	float FGR;
+	float SGR;
+	float FGS;
+	float SGS;
+	float FGL;
+	float SGL;	
+	float TRF;
+	float TRG;
+	float TRR;
+	float HMF;
+	float HMG;
+	float HMR;
+	float LMF;
+	float LMG;
+	float LMR;
+	float BSF;
+	float BSG;
+	float BSR;
+	float DSC;
+	float PAN;
+	float FAD;
 	
 	enum {
-		pvAL1,
-		pvSL1,
-		accSL1,
-		acc2SL1,
-		pvAL2,
-		pvSL2,
-		accSL2,
-		acc2SL2,
-		pvAL3,
-		pvSL3,
-		accSL3,
-		pvAL4,
-		pvSL4,
-		gndavgL,
-		outAL,
-		gainAL,
-		pvAR1,
-		pvSR1,
-		accSR1,
-		acc2SR1,
-		pvAR2,
-		pvSR2,
-		accSR2,
-		acc2SR2,
-		pvAR3,
-		pvSR3,
-		accSR3,
-		pvAR4,
-		pvSR4,
-		gndavgR,
-		outAR,
-		gainAR,
+		hilp_freq, hilp_temp,
+		hilp_a0, hilp_a1, hilp_b1, hilp_b2,
+		hilp_c0, hilp_c1, hilp_d1, hilp_d2,
+		hilp_e0, hilp_e1, hilp_f1, hilp_f2,
+		hilp_aL1, hilp_aL2, hilp_aR1, hilp_aR2,
+		hilp_cL1, hilp_cL2, hilp_cR1, hilp_cR2,
+		hilp_eL1, hilp_eL2, hilp_eR1, hilp_eR2,
+		hilp_total
+	};
+	double highpass[hilp_total];
+	double lowpass[hilp_total];
+	
+	enum {
+		pvAL1, pvSL1, accSL1, acc2SL1,
+		pvAL2, pvSL2, accSL2, acc2SL2,
+		pvAL3, pvSL3, accSL3,
+		pvAL4, pvSL4,
+		gndavgL, outAL, gainAL,
+		pvAR1, pvSR1, accSR1, acc2SR1,
+		pvAR2, pvSR2, accSR2, acc2SR2,
+		pvAR3, pvSR3, accSR3,
+		pvAR4, pvSR4,
+		gndavgR, outAR, gainAR,
 		air_total
 	};
 	double air[air_total];
 	
 	enum {
-		prevSampL1,
-		prevSlewL1,
-		accSlewL1,
-		prevSampL2,
-		prevSlewL2,
-		accSlewL2,
-		prevSampL3,
-		prevSlewL3,
-		accSlewL3,
-		kalGainL,
-		kalOutL,
-		prevSampR1,
-		prevSlewR1,
-		accSlewR1,
-		prevSampR2,
-		prevSlewR2,
-		accSlewR2,
-		prevSampR3,
-		prevSlewR3,
-		accSlewR3,
-		kalGainR,
-		kalOutR,
+		prevSampL1, prevSlewL1, accSlewL1,
+		prevSampL2, prevSlewL2, accSlewL2,
+		prevSampL3, prevSlewL3, accSlewL3,
+		kalGainL, kalOutL,
+		prevSampR1, prevSlewR1, accSlewR1,
+		prevSampR2, prevSlewR2, accSlewR2,
+		prevSampR3, prevSlewR3, accSlewR3,
+		kalGainR, kalOutR,
 		kal_total
 	};
 	double kal[kal_total];
+	double fireCompL;
+	double fireCompR;
+	double fireGate;
+	double stoneCompL;
+	double stoneCompR;
+	double stoneGate;	
+	double airGainA;
+	double airGainB;
+	double fireGainA;
+	double fireGainB;
+	double stoneGainA;
+	double stoneGainB;
 	
-	double mpkL[2005];
-	double mpkR[2005];
-	double f[66];
-	double prevfreqMPeak;
-	double prevamountMPeak;
-	int mpc;
+	enum { 
+		biqs_freq, biqs_reso, biqs_level,
+		biqs_nonlin, biqs_temp, biqs_dis,
+		biqs_a0, biqs_a1, biqs_b1, biqs_b2,
+		biqs_c0, biqs_c1, biqs_d1, biqs_d2,
+		biqs_e0, biqs_e1, biqs_f1, biqs_f2,
+		biqs_aL1, biqs_aL2, biqs_aR1, biqs_aR2,
+		biqs_cL1, biqs_cL2, biqs_cR1, biqs_cR2,
+		biqs_eL1, biqs_eL2, biqs_eR1, biqs_eR2,
+		biqs_outL, biqs_outR, biqs_total
+	};
+	double high[biqs_total];
+	double hmid[biqs_total];
+	double lmid[biqs_total];
+	double bass[biqs_total];
 	
 	double dBaL[dscBuf+5];
 	double dBaR[dscBuf+5];
@@ -158,27 +203,14 @@ private:
 	int dBaXL;
 	int dBaXR;
 	
-	double trebleGainA;
-	double trebleGainB;
-	double midGainA;
-	double midGainB;
-	double mPeakA;
-	double mPeakB;
-	double bassGainA;
-	double bassGainB;
 	double panA;
 	double panB;
 	double inTrimA;
 	double inTrimB;
-		
-    float A;
-    float B;
-    float C;
-    float D;
-    float E;
-    float F;
-    float G;
-    float H;
+	
+	uint32_t fpdL;
+	uint32_t fpdR;
+	//default stuff
 };
 
 #endif
