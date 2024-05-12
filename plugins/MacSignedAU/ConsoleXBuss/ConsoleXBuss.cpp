@@ -735,8 +735,8 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	inTrimA = inTrimB; inTrimB = GetParameter( kParam_FAD )*2.0;
 	
 	while (nSampleFrames-- > 0) {
-		double inputSampleL = *inputL;
-		double inputSampleR = *inputR;
+		long double inputSampleL = *inputL;
+		long double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		

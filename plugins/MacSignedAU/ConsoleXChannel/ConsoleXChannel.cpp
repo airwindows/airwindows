@@ -682,8 +682,8 @@ OSStatus		ConsoleXChannel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 	inTrimA = inTrimB; inTrimB = GetParameter( kParam_FAD )*2.0;
 	
 	while (nSampleFrames-- > 0) {
-		double inputSampleL = *inputL;
-		double inputSampleR = *inputR;
+		long double inputSampleL = *inputL;
+		long double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
@@ -897,7 +897,7 @@ OSStatus		ConsoleXChannel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
 		if (gain > 1.0) gain *= gain;
 		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 1.527864045000421;
+		gain *= 0.763932022500211;
 		double airGain = (airGainA*temp)+(airGainB*(1.0-temp));
 		double fireGain = (fireGainA*temp)+(fireGainB*(1.0-temp));
 		double stoneGain = (stoneGainA*temp)+(stoneGainB*(1.0-temp));

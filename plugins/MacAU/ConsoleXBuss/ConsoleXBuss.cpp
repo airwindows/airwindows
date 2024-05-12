@@ -149,7 +149,6 @@ ComponentResult			ConsoleXBuss::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamLOP;
                 break;
-				
 			case kParam_AIR:
                 AUBase::FillInParameterName (outParameterInfo, kParameterAIRName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
@@ -375,7 +374,6 @@ ComponentResult			ConsoleXBuss::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamBSR;
                 break;
-
 			case kParam_DSC:
                 AUBase::FillInParameterName (outParameterInfo, kParameterDSCName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
@@ -735,8 +733,8 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	inTrimA = inTrimB; inTrimB = GetParameter( kParam_FAD )*2.0;
 	
 	while (nSampleFrames-- > 0) {
-		double inputSampleL = *inputL;
-		double inputSampleR = *inputR;
+		long double inputSampleL = *inputL;
+		long double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		

@@ -41,7 +41,7 @@ Saturation: Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focu
 
 Stereo: Srsly, Srsly2, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTimer, Sidepass, SideDull
 
-Subtlety: Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
+Subtlety: Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
 
 Tape: ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
 
@@ -1443,6 +1443,26 @@ In the event that you’d like a softer, tubier Edge… I’ve got you covered.
 If you liked Airwindows Edge, this is a variation. It doesn’t go nearly as high gain but it’s got a much softer clip to it, and the same controls set up the same way (so highpass/lowpass settings ought to match if you want them to). My intent with it was to have a companion plugin to Edge for use with ITB guitars: I’d be using it with Cabs, but folks who need full-on IRs might try that too, or sandwiching your IR between Dirt and Cabs as a final tone/presentation tweak.
 
 I hope you like it… and not just on guitars. In line with my current ultrasonic filtering approach, you’ll get more mileage out of this and Edge at high sample rates, but the lowpass will let you get some space between you and aliasing no matter what sample rate you’re at.
+
+############ Discontinuity models air under intense loudness.
+
+This might be the most important subtle sound effect I've ever done.
+
+Air isn't linear. That's why DAWs don't sound like reality: they are literally too perfect, in that their transients, their sound combining, every aspect of their operation has no error at all. One would assume this would produce perfect sound, but some of us have never shut up about our grievances with it. (we just lost a titan of that grievance in Steve Albini, but he's far from alone in that.)
+
+If you have sounds in air, they sound real even while the air itself distorts them. Much like my recent work with capacitors modulating their values under voltage pressure (up to 80% in some cases!), air modulates the speed of sound under AIR pressure. This makes incredibly obvious and intense crackles on loud sounds like rocket takeoffs, but many of us have heard this crackle at things like rock concerts, especially in a really live room like a hockey rink.
+
+Discontinuity simply adds THAT distortion. At loudnesses from 70 dB to 140 dB. That's all it does, and at loudnesses below 110 dB or so it's quite subtle… but I've found use for it as quiet as 71dB (the voice tracks on my last two videos!)
+
+I won't say it's correct and accurate at 140dB: I include that because people will enjoy it so much, but I'm not using that much. I just have to… because people will enjoy it, and because it's impossible not to hear when cranked that high.
+
+How to use Discontinuity? At any point in the mix where there's a sound, apply it so that the loudest possible sound (typically 0dB, or clipping) matches the loudness you need. If your sound peaks at 10 dB quieter than clipping, and the sound needs to seem like it's 102 dB, set Discontinuity to 112 dB. And listen! There will be an obvious sweet spot where it starts to seem exactly right, and you can dial in the apparent loudness as if it was a tone or EQ move.
+
+Discontinuity does its frequency modulation using sample buffers. For that reason, it permanently has a bit of latency and it's never quite the same latency because it's frequency modulated by the track it's on. For that reason, you could put it on every track and drum mic as long as you give up the idea of phase coherence. It's better on minimally miked things or possibly submixes, and on distinct sounds that don't need to keep perfect phase alignment with each other.
+
+Depending on who you are and what you've dreamed of being able to make sound do, you might immediately not care about any of that, and immediately start using it on everything and never stop. That's me. It's like when I invented Console, only more so. The interesting thing is how useful I find the quiet, subtle settings when getting a mix to gel and come alive like it's a real sonic event happening. I can set very delicate and quiet, against super loud, and have them all just work.
+
+Discontinuity is a fundamental part of ConsoleX, which I'm still working on. I hope you like getting a little piece of the mixing revolution early, so you can learn about it :)
 
 ############ Distance is a sound design or reverb far-away-izer.
 
