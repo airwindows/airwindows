@@ -220,7 +220,7 @@ OSStatus		Console9Channel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAct
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
 		if (gain > 1.0) gain *= gain;
 		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 1.527864045000421;
+		gain *= 0.763932022500211;
 		
 		inputSampleL = inputSampleL * gainL * gain;
 		inputSampleR = inputSampleR * gainR * gain;
