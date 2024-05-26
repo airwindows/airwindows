@@ -35,7 +35,7 @@ Lo-Fi: Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitt
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kCathedral2, kPlateD, kPlateB, kPlateA, kPlateC, Verbity2, Galactic, Galactic2,    sVerbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kCathedral2, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -50,7 +50,6 @@ Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cide
 Utility: Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
-
 
 
 ############ Acceleration is an acceleration limiter that tames edge, leaves brightness.
@@ -1197,6 +1196,16 @@ If you're looking to get REAL abrasive, the remaining ingredient is fret buzz, a
 You can also run a mono bass into it and it'll still work, but the intention is for neck pickup on the left and bridge pickup on the right. It'll sum the two sounds to mono in any event.
 
 If this is the sort of thing you like, I might have given you a quick Crick in the neck (and the bridge!) and a real short-cut for bass DI tracking. Since this is a plugin, you can track right through it (zero latency) and then if you must do something else in the final mix, you still can. But it's meant to deliver this sort of tone in the most direct, no-fuss way imaginable. I'm looking forward to using this on everything: the extreme rawness of BigAmp and LilAmp turned out to be ideal for this purpose. If it's also useful to you, then yay! Bonus. Or of course misuse it, run breaks or synths or drums into it. Have fun!
+
+############ CrunchCoat is a cursed retro digital reverb!
+
+Such was the reaction of my livestream as this one came to life. Cursed retro digital is such an evocative term, isn't it? Gives you an idea of what you're in store for.
+
+This is no simple bitcrusher. What it's doing, is taking the existing ClearCoat reverb, a bright-ambiences reverb, into unknown territory through relentless abuse of undersampling. This is a first for me: rather than use undersampling to cleanly deliver appropriate reverb sounds whether at 2x or 4x sample rates, this time we're just running with that functionality and allowing you to crunch the sample rate down to about 40 hertz, if you like.
+
+What happens to the waveform when you only get a 'sample' every now and then? In this case, the plugin interpolates so it's not all square-wavey. Good news and/or bad news: it's not doing a clever interpolation. It's basically drawing straight lines between the points. So, depending on what the reverb's doing, you can get fairly soft waves… or pointy spikey nastiness. This, combined with the primitive input not-filtering, means you get a LOT of color and texture, but not the texture it was when it started. Instead… well, 'cursed retro digital' sums it up. Also, you can wildly pitch-swoop the entire reverb and crank up the regeneration to infinite sustain (or cut it out completely, even more than ClearCoat), which I'm sure nobody is going to use for evil at all.
+
+This will lead to great new things for all my reverbs going forward. But this specific reverb is for only certain people, and you know who you are. Have fun!
 
 ############ CrunchyGrooveWear is a version of GrooveWear for more edge and distortion.
 

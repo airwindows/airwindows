@@ -149,7 +149,6 @@ ComponentResult			ConsoleXBuss::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamLOP;
                 break;
-				
 			case kParam_AIR:
                 AUBase::FillInParameterName (outParameterInfo, kParameterAIRName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
@@ -375,7 +374,6 @@ ComponentResult			ConsoleXBuss::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamBSR;
                 break;
-
 			case kParam_DSC:
                 AUBase::FillInParameterName (outParameterInfo, kParameterDSCName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
@@ -558,6 +556,8 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	lowpass[hilp_fA2] = lowpass[hilp_fB2];
 	//previous run through the buffer is still in the filter, so we move it
 	//to the A section and now it's the new starting point.
+	//On the buss, highpass and lowpass are isolators meant to be moved,
+	//so they are interpolated where the channels are not
 	
 	double K = tan(M_PI * highpass[hilp_freq]); //highpass
 	double norm = 1.0 / (1.0 + K / 1.93185165 + K * K);
@@ -624,7 +624,7 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	fireGainA = fireGainB; fireGainB = GetParameter( kParam_FIR )*2.0;
 	stoneGainA = stoneGainB; stoneGainB = GetParameter( kParam_STO )*2.0;
 	//simple three band to adjust
-	double kalmanRange = 1.0-pow(GetParameter( kParam_RNG ),2);
+	double kalmanRange = 1.0-(pow(GetParameter( kParam_RNG ),2)/overallscale);
 	//crossover frequency between mid/bass
 	
 	double compFThresh = pow(GetParameter( kParam_FCT ),4);
@@ -769,12 +769,16 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		double gainL = 1.57079633-gainR;
 		gainR = sin(gainR); gainL = sin(gainL);
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		if (gain > 1.0) gain *= gain;
-		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
+		if (gain > 1.0) gain *= gain; else gain = 1.0-pow(1.0-gain,2);
 		gain *= 1.527864045000421;
 		double airGain = (airGainA*temp)+(airGainB*(1.0-temp));
+		if (airGain > 1.0) airGain *= airGain; else airGain = 1.0-pow(1.0-airGain,2);
 		double fireGain = (fireGainA*temp)+(fireGainB*(1.0-temp));
+		if (fireGain > 1.0) fireGain *= fireGain; else fireGain = 1.0-pow(1.0-fireGain,2);
+		double firePad = fireGain; if (firePad > 1.0) firePad = 1.0;
 		double stoneGain = (stoneGainA*temp)+(stoneGainB*(1.0-temp));
+		if (stoneGain > 1.0) stoneGain *= stoneGain; else stoneGain = 1.0-pow(1.0-stoneGain,2);
+		double stonePad = stoneGain; if (stonePad > 1.0) stonePad = 1.0;
 		//set up smoothed gain controls		
 		
 		if (highpassEngage) { //distributed Highpass
@@ -1007,7 +1011,7 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		air[pvAL2] = air[pvAL1]; air[pvAL1] = (air[gainAL] * air[outAL]) + drySampleL;
 		double fireL = drySampleL - ((air[outAL]*0.5)+(drySampleL*(0.457-(0.017*overallscale))));
 		temp = (fireL + air[gndavgL])*0.5; air[gndavgL] = fireL; fireL = temp;
-		double airL = drySampleL-fireL;
+		double airL = (drySampleL-fireL)*airGain;
 		inputSampleL = fireL;
 		//end Air3L
 		//begin Air3R
@@ -1024,7 +1028,7 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		air[pvAR2] = air[pvAR1]; air[pvAR1] = (air[gainAR] * air[outAR]) + drySampleR;
 		double fireR = drySampleR - ((air[outAR]*0.5)+(drySampleR*(0.457-(0.017*overallscale))));
 		temp = (fireR + air[gndavgR])*0.5; air[gndavgR] = fireR; fireR = temp;
-		double airR = drySampleR-fireR;
+		double airR = (drySampleR-fireR)*airGain;
 		inputSampleR = fireR;
 		//end Air3R
 		//begin KalmanL
@@ -1088,20 +1092,20 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			fireCompL -= (fireCompL * compFAttack);
 			fireCompL += ((compFThresh / fabs(fireL))*compFAttack);
 		} else fireCompL = (fireCompL*(1.0-compFRelease))+compFRelease;
-		if (fireCompL < 0.0) fireCompL = 0.0;
 		if (fabs(fireR) > compFThresh) { //compression R
 			fireCompR -= (fireCompR * compFAttack);
 			fireCompR += ((compFThresh / fabs(fireR))*compFAttack);
 		} else fireCompR = (fireCompR*(1.0-compFRelease))+compFRelease;
-		if (fireCompR < 0.0) fireCompR = 0.0;
 		if (fireCompL > fireCompR) fireCompL -= (fireCompL * compFAttack);
 		if (fireCompR > fireCompL) fireCompR -= (fireCompR * compFAttack);
 		if (fabs(fireL) > gateFThresh) fireGate = gateFSustain;
 		else if (fabs(fireR) > gateFThresh) fireGate = gateFSustain;
 		else fireGate *= (1.0-gateFRelease);
 		if (fireGate < 0.0) fireGate = 0.0;
-		if (fireCompL < 1.0) fireL *= ((1.0-compFRatio)+(fireCompL*compFRatio));
-		if (fireCompR < 1.0) fireR *= ((1.0-compFRatio)+(fireCompR*compFRatio));
+		fireCompL = fmax(fmin(fireCompL,1.0),0.0);
+		fireCompR = fmax(fmin(fireCompR,1.0),0.0);
+		fireL *= (((1.0-compFRatio)*firePad)+(fireCompL*compFRatio*fireGain));
+		fireR *= (((1.0-compFRatio)*firePad)+(fireCompR*compFRatio*fireGain));
 		if (fireGate < M_PI_2) {
 			temp = ((1.0-gateFRatio)+(sin(fireGate)*gateFRatio));
 			airL *= temp;
@@ -1118,20 +1122,20 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			stoneCompL -= (stoneCompL * compSAttack);
 			stoneCompL += ((compSThresh / fabs(stoneL))*compSAttack);
 		} else stoneCompL = (stoneCompL*(1.0-compSRelease))+compSRelease;
-		if (stoneCompL < 0.0) stoneCompL = 0.0;
 		if (fabs(stoneR) > compSThresh) { //compression R
 			stoneCompR -= (stoneCompR * compSAttack);
 			stoneCompR += ((compSThresh / fabs(stoneR))*compSAttack);
 		} else stoneCompR = (stoneCompR*(1.0-compSRelease))+compSRelease;
-		if (stoneCompR < 0.0) stoneCompR = 0.0;
 		if (stoneCompL > stoneCompR) stoneCompL -= (stoneCompL * compSAttack);
 		if (stoneCompR > stoneCompL) stoneCompR -= (stoneCompR * compSAttack);
 		if (fabs(stoneL) > gateSThresh) stoneGate = gateSSustain;
 		else if (fabs(stoneR) > gateSThresh) stoneGate = gateSSustain;
 		else stoneGate *= (1.0-gateSRelease);
 		if (stoneGate < 0.0) stoneGate = 0.0;
-		if (stoneCompL < 1.0) stoneL *= ((1.0-compSRatio)+(stoneCompL*compSRatio));
-		if (stoneCompR < 1.0) stoneR *= ((1.0-compSRatio)+(stoneCompR*compSRatio));
+		stoneCompL = fmax(fmin(stoneCompL,1.0),0.0);
+		stoneCompR = fmax(fmin(stoneCompR,1.0),0.0);
+		stoneL *= (((1.0-compSRatio)*stonePad)+(stoneCompL*compSRatio*stoneGain));
+		stoneR *= (((1.0-compSRatio)*stonePad)+(stoneCompR*compSRatio*stoneGain));
 		if (stoneGate < M_PI_2) {
 			temp = ((1.0-gateSRatio)+(sin(stoneGate)*gateSRatio));
 			stoneL *= temp;
@@ -1141,8 +1145,8 @@ OSStatus		ConsoleXBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			bass[biqs_outL] *= temp; //if Stone gating, gate lmid and bass
 			bass[biqs_outR] *= temp; //note that we aren't compressing these
 		}
-		inputSampleL = (stoneL*stoneGain) + (fireL*fireGain) + (airL*airGain);
-		inputSampleR = (stoneR*stoneGain) + (fireR*fireGain) + (airR*airGain);
+		inputSampleL = stoneL + fireL + airL;
+		inputSampleR = stoneR + fireR + airR;
 		//create Stonefire output
 		
 		if (highpassEngage) { //distributed Highpass

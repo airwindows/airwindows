@@ -249,20 +249,15 @@ void		Pop3Mono::Pop3MonoKernel::Process(	const Float32 	*inSourceP,
 		double inputSample = *sourceP;
 		if (fabs(inputSample)<1.18e-23) inputSample = fpd * 1.18e-17;
 		
-		
 		if (fabs(inputSample) > compThresh) { //compression 
 			popComp -= (popComp * compAttack);
 			popComp += ((compThresh / fabs(inputSample))*compAttack);
-		} else popComp = (popComp*(1.0-compRelease))+compRelease;
-		if (popComp < 0.0) popComp = 0.0;
-		//if (popCompL > popCompR) popCompL -= (popCompL * compAttack);
-		//if (popCompR > popCompL) popCompR -= (popCompR * compAttack);
-		
+		} else popComp = (popComp*(1.0-compRelease))+compRelease;		
 		if (fabs(inputSample) > gateThresh) popGate = gateSustain;
 		else popGate *= (1.0-gateRelease);
 		if (popGate < 0.0) popGate = 0.0;
-		
-		if (popComp < 1.0) inputSample *= ((1.0-compRatio)+(popComp*compRatio));
+		popComp = fmax(fmin(popComp,1.0),0.0);
+		inputSample *= ((1.0-compRatio)+(popComp*compRatio));
 		if (popGate < M_PI_2) inputSample *= ((1.0-gateRatio)+(sin(popGate)*gateRatio));
 				
 		//begin 32 bit floating point dither

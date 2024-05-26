@@ -276,16 +276,18 @@ OSStatus		StoneFireComp::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	double compFThresh = pow(GetParameter( kParam_B ),4);
 	double compFAttack = 1.0/(((pow(GetParameter( kParam_C ),3)*5000.0)+500.0)*overallscale);
 	double compFRelease = 1.0/(((pow(GetParameter( kParam_D ),5)*50000.0)+500.0)*overallscale);
-	double fireGain = GetParameter( kParam_E )*2.0; fireGain = pow(fireGain,3);
+	double fireGain = GetParameter( kParam_E )*2.0;
+	if (fireGain > 1.0) fireGain *= fireGain; else fireGain = 1.0-pow(1.0-fireGain,2);
 	double firePad = fireGain; if (firePad > 1.0) firePad = 1.0;
 	
 	double compSThresh = pow(GetParameter( kParam_F ),4);
 	double compSAttack = 1.0/(((pow(GetParameter( kParam_G ),3)*5000.0)+500.0)*overallscale);
 	double compSRelease = 1.0/(((pow(GetParameter( kParam_H ),5)*50000.0)+500.0)*overallscale);
-	double stoneGain = GetParameter( kParam_I )*2.0; stoneGain = pow(stoneGain,3);
+	double stoneGain = GetParameter( kParam_I )*2.0;
+	if (stoneGain > 1.0) stoneGain *= stoneGain; else stoneGain = 1.0-pow(1.0-stoneGain,2);
 	double stonePad = stoneGain; if (stonePad > 1.0) stonePad = 1.0;
 	
-	double kalman = 1.0-pow(GetParameter( kParam_J ),2);
+	double kalman = 1.0-(pow(GetParameter( kParam_J ),2)/overallscale);
 	//crossover frequency between mid/bass
 	double compRatio = 1.0-pow(1.0-GetParameter( kParam_K ),2);
 	
@@ -360,36 +362,32 @@ OSStatus		StoneFireComp::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 			fireCompL -= (fireCompL * compFAttack);
 			fireCompL += ((compFThresh / fabs(fireL))*compFAttack);
 		} else fireCompL = (fireCompL*(1.0-compFRelease))+compFRelease;
-		if (fireCompL < 0.0) fireCompL = 0.0;
 		if (fabs(fireR) > compFThresh) { //compression R
 			fireCompR -= (fireCompR * compFAttack);
 			fireCompR += ((compFThresh / fabs(fireR))*compFAttack);
 		} else fireCompR = (fireCompR*(1.0-compFRelease))+compFRelease;
-		if (fireCompR < 0.0) fireCompR = 0.0;
 		if (fireCompL > fireCompR) fireCompL -= (fireCompL * compFAttack);
 		if (fireCompR > fireCompL) fireCompR -= (fireCompR * compFAttack);
-		if (fireCompL < 1.0) fireL *= (((1.0-compRatio)*firePad)+(fireCompL*compRatio*fireGain));
-		else fireL *= firePad;
-		if (fireCompR < 1.0) fireR *= (((1.0-compRatio)*firePad)+(fireCompR*compRatio*fireGain));
-		else fireR *= firePad;
+		fireCompL = fmax(fmin(fireCompL,1.0),0.0);
+		fireCompR = fmax(fmin(fireCompR,1.0),0.0);
+		fireL *= (((1.0-compRatio)*firePad)+(fireCompL*compRatio*fireGain));
+		fireR *= (((1.0-compRatio)*firePad)+(fireCompR*compRatio*fireGain));
 		
 		//stone dynamics
 		if (fabs(stoneL) > compSThresh) { //compression L
 			stoneCompL -= (stoneCompL * compSAttack);
 			stoneCompL += ((compSThresh / fabs(stoneL))*compSAttack);
 		} else stoneCompL = (stoneCompL*(1.0-compSRelease))+compSRelease;
-		if (stoneCompL < 0.0) stoneCompL = 0.0;
 		if (fabs(stoneR) > compSThresh) { //compression R
 			stoneCompR -= (stoneCompR * compSAttack);
 			stoneCompR += ((compSThresh / fabs(stoneR))*compSAttack);
 		} else stoneCompR = (stoneCompR*(1.0-compSRelease))+compSRelease;
-		if (stoneCompR < 0.0) stoneCompR = 0.0;
 		if (stoneCompL > stoneCompR) stoneCompL -= (stoneCompL * compSAttack);
 		if (stoneCompR > stoneCompL) stoneCompR -= (stoneCompR * compSAttack);
-		if (stoneCompL < 1.0) stoneL *= (((1.0-compRatio)*stonePad)+(stoneCompL*compRatio*stoneGain));
-		else stoneL *= stonePad;
-		if (stoneCompR < 1.0) stoneR *= (((1.0-compRatio)*stonePad)+(stoneCompR*compRatio*stoneGain));
-		else stoneR *= stonePad;
+		stoneCompL = fmax(fmin(stoneCompL,1.0),0.0);
+		stoneCompR = fmax(fmin(stoneCompR,1.0),0.0);
+		stoneL *= (((1.0-compRatio)*stonePad)+(stoneCompL*compRatio*stoneGain));
+		stoneR *= (((1.0-compRatio)*stonePad)+(stoneCompR*compRatio*stoneGain));
 		
 		inputSampleL = stoneL+fireL;
 		inputSampleR = stoneR+fireR;

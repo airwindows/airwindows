@@ -39,20 +39,20 @@ void Pop3::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 			popCompL -= (popCompL * compAttack);
 			popCompL += ((compThresh / fabs(inputSampleL))*compAttack);
 		} else popCompL = (popCompL*(1.0-compRelease))+compRelease;
-		if (popCompL < 0.0) popCompL = 0.0;
 		if (fabs(inputSampleR) > compThresh) { //compression R
 			popCompR -= (popCompR * compAttack);
 			popCompR += ((compThresh / fabs(inputSampleR))*compAttack);
 		} else popCompR = (popCompR*(1.0-compRelease))+compRelease;
-		if (popCompR < 0.0) popCompR = 0.0;
 		if (popCompL > popCompR) popCompL -= (popCompL * compAttack);
 		if (popCompR > popCompL) popCompR -= (popCompR * compAttack);
 		if (fabs(inputSampleL) > gateThresh) popGate = gateSustain;
 		else if (fabs(inputSampleR) > gateThresh) popGate = gateSustain;
 		else popGate *= (1.0-gateRelease);
 		if (popGate < 0.0) popGate = 0.0;
-		if (popCompL < 1.0) inputSampleL *= ((1.0-compRatio)+(popCompL*compRatio));
-		if (popCompR < 1.0) inputSampleR *= ((1.0-compRatio)+(popCompR*compRatio));
+		popCompL = fmax(fmin(popCompL,1.0),0.0);
+		popCompR = fmax(fmin(popCompR,1.0),0.0);
+		inputSampleL *= ((1.0-compRatio)+(popCompL*compRatio));
+		inputSampleR *= ((1.0-compRatio)+(popCompR*compRatio));
 		if (popGate < M_PI_2) {
 			inputSampleL *= ((1.0-gateRatio)+(sin(popGate)*gateRatio));
 			inputSampleR *= ((1.0-gateRatio)+(sin(popGate)*gateRatio));
@@ -109,20 +109,20 @@ void Pop3::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 			popCompL -= (popCompL * compAttack);
 			popCompL += ((compThresh / fabs(inputSampleL))*compAttack);
 		} else popCompL = (popCompL*(1.0-compRelease))+compRelease;
-		if (popCompL < 0.0) popCompL = 0.0;
 		if (fabs(inputSampleR) > compThresh) { //compression R
 			popCompR -= (popCompR * compAttack);
 			popCompR += ((compThresh / fabs(inputSampleR))*compAttack);
 		} else popCompR = (popCompR*(1.0-compRelease))+compRelease;
-		if (popCompR < 0.0) popCompR = 0.0;
 		if (popCompL > popCompR) popCompL -= (popCompL * compAttack);
 		if (popCompR > popCompL) popCompR -= (popCompR * compAttack);
 		if (fabs(inputSampleL) > gateThresh) popGate = gateSustain;
 		else if (fabs(inputSampleR) > gateThresh) popGate = gateSustain;
 		else popGate *= (1.0-gateRelease);
 		if (popGate < 0.0) popGate = 0.0;
-		if (popCompL < 1.0) inputSampleL *= ((1.0-compRatio)+(popCompL*compRatio));
-		if (popCompR < 1.0) inputSampleR *= ((1.0-compRatio)+(popCompR*compRatio));
+		popCompL = fmax(fmin(popCompL,1.0),0.0);
+		popCompR = fmax(fmin(popCompR,1.0),0.0);
+		inputSampleL *= ((1.0-compRatio)+(popCompL*compRatio));
+		inputSampleR *= ((1.0-compRatio)+(popCompR*compRatio));
 		if (popGate < M_PI_2) {
 			inputSampleL *= ((1.0-gateRatio)+(sin(popGate)*gateRatio));
 			inputSampleR *= ((1.0-gateRatio)+(sin(popGate)*gateRatio));
