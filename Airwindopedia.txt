@@ -9,7 +9,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 Ambience: ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
-Amp Sims: GrindAmp, FireAmp, LeadAmp, CrickBass, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
+Amp Sims: GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
 Bass: OrbitKick, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
@@ -4763,6 +4763,24 @@ It works like this: you’ve got mid and side channels, but taken up several not
 But that’s not all: as a final space-manipulating technique, Wider applies an itty-bitty time delay and interpolation (it can be as small as sub-sample) to whichever is the least forward, mid or side. That causes a delicate roll-off and sits the relevant part just a tiny bit back, spatially… and then the audio’s recombined into stereo again. It’s a bold thing to try, but it’s done very subtly so you wouldn’t know it was happening except I’ve just told you, so my secret is out :)
 
 The result is this: you can kinda-sorta use Wider to produce extreme stereo effects (look for StereoFX, coming soon, as a better way to get aggressive with space) but it really comes into its own when used to redesign stereo soundfields. With tiny, small adjustments, you can get hugely effective results that sound totally natural. This is the mastering-grade one, where you can transform the source in a convincing and musical way, and not lose anything in the process. The effectiveness and transparency, especially when used for tiny corrections, will make this a go-to plugin for real stereo work.
+
+############ Wolfbot is an aggressive Kalman bandpass with evil in its heart.
+
+So it's possible that I simply went too far.
+
+This was inspired by, and specifically modelled after, the famous transformer DI 'Wolfbox', which I don't have. I had only a youtube video made by somebody who did have a real Wolfbox DI (and at that, not a vintage one) and who was A/Bing it against a different DI. I'm putting this out because I was asked to, but understand that it's a science experiment.
+
+And by that I mean, literal science experiment. It answers the question, 'what happens when you use two Kalman filters to mimic the bandpassing of a vintage transformer DI box?' plus there's a bit of saturation on the end. The saturation is not the aggressive distortion you hear: that's the Kalman filters acting as comes naturally! It's possible that DI bass is the single worst signal you could try to put through this plugin that was designed to work on bass, and voiced using examples of bass and DI guitar. It's possible something has gone quite horribly wrong.
+
+Or.
+
+It's possible that this will come in handy more than anybody imagined. The thing is, I worked real hard to get the 'voice' of this dialed in just right, and THEN checked to see what it was really doing. It has a bit of saturation (should rein in snaps and pops nicely) but the grind it delivers isn't from that, it's from specifically the highpass Kalman filter, which is turning the whole sound into a sort of bass horn! I was shocked to see how much this strange plugin turns otherwise normal DI signals into sort of fat beefy pulse waves. Wolfbot is not gentle, and doesn't have any more controls than the original Wolfbox did, and while some kinds of sounds (drums, snares etc) get voiced in a convincingly 'bandpass' way, other sounds like the DIs it was designed to do, get utterly transformed.
+
+It acts more like a bass amp than a transformer DI, but more like some strange new invention than either… and the specific way it retains the hammering, brutal directness of bass low-mids, while wiping out irritating string-gloss (even on a Rickenbacker bridge pickup) and nuking ALL the real bass to make room for kick drums and sub-synths, means in a strange way Wolfbot entirely succeeded. I have a pile of amp-sims, multiple DIs and transformer DIs, and real amps, and none of them are even close to doing this, whatever 'this' is.
+
+I need to try it in some mixes, and so can you. I bet I can add deep-bass boosts and get something else out of it, but even just as it is, I can immediately hear how it would fill in a spot where bass guitars are supposed to go. It's just that rather than going crazy on the channel EQ, or running a bass amp and going crazy on that, it will just do that sound right away and it'll sit in an otherwise full-range mix reinforcing exactly what I want the bass guitar to reinforce.
+
+I've looked at the output in a wave editor and it's terrifying to think that this monstrous thing is probably my new go-to DI bass plugin, but here we are. Oh, and I bet you anything this makes basses project better on a phone. Have fun :)
 
 ############ XBandpass is a distorted digital EQ, inspired by retro sampler DSP.
 
