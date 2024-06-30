@@ -31,7 +31,7 @@ Effects: GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Triang
 
 Filter: Parametric, Stonefire, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
-Lo-Fi: Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
+Lo-Fi: DeRez3, Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
@@ -1426,6 +1426,36 @@ I’ve been asked for dedicated emulations of vintage sampler gear. Instead, try
 Why does this one have the dry/wet? Because since the rate-crusher uses the previous sample for transitions, blending it with dry makes the transitions further softened with averaging. You can fade between pristine and clear, dark and cloudy, and totally retro-sampler thanks to that effect (which wouldn’t have happened with the previous DeRez, though you can try it on full Hard and see)
 
 What’s with the halfway settings between Soft and Hard? It engages wet/dry balance on the uLaws inside the plugin. If you do that to uLaw, you get weird broken results and it doesn’t work nicely. It just so happens that going from soft to halfway gives a big volume and grunge boost. So rather than have it as a clean off/on control, the Hard control lets you use that unforeseen weirdness as an intentional effect. If you have it dialed in but you’d like to punch up the aggression for effect, automate the Hard control and use it as a booster, for a unique result.
+
+############ DeRez3 reinvents retro digital tones.
+
+I've long been interested in old school lo-fi digital.
+
+It's partly because I've had ancient reverbs and things, stuff that produced a vibe far better than newer replacements, and it's partly because all my own efforts have been so much the opposite: working out how to dither 32-bit floating point and using it in all plugins, turning to 96k sampling rate and working out distributed filtering so the processing can be simpler than the wild overprocessing of oversampling: I've gone farther and farther towards ultra-resolution and learned how to adapt it musically so it doesn't just sound super-DAW-y and clinical.
+
+But all the time, I've known of the great retro samplers. Some I've even bought, but not really known what to do with, a rock/prog guy like me. Some are out of my range and I can't afford them. I've even picked up some seminal records done with old samplers like that, or discovered they played a role in stuff I loved.
+
+And then I started trying to improve on my undersampling for reverbs… and made a breakthrough that changed everything.
+
+You see, when I undersample a reverb, I'm taking a sample only every two or four samples, and interpolating the result to give a high output sample rate. I've been sticking to exactly 2x or 4x sampling rate, and doing a linear reconstruction: you can hear what that sounds like in CrunchCoat, which is also fun to play with… but in essence it's taking the idea of interpolating, and going 'let's just take a reverb sample every X samples. What's X? Anything!'
+
+So you got to swoop the reverb down to a gritty, low-fi mess. So far so good (or bad: but that's the point, it was called 'cursed retro digital' by my livestream and obviously I had to put it out as a plugin) But then, what would you do if you had a sequence of lo-fi samples, irregularly spaced, and you wanted to draw a smooth line through them, not a pointy line?
+
+Graphics has a handy technique called Bezier curves. It lets you draw a smooth line between points. Depending on the Bezier curve, you might go through the points, or around them, depending on how you set it up. But the important thing is, it's not an audio calculation. The higher harmonics you might generate have nothing to do with the sound. It doesn't know it is a sound. It's just trying to draw the seamless, smoothest curve between some points.
+
+Initial experiments with the reverbs went strangely. It would act like a cursed brickwall filter, but with a strange resonance unlike anything I'd heard before. In the ballpark, but always ruining the cleanness of the reverb and making horrible (but very smooth) artifacts… until I hit on using perfectly even divisors of the sample rate and that got me a plugin called CreamCoat and a whole batch of new reverbs I'm already beginning to use for everything.
+
+But then… what happened to the horrible but very smooth artifacts? The Bezier curve reconstruction that isn't so careful to sound nice, that throws out strange artifacts never before experienced, but always very mellow and smooth like some kind of cursed brickwall or isolator filter?
+
+Meet DeRez3. That's your Rate control. Unlike CrunchCoat it doesn't click when taken to zero, largely because it just goes to subsonics and never really to zero so it can't trap energy by mistake. Every parameter is control-smoothed because I expect this thing to be played like a synth filter… It's got a Rez control that's tweaked so at extreme low bit, it throws in a gating behavior that can be used in conjunction with the Rate to produce strange gatey effects on sounds. It's got a Dry/Wet that is actually set up like my Wetness controls: with full dry you can sneak in small amounts of DeRez without affecting dry level, with full wet you can sneak in traces of dry without cutting wet level. 0.5 gives you both.
+
+This is an alternate way of dialing in those retro digital sounds without 'emulation' of all that analog stuff. No added noise, no simulated analog stages. Instead, it is the refinement of a concept for reconstructing lo-fi using Bezier curves, and only gets better the more rez you've got to hold it. 96k, double precision? Bring it on, it will just further optimize the vibe being produced by the algorithm. It's HI-FI low-fi.
+
+I'm still working on the rock/prog dream of perfecting ConsoleX, with all those filters and things, tailored to get the most out of music that doesn't often sound great in the ordinary DAW… but this is a window onto something else. Where, it seems, there might be another kind of Console that could exist in the worlds of samples and low-bit and lo-fi, the isolator filters and digital overtones taking the place of detailed parametrics and guitar amp tweakings. It used to be that there was a big difference between golden age hip-hop and the newer stuff as more advanced samplers started to come out. It's a big enough deal that I really cannot get, say, an SP-1200. It'd be easier for me to get a Marshall Stack.
+
+Thing is, I bet it's possible to set up a Console system so it gives you everything you'd enjoy out of a real-deal SP-1200, possibly even including the delicate timing of the pads (very fine-grained quantization of time that is not quite as finely grained as sample-accurate DAWs…) but free and open source.
+
+For now, I hope you enjoy DeRez3, because it's a glimpse into that future, and it might just be a window into a hi-fi lo-fi that perfectly fits your sound. I mean, I'm a rock guy with no sampler experience and even I am tempted. I feel like this one might really break out of my prog-rock box. Give it a try :)
 
 ############ Desk is classic Airwindows subtle analog modeling.
 
