@@ -35,7 +35,7 @@ Lo-Fi: DeRez3, Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, 
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kCathedral2, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: CreamCoat, kCathedral2, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -1168,6 +1168,18 @@ My demo video tests this theory: I play all of Back In Black, by AC/DC, to show 
 If that works, I ought to be able to follow up with other tracks where I can play the whole song unmuted because react channels are allowed to play 'em and the record company simply claims the revenue. On that note if anyone has thoughts about what they'd like to see and hear, I'm taking requests. No limits, because now I can do a whole Evergreens video and then toss this plugin on that part of the video and export again, giving me an immediate replacement if it turns out the song's owner does not want the song heard as a song…
 
 Meanwhile, I'll get back to work on the next batch of plugins, things are going to start to get lively again pretty soon :)
+
+############ CreamCoat is a swiss army knife reverb with soft undersampling.
+
+Here's where the DeRez3 plugin came from. CreamCoat works as a general purpose reverb/ambience, taking the same basic algorithms from ClearCoat (when there's the Select knob and it's made out of 4x4 householder matrices, it's a Something-Coat reverb) but working an amazing trick on them that can really transform them.
+
+It turns out you can get a smooth, lush effect out of the undersampling (no weird 'antique digital' artifacts) so long as you undersample by an exact divisor of the sample rate, and then use the Bezier curve trick to reconstruct the wave from the low sample rate.
+
+If that was too technical, listen to the tone of the reverb as you drop the sample rate with DeRez. You'll get a series of 'steps', each of them being clean and natural-sounding, but having a very sharp cutoff. It's like a filter, but it's just how the wave is reconstructed. Using it at high sample rates is even better because it gets to reconstruct in a more finely-grained way, but also you'll get more 'DeRez' options around the area you're finding useful!
+
+In keeping with the 'swiss army knife' concept, CreamCoat has a wide-ranging Regen control, letting you do infinite reverbs across any of the settings, or extremely short ambiences. And a Predelay control, letting you sit the short ambiences exactly where you want them.
+
+This is almost certainly a better 'general purpose' verb than the original ClearCoat, which is simplified for ease of understanding the code. It's still pretty simple, though! I've got many more sophisticated reverbs coming or planned, but with this and CrunchCoat you should be able to cover an absurd number of bases, reverb-wise. I hope you enjoy CreamCoat!
 
 ############ Creature is a soft slew saturator, a new class of noisechanger.
 
