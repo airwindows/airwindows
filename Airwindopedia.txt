@@ -35,7 +35,7 @@ Lo-Fi: DeRez3, Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, 
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: CreamCoat, kCathedral2, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kCathedral3, CreamCoat, Galactic, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -2661,6 +2661,25 @@ But most of all, this time around it's using a completely different approach to 
 It's subtle, but it's also where I was able to step away from the Bricasti sound and try to establish my own. I think you'll find that the deep room tone is about the same, and the depth of space, but I want those early reflections to be a lot more diffuse (but NOT allpassy), so I've scaled them up and spread them out. It should sound more like detail in the actual room rather than an obvious back wall, which I think will be more useful for how I'll be using it. And I've got a lot closer to that textural butter-sound of the real Bricasti, while retaining some of my own goals for the project.
 
 Welcome to kCathedral2. Oops, I did it again (this time more like what I intended for the first time). Thanks to my Patreon patrons, who are literally the reason I can persist at goals like this, and without whom I might have to stop halfway and not get to stuff like this. Hope you like it!
+
+
+############ kCathedral3 is a giant cathedral-like space using Bezier undersampling.
+
+From the mad scientist's lab, bigtime!
+
+This is the third kCathedral, and probably the final one before I launch into lots of other types of reverbs. I've got three lined up already, but this is where I figure out what the kReverbs are about.
+
+The first one was like this: one knob, dry/wet (a 'wetness' knob, in that the center is full volume for both) and a 5x5 Householder matrix. Put it out, people had fun but it was kind of metallic. Not really ready. So I kept working.
+
+The second one was one knob, dry/wet as before, greatly improved sonics. I designed new ways to generate and test the reverb algorithms, churned through millions of possibilities, measured and tested and cooked up a new and unique Cathedral algorithm. Also, tried a different sort of early reflections. Still a one-knob, but sounded a lot better.
+
+Then… I did even more algorithm testing. And invented CrunchCoat. And then DeRez3. And then CreamCoat, a method for using that technique while keeping the downsample 'gears' from seeming unrealistic. And explored the usefulness of varying regeneration. And found that when varying downsampling it's useful to adjust regen. And discovered Discontinuity! And tried using it in the feedback loop of the reverb, to dial in realistic huge-space sustain at synthetic loudnesses.
+
+So basically this ought to work for the genre going forward. If you thought CreamCoat sounded cool, that's the very primitive version compared with this, still a 5x5 Householder (already an unusual choice) but this time selected from more millions of options with new metrics for analyzing them. This time there's a predelay, a Discontinuity (says Top dB), a wide ranging Regen control (for realistic RT60s: this one happens to not go infinite). And that DeRez control you saw on CreamCoat, but this time it's on a BIG reverb.
+
+I feel this ought to work really well for many purposes: just listen to it. It's still trying to be an Airwindows-style reverb rather than 'front and center instrument for making all possible sounds', but within the context of cathedral-style deep verb, I think this obliterates the first two AND completely abandons the 'over-simplified' thing I tried valiantly to make work.
+
+Hope you like it, let me know what you think.
 
 ############ kChamberAR is a take on tape echo into chamber echo.
 
