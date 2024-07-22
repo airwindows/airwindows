@@ -31,7 +31,7 @@ Effects: GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Triang
 
 Filter: Parametric, Stonefire, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
-Lo-Fi: DeRez3, Pockey2, Flutter, CrunchyGrooveWear, GrooveWear, Pockey, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
+Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
@@ -2041,7 +2041,7 @@ Why would you want to do fake bass?
 
 Because you can get more loudness out of it. (also, maybe you’re just doing something interesting with tonalities, or exploiting the algorithm to make a different sound…) Mostly, it’s just about making it seem like you can go louder with the same content. It’s not really the same, it’s altered, but it’s simulating/faking the effect of an extended bottom octave and restricting the ‘swing’ of those frequencies so they cover the smaller range taken up by a higher frequency, because they’re really NOT the extended frequencies anymore, just some rearranged energy trying to pretend it’s deep bass. (I’m not sure how Floor will work as a DC blocker for RawConsole5 fans: seems like it might have undesirable effects? How do you even fake DC energy?)
 
-############ Flutter is the most recent Airwindows flutter, standalone.
+############ Flutter is the flutter from ToTape6, standalone.
 
 This is by request. Sometimes you want stuff to go a little unsteady and wobbly, but you don't want a full-on tape emulation with, like, dubly and everything. (you don't do heavy metal in dubly, you know.) And so, here is Flutter, standalone!
 
@@ -2050,6 +2050,21 @@ This is a tricky little algorithm, so let me give some details on what's happeni
 In practice, you get a flutter/warble that stays pretty subtle right up to when it doesn't. Push it far enough and you get aggressive flutter. Dial it back and it quickly becomes more well-behaved, but it's still functioning and can do a nice job of destabilizing pitch in a tapelike way. A side effect of this quirky approach is that it runs with low enough (but NOT zero) latency that you can use it on a live instrument. You can sneak it onto a delay send, or reverb send, to give yourself just a little spread and layering to what otherwise sounds digitally flat and flawless. Or you can sit it on regular tracks and just go for that very subtle mulch-tone of old school retro, and use other means to dirty the sound up.
 
 Sometimes it's handy to be able to take something ultra-pure, like a bell or electric piano, and destabilize it without any tonal adjustment at all. Retain the chime but add that bit of drift. I hope you like Flutter.
+
+
+############ Flutter2 is the flutter from ToTape7, standalone.
+
+It's time for a new ToTape (actively being worked on, and yes you're still getting more reverbs and ConsoleX and all that) and it turns out that when I went back in to revise the tape flutter algorithm, live on stream, the work went so well that I COULD NOT WAIT. I was basically looking to address how, in the original Flutter, it slows as well as becoming gentler when you turn it down, and I thought that for 2024 ToTape7 it might be worth bringing in extra controls just to give people more power over their flutter effect.
+
+And then when I improved the algorithm and discovered that, cranked up, it does everything from shortwave radio impressions to Cookie Monsterification, that was exciting.
+
+But not as exciting as when I learned that if you crank it way up and make the flutterspeed REALLY slow, you get a heavy guitar doubler. Suddenly, I had a really decent fake hard-panned, still weirdly tight, doubled guitar that sounded fantastic apart from occasionally (and understandably) going mono on me.
+
+Enjoy Flutter2, it's going to be in the new ToTape7 when that's done. It means you have everything from reel-to-reel (less flutter than 0.5 for that), to cassette, to Roland Space Echo, to VHS, to cassette that's been yanked out of the shell and jumped up and down on for a bit and put back and attempted to be played.
+
+Also, here's my tip: rather than track one guitar and try to make it two with Flutter2, have you considered tracking three guitars and trying to make it five? If you do two real doubletracks, and then one 'thickener' to put in the center, and THEN add Flutter2 to that center track and use the dry/wet control, you can very definitely mimic FIVE guitar tracks for the price of three, and if center/flutter2 is slightly quieter it won't stick out that much when Flutter starts to hint at mono occasionally, because there's meant to be a mono track. You can lean on the Flutter2 a bit harder if you want to go superwide.
+
+Oh, which reminds me, there's also a new Srsly coming… but more on that later. Enjoy Flutter2 :)
 
 ############ Focus brings out clarity by distorting. Aggressive, subtle, flexible.
 
