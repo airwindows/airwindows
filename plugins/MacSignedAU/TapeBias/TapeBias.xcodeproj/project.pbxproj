@@ -1,0 +1,965 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8BA05A6B0720730100365D66 /* TapeBias.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BA05A660720730100365D66 /* TapeBias.cpp */; };
+		8BA05A6E0720730100365D66 /* TapeBiasVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BA05A690720730100365D66 /* TapeBiasVersion.h */; };
+		8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AF9072074E100365D66 /* AudioToolbox.framework */; };
+		8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05AFA072074E100365D66 /* AudioUnit.framework */; };
+		8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA05B01072074F900365D66 /* CoreServices.framework */; };
+		8BB49A632C544F810038EED5 /* CAExtAudioFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499DB2C544F810038EED5 /* CAExtAudioFile.h */; };
+		8BB49A642C544F810038EED5 /* CACFMachPort.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499DC2C544F810038EED5 /* CACFMachPort.h */; };
+		8BB49A652C544F810038EED5 /* CABool.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499DD2C544F810038EED5 /* CABool.h */; };
+		8BB49A662C544F810038EED5 /* CAComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499DE2C544F810038EED5 /* CAComponent.cpp */; };
+		8BB49A672C544F810038EED5 /* CADebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499DF2C544F810038EED5 /* CADebugger.h */; };
+		8BB49A682C544F810038EED5 /* CACFNumber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499E02C544F810038EED5 /* CACFNumber.cpp */; };
+		8BB49A692C544F810038EED5 /* CAGuard.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E12C544F810038EED5 /* CAGuard.h */; };
+		8BB49A6A2C544F810038EED5 /* CAAtomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E22C544F810038EED5 /* CAAtomic.h */; };
+		8BB49A6B2C544F810038EED5 /* CAStreamBasicDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E32C544F810038EED5 /* CAStreamBasicDescription.h */; };
+		8BB49A6C2C544F810038EED5 /* CACFObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E42C544F810038EED5 /* CACFObject.h */; };
+		8BB49A6D2C544F810038EED5 /* CAStreamRangedDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E52C544F810038EED5 /* CAStreamRangedDescription.h */; };
+		8BB49A6E2C544F810038EED5 /* CATokenMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E62C544F810038EED5 /* CATokenMap.h */; };
+		8BB49A6F2C544F810038EED5 /* CAComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E72C544F810038EED5 /* CAComponent.h */; };
+		8BB49A702C544F810038EED5 /* CAAudioBufferList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E82C544F810038EED5 /* CAAudioBufferList.h */; };
+		8BB49A712C544F810038EED5 /* CAAudioUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499E92C544F810038EED5 /* CAAudioUnit.h */; };
+		8BB49A722C544F810038EED5 /* CAAUParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499EA2C544F810038EED5 /* CAAUParameter.h */; };
+		8BB49A732C544F810038EED5 /* CAException.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499EB2C544F810038EED5 /* CAException.h */; };
+		8BB49A742C544F810038EED5 /* CAAUProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499EC2C544F810038EED5 /* CAAUProcessor.cpp */; };
+		8BB49A752C544F810038EED5 /* CAAUProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499ED2C544F810038EED5 /* CAAUProcessor.h */; };
+		8BB49A762C544F810038EED5 /* CAProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499EE2C544F810038EED5 /* CAProcess.h */; };
+		8BB49A772C544F810038EED5 /* CACFDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499EF2C544F810038EED5 /* CACFDictionary.h */; };
+		8BB49A782C544F810038EED5 /* CAPThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499F02C544F810038EED5 /* CAPThread.h */; };
+		8BB49A792C544F810038EED5 /* CAAUParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499F12C544F810038EED5 /* CAAUParameter.cpp */; };
+		8BB49A7A2C544F810038EED5 /* CAAudioTimeStamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499F22C544F810038EED5 /* CAAudioTimeStamp.h */; };
+		8BB49A7B2C544F810038EED5 /* CAFilePathUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499F32C544F810038EED5 /* CAFilePathUtils.cpp */; };
+		8BB49A7C2C544F810038EED5 /* CAAudioValueRange.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499F42C544F810038EED5 /* CAAudioValueRange.h */; };
+		8BB49A7D2C544F810038EED5 /* CAVectorUnitTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499F52C544F810038EED5 /* CAVectorUnitTypes.h */; };
+		8BB49A7E2C544F810038EED5 /* CAAudioChannelLayoutObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499F62C544F810038EED5 /* CAAudioChannelLayoutObject.cpp */; };
+		8BB49A7F2C544F810038EED5 /* CAGuard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499F72C544F810038EED5 /* CAGuard.cpp */; };
+		8BB49A802C544F810038EED5 /* CACFNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499F82C544F810038EED5 /* CACFNumber.h */; };
+		8BB49A812C544F810038EED5 /* CACFDistributedNotification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499F92C544F810038EED5 /* CACFDistributedNotification.cpp */; };
+		8BB49A822C544F810038EED5 /* CACFString.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499FA2C544F810038EED5 /* CACFString.h */; };
+		8BB49A832C544F810038EED5 /* CAAUMIDIMapManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499FB2C544F810038EED5 /* CAAUMIDIMapManager.cpp */; };
+		8BB49A842C544F810038EED5 /* CAComponentDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499FC2C544F810038EED5 /* CAComponentDescription.cpp */; };
+		8BB49A852C544F810038EED5 /* CAHostTimeBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499FD2C544F810038EED5 /* CAHostTimeBase.h */; };
+		8BB49A862C544F810038EED5 /* CADebugMacros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB499FE2C544F810038EED5 /* CADebugMacros.cpp */; };
+		8BB49A872C544F810038EED5 /* CAAudioFileFormats.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB499FF2C544F810038EED5 /* CAAudioFileFormats.h */; };
+		8BB49A882C544F810038EED5 /* CAAUMIDIMapManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A002C544F810038EED5 /* CAAUMIDIMapManager.h */; };
+		8BB49A892C544F810038EED5 /* CACFDictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A012C544F810038EED5 /* CACFDictionary.cpp */; };
+		8BB49A8A2C544F810038EED5 /* CAMutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A022C544F810038EED5 /* CAMutex.h */; };
+		8BB49A8B2C544F810038EED5 /* CACFString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A032C544F810038EED5 /* CACFString.cpp */; };
+		8BB49A8C2C544F810038EED5 /* CASettingsStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A042C544F810038EED5 /* CASettingsStorage.h */; };
+		8BB49A8D2C544F810038EED5 /* CADebugPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A052C544F810038EED5 /* CADebugPrintf.h */; };
+		8BB49A8E2C544F810038EED5 /* CAXException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A062C544F810038EED5 /* CAXException.cpp */; };
+		8BB49A8F2C544F810038EED5 /* CAAUMIDIMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A072C544F810038EED5 /* CAAUMIDIMap.h */; };
+		8BB49A902C544F810038EED5 /* AUParamInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A082C544F810038EED5 /* AUParamInfo.h */; };
+		8BB49A912C544F810038EED5 /* CABitOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A092C544F810038EED5 /* CABitOperations.h */; };
+		8BB49A922C544F810038EED5 /* CACFPreferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A0A2C544F810038EED5 /* CACFPreferences.cpp */; };
+		8BB49A932C544F810038EED5 /* CABundleLocker.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A0B2C544F810038EED5 /* CABundleLocker.h */; };
+		8BB49A942C544F810038EED5 /* CAPropertyAddress.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A0C2C544F810038EED5 /* CAPropertyAddress.h */; };
+		8BB49A952C544F810038EED5 /* CAXException.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A0D2C544F810038EED5 /* CAXException.h */; };
+		8BB49A962C544F810038EED5 /* CAAudioChannelLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A0E2C544F810038EED5 /* CAAudioChannelLayout.cpp */; };
+		8BB49A972C544F810038EED5 /* CAThreadSafeList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A0F2C544F810038EED5 /* CAThreadSafeList.h */; };
+		8BB49A982C544F810038EED5 /* CAAudioUnitOutputCapturer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A102C544F810038EED5 /* CAAudioUnitOutputCapturer.h */; };
+		8BB49A992C544F810038EED5 /* AUParamInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A112C544F810038EED5 /* AUParamInfo.cpp */; };
+		8BB49A9A2C544F810038EED5 /* CASharedLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A122C544F810038EED5 /* CASharedLibrary.cpp */; };
+		8BB49A9B2C544F810038EED5 /* CAAUMIDIMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A132C544F810038EED5 /* CAAUMIDIMap.cpp */; };
+		8BB49A9C2C544F810038EED5 /* CALogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A142C544F810038EED5 /* CALogMacros.h */; };
+		8BB49A9D2C544F810038EED5 /* CACFMessagePort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A152C544F810038EED5 /* CACFMessagePort.cpp */; };
+		8BB49A9E2C544F810038EED5 /* CARingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A162C544F810038EED5 /* CARingBuffer.h */; };
+		8BB49A9F2C544F810038EED5 /* AUOutputBL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A172C544F810038EED5 /* AUOutputBL.cpp */; };
+		8BB49AA02C544F810038EED5 /* CABufferList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A182C544F810038EED5 /* CABufferList.h */; };
+		8BB49AA12C544F810038EED5 /* CASharedLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A192C544F810038EED5 /* CASharedLibrary.h */; };
+		8BB49AA22C544F810038EED5 /* CACFData.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A1A2C544F810038EED5 /* CACFData.h */; };
+		8BB49AA32C544F810038EED5 /* CAStreamRangedDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A1B2C544F810038EED5 /* CAStreamRangedDescription.cpp */; };
+		8BB49AA42C544F810038EED5 /* CAPThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A1C2C544F810038EED5 /* CAPThread.cpp */; };
+		8BB49AA52C544F810038EED5 /* CAAutoDisposer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A1D2C544F810038EED5 /* CAAutoDisposer.h */; };
+		8BB49AA62C544F810038EED5 /* CACFPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A1E2C544F810038EED5 /* CACFPreferences.h */; };
+		8BB49AA72C544F810038EED5 /* CAVectorUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A1F2C544F810038EED5 /* CAVectorUnit.cpp */; };
+		8BB49AA82C544F810038EED5 /* CAComponentDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A202C544F810038EED5 /* CAComponentDescription.h */; };
+		8BB49AA92C544F810038EED5 /* CADebugMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A212C544F810038EED5 /* CADebugMacros.h */; };
+		8BB49AAA2C544F810038EED5 /* AUOutputBL.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A222C544F810038EED5 /* AUOutputBL.h */; };
+		8BB49AAB2C544F810038EED5 /* CADebugPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A232C544F810038EED5 /* CADebugPrintf.cpp */; };
+		8BB49AAC2C544F810038EED5 /* CARingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A242C544F810038EED5 /* CARingBuffer.cpp */; };
+		8BB49AAD2C544F810038EED5 /* CACFPlugIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A252C544F810038EED5 /* CACFPlugIn.h */; };
+		8BB49AAE2C544F810038EED5 /* CASettingsStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A262C544F810038EED5 /* CASettingsStorage.cpp */; };
+		8BB49AAF2C544F810038EED5 /* CAMixMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A272C544F810038EED5 /* CAMixMap.h */; };
+		8BB49AB02C544F810038EED5 /* CACFDistributedNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A282C544F810038EED5 /* CACFDistributedNotification.h */; };
+		8BB49AB12C544F810038EED5 /* CAFilePathUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A292C544F810038EED5 /* CAFilePathUtils.h */; };
+		8BB49AB22C544F810038EED5 /* CATink.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A2A2C544F810038EED5 /* CATink.h */; };
+		8BB49AB32C544F810038EED5 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A2B2C544F810038EED5 /* CAStreamBasicDescription.cpp */; };
+		8BB49AB42C544F810038EED5 /* CAAudioChannelLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A2C2C544F810038EED5 /* CAAudioChannelLayout.h */; };
+		8BB49AB52C544F810038EED5 /* CAProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A2D2C544F810038EED5 /* CAProcess.cpp */; };
+		8BB49AB62C544F810038EED5 /* CAHostTimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A2E2C544F810038EED5 /* CAHostTimeBase.cpp */; };
+		8BB49AB72C544F810038EED5 /* CAPersistence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A2F2C544F810038EED5 /* CAPersistence.cpp */; };
+		8BB49AB82C544F810038EED5 /* CAAudioBufferList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A302C544F810038EED5 /* CAAudioBufferList.cpp */; };
+		8BB49AB92C544F810038EED5 /* CAAudioTimeStamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A312C544F810038EED5 /* CAAudioTimeStamp.cpp */; };
+		8BB49ABA2C544F810038EED5 /* CAVectorUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A322C544F810038EED5 /* CAVectorUnit.h */; };
+		8BB49ABB2C544F810038EED5 /* CAByteOrder.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A332C544F810038EED5 /* CAByteOrder.h */; };
+		8BB49ABC2C544F810038EED5 /* CACFArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A342C544F810038EED5 /* CACFArray.h */; };
+		8BB49ABD2C544F810038EED5 /* CAAtomicStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A352C544F810038EED5 /* CAAtomicStack.h */; };
+		8BB49ABE2C544F810038EED5 /* CAReferenceCounted.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A362C544F810038EED5 /* CAReferenceCounted.h */; };
+		8BB49ABF2C544F810038EED5 /* CACFMachPort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A372C544F810038EED5 /* CACFMachPort.cpp */; };
+		8BB49AC02C544F810038EED5 /* CABufferList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A382C544F810038EED5 /* CABufferList.cpp */; };
+		8BB49AC12C544F810038EED5 /* CAMutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A392C544F810038EED5 /* CAMutex.cpp */; };
+		8BB49AC22C544F810038EED5 /* CADebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A3A2C544F810038EED5 /* CADebugger.cpp */; };
+		8BB49AC32C544F810038EED5 /* CABundleLocker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A3B2C544F810038EED5 /* CABundleLocker.cpp */; };
+		8BB49AC42C544F810038EED5 /* CAAudioFileFormats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A3C2C544F810038EED5 /* CAAudioFileFormats.cpp */; };
+		8BB49AC52C544F810038EED5 /* CAMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A3D2C544F810038EED5 /* CAMath.h */; };
+		8BB49AC62C544F810038EED5 /* CACFArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A3E2C544F810038EED5 /* CACFArray.cpp */; };
+		8BB49AC72C544F810038EED5 /* CACFMessagePort.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A3F2C544F810038EED5 /* CACFMessagePort.h */; };
+		8BB49AC82C544F810038EED5 /* CAAudioValueRange.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A402C544F810038EED5 /* CAAudioValueRange.cpp */; };
+		8BB49AC92C544F810038EED5 /* CAAudioUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A412C544F810038EED5 /* CAAudioUnit.cpp */; };
+		8BB49ACA2C544F810038EED5 /* AUViewLocalizedStringKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A452C544F810038EED5 /* AUViewLocalizedStringKeys.h */; };
+		8BB49ACB2C544F810038EED5 /* ComponentBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A472C544F810038EED5 /* ComponentBase.cpp */; };
+		8BB49ACC2C544F810038EED5 /* AUScopeElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A482C544F810038EED5 /* AUScopeElement.cpp */; };
+		8BB49ACD2C544F810038EED5 /* ComponentBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A492C544F810038EED5 /* ComponentBase.h */; };
+		8BB49ACE2C544F810038EED5 /* AUBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A4A2C544F810038EED5 /* AUBase.cpp */; };
+		8BB49ACF2C544F810038EED5 /* AUInputElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A4B2C544F810038EED5 /* AUInputElement.h */; };
+		8BB49AD02C544F810038EED5 /* AUBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A4C2C544F810038EED5 /* AUBase.h */; };
+		8BB49AD12C544F810038EED5 /* AUPlugInDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A4D2C544F810038EED5 /* AUPlugInDispatch.h */; };
+		8BB49AD22C544F810038EED5 /* AUDispatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A4E2C544F810038EED5 /* AUDispatch.h */; };
+		8BB49AD32C544F810038EED5 /* AUOutputElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A4F2C544F810038EED5 /* AUOutputElement.cpp */; };
+		8BB49AD52C544F810038EED5 /* AUPlugInDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A512C544F810038EED5 /* AUPlugInDispatch.cpp */; };
+		8BB49AD62C544F810038EED5 /* AUOutputElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A522C544F810038EED5 /* AUOutputElement.h */; };
+		8BB49AD72C544F810038EED5 /* AUDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A532C544F810038EED5 /* AUDispatch.cpp */; };
+		8BB49AD82C544F810038EED5 /* AUScopeElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A542C544F810038EED5 /* AUScopeElement.h */; };
+		8BB49AD92C544F810038EED5 /* AUInputElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A552C544F810038EED5 /* AUInputElement.cpp */; };
+		8BB49ADA2C544F810038EED5 /* AUEffectBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A572C544F810038EED5 /* AUEffectBase.cpp */; };
+		8BB49ADB2C544F810038EED5 /* AUEffectBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A582C544F810038EED5 /* AUEffectBase.h */; };
+		8BB49ADC2C544F810038EED5 /* AUTimestampGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A5A2C544F810038EED5 /* AUTimestampGenerator.h */; };
+		8BB49ADD2C544F810038EED5 /* AUBaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A5B2C544F810038EED5 /* AUBaseHelper.cpp */; };
+		8BB49ADE2C544F810038EED5 /* AUSilentTimeout.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A5C2C544F810038EED5 /* AUSilentTimeout.h */; };
+		8BB49ADF2C544F810038EED5 /* AUInputFormatConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A5D2C544F810038EED5 /* AUInputFormatConverter.h */; };
+		8BB49AE02C544F810038EED5 /* AUTimestampGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A5E2C544F810038EED5 /* AUTimestampGenerator.cpp */; };
+		8BB49AE12C544F810038EED5 /* AUBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BB49A5F2C544F810038EED5 /* AUBuffer.cpp */; };
+		8BB49AE22C544F810038EED5 /* AUMIDIDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A602C544F810038EED5 /* AUMIDIDefs.h */; };
+		8BB49AE32C544F810038EED5 /* AUBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A612C544F810038EED5 /* AUBuffer.h */; };
+		8BB49AE42C544F810038EED5 /* AUBaseHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB49A622C544F810038EED5 /* AUBaseHelper.h */; };
+		8BC6025C073B072D006C4272 /* TapeBias.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BC6025B073B072D006C4272 /* TapeBias.h */; };
+		8D01CCCA0486CAD60068D4B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8B5C7FBF076FB2C200A15F61 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
+		8BA05A660720730100365D66 /* TapeBias.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TapeBias.cpp; sourceTree = "<group>"; };
+		8BA05A670720730100365D66 /* TapeBias.exp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.exports; path = TapeBias.exp; sourceTree = "<group>"; };
+		8BA05A680720730100365D66 /* TapeBias.r */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.rez; path = TapeBias.r; sourceTree = "<group>"; };
+		8BA05A690720730100365D66 /* TapeBiasVersion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TapeBiasVersion.h; sourceTree = "<group>"; };
+		8BA05AF9072074E100365D66 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		8BA05AFA072074E100365D66 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
+		8BA05B01072074F900365D66 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		8BB499DB2C544F810038EED5 /* CAExtAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAExtAudioFile.h; sourceTree = "<group>"; };
+		8BB499DC2C544F810038EED5 /* CACFMachPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFMachPort.h; sourceTree = "<group>"; };
+		8BB499DD2C544F810038EED5 /* CABool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CABool.h; sourceTree = "<group>"; };
+		8BB499DE2C544F810038EED5 /* CAComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAComponent.cpp; sourceTree = "<group>"; };
+		8BB499DF2C544F810038EED5 /* CADebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugger.h; sourceTree = "<group>"; };
+		8BB499E02C544F810038EED5 /* CACFNumber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFNumber.cpp; sourceTree = "<group>"; };
+		8BB499E12C544F810038EED5 /* CAGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAGuard.h; sourceTree = "<group>"; };
+		8BB499E22C544F810038EED5 /* CAAtomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAtomic.h; sourceTree = "<group>"; };
+		8BB499E32C544F810038EED5 /* CAStreamBasicDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamBasicDescription.h; sourceTree = "<group>"; };
+		8BB499E42C544F810038EED5 /* CACFObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFObject.h; sourceTree = "<group>"; };
+		8BB499E52C544F810038EED5 /* CAStreamRangedDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAStreamRangedDescription.h; sourceTree = "<group>"; };
+		8BB499E62C544F810038EED5 /* CATokenMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CATokenMap.h; sourceTree = "<group>"; };
+		8BB499E72C544F810038EED5 /* CAComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAComponent.h; sourceTree = "<group>"; };
+		8BB499E82C544F810038EED5 /* CAAudioBufferList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioBufferList.h; sourceTree = "<group>"; };
+		8BB499E92C544F810038EED5 /* CAAudioUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioUnit.h; sourceTree = "<group>"; };
+		8BB499EA2C544F810038EED5 /* CAAUParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAUParameter.h; sourceTree = "<group>"; };
+		8BB499EB2C544F810038EED5 /* CAException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAException.h; sourceTree = "<group>"; };
+		8BB499EC2C544F810038EED5 /* CAAUProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAUProcessor.cpp; sourceTree = "<group>"; };
+		8BB499ED2C544F810038EED5 /* CAAUProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAUProcessor.h; sourceTree = "<group>"; };
+		8BB499EE2C544F810038EED5 /* CAProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAProcess.h; sourceTree = "<group>"; };
+		8BB499EF2C544F810038EED5 /* CACFDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFDictionary.h; sourceTree = "<group>"; };
+		8BB499F02C544F810038EED5 /* CAPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAPThread.h; sourceTree = "<group>"; };
+		8BB499F12C544F810038EED5 /* CAAUParameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAUParameter.cpp; sourceTree = "<group>"; };
+		8BB499F22C544F810038EED5 /* CAAudioTimeStamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioTimeStamp.h; sourceTree = "<group>"; };
+		8BB499F32C544F810038EED5 /* CAFilePathUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAFilePathUtils.cpp; sourceTree = "<group>"; };
+		8BB499F42C544F810038EED5 /* CAAudioValueRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioValueRange.h; sourceTree = "<group>"; };
+		8BB499F52C544F810038EED5 /* CAVectorUnitTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAVectorUnitTypes.h; sourceTree = "<group>"; };
+		8BB499F62C544F810038EED5 /* CAAudioChannelLayoutObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioChannelLayoutObject.cpp; sourceTree = "<group>"; };
+		8BB499F72C544F810038EED5 /* CAGuard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAGuard.cpp; sourceTree = "<group>"; };
+		8BB499F82C544F810038EED5 /* CACFNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFNumber.h; sourceTree = "<group>"; };
+		8BB499F92C544F810038EED5 /* CACFDistributedNotification.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFDistributedNotification.cpp; sourceTree = "<group>"; };
+		8BB499FA2C544F810038EED5 /* CACFString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFString.h; sourceTree = "<group>"; };
+		8BB499FB2C544F810038EED5 /* CAAUMIDIMapManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAUMIDIMapManager.cpp; sourceTree = "<group>"; };
+		8BB499FC2C544F810038EED5 /* CAComponentDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAComponentDescription.cpp; sourceTree = "<group>"; };
+		8BB499FD2C544F810038EED5 /* CAHostTimeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAHostTimeBase.h; sourceTree = "<group>"; };
+		8BB499FE2C544F810038EED5 /* CADebugMacros.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CADebugMacros.cpp; sourceTree = "<group>"; };
+		8BB499FF2C544F810038EED5 /* CAAudioFileFormats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioFileFormats.h; sourceTree = "<group>"; };
+		8BB49A002C544F810038EED5 /* CAAUMIDIMapManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAUMIDIMapManager.h; sourceTree = "<group>"; };
+		8BB49A012C544F810038EED5 /* CACFDictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFDictionary.cpp; sourceTree = "<group>"; };
+		8BB49A022C544F810038EED5 /* CAMutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMutex.h; sourceTree = "<group>"; };
+		8BB49A032C544F810038EED5 /* CACFString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFString.cpp; sourceTree = "<group>"; };
+		8BB49A042C544F810038EED5 /* CASettingsStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CASettingsStorage.h; sourceTree = "<group>"; };
+		8BB49A052C544F810038EED5 /* CADebugPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugPrintf.h; sourceTree = "<group>"; };
+		8BB49A062C544F810038EED5 /* CAXException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAXException.cpp; sourceTree = "<group>"; };
+		8BB49A072C544F810038EED5 /* CAAUMIDIMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAUMIDIMap.h; sourceTree = "<group>"; };
+		8BB49A082C544F810038EED5 /* AUParamInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUParamInfo.h; sourceTree = "<group>"; };
+		8BB49A092C544F810038EED5 /* CABitOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CABitOperations.h; sourceTree = "<group>"; };
+		8BB49A0A2C544F810038EED5 /* CACFPreferences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFPreferences.cpp; sourceTree = "<group>"; };
+		8BB49A0B2C544F810038EED5 /* CABundleLocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CABundleLocker.h; sourceTree = "<group>"; };
+		8BB49A0C2C544F810038EED5 /* CAPropertyAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAPropertyAddress.h; sourceTree = "<group>"; };
+		8BB49A0D2C544F810038EED5 /* CAXException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAXException.h; sourceTree = "<group>"; };
+		8BB49A0E2C544F810038EED5 /* CAAudioChannelLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioChannelLayout.cpp; sourceTree = "<group>"; };
+		8BB49A0F2C544F810038EED5 /* CAThreadSafeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAThreadSafeList.h; sourceTree = "<group>"; };
+		8BB49A102C544F810038EED5 /* CAAudioUnitOutputCapturer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioUnitOutputCapturer.h; sourceTree = "<group>"; };
+		8BB49A112C544F810038EED5 /* AUParamInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUParamInfo.cpp; sourceTree = "<group>"; };
+		8BB49A122C544F810038EED5 /* CASharedLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CASharedLibrary.cpp; sourceTree = "<group>"; };
+		8BB49A132C544F810038EED5 /* CAAUMIDIMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAUMIDIMap.cpp; sourceTree = "<group>"; };
+		8BB49A142C544F810038EED5 /* CALogMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CALogMacros.h; sourceTree = "<group>"; };
+		8BB49A152C544F810038EED5 /* CACFMessagePort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFMessagePort.cpp; sourceTree = "<group>"; };
+		8BB49A162C544F810038EED5 /* CARingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CARingBuffer.h; sourceTree = "<group>"; };
+		8BB49A172C544F810038EED5 /* AUOutputBL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUOutputBL.cpp; sourceTree = "<group>"; };
+		8BB49A182C544F810038EED5 /* CABufferList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CABufferList.h; sourceTree = "<group>"; };
+		8BB49A192C544F810038EED5 /* CASharedLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CASharedLibrary.h; sourceTree = "<group>"; };
+		8BB49A1A2C544F810038EED5 /* CACFData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFData.h; sourceTree = "<group>"; };
+		8BB49A1B2C544F810038EED5 /* CAStreamRangedDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamRangedDescription.cpp; sourceTree = "<group>"; };
+		8BB49A1C2C544F810038EED5 /* CAPThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAPThread.cpp; sourceTree = "<group>"; };
+		8BB49A1D2C544F810038EED5 /* CAAutoDisposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAutoDisposer.h; sourceTree = "<group>"; };
+		8BB49A1E2C544F810038EED5 /* CACFPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFPreferences.h; sourceTree = "<group>"; };
+		8BB49A1F2C544F810038EED5 /* CAVectorUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAVectorUnit.cpp; sourceTree = "<group>"; };
+		8BB49A202C544F810038EED5 /* CAComponentDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAComponentDescription.h; sourceTree = "<group>"; };
+		8BB49A212C544F810038EED5 /* CADebugMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CADebugMacros.h; sourceTree = "<group>"; };
+		8BB49A222C544F810038EED5 /* AUOutputBL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUOutputBL.h; sourceTree = "<group>"; };
+		8BB49A232C544F810038EED5 /* CADebugPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CADebugPrintf.cpp; sourceTree = "<group>"; };
+		8BB49A242C544F810038EED5 /* CARingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CARingBuffer.cpp; sourceTree = "<group>"; };
+		8BB49A252C544F810038EED5 /* CACFPlugIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFPlugIn.h; sourceTree = "<group>"; };
+		8BB49A262C544F810038EED5 /* CASettingsStorage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CASettingsStorage.cpp; sourceTree = "<group>"; };
+		8BB49A272C544F810038EED5 /* CAMixMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMixMap.h; sourceTree = "<group>"; };
+		8BB49A282C544F810038EED5 /* CACFDistributedNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFDistributedNotification.h; sourceTree = "<group>"; };
+		8BB49A292C544F810038EED5 /* CAFilePathUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAFilePathUtils.h; sourceTree = "<group>"; };
+		8BB49A2A2C544F810038EED5 /* CATink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CATink.h; sourceTree = "<group>"; };
+		8BB49A2B2C544F810038EED5 /* CAStreamBasicDescription.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAStreamBasicDescription.cpp; sourceTree = "<group>"; };
+		8BB49A2C2C544F810038EED5 /* CAAudioChannelLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAudioChannelLayout.h; sourceTree = "<group>"; };
+		8BB49A2D2C544F810038EED5 /* CAProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAProcess.cpp; sourceTree = "<group>"; };
+		8BB49A2E2C544F810038EED5 /* CAHostTimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAHostTimeBase.cpp; sourceTree = "<group>"; };
+		8BB49A2F2C544F810038EED5 /* CAPersistence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAPersistence.cpp; sourceTree = "<group>"; };
+		8BB49A302C544F810038EED5 /* CAAudioBufferList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioBufferList.cpp; sourceTree = "<group>"; };
+		8BB49A312C544F810038EED5 /* CAAudioTimeStamp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioTimeStamp.cpp; sourceTree = "<group>"; };
+		8BB49A322C544F810038EED5 /* CAVectorUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAVectorUnit.h; sourceTree = "<group>"; };
+		8BB49A332C544F810038EED5 /* CAByteOrder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAByteOrder.h; sourceTree = "<group>"; };
+		8BB49A342C544F810038EED5 /* CACFArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFArray.h; sourceTree = "<group>"; };
+		8BB49A352C544F810038EED5 /* CAAtomicStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAtomicStack.h; sourceTree = "<group>"; };
+		8BB49A362C544F810038EED5 /* CAReferenceCounted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAReferenceCounted.h; sourceTree = "<group>"; };
+		8BB49A372C544F810038EED5 /* CACFMachPort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFMachPort.cpp; sourceTree = "<group>"; };
+		8BB49A382C544F810038EED5 /* CABufferList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CABufferList.cpp; sourceTree = "<group>"; };
+		8BB49A392C544F810038EED5 /* CAMutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAMutex.cpp; sourceTree = "<group>"; };
+		8BB49A3A2C544F810038EED5 /* CADebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CADebugger.cpp; sourceTree = "<group>"; };
+		8BB49A3B2C544F810038EED5 /* CABundleLocker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CABundleLocker.cpp; sourceTree = "<group>"; };
+		8BB49A3C2C544F810038EED5 /* CAAudioFileFormats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioFileFormats.cpp; sourceTree = "<group>"; };
+		8BB49A3D2C544F810038EED5 /* CAMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAMath.h; sourceTree = "<group>"; };
+		8BB49A3E2C544F810038EED5 /* CACFArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CACFArray.cpp; sourceTree = "<group>"; };
+		8BB49A3F2C544F810038EED5 /* CACFMessagePort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CACFMessagePort.h; sourceTree = "<group>"; };
+		8BB49A402C544F810038EED5 /* CAAudioValueRange.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioValueRange.cpp; sourceTree = "<group>"; };
+		8BB49A412C544F810038EED5 /* CAAudioUnit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAAudioUnit.cpp; sourceTree = "<group>"; };
+		8BB49A452C544F810038EED5 /* AUViewLocalizedStringKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUViewLocalizedStringKeys.h; sourceTree = "<group>"; };
+		8BB49A472C544F810038EED5 /* ComponentBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentBase.cpp; sourceTree = "<group>"; };
+		8BB49A482C544F810038EED5 /* AUScopeElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUScopeElement.cpp; sourceTree = "<group>"; };
+		8BB49A492C544F810038EED5 /* ComponentBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentBase.h; sourceTree = "<group>"; };
+		8BB49A4A2C544F810038EED5 /* AUBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUBase.cpp; sourceTree = "<group>"; };
+		8BB49A4B2C544F810038EED5 /* AUInputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUInputElement.h; sourceTree = "<group>"; };
+		8BB49A4C2C544F810038EED5 /* AUBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUBase.h; sourceTree = "<group>"; };
+		8BB49A4D2C544F810038EED5 /* AUPlugInDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUPlugInDispatch.h; sourceTree = "<group>"; };
+		8BB49A4E2C544F810038EED5 /* AUDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUDispatch.h; sourceTree = "<group>"; };
+		8BB49A4F2C544F810038EED5 /* AUOutputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUOutputElement.cpp; sourceTree = "<group>"; };
+		8BB49A502C544F810038EED5 /* AUResources.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = AUResources.r; sourceTree = "<group>"; };
+		8BB49A512C544F810038EED5 /* AUPlugInDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUPlugInDispatch.cpp; sourceTree = "<group>"; };
+		8BB49A522C544F810038EED5 /* AUOutputElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUOutputElement.h; sourceTree = "<group>"; };
+		8BB49A532C544F810038EED5 /* AUDispatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUDispatch.cpp; sourceTree = "<group>"; };
+		8BB49A542C544F810038EED5 /* AUScopeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUScopeElement.h; sourceTree = "<group>"; };
+		8BB49A552C544F810038EED5 /* AUInputElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUInputElement.cpp; sourceTree = "<group>"; };
+		8BB49A572C544F810038EED5 /* AUEffectBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUEffectBase.cpp; sourceTree = "<group>"; };
+		8BB49A582C544F810038EED5 /* AUEffectBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUEffectBase.h; sourceTree = "<group>"; };
+		8BB49A5A2C544F810038EED5 /* AUTimestampGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUTimestampGenerator.h; sourceTree = "<group>"; };
+		8BB49A5B2C544F810038EED5 /* AUBaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUBaseHelper.cpp; sourceTree = "<group>"; };
+		8BB49A5C2C544F810038EED5 /* AUSilentTimeout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUSilentTimeout.h; sourceTree = "<group>"; };
+		8BB49A5D2C544F810038EED5 /* AUInputFormatConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUInputFormatConverter.h; sourceTree = "<group>"; };
+		8BB49A5E2C544F810038EED5 /* AUTimestampGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUTimestampGenerator.cpp; sourceTree = "<group>"; };
+		8BB49A5F2C544F810038EED5 /* AUBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AUBuffer.cpp; sourceTree = "<group>"; };
+		8BB49A602C544F810038EED5 /* AUMIDIDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUMIDIDefs.h; sourceTree = "<group>"; };
+		8BB49A612C544F810038EED5 /* AUBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUBuffer.h; sourceTree = "<group>"; };
+		8BB49A622C544F810038EED5 /* AUBaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUBaseHelper.h; sourceTree = "<group>"; };
+		8BB49AE52C544FFB0038EED5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8BC6025B073B072D006C4272 /* TapeBias.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TapeBias.h; sourceTree = "<group>"; };
+		8D01CCD10486CAD60068D4B7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D01CCD20486CAD60068D4B7 /* TapeBias.component */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TapeBias.component; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D01CCCD0486CAD60068D4B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BA05AFC072074E100365D66 /* AudioToolbox.framework in Frameworks */,
+				8BA05AFD072074E100365D66 /* AudioUnit.framework in Frameworks */,
+				8BA05B02072074F900365D66 /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* TapeBias */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77ADFE841716C02AAC07 /* Source */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
+			);
+			name = TapeBias;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				8B5C7FBF076FB2C200A15F61 /* CoreAudio.framework */,
+				8BA05B01072074F900365D66 /* CoreServices.framework */,
+				8BA05AF9072074E100365D66 /* AudioToolbox.framework */,
+				8BA05AFA072074E100365D66 /* AudioUnit.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D01CCD10486CAD60068D4B7 /* Info.plist */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77ADFE841716C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				8BB499D92C544F810038EED5 /* CA_SDK */,
+				8BA05A56072072A900365D66 /* AU Source */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D01CCD20486CAD60068D4B7 /* TapeBias.component */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8BA05A56072072A900365D66 /* AU Source */ = {
+			isa = PBXGroup;
+			children = (
+				8BC6025B073B072D006C4272 /* TapeBias.h */,
+				8BA05A660720730100365D66 /* TapeBias.cpp */,
+				8BA05A670720730100365D66 /* TapeBias.exp */,
+				8BA05A680720730100365D66 /* TapeBias.r */,
+				8BA05A690720730100365D66 /* TapeBiasVersion.h */,
+			);
+			name = "AU Source";
+			sourceTree = "<group>";
+		};
+		8BB499D92C544F810038EED5 /* CA_SDK */ = {
+			isa = PBXGroup;
+			children = (
+				8BB499DA2C544F810038EED5 /* PublicUtility */,
+				8BB49A422C544F810038EED5 /* AudioUnits */,
+			);
+			name = CA_SDK;
+			path = ../../../../CA_SDK;
+			sourceTree = "<group>";
+		};
+		8BB499DA2C544F810038EED5 /* PublicUtility */ = {
+			isa = PBXGroup;
+			children = (
+				8BB499DB2C544F810038EED5 /* CAExtAudioFile.h */,
+				8BB499DC2C544F810038EED5 /* CACFMachPort.h */,
+				8BB499DD2C544F810038EED5 /* CABool.h */,
+				8BB499DE2C544F810038EED5 /* CAComponent.cpp */,
+				8BB499DF2C544F810038EED5 /* CADebugger.h */,
+				8BB499E02C544F810038EED5 /* CACFNumber.cpp */,
+				8BB499E12C544F810038EED5 /* CAGuard.h */,
+				8BB499E22C544F810038EED5 /* CAAtomic.h */,
+				8BB499E32C544F810038EED5 /* CAStreamBasicDescription.h */,
+				8BB499E42C544F810038EED5 /* CACFObject.h */,
+				8BB499E52C544F810038EED5 /* CAStreamRangedDescription.h */,
+				8BB499E62C544F810038EED5 /* CATokenMap.h */,
+				8BB499E72C544F810038EED5 /* CAComponent.h */,
+				8BB499E82C544F810038EED5 /* CAAudioBufferList.h */,
+				8BB499E92C544F810038EED5 /* CAAudioUnit.h */,
+				8BB499EA2C544F810038EED5 /* CAAUParameter.h */,
+				8BB499EB2C544F810038EED5 /* CAException.h */,
+				8BB499EC2C544F810038EED5 /* CAAUProcessor.cpp */,
+				8BB499ED2C544F810038EED5 /* CAAUProcessor.h */,
+				8BB499EE2C544F810038EED5 /* CAProcess.h */,
+				8BB499EF2C544F810038EED5 /* CACFDictionary.h */,
+				8BB499F02C544F810038EED5 /* CAPThread.h */,
+				8BB499F12C544F810038EED5 /* CAAUParameter.cpp */,
+				8BB499F22C544F810038EED5 /* CAAudioTimeStamp.h */,
+				8BB499F32C544F810038EED5 /* CAFilePathUtils.cpp */,
+				8BB499F42C544F810038EED5 /* CAAudioValueRange.h */,
+				8BB499F52C544F810038EED5 /* CAVectorUnitTypes.h */,
+				8BB499F62C544F810038EED5 /* CAAudioChannelLayoutObject.cpp */,
+				8BB499F72C544F810038EED5 /* CAGuard.cpp */,
+				8BB499F82C544F810038EED5 /* CACFNumber.h */,
+				8BB499F92C544F810038EED5 /* CACFDistributedNotification.cpp */,
+				8BB499FA2C544F810038EED5 /* CACFString.h */,
+				8BB499FB2C544F810038EED5 /* CAAUMIDIMapManager.cpp */,
+				8BB499FC2C544F810038EED5 /* CAComponentDescription.cpp */,
+				8BB499FD2C544F810038EED5 /* CAHostTimeBase.h */,
+				8BB499FE2C544F810038EED5 /* CADebugMacros.cpp */,
+				8BB499FF2C544F810038EED5 /* CAAudioFileFormats.h */,
+				8BB49A002C544F810038EED5 /* CAAUMIDIMapManager.h */,
+				8BB49A012C544F810038EED5 /* CACFDictionary.cpp */,
+				8BB49A022C544F810038EED5 /* CAMutex.h */,
+				8BB49A032C544F810038EED5 /* CACFString.cpp */,
+				8BB49A042C544F810038EED5 /* CASettingsStorage.h */,
+				8BB49A052C544F810038EED5 /* CADebugPrintf.h */,
+				8BB49A062C544F810038EED5 /* CAXException.cpp */,
+				8BB49A072C544F810038EED5 /* CAAUMIDIMap.h */,
+				8BB49A082C544F810038EED5 /* AUParamInfo.h */,
+				8BB49A092C544F810038EED5 /* CABitOperations.h */,
+				8BB49A0A2C544F810038EED5 /* CACFPreferences.cpp */,
+				8BB49A0B2C544F810038EED5 /* CABundleLocker.h */,
+				8BB49A0C2C544F810038EED5 /* CAPropertyAddress.h */,
+				8BB49A0D2C544F810038EED5 /* CAXException.h */,
+				8BB49A0E2C544F810038EED5 /* CAAudioChannelLayout.cpp */,
+				8BB49A0F2C544F810038EED5 /* CAThreadSafeList.h */,
+				8BB49A102C544F810038EED5 /* CAAudioUnitOutputCapturer.h */,
+				8BB49A112C544F810038EED5 /* AUParamInfo.cpp */,
+				8BB49A122C544F810038EED5 /* CASharedLibrary.cpp */,
+				8BB49A132C544F810038EED5 /* CAAUMIDIMap.cpp */,
+				8BB49A142C544F810038EED5 /* CALogMacros.h */,
+				8BB49A152C544F810038EED5 /* CACFMessagePort.cpp */,
+				8BB49A162C544F810038EED5 /* CARingBuffer.h */,
+				8BB49A172C544F810038EED5 /* AUOutputBL.cpp */,
+				8BB49A182C544F810038EED5 /* CABufferList.h */,
+				8BB49A192C544F810038EED5 /* CASharedLibrary.h */,
+				8BB49A1A2C544F810038EED5 /* CACFData.h */,
+				8BB49A1B2C544F810038EED5 /* CAStreamRangedDescription.cpp */,
+				8BB49A1C2C544F810038EED5 /* CAPThread.cpp */,
+				8BB49A1D2C544F810038EED5 /* CAAutoDisposer.h */,
+				8BB49A1E2C544F810038EED5 /* CACFPreferences.h */,
+				8BB49A1F2C544F810038EED5 /* CAVectorUnit.cpp */,
+				8BB49A202C544F810038EED5 /* CAComponentDescription.h */,
+				8BB49A212C544F810038EED5 /* CADebugMacros.h */,
+				8BB49A222C544F810038EED5 /* AUOutputBL.h */,
+				8BB49A232C544F810038EED5 /* CADebugPrintf.cpp */,
+				8BB49A242C544F810038EED5 /* CARingBuffer.cpp */,
+				8BB49A252C544F810038EED5 /* CACFPlugIn.h */,
+				8BB49A262C544F810038EED5 /* CASettingsStorage.cpp */,
+				8BB49A272C544F810038EED5 /* CAMixMap.h */,
+				8BB49A282C544F810038EED5 /* CACFDistributedNotification.h */,
+				8BB49A292C544F810038EED5 /* CAFilePathUtils.h */,
+				8BB49A2A2C544F810038EED5 /* CATink.h */,
+				8BB49A2B2C544F810038EED5 /* CAStreamBasicDescription.cpp */,
+				8BB49A2C2C544F810038EED5 /* CAAudioChannelLayout.h */,
+				8BB49A2D2C544F810038EED5 /* CAProcess.cpp */,
+				8BB49A2E2C544F810038EED5 /* CAHostTimeBase.cpp */,
+				8BB49A2F2C544F810038EED5 /* CAPersistence.cpp */,
+				8BB49A302C544F810038EED5 /* CAAudioBufferList.cpp */,
+				8BB49A312C544F810038EED5 /* CAAudioTimeStamp.cpp */,
+				8BB49A322C544F810038EED5 /* CAVectorUnit.h */,
+				8BB49A332C544F810038EED5 /* CAByteOrder.h */,
+				8BB49A342C544F810038EED5 /* CACFArray.h */,
+				8BB49A352C544F810038EED5 /* CAAtomicStack.h */,
+				8BB49A362C544F810038EED5 /* CAReferenceCounted.h */,
+				8BB49A372C544F810038EED5 /* CACFMachPort.cpp */,
+				8BB49A382C544F810038EED5 /* CABufferList.cpp */,
+				8BB49A392C544F810038EED5 /* CAMutex.cpp */,
+				8BB49A3A2C544F810038EED5 /* CADebugger.cpp */,
+				8BB49A3B2C544F810038EED5 /* CABundleLocker.cpp */,
+				8BB49A3C2C544F810038EED5 /* CAAudioFileFormats.cpp */,
+				8BB49A3D2C544F810038EED5 /* CAMath.h */,
+				8BB49A3E2C544F810038EED5 /* CACFArray.cpp */,
+				8BB49A3F2C544F810038EED5 /* CACFMessagePort.h */,
+				8BB49A402C544F810038EED5 /* CAAudioValueRange.cpp */,
+				8BB49A412C544F810038EED5 /* CAAudioUnit.cpp */,
+			);
+			path = PublicUtility;
+			sourceTree = "<group>";
+		};
+		8BB49A422C544F810038EED5 /* AudioUnits */ = {
+			isa = PBXGroup;
+			children = (
+				8BB49A432C544F810038EED5 /* AUPublic */,
+			);
+			path = AudioUnits;
+			sourceTree = "<group>";
+		};
+		8BB49A432C544F810038EED5 /* AUPublic */ = {
+			isa = PBXGroup;
+			children = (
+				8BB49A442C544F810038EED5 /* AUViewBase */,
+				8BB49A462C544F810038EED5 /* AUBase */,
+				8BB49A562C544F810038EED5 /* OtherBases */,
+				8BB49A592C544F810038EED5 /* Utility */,
+			);
+			path = AUPublic;
+			sourceTree = "<group>";
+		};
+		8BB49A442C544F810038EED5 /* AUViewBase */ = {
+			isa = PBXGroup;
+			children = (
+				8BB49A452C544F810038EED5 /* AUViewLocalizedStringKeys.h */,
+			);
+			path = AUViewBase;
+			sourceTree = "<group>";
+		};
+		8BB49A462C544F810038EED5 /* AUBase */ = {
+			isa = PBXGroup;
+			children = (
+				8BB49A472C544F810038EED5 /* ComponentBase.cpp */,
+				8BB49A482C544F810038EED5 /* AUScopeElement.cpp */,
+				8BB49A492C544F810038EED5 /* ComponentBase.h */,
+				8BB49A4A2C544F810038EED5 /* AUBase.cpp */,
+				8BB49A4B2C544F810038EED5 /* AUInputElement.h */,
+				8BB49A4C2C544F810038EED5 /* AUBase.h */,
+				8BB49A4D2C544F810038EED5 /* AUPlugInDispatch.h */,
+				8BB49A4E2C544F810038EED5 /* AUDispatch.h */,
+				8BB49A4F2C544F810038EED5 /* AUOutputElement.cpp */,
+				8BB49A502C544F810038EED5 /* AUResources.r */,
+				8BB49A512C544F810038EED5 /* AUPlugInDispatch.cpp */,
+				8BB49A522C544F810038EED5 /* AUOutputElement.h */,
+				8BB49A532C544F810038EED5 /* AUDispatch.cpp */,
+				8BB49A542C544F810038EED5 /* AUScopeElement.h */,
+				8BB49A552C544F810038EED5 /* AUInputElement.cpp */,
+			);
+			path = AUBase;
+			sourceTree = "<group>";
+		};
+		8BB49A562C544F810038EED5 /* OtherBases */ = {
+			isa = PBXGroup;
+			children = (
+				8BB49A572C544F810038EED5 /* AUEffectBase.cpp */,
+				8BB49A582C544F810038EED5 /* AUEffectBase.h */,
+			);
+			path = OtherBases;
+			sourceTree = "<group>";
+		};
+		8BB49A592C544F810038EED5 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				8BB49A5A2C544F810038EED5 /* AUTimestampGenerator.h */,
+				8BB49A5B2C544F810038EED5 /* AUBaseHelper.cpp */,
+				8BB49A5C2C544F810038EED5 /* AUSilentTimeout.h */,
+				8BB49A5D2C544F810038EED5 /* AUInputFormatConverter.h */,
+				8BB49A5E2C544F810038EED5 /* AUTimestampGenerator.cpp */,
+				8BB49A5F2C544F810038EED5 /* AUBuffer.cpp */,
+				8BB49A602C544F810038EED5 /* AUMIDIDefs.h */,
+				8BB49A612C544F810038EED5 /* AUBuffer.h */,
+				8BB49A622C544F810038EED5 /* AUBaseHelper.h */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8D01CCC70486CAD60068D4B7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BB49A932C544F810038EED5 /* CABundleLocker.h in Headers */,
+				8BB49AB42C544F810038EED5 /* CAAudioChannelLayout.h in Headers */,
+				8BB49AAA2C544F810038EED5 /* AUOutputBL.h in Headers */,
+				8BB49A852C544F810038EED5 /* CAHostTimeBase.h in Headers */,
+				8BB49ACD2C544F810038EED5 /* ComponentBase.h in Headers */,
+				8BB49ABD2C544F810038EED5 /* CAAtomicStack.h in Headers */,
+				8BB49A7A2C544F810038EED5 /* CAAudioTimeStamp.h in Headers */,
+				8BB49A972C544F810038EED5 /* CAThreadSafeList.h in Headers */,
+				8BB49A722C544F810038EED5 /* CAAUParameter.h in Headers */,
+				8BB49AE42C544F810038EED5 /* AUBaseHelper.h in Headers */,
+				8BB49ADC2C544F810038EED5 /* AUTimestampGenerator.h in Headers */,
+				8BB49A8D2C544F810038EED5 /* CADebugPrintf.h in Headers */,
+				8BB49AC72C544F810038EED5 /* CACFMessagePort.h in Headers */,
+				8BB49A752C544F810038EED5 /* CAAUProcessor.h in Headers */,
+				8BB49A712C544F810038EED5 /* CAAudioUnit.h in Headers */,
+				8BB49ACA2C544F810038EED5 /* AUViewLocalizedStringKeys.h in Headers */,
+				8BB49AB02C544F810038EED5 /* CACFDistributedNotification.h in Headers */,
+				8BB49A6F2C544F810038EED5 /* CAComponent.h in Headers */,
+				8BB49A7D2C544F810038EED5 /* CAVectorUnitTypes.h in Headers */,
+				8BA05A6E0720730100365D66 /* TapeBiasVersion.h in Headers */,
+				8BB49AB12C544F810038EED5 /* CAFilePathUtils.h in Headers */,
+				8BB49A732C544F810038EED5 /* CAException.h in Headers */,
+				8BB49A6A2C544F810038EED5 /* CAAtomic.h in Headers */,
+				8BB49A692C544F810038EED5 /* CAGuard.h in Headers */,
+				8BB49ACF2C544F810038EED5 /* AUInputElement.h in Headers */,
+				8BB49AA62C544F810038EED5 /* CACFPreferences.h in Headers */,
+				8BB49ABB2C544F810038EED5 /* CAByteOrder.h in Headers */,
+				8BB49A9E2C544F810038EED5 /* CARingBuffer.h in Headers */,
+				8BB49A652C544F810038EED5 /* CABool.h in Headers */,
+				8BB49A8A2C544F810038EED5 /* CAMutex.h in Headers */,
+				8BB49AD02C544F810038EED5 /* AUBase.h in Headers */,
+				8BC6025C073B072D006C4272 /* TapeBias.h in Headers */,
+				8BB49A822C544F810038EED5 /* CACFString.h in Headers */,
+				8BB49AA12C544F810038EED5 /* CASharedLibrary.h in Headers */,
+				8BB49A6E2C544F810038EED5 /* CATokenMap.h in Headers */,
+				8BB49A632C544F810038EED5 /* CAExtAudioFile.h in Headers */,
+				8BB49A782C544F810038EED5 /* CAPThread.h in Headers */,
+				8BB49A942C544F810038EED5 /* CAPropertyAddress.h in Headers */,
+				8BB49ABE2C544F810038EED5 /* CAReferenceCounted.h in Headers */,
+				8BB49AE32C544F810038EED5 /* AUBuffer.h in Headers */,
+				8BB49AC52C544F810038EED5 /* CAMath.h in Headers */,
+				8BB49AA52C544F810038EED5 /* CAAutoDisposer.h in Headers */,
+				8BB49A6C2C544F810038EED5 /* CACFObject.h in Headers */,
+				8BB49A8C2C544F810038EED5 /* CASettingsStorage.h in Headers */,
+				8BB49A952C544F810038EED5 /* CAXException.h in Headers */,
+				8BB49AB22C544F810038EED5 /* CATink.h in Headers */,
+				8BB49ADF2C544F810038EED5 /* AUInputFormatConverter.h in Headers */,
+				8BB49ABA2C544F810038EED5 /* CAVectorUnit.h in Headers */,
+				8BB49A762C544F810038EED5 /* CAProcess.h in Headers */,
+				8BB49A7C2C544F810038EED5 /* CAAudioValueRange.h in Headers */,
+				8BB49A912C544F810038EED5 /* CABitOperations.h in Headers */,
+				8BB49A872C544F810038EED5 /* CAAudioFileFormats.h in Headers */,
+				8BB49A802C544F810038EED5 /* CACFNumber.h in Headers */,
+				8BB49A982C544F810038EED5 /* CAAudioUnitOutputCapturer.h in Headers */,
+				8BB49AA92C544F810038EED5 /* CADebugMacros.h in Headers */,
+				8BB49AE22C544F810038EED5 /* AUMIDIDefs.h in Headers */,
+				8BB49AA22C544F810038EED5 /* CACFData.h in Headers */,
+				8BB49A6B2C544F810038EED5 /* CAStreamBasicDescription.h in Headers */,
+				8BB49AD12C544F810038EED5 /* AUPlugInDispatch.h in Headers */,
+				8BB49A6D2C544F810038EED5 /* CAStreamRangedDescription.h in Headers */,
+				8BB49AAD2C544F810038EED5 /* CACFPlugIn.h in Headers */,
+				8BB49A702C544F810038EED5 /* CAAudioBufferList.h in Headers */,
+				8BB49A882C544F810038EED5 /* CAAUMIDIMapManager.h in Headers */,
+				8BB49ADB2C544F810038EED5 /* AUEffectBase.h in Headers */,
+				8BB49A772C544F810038EED5 /* CACFDictionary.h in Headers */,
+				8BB49AD82C544F810038EED5 /* AUScopeElement.h in Headers */,
+				8BB49AA82C544F810038EED5 /* CAComponentDescription.h in Headers */,
+				8BB49ADE2C544F810038EED5 /* AUSilentTimeout.h in Headers */,
+				8BB49AA02C544F810038EED5 /* CABufferList.h in Headers */,
+				8BB49AD22C544F810038EED5 /* AUDispatch.h in Headers */,
+				8BB49AD62C544F810038EED5 /* AUOutputElement.h in Headers */,
+				8BB49A9C2C544F810038EED5 /* CALogMacros.h in Headers */,
+				8BB49A902C544F810038EED5 /* AUParamInfo.h in Headers */,
+				8BB49AAF2C544F810038EED5 /* CAMixMap.h in Headers */,
+				8BB49ABC2C544F810038EED5 /* CACFArray.h in Headers */,
+				8BB49A642C544F810038EED5 /* CACFMachPort.h in Headers */,
+				8BB49A8F2C544F810038EED5 /* CAAUMIDIMap.h in Headers */,
+				8BB49A672C544F810038EED5 /* CADebugger.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8D01CCC60486CAD60068D4B7 /* TapeBias */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E4BA243089833B7007656EC /* Build configuration list for PBXNativeTarget "TapeBias" */;
+			buildPhases = (
+				8D01CCC70486CAD60068D4B7 /* Headers */,
+				8D01CCC90486CAD60068D4B7 /* Resources */,
+				8D01CCCB0486CAD60068D4B7 /* Sources */,
+				8D01CCCD0486CAD60068D4B7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TapeBias;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = TapeBias;
+			productReference = 8D01CCD20486CAD60068D4B7 /* TapeBias.component */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1420;
+			};
+			buildConfigurationList = 3E4BA247089833B7007656EC /* Build configuration list for PBXProject "TapeBias" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = en;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				ja,
+				Base,
+				de,
+				en,
+				fr,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* TapeBias */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D01CCC60486CAD60068D4B7 /* TapeBias */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D01CCC90486CAD60068D4B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D01CCCA0486CAD60068D4B7 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D01CCCB0486CAD60068D4B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8BB49A9F2C544F810038EED5 /* AUOutputBL.cpp in Sources */,
+				8BB49AC42C544F810038EED5 /* CAAudioFileFormats.cpp in Sources */,
+				8BB49AB62C544F810038EED5 /* CAHostTimeBase.cpp in Sources */,
+				8BB49A8E2C544F810038EED5 /* CAXException.cpp in Sources */,
+				8BB49AB82C544F810038EED5 /* CAAudioBufferList.cpp in Sources */,
+				8BB49A7B2C544F810038EED5 /* CAFilePathUtils.cpp in Sources */,
+				8BB49A792C544F810038EED5 /* CAAUParameter.cpp in Sources */,
+				8BB49A9B2C544F810038EED5 /* CAAUMIDIMap.cpp in Sources */,
+				8BB49AC82C544F810038EED5 /* CAAudioValueRange.cpp in Sources */,
+				8BB49AD72C544F810038EED5 /* AUDispatch.cpp in Sources */,
+				8BB49A922C544F810038EED5 /* CACFPreferences.cpp in Sources */,
+				8BB49AD52C544F810038EED5 /* AUPlugInDispatch.cpp in Sources */,
+				8BB49A742C544F810038EED5 /* CAAUProcessor.cpp in Sources */,
+				8BB49A892C544F810038EED5 /* CACFDictionary.cpp in Sources */,
+				8BB49ADD2C544F810038EED5 /* AUBaseHelper.cpp in Sources */,
+				8BB49AC22C544F810038EED5 /* CADebugger.cpp in Sources */,
+				8BB49A962C544F810038EED5 /* CAAudioChannelLayout.cpp in Sources */,
+				8BB49A992C544F810038EED5 /* AUParamInfo.cpp in Sources */,
+				8BB49AB72C544F810038EED5 /* CAPersistence.cpp in Sources */,
+				8BB49AAB2C544F810038EED5 /* CADebugPrintf.cpp in Sources */,
+				8BB49AE02C544F810038EED5 /* AUTimestampGenerator.cpp in Sources */,
+				8BB49AB32C544F810038EED5 /* CAStreamBasicDescription.cpp in Sources */,
+				8BB49A832C544F810038EED5 /* CAAUMIDIMapManager.cpp in Sources */,
+				8BB49AAE2C544F810038EED5 /* CASettingsStorage.cpp in Sources */,
+				8BB49AD32C544F810038EED5 /* AUOutputElement.cpp in Sources */,
+				8BB49A7F2C544F810038EED5 /* CAGuard.cpp in Sources */,
+				8BA05A6B0720730100365D66 /* TapeBias.cpp in Sources */,
+				8BB49AC12C544F810038EED5 /* CAMutex.cpp in Sources */,
+				8BB49ADA2C544F810038EED5 /* AUEffectBase.cpp in Sources */,
+				8BB49ABF2C544F810038EED5 /* CACFMachPort.cpp in Sources */,
+				8BB49ACE2C544F810038EED5 /* AUBase.cpp in Sources */,
+				8BB49A9A2C544F810038EED5 /* CASharedLibrary.cpp in Sources */,
+				8BB49A812C544F810038EED5 /* CACFDistributedNotification.cpp in Sources */,
+				8BB49A842C544F810038EED5 /* CAComponentDescription.cpp in Sources */,
+				8BB49A8B2C544F810038EED5 /* CACFString.cpp in Sources */,
+				8BB49ACB2C544F810038EED5 /* ComponentBase.cpp in Sources */,
+				8BB49AAC2C544F810038EED5 /* CARingBuffer.cpp in Sources */,
+				8BB49ACC2C544F810038EED5 /* AUScopeElement.cpp in Sources */,
+				8BB49AC92C544F810038EED5 /* CAAudioUnit.cpp in Sources */,
+				8BB49AC62C544F810038EED5 /* CACFArray.cpp in Sources */,
+				8BB49AC32C544F810038EED5 /* CABundleLocker.cpp in Sources */,
+				8BB49AB52C544F810038EED5 /* CAProcess.cpp in Sources */,
+				8BB49AA32C544F810038EED5 /* CAStreamRangedDescription.cpp in Sources */,
+				8BB49AA42C544F810038EED5 /* CAPThread.cpp in Sources */,
+				8BB49A662C544F810038EED5 /* CAComponent.cpp in Sources */,
+				8BB49A7E2C544F810038EED5 /* CAAudioChannelLayoutObject.cpp in Sources */,
+				8BB49AB92C544F810038EED5 /* CAAudioTimeStamp.cpp in Sources */,
+				8BB49AC02C544F810038EED5 /* CABufferList.cpp in Sources */,
+				8BB49A9D2C544F810038EED5 /* CACFMessagePort.cpp in Sources */,
+				8BB49AA72C544F810038EED5 /* CAVectorUnit.cpp in Sources */,
+				8BB49AD92C544F810038EED5 /* AUInputElement.cpp in Sources */,
+				8BB49AE12C544F810038EED5 /* AUBuffer.cpp in Sources */,
+				8BB49A862C544F810038EED5 /* CADebugMacros.cpp in Sources */,
+				8BB49A682C544F810038EED5 /* CACFNumber.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8BB49AE52C544FFB0038EED5 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3E4BA244089833B7007656EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 9BMAKYA76W;
+				EXPORTED_SYMBOLS_FILE = TapeBias.exp;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GENERATE_PKGINFO_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
+				LIBRARY_STYLE = Bundle;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				OTHER_LDFLAGS = "-bundle";
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.airwindows.audiounit.${PRODUCT_NAME:identifier}";
+				PRODUCT_NAME = TapeBias;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				STRIP_STYLE = debugging;
+				WRAPPER_EXTENSION = component;
+			};
+			name = Debug;
+		};
+		3E4BA245089833B7007656EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = 9BMAKYA76W;
+				EXPORTED_SYMBOLS_FILE = TapeBias.exp;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GENERATE_PKGINFO_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Audio/Plug-Ins/Components/";
+				LIBRARY_STYLE = Bundle;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				OTHER_LDFLAGS = "-bundle";
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.airwindows.audiounit.${PRODUCT_NAME:identifier}";
+				PRODUCT_NAME = TapeBias;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = debugging;
+				WRAPPER_EXTENSION = component;
+			};
+			name = Release;
+		};
+		3E4BA248089833B7007656EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/Users/christopherjohnson/Desktop/CA_SDK/**";
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		3E4BA249089833B7007656EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "/Users/christopherjohnson/Desktop/CA_SDK/**";
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3E4BA243089833B7007656EC /* Build configuration list for PBXNativeTarget "TapeBias" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E4BA244089833B7007656EC /* Debug */,
+				3E4BA245089833B7007656EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3E4BA247089833B7007656EC /* Build configuration list for PBXProject "TapeBias" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E4BA248089833B7007656EC /* Debug */,
+				3E4BA249089833B7007656EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

@@ -27,7 +27,7 @@ Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither,
 
 Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
-Effects: GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
+Effects: Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
 Filter: Parametric, Stonefire, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
@@ -1798,6 +1798,25 @@ So what if you strip all that down, Airwindows-style, to only the basic principl
 Meet Dubly. It uses uLaw technology (really!) for good, not evil! It does the most general form of that processing, NOT like any specific very proprietary tech, and uses a simple distortion inside rather than any tricky tape emulation (that can come later!). It defaults to 0.5, where it will just bring a delicate aura of retro magic to the sound. But, the way it's calibrated (very tricky, by nature) you can crank it out and mis-calibrate it. And when you do, you'll get more and more into a crazy, hyped, intensified zone that adds a lot of treble energy. But this doesn't make it into a 'single ended' version of the processing (even though that's a known secret weapon). It remains the double-ended, full chain, noise-reducing system (that is, if the single distortion stage was adding noise, which it isn't). Just… twisted.
 
 There will obviously be more of this, but for now, you can do your heavy metal in Dubly, you know. It will get a little lighter and spacier and more atmospheric, which is probably why this is Not Done. But who knows, maybe you'll like a little Dubly on your record. Hope you like it :)
+
+
+############ Dubly2 is a key part of seventies sonics!
+
+As we race towards ToTape7, more of the component parts emerge as their own plugins! As long as I'm reinventing all the things that go into ToTape7 (I've seen people get excited about the previous plugin, ToTape6, and felt I could do a heck of a lot better now) I like to let people have the new stuff immediately, and I like to let people use the component parts of things. So, first Flutter2 gets lifted to a new level, and now, Dubly2 is yours!
+
+And where Flutter2 took the basic algorithm to a new level, Dubly2 hasn't changed the basic sound of the plugin very much (it DOES change, especially if you're slamming it with volume). Instead… it's the control you get… which goes from a 2022-Chris 'one knob simplification' design, to six knobs and a dry/wet. Normally, nearly all of those would be preset, or perhaps would be trimpots inside the noise reduction box. Dubly's sound dates back to the late (or even mid) 1960s, and of course the 1970s, and the noise reduction machines were sold to big studios.
+
+So, unlike modern noise reductions where the system's very specific and detailed and is a black box you can't mess with… Dubly is kicking it old school! You can leave the encode and decode controls set to 0.5 for a 'normal' sound, or you can mess with them. The algorithms are very simple for better tone quality, but the end result is very Dubly!
+
+Encode has an encode level, and a frequency control. This specifies the 'brightness band' you'll be using and compressing 2:1 to get the brightness boost that gets added to the audio. It's pretty straightforward.
+
+Decode has a decode level, and a frequency control. This (and it's the same on the old units, believe it or not) does exactly the same encode, the same way… except you add it phase-inverted. That's it: that's Dubly. You can look up on old schematics, exactly where the output of the elaborate filtering and compression stuff is routed to one spot on the circuit board for 'encode' and another spot for 'decode'.
+
+This does have some implications. The highs get squished twice. In real units, care is taken to not have the compression time constants 'breathe' weirdly: for Dubly, we just use uLaw encoding on a brightness-filtered sound and it works great. It produces a similar effect when you add small amounts to the source audio.
+
+If you're going to mess with the trimpots (now ordinary sliders for anybody to play with), you can get controllable amounts of the 'two noise reduction units in encode, in series' simply by turning up the Encode amount. The existing processing becomes a special 'gloss and sparkle' control. You can tweak the Decode Amount similarly. The frequencies can be nudged up or down together, or you can make them be slightly different frequencies for unusual midrange effects that aren't normal: letting more mids through on Encode will cause them to be more compressed and intense, or you could go the other way and slim them down a little for an 'expanded' feel. It's all rather subtle but it's also tonal characteristics that really can't be had any other way… and if I'm not mistaken, these little adjustments can 'dial in' on the sound of many classic, beloved records.
+
+I look forward to playing with all this in the full ToTape7, with flutter and tape bias modeling, but for now you can fully play with and get used to these qualities in advance! Have fun with Dubly2 :)
 
 ############ DubSub is a fully featured bass doctor.
 
