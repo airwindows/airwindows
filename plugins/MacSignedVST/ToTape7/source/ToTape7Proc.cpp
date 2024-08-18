@@ -25,7 +25,7 @@ void ToTape7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 	double iirEncFreq = B/overallscale;
 	double iirMidFreq = ((B * 0.618) + 0.382)/overallscale;
 	double inputGain = pow(C*2.0,2.0);
-	double flutDepth = pow(D,5)*overallscale*60;
+	double flutDepth = pow(D,6)*overallscale*50;
 	if (flutDepth > 498.0) flutDepth = 498.0;
 	double flutFrequency = (0.02*pow(E,3))/overallscale;
 	double bias = (F*2.0)-1.0;
@@ -116,7 +116,13 @@ void ToTape7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			int count = gcount;
 			double offset = flutDepth + (flutDepth * sin(sweepL));
 			sweepL += nextmaxL * flutFrequency;
-			if (sweepL > (M_PI*2.0)) {sweepL -= M_PI*2.0; nextmaxL = 0.24 + (fpdL / (double)UINT32_MAX * 0.74);}
+			if (sweepL > (M_PI*2.0)) {
+				sweepL -= M_PI*2.0;
+				double flutA = 0.24 + (fpdL / (double)UINT32_MAX * 0.74);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				double flutB = 0.24 + (fpdL / (double)UINT32_MAX * 0.74);
+				if (fabs(flutA-sin(sweepR+nextmaxR))<fabs(flutB-sin(sweepR+nextmaxR))) nextmaxL = flutA; else nextmaxL = flutB;
+			}
 			count += (int)floor(offset);
 			inputSampleL = (dL[count-((count > 999)?1000:0)] * (1-(offset-floor(offset))));
 			inputSampleL += (dL[count+1-((count+1 > 999)?1000:0)] * (offset-floor(offset)));
@@ -124,7 +130,13 @@ void ToTape7::processReplacing(float **inputs, float **outputs, VstInt32 sampleF
 			count = gcount;
 			offset = flutDepth + (flutDepth * sin(sweepR));
 			sweepR += nextmaxR * flutFrequency;
-			if (sweepR > (M_PI*2.0)) {sweepR -= M_PI*2.0; nextmaxR = 0.24 + (fpdR / (double)UINT32_MAX * 0.74);}
+			if (sweepR > (M_PI*2.0)) {
+				sweepR -= M_PI*2.0;
+				double flutA = 0.24 + (fpdR / (double)UINT32_MAX * 0.74);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				double flutB = 0.24 + (fpdR / (double)UINT32_MAX * 0.74);
+				if (fabs(flutA-sin(sweepL+nextmaxL))<fabs(flutB-sin(sweepL+nextmaxL))) nextmaxR = flutA; else nextmaxR = flutB;
+			}
 			count += (int)floor(offset);
 			inputSampleR = (dR[count-((count > 999)?1000:0)] * (1-(offset-floor(offset))));
 			inputSampleR += (dR[count+1-((count+1 > 999)?1000:0)] * (offset-floor(offset)));
@@ -299,7 +311,7 @@ void ToTape7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 	double iirEncFreq = B/overallscale;
 	double iirMidFreq = ((B * 0.618) + 0.382)/overallscale;
 	double inputGain = pow(C*2.0,2.0);
-	double flutDepth = pow(D,5)*overallscale*60;
+	double flutDepth = pow(D,6)*overallscale*50;
 	if (flutDepth > 498.0) flutDepth = 498.0;
 	double flutFrequency = (0.02*pow(E,3))/overallscale;
 	double bias = (F*2.0)-1.0;
@@ -390,7 +402,13 @@ void ToTape7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			int count = gcount;
 			double offset = flutDepth + (flutDepth * sin(sweepL));
 			sweepL += nextmaxL * flutFrequency;
-			if (sweepL > (M_PI*2.0)) {sweepL -= M_PI*2.0; nextmaxL = 0.24 + (fpdL / (double)UINT32_MAX * 0.74);}
+			if (sweepL > (M_PI*2.0)) {
+				sweepL -= M_PI*2.0;
+				double flutA = 0.24 + (fpdL / (double)UINT32_MAX * 0.74);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				double flutB = 0.24 + (fpdL / (double)UINT32_MAX * 0.74);
+				if (fabs(flutA-sin(sweepR+nextmaxR))<fabs(flutB-sin(sweepR+nextmaxR))) nextmaxL = flutA; else nextmaxL = flutB;
+			}
 			count += (int)floor(offset);
 			inputSampleL = (dL[count-((count > 999)?1000:0)] * (1-(offset-floor(offset))));
 			inputSampleL += (dL[count+1-((count+1 > 999)?1000:0)] * (offset-floor(offset)));
@@ -398,7 +416,13 @@ void ToTape7::processDoubleReplacing(double **inputs, double **outputs, VstInt32
 			count = gcount;
 			offset = flutDepth + (flutDepth * sin(sweepR));
 			sweepR += nextmaxR * flutFrequency;
-			if (sweepR > (M_PI*2.0)) {sweepR -= M_PI*2.0; nextmaxR = 0.24 + (fpdR / (double)UINT32_MAX * 0.74);}
+			if (sweepR > (M_PI*2.0)) {
+				sweepR -= M_PI*2.0;
+				double flutA = 0.24 + (fpdR / (double)UINT32_MAX * 0.74);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				double flutB = 0.24 + (fpdR / (double)UINT32_MAX * 0.74);
+				if (fabs(flutA-sin(sweepL+nextmaxL))<fabs(flutB-sin(sweepL+nextmaxL))) nextmaxR = flutA; else nextmaxR = flutB;
+			}
 			count += (int)floor(offset);
 			inputSampleR = (dR[count-((count > 999)?1000:0)] * (1-(offset-floor(offset))));
 			inputSampleR += (dR[count+1-((count+1 > 999)?1000:0)] * (offset-floor(offset)));

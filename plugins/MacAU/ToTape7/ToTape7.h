@@ -57,7 +57,7 @@
 static const float kDefaultValue_ParamA = 0.5;
 static const float kDefaultValue_ParamB = 0.5;
 static const float kDefaultValue_ParamC = 0.5;
-static const float kDefaultValue_ParamD = 0.25;
+static const float kDefaultValue_ParamD = 0.5;
 static const float kDefaultValue_ParamE = 0.5;
 static const float kDefaultValue_ParamF = 0.5;
 static const float kDefaultValue_ParamG = 0.5;

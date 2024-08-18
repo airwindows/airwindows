@@ -15,7 +15,7 @@ ToTape7::ToTape7(audioMasterCallback audioMaster) :
 	A = 0.5;
 	B = 0.5;
 	C = 0.5;
-	D = 0.25;
+	D = 0.5;
 	E = 0.5;
 	F = 0.5;
 	G = 0.5;
