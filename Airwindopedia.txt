@@ -27,7 +27,7 @@ Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither,
 
 Dynamics: Pop2, Pressure5, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
-Effects: Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
+Effects: Dubly3, Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
 Filter: Parametric, Stonefire, Isolator3, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
@@ -1842,6 +1842,30 @@ This does have some implications. The highs get squished twice. In real units, c
 If you're going to mess with the trimpots (now ordinary sliders for anybody to play with), you can get controllable amounts of the 'two noise reduction units in encode, in series' simply by turning up the Encode amount. The existing processing becomes a special 'gloss and sparkle' control. You can tweak the Decode Amount similarly. The frequencies can be nudged up or down together, or you can make them be slightly different frequencies for unusual midrange effects that aren't normal: letting more mids through on Encode will cause them to be more compressed and intense, or you could go the other way and slim them down a little for an 'expanded' feel. It's all rather subtle but it's also tonal characteristics that really can't be had any other way… and if I'm not mistaken, these little adjustments can 'dial in' on the sound of many classic, beloved records.
 
 I look forward to playing with all this in the full ToTape7, with flutter and tape bias modeling, but for now you can fully play with and get used to these qualities in advance! Have fun with Dubly2 :)
+
+############ Dubly3 refines and transforms the Dubly sound.
+
+So here's where the Dubly stuff suddenly gets more useful for a lot of people.
+
+This whole time, Dubly's been using a transfer function called uLaw encoding to take the place of 'compression', because it gets to roughly the same 2:1 ratio that the famous noise reduction system liked to use. And this is all well and good… but transfer function modifications without time constants aren't compression. They're distortion. And so all the versions of Dubly have used brightened but distorted audio to encode and decode with. And this is fine for a number of reasons (one of them being, Dubly is a Spinal Tap joke and not an attempt to pirate still very defended IP) up until ToTape7 came out, and people started trying to use it for all manner of things.
+
+Dubly and Dubly2 are the right basic sort of thing, but gritty and alias-y, and I vowed I'd work on it in order to develop a ToTape8 that performed better, ideally with a heck of a lot less aliasing but still zero latency and with the immediacy Airwindows ToTape has been known for. And so, towards that goal, Dubly3 is here.
+
+What's changed? A bunch of things. Notably, Dubly3 uses real compression: but not in any sense a clone of other gear. Instead, it's a new trick I might look into further: it's applying a compression based not on the input signal, but the uLaw version of the input signal, so the 'DNA' of original Dubly is very much still in there. But the time constants totally alter the texture of how Dubly3 behaves. It acts a lot more like a real compressor, as in a sense it is one, just one that's following an unusual form of signal (much like having the compression try to follow a tube-drive style control signal).
+
+That applies to both encode and decode. On top of that, Dubly3 does adopt the classic trick of clipping the compressed highs slightly, which also helps it sound authentic. But beyond that, Dubly3 reinvents the controls in a way that I think will be very helpful, and in a way that lets the upcoming ToTape8 add some asked-for features.
+
+Instead of direct control over amounts of encode, decode, and their crossover frequencies, Dubly3 boils it down to input and output gains (labeled as such, not 'tape drive') and tilt and shape controls, and that's how you dial it in. What's tilt? At 0.5 tilt is 'neutral', but as you boost it, you're adding encode and cutting decode. The similarity to a tilt EQ is obvious. More tilt means more bright, and if you cut it below 0.5 you're leaving decode fully engaged but reducing encode, causing it still to be the Dubly sound, but darker.
+
+Shape is even more interesting. Where Tilt balances the encode and decode levels against each other, Shape balances the crossover frequencies against each other… and lets you push them to unreasonable extremes, in case it gives you usefully weird sounds to play with. For real sounds you'll be keeping it a lot nearer 0.5 where it defaults to. What happens is this: if you increase Shape, you're encoding at lower frequencies, but decoding at higher. That means the brightness factor stays roughly the same, but the mids get more intense, more compressed, more lively. You'll hear it in the chug of guitars and in the energy of percussion, but it's not purely a treble hype: it's reshaping the whole midrange where Dubly crosses it over to treble. Then, when you cut Shape, you're encoding at higher frequencies but decoding more in lower frequencies… and since decoding is more subtractive, and since Dubly3 is a compressy thing, you're darkening and expanding the mids instead.
+
+Using these controls, you can use Dubly3 to start dialing in a number of classic record sounds, particular albums where perhaps the hardware noise reduction of the day had drifted and produced a distinctive sound. And then, once ToTape8 is done, you can apply it to the additional controls of ToTape, adding refinements in bias and using the classic ToTape algorithm to make a plugin you can hit like it was a real tape machine.
+
+Which real tape machine? ANY real tape machine, pretty much. If you can identify the sound (things like where the head bump sits, how overbiased or underbiased the sound is, whether it's a brighter or darker sound, more saturated and hyped in the mids or cleaner and more dark and studio-y… at that point it ought to be possible to decode the classic sounds and either mimic them, or learn from them and use the plugin to make the choices that work for YOUR mix and your sound.
+
+It starts with Dubly3, and once I've got ToTape8 done, you'll have everything ToTape7 has, except with this Dubly instead of the previous, and thanks to the use of two fewer tone controls, ToTape8 will also have an Input control at the top and an Output control at the bottom, to make the gain staging simpler for people to deal with. And it will still fit in Airwindows Consolidated. But for now, play with Dubly3 and see if that works better for ya than Dubly2 did. And Dubly2 is still supported and available because it's an entirely different sound and you should still have it in case you can use it.
+
+Next, a ToTape8, but in weeks rather than another couple years. And then… more work on ConsoleX :)
 
 ############ DubSub is a fully featured bass doctor.
 
