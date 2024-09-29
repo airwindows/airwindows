@@ -43,7 +43,7 @@ Stereo: Srsly, Srsly2, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTi
 
 Subtlety: Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
 
-Tape: ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
+Tape: ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
@@ -4573,7 +4573,6 @@ The dry/wet control has a trick in store: it only works in the normal way if you
 
 Oh, one more thing: ToTape6 has the guts of ADClip built into it as a safety clipper. So you can use it as a final loudenator, at which it ought to be about as good as they get: if the tape slam isn’t getting you there, you can push the output volume past 0 dB to intentionally clip harder, or pull it back to make sure ToTape is the only distortion stage. If you’re seeing extended periods of -0.09 dB you’re seeing ADClip working.
 
-
 ############ ToTape7 is Airwindows tape emulation with Bias and Dubly.
 
 So about that simplification of ToTape? Nah. But… set everything to the middle and you can ignore all the many controls.
@@ -4597,6 +4596,22 @@ Said bump still does the thing from DubSub2 where it's also giving a mild notch 
 And Dubly Decode helps you get even smoother, more compressed sound out of the tape saturation, and lets you dial it in by both amount and frequency. Be aware that it's a really gentle treble-slope, so making subtle changes to frequency will have an effect on the character of the sound but won't produce wild effects. Basically, if Dubly mostly balances but Enc is crossing over lower than Dec, there will be a sort of lower midrange hype that comes through: if Dec is lower than Enc, it's going to be drying up that energy and making it a bit tighter. They're supposed to cancel out, but half the reason classic records all sound different from each other is that this system in real life required a lot of fussy tuning, and some people set it up by ear and ended up with distinct tone qualities for their studios when they did. It's not so much 'EQ' qualities as texture. Experiment with it to see if you have preferences.
 
 And that's ToTape7! Ought to hold people for a while, and be a decent upgrade from ToTape6, even though people really like that one (and it's still there so you can still have it anytime you want).
+
+############ ToTape8 is Airwindows tape emulation with gain staging, bias and optimized Dubly!
+
+Sometimes, things move kinda fast.
+
+ToTape8 comes right on the heels of ToTape7, rather than a couple of years later. Why? Necessity. So much was right and new with ToTape7, but it was letting itself down. It wasn't clear how to set levels on it as there was only 'TapeDrv' in the middle of many other controls. There was lots of control over the Dubly, but it'd never made its way into a ToTape version before and quickly showed a gritty, fierce character that actually limited the amount of good Dubly could even do with the tone. Yet it took up four controls, getting in the way of an output level control while still allowing use with Consolidated and the VCV Rack version.
+
+Clearly, the answer was to immediately get COVID! But in recuperating from that, there was time to revisit ToTape and Dubly, and the new Dubly is out, and here's the next generation of ToTape. Already. And probably about two years worth of 'better', if you're wondering, because that was just waiting to be unleashed: all the other stuff was ready to support it.
+
+It's now obvious how to gain stage ToTape, with an input and an output control… but it's more sophisticated than it looks, because ToTape8 has a safety clipper built in (same as ToTape7). This is ClipOnly2, running after ToTape so no matter what you do the output is safe for a final mixdown… but since there's an output control now, the output control goes after the tape emulation and before the final clip. So if you want to pull it back to 'tape overdrive only', you can set the output to about 0.4 or so (depends on your other settings), shy of the ClipOnly2 clip. Or, if you want a much cleaner tape effect with more powerful peaks, leave it as default or even turn it up: the Input control can have you hit the 'tape' less hard, and since idealized tape needn't have noise you can gain stage it any way you want (there can be a kind of noise in a future variation that's more lo-fi, this is more for being able to put on tracks and mix buss without wrecking the tone)
+
+With no tape noise, what does the new Dubly do? Amazing things. Now that it does a kind of compression (not a clone of hardware, but a simpler, optimized compression to clean up the grit) that's tied with the Dubly frequency, the formerly crunchy Dubly has been reduced to two controls, but they're amazing and way more useful than the original four. Tilt simply adjusts the Dubly amounts against each other. Maybe 0.5 is not, in fact, the perfect setting. Try other settings! Anything close to the center will be musical and useful, cranking it to 1.0 will give you the 'Dubly encode trick' used in studios, and turning it down to 0.0 gives you only decode, at the most extreme amount possible. So, it's named Tilt because it works like a tilt EQ, but it comes from the existing Dubly. Then, the Shape control varies the cutoffs of the Dubly encode and decode, AND the response of the compressors, against each other. What this does might not be obvious, but once you try it, there's nothing more obvious. Tweaking this adjusts the midrange hype. You can have the mids be more searing and compressed and lively, or you can dial them back until they're dark and vibey. You get a funky expanded dynamic tone you'll immediately recognize from certain Seventies records. It's at your fingertips with the Shape control.
+
+Does that mean setting it to neutral does nothing? Nope, this is the best part. Just by being there, Dubly does a special thing with the ToTape overdrive/saturation. It cancels harmonics, and this is why real tape machines are often thought of as near-magical 'clean level compressors'. ToTape8 pulls this off pretty well, even though it's minimal and clean enough to use in real audio work (not just sound design). Note that this is not 'aliasing control' though it'll sound like it is, compared to the gritty ToTape7 (vibey though it is). ToTape8 does use filtering in both the Dubly encode and decode, but not in an 'elaborate brickwall filter because it thinks it is oversampling' way, in a way that's designed for better tone and ability to run at zero latency. What's happening is, the nature of Dubly means anything producing harmonics tends to also have the harmonics taken back out again, because they're treated as additional noise. It's that simple, and still works in minimal form in spite of not cloning any hardware box, and that's why ToTape8 gets the sound it does.
+
+That's the new stuff, Flutter and Bias and Head Bump and Head Bump Frequency still work the way they do in ToTape7. I think they'll be even easier and more pleasing to work with now that the Dubly stuff has been brought up to par. Let me know if this plugin sounds better than ToTape7. It ought to :)
 
 ############ ToVinyl4 is a vinyl-mastering simulator bringing several vinyl-type colors.
 
