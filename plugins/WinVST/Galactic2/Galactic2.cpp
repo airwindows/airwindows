@@ -37,7 +37,7 @@ Galactic2::Galactic2(audioMasterCallback audioMaster) :
 	
 	feedbackA = feedbackB = feedbackC = feedbackD = 1.0;
 	
-	iirA = iirB = iirC = iirD = 0.0;
+	iirA = iirB = iirC = iirD = iirE = iirF = iirG = iirH = 0.0;
 	
 	feedbackAL = 0.0;
 	feedbackBL = 0.0;
