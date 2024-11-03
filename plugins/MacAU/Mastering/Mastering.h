@@ -3,7 +3,7 @@
 *	
 *	Version:	1.0
 * 
-*	Created:	10/8/24
+*	Created:	10/21/24
 *	
 *	Copyright:  Copyright © 2024 Airwindows, Airwindows uses the MIT license
 * 
@@ -63,6 +63,20 @@ static const float kDefaultValue_ParamF = 0.5;
 static const float kDefaultValue_ParamG = 0.5;
 static const float kDefaultValue_ParamH = 0.5;
 static const float kDefaultValue_ParamI = 0.0;
+static const int kDark = 1;
+static const int kTenNines = 2;
+static const int kTPDFWide = 3;
+static const int kPaulWide = 4;
+static const int kNJAD = 5;
+static const int kBypass = 6;
+static const int kDefaultValue_ParamJ = kBypass;
+
+static CFStringRef kMenuItem_Dark = CFSTR ("Dark");
+static CFStringRef kMenuItem_TenNines = CFSTR ("Ten Nines");
+static CFStringRef kMenuItem_TPDFWide = CFSTR ("TPDFWide");
+static CFStringRef kMenuItem_PaulWide = CFSTR ("PaulWide");
+static CFStringRef kMenuItem_NJAD = CFSTR ("NJAD");
+static CFStringRef kMenuItem_Bypass = CFSTR ("Bypass");
 
 static CFStringRef kParameterAName = CFSTR("Air");
 static CFStringRef kParameterBName = CFSTR("Mid");
@@ -73,6 +87,7 @@ static CFStringRef kParameterFName = CFSTR("XvL-S");
 static CFStringRef kParameterGName = CFSTR("Zoom");
 static CFStringRef kParameterHName = CFSTR("DarkF");
 static CFStringRef kParameterIName = CFSTR("Ratio");
+static CFStringRef kParameterJName = CFSTR("Dither");
 
 enum {
 	kParam_A =0,
@@ -84,8 +99,9 @@ enum {
 	kParam_G =6,
 	kParam_H =7,
 	kParam_I =8,
+	kParam_J =9,
 	//Add your parameters here...
-	kNumberOfParameters=9
+	kNumberOfParameters=10
 };
 
 #pragma mark ____Mastering
@@ -97,8 +113,13 @@ public:
 	virtual ~Mastering () { delete mDebugDispatcher; }
 #endif
 	
-	virtual AUKernelBase *		NewKernel() { return new MasteringKernel(this); }
-	
+	virtual ComponentResult Reset(AudioUnitScope inScope, AudioUnitElement inElement);
+
+	virtual OSStatus ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlags, 
+						const AudioBufferList & inBuffer, AudioBufferList & outBuffer, 
+						UInt32 inFramesToProcess);
+	virtual UInt32 SupportedNumChannels(const AUChannelInfo ** outInfo);
+
 	virtual	ComponentResult		GetParameterValueStrings(AudioUnitScope			inScope,
 														 AudioUnitParameterID		inParameterID,
 														 CFArrayRef *			outStrings);
@@ -117,7 +138,7 @@ public:
 											AudioUnitScope 		inScope,
 											AudioUnitElement 		inElement,
 											void *			outData);
-	
+
 	virtual ComponentResult    Initialize();
 	virtual bool				SupportsTail () { return true; }
     virtual Float64				GetTailTime() {return (1.0/GetSampleRate())*0.0;} //in SECONDS! gsr * a number = in samples
@@ -126,78 +147,126 @@ public:
 	/*! @method Version */
 	virtual ComponentResult		Version() { return kMasteringVersion; }
 	
-    
+	private:
 	
-protected:
-		class MasteringKernel : public AUKernelBase		// most of the real work happens here
-	{
-public:
-		MasteringKernel(AUEffectBase *inAudioUnit )
-		: AUKernelBase(inAudioUnit)
-	{
-	}
-		
-		// *Required* overides for the process method for this effect
-		// processes one channel of interleaved samples
-        virtual void 		Process(	const Float32 	*inSourceP,
-										Float32		 	*inDestP,
-										UInt32 			inFramesToProcess,
-										UInt32			inNumChannels,
-										bool			&ioSilence);
-		
-        virtual void		Reset();
-		
-		private: 
-		enum {
-			pvAL1,
-			pvSL1,
-			accSL1,
-			acc2SL1,
-			pvAL2,
-			pvSL2,
-			accSL2,
-			acc2SL2,
-			pvAL3,
-			pvSL3,
-			accSL3,
-			pvAL4,
-			pvSL4,
-			gndavgL,
-			outAL,
-			gainAL,
-			air_total
-		};
-		double air[air_total];
-		
-		enum {
-			prevSampL1,
-			prevSlewL1,
-			accSlewL1,
-			prevSampL2,
-			prevSlewL2,
-			accSlewL2,
-			prevSampL3,
-			prevSlewL3,
-			accSlewL3,
-			kalGainL,
-			kalOutL,
-			kalAvgL,
-			kal_total
-		};
-		double kalM[kal_total];
-		double kalS[kal_total];
-				
-		long double lastSinewL;
-		//this is overkill, used to run both Zoom and Sinew stages as they are after
-		//the summing in StoneFire, which sums three doubles to a long double.
-		
-		double lastSample;  //this doesn't touch the audio unless it's clipping
-		double intermediate[16];
-		bool wasPosClip;
-		bool wasNegClip;
-		
-		uint32_t fpd;
+	enum {
+		pvAL1,
+		pvSL1,
+		accSL1,
+		acc2SL1,
+		pvAL2,
+		pvSL2,
+		accSL2,
+		acc2SL2,
+		pvAL3,
+		pvSL3,
+		accSL3,
+		pvAL4,
+		pvSL4,
+		gndavgL,
+		outAL,
+		gainAL,
+		pvAR1,
+		pvSR1,
+		accSR1,
+		acc2SR1,
+		pvAR2,
+		pvSR2,
+		accSR2,
+		acc2SR2,
+		pvAR3,
+		pvSR3,
+		accSR3,
+		pvAR4,
+		pvSR4,
+		gndavgR,
+		outAR,
+		gainAR,
+		air_total
 	};
+	double air[air_total];
+	
+	enum {
+		prevSampL1,
+		prevSlewL1,
+		accSlewL1,
+		prevSampL2,
+		prevSlewL2,
+		accSlewL2,
+		prevSampL3,
+		prevSlewL3,
+		accSlewL3,
+		kalGainL,
+		kalOutL,
+		kalAvgL,
+		prevSampR1,
+		prevSlewR1,
+		accSlewR1,
+		prevSampR2,
+		prevSlewR2,
+		accSlewR2,
+		prevSampR3,
+		prevSlewR3,
+		accSlewR3,
+		kalGainR,
+		kalOutR,
+		kalAvgR,
+		kal_total
+	};
+	double kalM[kal_total];
+	double kalS[kal_total];
+	
+	long double lastSinewL;
+	long double lastSinewR;
+	//this is overkill, used to run both Zoom and Sinew stages as they are after
+	//the summing in StoneFire, which sums three doubles to a long double.
+	
+	double lastSampleL;
+	double intermediateL[16];
+	bool wasPosClipL;
+	bool wasNegClipL;
+	double lastSampleR;
+	double intermediateR[16];
+	bool wasPosClipR;
+	bool wasNegClipR; //Stereo ClipOnly2
+	
+	int quantA;
+	int quantB;
+	float expectedSlew;
+	float testA;
+	float testB;
+	double correction;
+	double shapedSampleL;
+	double shapedSampleR;
+	double currentDither;
+	double ditherL;
+	double ditherR;
+	bool cutbinsL;
+	bool cutbinsR;
+	int hotbinA;
+	int hotbinB;
+	double benfordize;
+	double totalA;
+	double totalB;
+	double outputSample;
+	int expon; //internal dither variables
+
+	double NSOddL; //dither section!
+	double NSEvenL;
+	double prevShapeL;
+	double NSOddR;
+	double NSEvenR;
+	double prevShapeR;
+	bool flip; //VinylDither
+	double darkSampleL[100];
+	double darkSampleR[100]; //Dark
+	double previousDitherL;
+	double previousDitherR; //PaulWide
+	double bynL[13], bynR[13];
+	double noiseShapingL, noiseShapingR; //NJAD
+		
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

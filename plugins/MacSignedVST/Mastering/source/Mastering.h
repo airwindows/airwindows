@@ -25,7 +25,8 @@ enum {
 	kParamG =6,
 	kParamH =7,
 	kParamI =8,
-  kNumParameters = 9
+	kParamJ =9,
+  kNumParameters = 10
 }; //
 
 const int kNumPrograms = 0;
@@ -69,6 +70,7 @@ private:
     float G;
     float H;
     float I;
+    float J;
 
 	enum {
 		pvAL1,
@@ -151,6 +153,41 @@ private:
 	bool wasPosClipR;
 	bool wasNegClipR; //Stereo ClipOnly2
 	
+	int quantA;
+	int quantB;
+	float expectedSlew;
+	float testA;
+	float testB;
+	double correction;
+	double shapedSampleL;
+	double shapedSampleR;
+	double currentDither;
+	double ditherL;
+	double ditherR;
+	bool cutbinsL;
+	bool cutbinsR;
+	int hotbinA;
+	int hotbinB;
+	double benfordize;
+	double totalA;
+	double totalB;
+	double outputSample;
+	int expon; //internal dither variables
+	
+	double NSOddL; //dither section!
+	double NSEvenL;
+	double prevShapeL;
+	double NSOddR;
+	double NSEvenR;
+	double prevShapeR;
+	bool flip; //VinylDither
+	double darkSampleL[100];
+	double darkSampleR[100]; //Dark
+	double previousDitherL;
+	double previousDitherR; //PaulWide
+	double bynL[13], bynR[13];
+	double noiseShapingL, noiseShapingR; //NJAD
+		
 	uint32_t fpdL;
 	uint32_t fpdR;
 	//default stuff

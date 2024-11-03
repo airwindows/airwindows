@@ -36,6 +36,10 @@ void Mastering::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 	double depthSinew = I;
 	int spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
 	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16;
+	int dither = (int) ( J * 5.999 )+1;
+	int depth = (int)(17.0*overallscale);
+	if (depth < 3) depth = 3;
+	if (depth > 98) depth = 98; //for Dark
 	
     while (--sampleFrames >= 0)
     {
@@ -270,14 +274,388 @@ void Mastering::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		inputSampleR = (inputSampleR * (1.0-depthSinew))+(lastSinewR*depthSinew);
 		//run Sinew to stop excess slews, but run a dry/wet to allow a range of brights
 		
-		//begin 32 bit stereo floating point dither
-		int expon; frexpf((float)inputSampleL, &expon);
-		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
-		frexpf((float)inputSampleR, &expon);
-		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
-		//end 32 bit stereo floating point dither
+		
+		switch (dither) {
+			case 1:
+				//begin Dark		
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0; //we will apply the 24 bit Dark
+				//We are doing it first Left, then Right, because the loops may run faster if
+				//they aren't too jammed full of variables. This means re-running code.
+				
+				//begin left
+				quantA = floor(inputSampleL);
+				quantB = floor(inputSampleL+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleL[x+1] - darkSampleL[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleL[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleL[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleL = quantA;
+				else inputSampleL = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleL[x+1] = darkSampleL[x];
+				}
+				darkSampleL[0] = inputSampleL;
+				//end Dark left
+				
+				//begin right
+				quantA = floor(inputSampleR);
+				quantB = floor(inputSampleR+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleR[x+1] - darkSampleR[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleR[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleR[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleR = quantA;
+				else inputSampleR = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleR[x+1] = darkSampleR[x];
+				}
+				darkSampleR[0] = inputSampleR;
+				//end Dark right
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //Dark (Monitoring2)
+			case 2:
+				//begin Dark	 for Ten Nines
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0; //we will apply the 24 bit Dark
+				//We are doing it first Left, then Right, because the loops may run faster if
+				//they aren't too jammed full of variables. This means re-running code.
+				
+				//begin L
+				correction = 0;
+				if (flip) {
+					NSOddL = (NSOddL * 0.9999999999) + prevShapeL;
+					NSEvenL = (NSEvenL * 0.9999999999) - prevShapeL;
+					correction = NSOddL;
+				} else {
+					NSOddL = (NSOddL * 0.9999999999) - prevShapeL;
+					NSEvenL = (NSEvenL * 0.9999999999) + prevShapeL;
+					correction = NSEvenL;
+				}
+				shapedSampleL = inputSampleL+correction;
+				//end Ten Nines L
+				
+				//begin Dark L
+				quantA = floor(shapedSampleL);
+				quantB = floor(shapedSampleL+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleL[x+1] - darkSampleL[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleL[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleL[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleL = quantA;
+				else inputSampleL = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleL[x+1] = darkSampleL[x];
+				}
+				darkSampleL[0] = inputSampleL;
+				//end Dark L
+				
+				prevShapeL = (floor(shapedSampleL) - inputSampleL)*0.9999999999;
+				//end Ten Nines L
+				
+				//begin R
+				correction = 0;
+				if (flip) {
+					NSOddR = (NSOddR * 0.9999999999) + prevShapeR;
+					NSEvenR = (NSEvenR * 0.9999999999) - prevShapeR;
+					correction = NSOddR;
+				} else {
+					NSOddR = (NSOddR * 0.9999999999) - prevShapeR;
+					NSEvenR = (NSEvenR * 0.9999999999) + prevShapeR;
+					correction = NSEvenR;
+				}
+				shapedSampleR = inputSampleR+correction;
+				//end Ten Nines R
+				
+				//begin Dark R
+				quantA = floor(shapedSampleR);
+				quantB = floor(shapedSampleR+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleR[x+1] - darkSampleR[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleR[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleR[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleR = quantA;
+				else inputSampleR = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleR[x+1] = darkSampleR[x];
+				}
+				darkSampleR[0] = inputSampleR;
+				//end Dark R
+				
+				prevShapeR = (floor(shapedSampleR) - inputSampleR)*0.9999999999;
+				//end Ten Nines
+				flip = !flip;
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //Ten Nines (which goes into Dark in Monitoring3)
+			case 3:
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0;
+				
+				ditherL = -1.0;
+				ditherL += (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				ditherL += (double(fpdL)/UINT32_MAX);
+				//TPDF: two 0-1 random noises
+				
+				ditherR = -1.0;
+				ditherR += (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				ditherR += (double(fpdR)/UINT32_MAX);
+				//TPDF: two 0-1 random noises
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					ditherL = -1.0;
+					ditherL += (double(fpdL)/UINT32_MAX);
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					ditherL += (double(fpdL)/UINT32_MAX);
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					ditherR = -1.0;
+					ditherR += (double(fpdR)/UINT32_MAX);
+					fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+					ditherR += (double(fpdR)/UINT32_MAX);
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					ditherL = -1.0;
+					ditherL += (double(fpdL)/UINT32_MAX);
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					ditherL += (double(fpdL)/UINT32_MAX);
+				}
+				
+				inputSampleL = floor(inputSampleL+ditherL);
+				inputSampleR = floor(inputSampleR+ditherR);
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //TPDFWide (a good neutral with the width enhancement)
+			case 4:
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0;
+				//Paul Frindle: It's true that the dither itself can sound different 
+				//if it's given a different freq response and you get to hear it. 
+				//The one we use most is triangular single pole high pass dither. 
+				//It's not freq bent enough to sound odd, but is slightly less audible than 
+				//flat dither. It can also be easily made by taking one sample of dither 
+				//away from the previous one - this gives you the triangular PDF and the 
+				//filtering in one go :-)
+				
+				currentDither = (double(fpdL)/UINT32_MAX);
+				ditherL = currentDither;
+				ditherL -= previousDitherL;
+				previousDitherL = currentDither;
+				//TPDF: two 0-1 random noises
+				
+				currentDither = (double(fpdR)/UINT32_MAX);
+				ditherR = currentDither;
+				ditherR -= previousDitherR;
+				previousDitherR = currentDither;
+				//TPDF: two 0-1 random noises
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					currentDither = (double(fpdL)/UINT32_MAX);
+					ditherL = currentDither;
+					ditherL -= previousDitherL;
+					previousDitherL = currentDither;
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+					currentDither = (double(fpdR)/UINT32_MAX);
+					ditherR = currentDither;
+					ditherR -= previousDitherR;
+					previousDitherR = currentDither;
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					currentDither = (double(fpdL)/UINT32_MAX);
+					ditherL = currentDither;
+					ditherL -= previousDitherL;
+					previousDitherL = currentDither;
+				}
+				
+				inputSampleL = floor(inputSampleL+ditherL);
+				inputSampleR = floor(inputSampleR+ditherR);
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //PaulWide (brighter neutral that's still TPDF and wide)
+			case 5:
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0;
+				cutbinsL = false;
+				cutbinsR = false;
+				drySampleL = inputSampleL;//re-using in NJAD
+				inputSampleL -= noiseShapingL;
+				//NJAD L
+				benfordize = floor(inputSampleL);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+				hotbinA = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number floored
+				totalA = 0.0;
+				if ((hotbinA > 0) && (hotbinA < 10))
+				{
+					bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
+					totalA += (301-bynL[1]); totalA += (176-bynL[2]); totalA += (125-bynL[3]);
+					totalA += (97-bynL[4]); totalA += (79-bynL[5]); totalA += (67-bynL[6]);
+					totalA += (58-bynL[7]); totalA += (51-bynL[8]); totalA += (46-bynL[9]); bynL[hotbinA] -= 1;
+				} else hotbinA = 10;
+				//produce total number- smaller is closer to Benford real
+				benfordize = ceil(inputSampleL);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+				hotbinB = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number ceiled
+				totalB = 0.0;
+				if ((hotbinB > 0) && (hotbinB < 10))
+				{
+					bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
+					totalB += (301-bynL[1]); totalB += (176-bynL[2]); totalB += (125-bynL[3]);
+					totalB += (97-bynL[4]); totalB += (79-bynL[5]); totalB += (67-bynL[6]);
+					totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]); bynL[hotbinB] -= 1;
+				} else hotbinB = 10;
+				//produce total number- smaller is closer to Benford real
+				if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
+				else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
+				//assign the relevant one to the delay line
+				//and floor/ceil signal accordingly
+				if (cutbinsL) {
+					bynL[1] *= 0.99; bynL[2] *= 0.99; bynL[3] *= 0.99; bynL[4] *= 0.99; bynL[5] *= 0.99; 
+					bynL[6] *= 0.99; bynL[7] *= 0.99; bynL[8] *= 0.99; bynL[9] *= 0.99; bynL[10] *= 0.99; 
+				}
+				noiseShapingL += outputSample - drySampleL;			
+				if (noiseShapingL > fabs(inputSampleL)) noiseShapingL = fabs(inputSampleL);
+				if (noiseShapingL < -fabs(inputSampleL)) noiseShapingL = -fabs(inputSampleL);
+				inputSampleL /= 8388608.0;
+				if (inputSampleL > 1.0) inputSampleL = 1.0;
+				if (inputSampleL < -1.0) inputSampleL = -1.0;
+				//finished NJAD L
+				
+				//NJAD R
+				drySampleR = inputSampleR;
+				inputSampleR -= noiseShapingR;
+				benfordize = floor(inputSampleR);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
+				hotbinA = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number floored
+				totalA = 0.0;
+				if ((hotbinA > 0) && (hotbinA < 10))
+				{
+					bynR[hotbinA] += 1; if (bynR[hotbinA] > 982) cutbinsR = true;
+					totalA += (301-bynR[1]); totalA += (176-bynR[2]); totalA += (125-bynR[3]);
+					totalA += (97-bynR[4]); totalA += (79-bynR[5]); totalA += (67-bynR[6]);
+					totalA += (58-bynR[7]); totalA += (51-bynR[8]); totalA += (46-bynR[9]); bynR[hotbinA] -= 1;
+				} else hotbinA = 10;
+				//produce total number- smaller is closer to Benford real
+				benfordize = ceil(inputSampleR);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
+				hotbinB = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number ceiled
+				totalB = 0.0;
+				if ((hotbinB > 0) && (hotbinB < 10))
+				{
+					bynR[hotbinB] += 1; if (bynR[hotbinB] > 982) cutbinsR = true;
+					totalB += (301-bynR[1]); totalB += (176-bynR[2]); totalB += (125-bynR[3]);
+					totalB += (97-bynR[4]); totalB += (79-bynR[5]); totalB += (67-bynR[6]);
+					totalB += (58-bynR[7]); totalB += (51-bynR[8]); totalB += (46-bynR[9]); bynR[hotbinB] -= 1;
+				} else hotbinB = 10;
+				//produce total number- smaller is closer to Benford real
+				if (totalA < totalB) {bynR[hotbinA] += 1; outputSample = floor(inputSampleR);}
+				else {bynR[hotbinB] += 1; outputSample = floor(inputSampleR+1);}
+				//assign the relevant one to the delay line
+				//and floor/ceil signal accordingly
+				if (cutbinsR) {
+					bynR[1] *= 0.99; bynR[2] *= 0.99; bynR[3] *= 0.99; bynR[4] *= 0.99; bynR[5] *= 0.99; 
+					bynR[6] *= 0.99; bynR[7] *= 0.99; bynR[8] *= 0.99; bynR[9] *= 0.99; bynR[10] *= 0.99; 
+				}
+				noiseShapingR += outputSample - drySampleR;			
+				if (noiseShapingR > fabs(inputSampleR)) noiseShapingR = fabs(inputSampleR);
+				if (noiseShapingR < -fabs(inputSampleR)) noiseShapingR = -fabs(inputSampleR);
+				inputSampleR /= 8388608.0;
+				if (inputSampleR > 1.0) inputSampleR = 1.0;
+				if (inputSampleR < -1.0) inputSampleR = -1.0;				
+				break; //NJAD (Monitoring. Brightest)
+			case 6:
+				//begin 32 bit stereo floating point dither
+				frexpf((float)inputSampleL, &expon);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+				frexpf((float)inputSampleR, &expon);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+				//end 32 bit stereo floating point dither
+				break; //Bypass for saving floating point files directly
+		}
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
@@ -318,7 +696,11 @@ void Mastering::processDoubleReplacing(double **inputs, double **outputs, VstInt
 	double depthSinew = I;
 	int spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
 	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16;
-	
+	int dither = (int) ( J * 5.999 )+1;
+	int depth = (int)(17.0*overallscale);
+	if (depth < 3) depth = 3;
+	if (depth > 98) depth = 98; //for Dark
+		
     while (--sampleFrames >= 0)
     {
 		double inputSampleL = *in1;
@@ -552,14 +934,388 @@ void Mastering::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		inputSampleR = (inputSampleR * (1.0-depthSinew))+(lastSinewR*depthSinew);
 		//run Sinew to stop excess slews, but run a dry/wet to allow a range of brights
 		
-		//begin 64 bit stereo floating point dither
-		int expon; frexp((double)inputSampleL, &expon);
-		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		frexp((double)inputSampleR, &expon);
-		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
-		//end 64 bit stereo floating point dither
+		
+		switch (dither) {
+			case 1:
+				//begin Dark		
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0; //we will apply the 24 bit Dark
+				//We are doing it first Left, then Right, because the loops may run faster if
+				//they aren't too jammed full of variables. This means re-running code.
+				
+				//begin left
+				quantA = floor(inputSampleL);
+				quantB = floor(inputSampleL+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleL[x+1] - darkSampleL[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleL[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleL[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleL = quantA;
+				else inputSampleL = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleL[x+1] = darkSampleL[x];
+				}
+				darkSampleL[0] = inputSampleL;
+				//end Dark left
+				
+				//begin right
+				quantA = floor(inputSampleR);
+				quantB = floor(inputSampleR+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleR[x+1] - darkSampleR[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleR[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleR[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleR = quantA;
+				else inputSampleR = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleR[x+1] = darkSampleR[x];
+				}
+				darkSampleR[0] = inputSampleR;
+				//end Dark right
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //Dark (Monitoring2)
+			case 2:
+				//begin Dark	 for Ten Nines
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0; //we will apply the 24 bit Dark
+				//We are doing it first Left, then Right, because the loops may run faster if
+				//they aren't too jammed full of variables. This means re-running code.
+				
+				//begin L
+				correction = 0;
+				if (flip) {
+					NSOddL = (NSOddL * 0.9999999999) + prevShapeL;
+					NSEvenL = (NSEvenL * 0.9999999999) - prevShapeL;
+					correction = NSOddL;
+				} else {
+					NSOddL = (NSOddL * 0.9999999999) - prevShapeL;
+					NSEvenL = (NSEvenL * 0.9999999999) + prevShapeL;
+					correction = NSEvenL;
+				}
+				shapedSampleL = inputSampleL+correction;
+				//end Ten Nines L
+				
+				//begin Dark L
+				quantA = floor(shapedSampleL);
+				quantB = floor(shapedSampleL+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleL[x+1] - darkSampleL[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleL[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleL[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleL = quantA;
+				else inputSampleL = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleL[x+1] = darkSampleL[x];
+				}
+				darkSampleL[0] = inputSampleL;
+				//end Dark L
+				
+				prevShapeL = (floor(shapedSampleL) - inputSampleL)*0.9999999999;
+				//end Ten Nines L
+				
+				//begin R
+				correction = 0;
+				if (flip) {
+					NSOddR = (NSOddR * 0.9999999999) + prevShapeR;
+					NSEvenR = (NSEvenR * 0.9999999999) - prevShapeR;
+					correction = NSOddR;
+				} else {
+					NSOddR = (NSOddR * 0.9999999999) - prevShapeR;
+					NSEvenR = (NSEvenR * 0.9999999999) + prevShapeR;
+					correction = NSEvenR;
+				}
+				shapedSampleR = inputSampleR+correction;
+				//end Ten Nines R
+				
+				//begin Dark R
+				quantA = floor(shapedSampleR);
+				quantB = floor(shapedSampleR+1.0);
+				//to do this style of dither, we quantize in either direction and then
+				//do a reconstruction of what the result will be for each choice.
+				//We then evaluate which one we like, and keep a history of what we previously had
+				
+				expectedSlew = 0;
+				for(int x = 0; x < depth; x++) {
+					expectedSlew += (darkSampleR[x+1] - darkSampleR[x]);
+				}
+				expectedSlew /= depth; //we have an average of all recent slews
+				//we are doing that to voice the thing down into the upper mids a bit
+				//it mustn't just soften the brightest treble, it must smooth high mids too
+				
+				testA = fabs((darkSampleR[0] - quantA) - expectedSlew);
+				testB = fabs((darkSampleR[0] - quantB) - expectedSlew);
+				
+				if (testA < testB) inputSampleR = quantA;
+				else inputSampleR = quantB;
+				//select whichever one departs LEAST from the vector of averaged
+				//reconstructed previous final samples. This will force a kind of dithering
+				//as it'll make the output end up as smooth as possible
+				
+				for(int x = depth; x >=0; x--) {
+					darkSampleR[x+1] = darkSampleR[x];
+				}
+				darkSampleR[0] = inputSampleR;
+				//end Dark R
+				
+				prevShapeR = (floor(shapedSampleR) - inputSampleR)*0.9999999999;
+				//end Ten Nines
+				flip = !flip;
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //Ten Nines (which goes into Dark in Monitoring3)
+			case 3:
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0;
+				
+				ditherL = -1.0;
+				ditherL += (double(fpdL)/UINT32_MAX);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				ditherL += (double(fpdL)/UINT32_MAX);
+				//TPDF: two 0-1 random noises
+				
+				ditherR = -1.0;
+				ditherR += (double(fpdR)/UINT32_MAX);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				ditherR += (double(fpdR)/UINT32_MAX);
+				//TPDF: two 0-1 random noises
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					ditherL = -1.0;
+					ditherL += (double(fpdL)/UINT32_MAX);
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					ditherL += (double(fpdL)/UINT32_MAX);
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					ditherR = -1.0;
+					ditherR += (double(fpdR)/UINT32_MAX);
+					fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+					ditherR += (double(fpdR)/UINT32_MAX);
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					ditherL = -1.0;
+					ditherL += (double(fpdL)/UINT32_MAX);
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					ditherL += (double(fpdL)/UINT32_MAX);
+				}
+				
+				inputSampleL = floor(inputSampleL+ditherL);
+				inputSampleR = floor(inputSampleR+ditherR);
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //TPDFWide (a good neutral with the width enhancement)
+			case 4:
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0;
+				//Paul Frindle: It's true that the dither itself can sound different 
+				//if it's given a different freq response and you get to hear it. 
+				//The one we use most is triangular single pole high pass dither. 
+				//It's not freq bent enough to sound odd, but is slightly less audible than 
+				//flat dither. It can also be easily made by taking one sample of dither 
+				//away from the previous one - this gives you the triangular PDF and the 
+				//filtering in one go :-)
+				
+				currentDither = (double(fpdL)/UINT32_MAX);
+				ditherL = currentDither;
+				ditherL -= previousDitherL;
+				previousDitherL = currentDither;
+				//TPDF: two 0-1 random noises
+				
+				currentDither = (double(fpdR)/UINT32_MAX);
+				ditherR = currentDither;
+				ditherR -= previousDitherR;
+				previousDitherR = currentDither;
+				//TPDF: two 0-1 random noises
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					currentDither = (double(fpdL)/UINT32_MAX);
+					ditherL = currentDither;
+					ditherL -= previousDitherL;
+					previousDitherL = currentDither;
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+					currentDither = (double(fpdR)/UINT32_MAX);
+					ditherR = currentDither;
+					ditherR -= previousDitherR;
+					previousDitherR = currentDither;
+				}
+				
+				if (fabs(ditherL-ditherR) < 0.5) {
+					fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+					currentDither = (double(fpdL)/UINT32_MAX);
+					ditherL = currentDither;
+					ditherL -= previousDitherL;
+					previousDitherL = currentDither;
+				}
+				
+				inputSampleL = floor(inputSampleL+ditherL);
+				inputSampleR = floor(inputSampleR+ditherR);
+				
+				inputSampleL /= 8388608.0;
+				inputSampleR /= 8388608.0;
+				break; //PaulWide (brighter neutral that's still TPDF and wide)
+			case 5:
+				inputSampleL *= 8388608.0;
+				inputSampleR *= 8388608.0;
+				cutbinsL = false;
+				cutbinsR = false;
+				drySampleL = inputSampleL;//re-using in NJAD
+				inputSampleL -= noiseShapingL;
+				//NJAD L
+				benfordize = floor(inputSampleL);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+				hotbinA = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number floored
+				totalA = 0.0;
+				if ((hotbinA > 0) && (hotbinA < 10))
+				{
+					bynL[hotbinA] += 1; if (bynL[hotbinA] > 982) cutbinsL = true;
+					totalA += (301-bynL[1]); totalA += (176-bynL[2]); totalA += (125-bynL[3]);
+					totalA += (97-bynL[4]); totalA += (79-bynL[5]); totalA += (67-bynL[6]);
+					totalA += (58-bynL[7]); totalA += (51-bynL[8]); totalA += (46-bynL[9]); bynL[hotbinA] -= 1;
+				} else hotbinA = 10;
+				//produce total number- smaller is closer to Benford real
+				benfordize = ceil(inputSampleL);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;
+				hotbinB = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number ceiled
+				totalB = 0.0;
+				if ((hotbinB > 0) && (hotbinB < 10))
+				{
+					bynL[hotbinB] += 1; if (bynL[hotbinB] > 982) cutbinsL = true;
+					totalB += (301-bynL[1]); totalB += (176-bynL[2]); totalB += (125-bynL[3]);
+					totalB += (97-bynL[4]); totalB += (79-bynL[5]); totalB += (67-bynL[6]);
+					totalB += (58-bynL[7]); totalB += (51-bynL[8]); totalB += (46-bynL[9]); bynL[hotbinB] -= 1;
+				} else hotbinB = 10;
+				//produce total number- smaller is closer to Benford real
+				if (totalA < totalB) {bynL[hotbinA] += 1; outputSample = floor(inputSampleL);}
+				else {bynL[hotbinB] += 1; outputSample = floor(inputSampleL+1);}
+				//assign the relevant one to the delay line
+				//and floor/ceil signal accordingly
+				if (cutbinsL) {
+					bynL[1] *= 0.99; bynL[2] *= 0.99; bynL[3] *= 0.99; bynL[4] *= 0.99; bynL[5] *= 0.99; 
+					bynL[6] *= 0.99; bynL[7] *= 0.99; bynL[8] *= 0.99; bynL[9] *= 0.99; bynL[10] *= 0.99; 
+				}
+				noiseShapingL += outputSample - drySampleL;			
+				if (noiseShapingL > fabs(inputSampleL)) noiseShapingL = fabs(inputSampleL);
+				if (noiseShapingL < -fabs(inputSampleL)) noiseShapingL = -fabs(inputSampleL);
+				inputSampleL /= 8388608.0;
+				if (inputSampleL > 1.0) inputSampleL = 1.0;
+				if (inputSampleL < -1.0) inputSampleL = -1.0;
+				//finished NJAD L
+				
+				//NJAD R
+				drySampleR = inputSampleR;
+				inputSampleR -= noiseShapingR;
+				benfordize = floor(inputSampleR);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
+				hotbinA = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number floored
+				totalA = 0.0;
+				if ((hotbinA > 0) && (hotbinA < 10))
+				{
+					bynR[hotbinA] += 1; if (bynR[hotbinA] > 982) cutbinsR = true;
+					totalA += (301-bynR[1]); totalA += (176-bynR[2]); totalA += (125-bynR[3]);
+					totalA += (97-bynR[4]); totalA += (79-bynR[5]); totalA += (67-bynR[6]);
+					totalA += (58-bynR[7]); totalA += (51-bynR[8]); totalA += (46-bynR[9]); bynR[hotbinA] -= 1;
+				} else hotbinA = 10;
+				//produce total number- smaller is closer to Benford real
+				benfordize = ceil(inputSampleR);
+				while (benfordize >= 1.0) benfordize /= 10;
+				while (benfordize < 1.0 && benfordize > 0.0000001) benfordize *= 10;		
+				hotbinB = floor(benfordize);
+				//hotbin becomes the Benford bin value for this number ceiled
+				totalB = 0.0;
+				if ((hotbinB > 0) && (hotbinB < 10))
+				{
+					bynR[hotbinB] += 1; if (bynR[hotbinB] > 982) cutbinsR = true;
+					totalB += (301-bynR[1]); totalB += (176-bynR[2]); totalB += (125-bynR[3]);
+					totalB += (97-bynR[4]); totalB += (79-bynR[5]); totalB += (67-bynR[6]);
+					totalB += (58-bynR[7]); totalB += (51-bynR[8]); totalB += (46-bynR[9]); bynR[hotbinB] -= 1;
+				} else hotbinB = 10;
+				//produce total number- smaller is closer to Benford real
+				if (totalA < totalB) {bynR[hotbinA] += 1; outputSample = floor(inputSampleR);}
+				else {bynR[hotbinB] += 1; outputSample = floor(inputSampleR+1);}
+				//assign the relevant one to the delay line
+				//and floor/ceil signal accordingly
+				if (cutbinsR) {
+					bynR[1] *= 0.99; bynR[2] *= 0.99; bynR[3] *= 0.99; bynR[4] *= 0.99; bynR[5] *= 0.99; 
+					bynR[6] *= 0.99; bynR[7] *= 0.99; bynR[8] *= 0.99; bynR[9] *= 0.99; bynR[10] *= 0.99; 
+				}
+				noiseShapingR += outputSample - drySampleR;			
+				if (noiseShapingR > fabs(inputSampleR)) noiseShapingR = fabs(inputSampleR);
+				if (noiseShapingR < -fabs(inputSampleR)) noiseShapingR = -fabs(inputSampleR);
+				inputSampleR /= 8388608.0;
+				if (inputSampleR > 1.0) inputSampleR = 1.0;
+				if (inputSampleR < -1.0) inputSampleR = -1.0;				
+				break; //NJAD (Monitoring. Brightest)
+			case 6:
+				//begin 64 bit stereo floating point dither
+				frexp((double)inputSampleL, &expon);
+				fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
+				inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+				frexp((double)inputSampleR, &expon);
+				fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
+				inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+				//end 64 bit stereo floating point dither
+				break; //Bypass for saving floating point files directly
+		}
 		
 		*out1 = inputSampleL;
 		*out2 = inputSampleR;
