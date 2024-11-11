@@ -15,7 +15,7 @@ Bass: DubSub2, OrbitKick, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrason
 
 Biquads: BiquadStack, BiquadNonLin, BiquadPlus, Biquad, BiquadDouble, BiquadOneHalf, BiquadTriple, Biquad2
 
-Brightness: Air3, PlatinumSlew, DeBess, GoldenSlew, Sinew, SlewSonic, Acceleration2, DeEss, Smooth, EverySlew, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
+Brightness: Air4, Air3, PlatinumSlew, DeBess, GoldenSlew, Sinew, SlewSonic, Acceleration2, DeEss, Smooth, EverySlew, Slew3, Slew2, Slew, Air2, Air, PurestAir, Acceleration, DeHiss, Hypersonic, HypersonX, Ultrasonic, UltrasonicLite, UltrasonicMed, UltrasonX
 
 Clipping: ClipOnly2, ADClip8, ClipSoftly, OneCornerClip, ADClip7, AQuickVoiceClip, ClipOnly, FinalClip
 
@@ -153,6 +153,24 @@ I've not heard a better EQ for this super-high stuff. It seems really good at li
 I think this is going to be hard to beat for this purpose, especially used subtly, and expect to be including it into upcoming stuff that doesn't have to act like 'an EQ'. Still a lot of 'lettered' Console versions that need to be made, to emulate analog gear. This one's for imagining where we can go after that, for a new sort of mixing in the box that doesn't follow the constrictions of analog gear, letting you dial in tone characteristics as much as frequencies.
 
 For now, enjoy Air3, and if you've got opinions on what needs to follow it next, drop by a livestream: you have Air3 today because a livestream viewer asked for it to come out ASAP, and here we are. There's lots more. I'll keep working on all this stuff, it's great to see it all come together :)
+
+############ Air4 extends Air3 with controllable high frequency limiting.
+
+I'm pleased and honored to bring you Air4, which extends Air3 in a way that can help people trying my Meter plugin, and unable to get good high frequencies without bombing the slew section with red 'overslew' spikes.
+
+Back in the day, because of natural limitations of analog media and disc mastering, we didn't have extended treble, and yet there were still bright hit records. We more readily hear brightness when it's really upper-mids, but the really high stuff has special characteristics: first, it's harder to hear, and second, it conveys a spatial position in air. That position is 'CLOSE'. Within arm's reach, within a few inches, within a few millimeters… of your eardrum.
+
+This is because air is lossy, but digital isn't. Digital loses nothing, it just adds various distortions while it goes (this is why oversampling fans get excited about that: the extra distortions are rarely nice). For that reason, it's easy to make digital sounds unrealistically 'close', and this characterizes nearly all digital mixing.
+
+We see this in Airwindows Meter as massive red spikes. Because there's absolutely no flexibility or 'glue' to the highs, what happens is you get all the sonic cues of 'far too close to my ear' before you get the brightness lift you're expecting. Air3 only aggravates this: it's based on Kalman filtering, and it can boost ONLY that airy glitter, and then you've got that problem. Fine if you want that effect, but then you're also distorting.
+
+Air is the control for doing that, and Gnd means 'ground' and is literally everything else, so you can also adjust levels with it. Then there's the new controls. DarkF means 'dark filter', and it's the same as the control in Sinew (remember that? you already have it, but I saw it as a tube-fuzz sort of thing). And Ratio is basically a dry/wet for just DarkF, just Sinew (which, when it was invented, didn't get one: really novel stuff often appears as a super minimal plugin first).
+
+As seen in the video, if you adjust DarkF it produces a hard limit on the slews. It defaults to just over 0.5, which automatically stops 'red spikes' in the Slew section of Meter, no matter what treble boost you do. This'll be an aggressive sort of 'glue' for the highs, or a safety highs-restrictor if you want to not mess with the red spikes of brightness.
+
+To use it the way I use it, maybe lower the DarkF a bit, and then sneak Ratio back from full crank. What'll happen is, the spikes will gradually creep up towards their original volume, forming a spread-out cloud rather than a hard clipped line, except they'll be quieter than they were. The idea is to find the loudness you want for these bright peaks, and then work out how wide a range they're to cover. Doing this gives you brightness, but without the brittle harshness of digital treble boosting.
+
+I hope you like Air4! I'm working on ConsoleX every day now, and it'll get there. It's a LOT of work.
 
 ############ Apicolypse is a re-release of my old API-style color adder, exacly as it was.
 
