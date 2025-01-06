@@ -65,10 +65,6 @@ Mastering::Mastering(AudioUnit component)
 	SetParameter(kParam_D, kDefaultValue_ParamD );
 	SetParameter(kParam_E, kDefaultValue_ParamE );
 	SetParameter(kParam_F, kDefaultValue_ParamF );
-	SetParameter(kParam_G, kDefaultValue_ParamG );
-	SetParameter(kParam_H, kDefaultValue_ParamH );
-	SetParameter(kParam_I, kDefaultValue_ParamI );
-	SetParameter(kParam_J, kDefaultValue_ParamJ );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -84,7 +80,7 @@ ComponentResult			Mastering::GetParameterValueStrings(AudioUnitScope		inScope,
                                                                 AudioUnitParameterID	inParameterID,
                                                                 CFArrayRef *		outStrings)
 {
-    if ((inScope == kAudioUnitScope_Global) && (inParameterID == kParam_J)) //ID must be actual name of parameter identifier, not number
+    if ((inScope == kAudioUnitScope_Global) && (inParameterID == kParam_F)) //ID must be actual name of parameter identifier, not number
 	{
 		if (outStrings == NULL) return noErr;
 		CFStringRef strings [] =
@@ -161,40 +157,12 @@ ComponentResult			Mastering::GetParameterInfo(AudioUnitScope		inScope,
                 break;
             case kParam_F:
                 AUBase::FillInParameterName (outParameterInfo, kParameterFName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamF;
-                break;
-            case kParam_G:
-                AUBase::FillInParameterName (outParameterInfo, kParameterGName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamG;
-                break;
-            case kParam_H:
-                AUBase::FillInParameterName (outParameterInfo, kParameterHName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamH;
-                break;
-            case kParam_I:
-                AUBase::FillInParameterName (outParameterInfo, kParameterIName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamI;
-                break;
-            case kParam_J:
-                AUBase::FillInParameterName (outParameterInfo, kParameterJName, false);
 				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
                 outParameterInfo.minValue = kDark;
                 outParameterInfo.maxValue = kBypass;
-                outParameterInfo.defaultValue = kDefaultValue_ParamJ;
+                outParameterInfo.defaultValue = kDefaultValue_ParamF;
                 break;
-           default:
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
             }
@@ -356,36 +324,42 @@ OSStatus		Mastering::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
 	
-	long double trebleGain = GetParameter( kParam_A )+0.5;
+	double threshSinew = (0.25+((1.0-GetParameter( kParam_A ))*0.333))/overallscale;
+	double depthSinew = 1.0-pow(1.0-GetParameter( kParam_A ),2.0);
+	
+	double trebleZoom = GetParameter( kParam_B )-0.5;
+	long double trebleGain = (trebleZoom*fabs(trebleZoom))+1.0;
 	if (trebleGain > 1.0) trebleGain = pow(trebleGain,3.0+sqrt(overallscale));
 	//this boost is necessary to adapt to higher sample rates
-	long double midGain = GetParameter( kParam_B )+0.5;
-	long double bassGain = (1.0-GetParameter( kParam_C ))+0.5; //control inverted
-	long double subGain = GetParameter( kParam_D )+0.5;
-	//simple four band to adjust
-	double kalMid = pow(1.0-GetParameter( kParam_E ),3);
-	//crossover frequency between mid/bass
-	double kalSub = (1.0-(pow(GetParameter( kParam_F ),3)));
-	//crossover frequency between bass/sub
-	double zoom = (GetParameter( kParam_G )*2.0)-1.0;
-	double zoomStages = (fabs(zoom)*4.0)+1.0;
-	for (int count = 0; count < sqrt(zoomStages); count++) zoom *= fabs(zoom);
-	double threshSinew = pow(GetParameter( kParam_H ),2)/overallscale;
-	double depthSinew = GetParameter( kParam_I );
+	
+	double midZoom = GetParameter( kParam_C )-0.5;
+	long double midGain = (midZoom*fabs(midZoom))+1.0;
+	double kalMid = 0.35-(GetParameter( kParam_C )*0.25); //crossover frequency between mid/bass
+	double kalSub = 0.45+(GetParameter( kParam_C )*0.25); //crossover frequency between bass/sub
+	
+	double bassZoom = (GetParameter( kParam_D )*0.5)-0.25;
+	long double bassGain = (-bassZoom*fabs(bassZoom))+1.0; //control inverted
+	long double subGain = ((GetParameter( kParam_D )*0.25)-0.125)+1.0;
+	if (subGain < 1.0) subGain = 1.0; //very small sub shift, only pos.
+	
+	long double driveIn = (GetParameter( kParam_E )-0.5)+1.0;
+	long double driveOut = (-(GetParameter( kParam_E )-0.5)*fabs(GetParameter( kParam_E )-0.5))+1.0;
+	
 	int spacing = floor(overallscale); //should give us working basic scaling, usually 2 or 4
 	if (spacing < 1) spacing = 1; if (spacing > 16) spacing = 16;
-	int dither = (int) GetParameter( kParam_J );
+	int dither = (int) GetParameter( kParam_F );
 	int depth = (int)(17.0*overallscale);
-	if (depth < 3) depth = 3;
-	if (depth > 98) depth = 98; //for Dark
+	if (depth < 3) depth = 3; if (depth > 98) depth = 98; //for Dark
 	
 	while (nSampleFrames-- > 0) {
-		double inputSampleL = *inputL;
-		double inputSampleR = *inputR;
+		long double inputSampleL = *inputL;
+		long double inputSampleR = *inputR;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
-		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		double drySampleL = inputSampleL;
-		double drySampleR = inputSampleR;
+		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;		
+		inputSampleL *= driveIn;
+		inputSampleR *= driveIn;
+		long double drySampleL = inputSampleL;
+		long double drySampleR = inputSampleR;
 		
 		//begin Air3L
 		air[pvSL4] = air[pvAL4] - air[pvAL3]; air[pvSL3] = air[pvAL3] - air[pvAL2];
@@ -528,41 +502,87 @@ OSStatus		Mastering::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		kalS[kalAvgR] = kalS[kalOutR];
 		bassR -= subR;
 		//end KalmanSR
-		
 		inputSampleL = (subL*subGain);
-		inputSampleL += (bassL*bassGain);
-		inputSampleL += (midL*midGain);
-		inputSampleL += (trebleL*trebleGain);
 		inputSampleR = (subR*subGain);
+		
+		if (bassZoom > 0.0) {
+			double closer = bassL * 1.57079633;
+			if (closer > 1.57079633) closer = 1.57079633;
+			if (closer < -1.57079633) closer = -1.57079633;
+			bassL = (bassL*(1.0-bassZoom))+(sin(closer)*bassZoom);
+			closer = bassR * 1.57079633;
+			if (closer > 1.57079633) closer = 1.57079633;
+			if (closer < -1.57079633) closer = -1.57079633;
+			bassR = (bassR*(1.0-bassZoom))+(sin(closer)*bassZoom);
+		} //zooming in will make the body of the sound louder: it's just Density
+		if (bassZoom < 0.0) {
+			double farther = fabs(bassL) * 1.57079633;
+			if (farther > 1.57079633) farther = 1.0;
+			else farther = 1.0-cos(farther);
+			if (bassL > 0.0) bassL = (bassL*(1.0+bassZoom))-(farther*bassZoom*1.57079633);
+			if (bassL < 0.0) bassL = (bassL*(1.0+bassZoom))+(farther*bassZoom*1.57079633);			
+			farther = fabs(bassR) * 1.57079633;
+			if (farther > 1.57079633) farther = 1.0;
+			else farther = 1.0-cos(farther);
+			if (bassR > 0.0) bassR = (bassR*(1.0+bassZoom))-(farther*bassZoom*1.57079633);
+			if (bassR < 0.0) bassR = (bassR*(1.0+bassZoom))+(farther*bassZoom*1.57079633);			
+		} //zooming out boosts the hottest peaks but cuts back softer stuff
+		inputSampleL += (bassL*bassGain);
 		inputSampleR += (bassR*bassGain);
+		
+		if (midZoom > 0.0) {
+			double closer = midL * 1.57079633;
+			if (closer > 1.57079633) closer = 1.57079633;
+			if (closer < -1.57079633) closer = -1.57079633;
+			midL = (midL*(1.0-midZoom))+(sin(closer)*midZoom);
+			closer = midR * 1.57079633;
+			if (closer > 1.57079633) closer = 1.57079633;
+			if (closer < -1.57079633) closer = -1.57079633;
+			midR = (midR*(1.0-midZoom))+(sin(closer)*midZoom);
+		} //zooming in will make the body of the sound louder: it's just Density
+		if (midZoom < 0.0) {
+			double farther = fabs(midL) * 1.57079633;
+			if (farther > 1.57079633) farther = 1.0;
+			else farther = 1.0-cos(farther);
+			if (midL > 0.0) midL = (midL*(1.0+midZoom))-(farther*midZoom*1.57079633);
+			if (midL < 0.0) midL = (midL*(1.0+midZoom))+(farther*midZoom*1.57079633);			
+			farther = fabs(midR) * 1.57079633;
+			if (farther > 1.57079633) farther = 1.0;
+			else farther = 1.0-cos(farther);
+			if (midR > 0.0) midR = (midR*(1.0+midZoom))-(farther*midZoom*1.57079633);
+			if (midR < 0.0) midR = (midR*(1.0+midZoom))+(farther*midZoom*1.57079633);			
+		} //zooming out boosts the hottest peaks but cuts back softer stuff
+		inputSampleL += (midL*midGain);
 		inputSampleR += (midR*midGain);
+		
+		if (trebleZoom > 0.0) {
+			double closer = trebleL * 1.57079633;
+			if (closer > 1.57079633) closer = 1.57079633;
+			if (closer < -1.57079633) closer = -1.57079633;
+			trebleL = (trebleL*(1.0-trebleZoom))+(sin(closer)*trebleZoom);
+			closer = trebleR * 1.57079633;
+			if (closer > 1.57079633) closer = 1.57079633;
+			if (closer < -1.57079633) closer = -1.57079633;
+			trebleR = (trebleR*(1.0-trebleZoom))+(sin(closer)*trebleZoom);
+		} //zooming in will make the body of the sound louder: it's just Density
+		if (trebleZoom < 0.0) {
+			double farther = fabs(trebleL) * 1.57079633;
+			if (farther > 1.57079633) farther = 1.0;
+			else farther = 1.0-cos(farther);
+			if (trebleL > 0.0) trebleL = (trebleL*(1.0+trebleZoom))-(farther*trebleZoom*1.57079633);
+			if (trebleL < 0.0) trebleL = (trebleL*(1.0+trebleZoom))+(farther*trebleZoom*1.57079633);			
+			farther = fabs(trebleR) * 1.57079633;
+			if (farther > 1.57079633) farther = 1.0;
+			else farther = 1.0-cos(farther);
+			if (trebleR > 0.0) trebleR = (trebleR*(1.0+trebleZoom))-(farther*trebleZoom*1.57079633);
+			if (trebleR < 0.0) trebleR = (trebleR*(1.0+trebleZoom))+(farther*trebleZoom*1.57079633);			
+		} //zooming out boosts the hottest peaks but cuts back softer stuff
+		inputSampleL += (trebleL*trebleGain);
 		inputSampleR += (trebleR*trebleGain);
 		
-		for (int count = 0; count < zoomStages; count++) {
-			if (zoom > 0.0) {
-				double closer = inputSampleL * 1.57079633;
-				if (closer > 1.57079633) closer = 1.57079633;
-				if (closer < -1.57079633) closer = -1.57079633;
-				inputSampleL = (inputSampleL*(1.0-zoom))+(sin(closer)*zoom);
-				closer = inputSampleR * 1.57079633;
-				if (closer > 1.57079633) closer = 1.57079633;
-				if (closer < -1.57079633) closer = -1.57079633;
-				inputSampleR = (inputSampleR*(1.0-zoom))+(sin(closer)*zoom);
-			} //zooming in will make the body of the sound louder: it's just Density
-			if (zoom < 0.0) {
-				double farther = fabs(inputSampleL) * 1.57079633;
-				if (farther > 1.57079633) farther = 1.0;
-				else farther = 1.0-cos(farther);
-				if (inputSampleL > 0.0) inputSampleL = (inputSampleL*(1.0+zoom))-(farther*zoom*1.57079633);
-				if (inputSampleL < 0.0) inputSampleL = (inputSampleL*(1.0+zoom))+(farther*zoom*1.57079633);			
-				farther = fabs(inputSampleR) * 1.57079633;
-				if (farther > 1.57079633) farther = 1.0;
-				else farther = 1.0-cos(farther);
-				if (inputSampleR > 0.0) inputSampleR = (inputSampleR*(1.0+zoom))-(farther*zoom*1.57079633);
-				if (inputSampleR < 0.0) inputSampleR = (inputSampleR*(1.0+zoom))+(farther*zoom*1.57079633);			
-			} //zooming out boosts the hottest peaks but cuts back softer stuff
-		}
-		
+		inputSampleL *= driveOut;
+		inputSampleR *= driveOut;
+				
 		//begin ClipOnly2 stereo as a little, compressed chunk that can be dropped into code
 		if (inputSampleL > 4.0) inputSampleL = 4.0; if (inputSampleL < -4.0) inputSampleL = -4.0;
 		if (wasPosClipL == true) { //current will be over

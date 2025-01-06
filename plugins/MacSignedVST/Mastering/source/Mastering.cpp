@@ -12,16 +12,12 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new M
 Mastering::Mastering(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.5;
+	A = 0.0;
 	B = 0.5;
 	C = 0.5;
 	D = 0.5;
 	E = 0.5;
-	F = 0.5;
-	G = 0.5;
-	H = 0.5;
-	I = 0.0;
-	J = 1.0;
+	F = 1.0;
 	
 	for (int x = 0; x < air_total; x++) air[x] = 0.0;
 	for (int x = 0; x < kal_total; x++) {kalM[x] = 0.0;kalS[x] = 0.0;}
@@ -132,10 +128,6 @@ VstInt32 Mastering::getChunk (void** data, bool isPreset)
 	chunkData[3] = D;
 	chunkData[4] = E;
 	chunkData[5] = F;
-	chunkData[6] = G;
-	chunkData[7] = H;
-	chunkData[8] = I;
-	chunkData[9] = J;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -153,10 +145,6 @@ VstInt32 Mastering::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	D = pinParameter(chunkData[3]);
 	E = pinParameter(chunkData[4]);
 	F = pinParameter(chunkData[5]);
-	G = pinParameter(chunkData[6]);
-	H = pinParameter(chunkData[7]);
-	I = pinParameter(chunkData[8]);
-	J = pinParameter(chunkData[9]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -172,10 +160,6 @@ void Mastering::setParameter(VstInt32 index, float value) {
         case kParamD: D = value; break;
         case kParamE: E = value; break;
         case kParamF: F = value; break;
-        case kParamG: G = value; break;
-        case kParamH: H = value; break;
-        case kParamI: I = value; break;
-        case kParamJ: J = value; break;
         default: throw; // unknown parameter, shouldn't happen!
     }
 }
@@ -188,26 +172,18 @@ float Mastering::getParameter(VstInt32 index) {
         case kParamD: return D; break;
         case kParamE: return E; break;
         case kParamF: return F; break;
-        case kParamG: return G; break;
-        case kParamH: return H; break;
-        case kParamI: return I; break;
-        case kParamJ: return J; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void Mastering::getParameterName(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: vst_strncpy (text, "Air", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Mid", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "Low", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Sub", kVstMaxParamStrLen); break;
-		case kParamE: vst_strncpy (text, "XvM-L", kVstMaxParamStrLen); break;
-		case kParamF: vst_strncpy (text, "XvL-S", kVstMaxParamStrLen); break;
-		case kParamG: vst_strncpy (text, "Zoom", kVstMaxParamStrLen); break;
-		case kParamH: vst_strncpy (text, "DarkF", kVstMaxParamStrLen); break;
-		case kParamI: vst_strncpy (text, "Ratio", kVstMaxParamStrLen); break;
-		case kParamJ: vst_strncpy (text, "Dither", kVstMaxParamStrLen); break;
+        case kParamA: vst_strncpy (text, "Glue", kVstMaxParamStrLen); break;
+		case kParamB: vst_strncpy (text, "Scope", kVstMaxParamStrLen); break;
+		case kParamC: vst_strncpy (text, "Skronk", kVstMaxParamStrLen); break;
+		case kParamD: vst_strncpy (text, "Girth", kVstMaxParamStrLen); break;
+		case kParamE: vst_strncpy (text, "Drive", kVstMaxParamStrLen); break;
+		case kParamF: vst_strncpy (text, "Dither", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -219,11 +195,7 @@ void Mastering::getParameterDisplay(VstInt32 index, char *text) {
         case kParamC: float2string (C, text, kVstMaxParamStrLen); break;
         case kParamD: float2string (D, text, kVstMaxParamStrLen); break;
         case kParamE: float2string (E, text, kVstMaxParamStrLen); break;
-        case kParamF: float2string (F, text, kVstMaxParamStrLen); break;
-        case kParamG: float2string (G, text, kVstMaxParamStrLen); break;
-        case kParamH: float2string (H, text, kVstMaxParamStrLen); break;
-        case kParamI: float2string (I, text, kVstMaxParamStrLen); break;
-        case kParamJ: switch((VstInt32)( J * 5.999 )) //0 to almost edge of # of params
+        case kParamF: switch((VstInt32)( F * 5.999 )) //0 to almost edge of # of params
 		{	case 0: vst_strncpy (text, "Dark", kVstMaxParamStrLen); break;
 			case 1: vst_strncpy (text, "TenNines", kVstMaxParamStrLen); break;
 			case 2: vst_strncpy (text, "TPDFWde", kVstMaxParamStrLen); break;
@@ -244,10 +216,6 @@ void Mastering::getParameterLabel(VstInt32 index, char *text) {
         case kParamD: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamE: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamF: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamG: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamH: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamI: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamJ: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }

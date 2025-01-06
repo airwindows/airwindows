@@ -54,22 +54,18 @@
 #pragma mark ____Mastering Parameters
 
 // parameters
-static const float kDefaultValue_ParamA = 0.5;
+static const float kDefaultValue_ParamA = 0.0;
 static const float kDefaultValue_ParamB = 0.5;
 static const float kDefaultValue_ParamC = 0.5;
 static const float kDefaultValue_ParamD = 0.5;
 static const float kDefaultValue_ParamE = 0.5;
-static const float kDefaultValue_ParamF = 0.5;
-static const float kDefaultValue_ParamG = 0.5;
-static const float kDefaultValue_ParamH = 0.5;
-static const float kDefaultValue_ParamI = 0.0;
 static const int kDark = 1;
 static const int kTenNines = 2;
 static const int kTPDFWide = 3;
 static const int kPaulWide = 4;
 static const int kNJAD = 5;
 static const int kBypass = 6;
-static const int kDefaultValue_ParamJ = kBypass;
+static const int kDefaultValue_ParamF = kBypass;
 
 static CFStringRef kMenuItem_Dark = CFSTR ("Dark");
 static CFStringRef kMenuItem_TenNines = CFSTR ("Ten Nines");
@@ -78,16 +74,12 @@ static CFStringRef kMenuItem_PaulWide = CFSTR ("PaulWide");
 static CFStringRef kMenuItem_NJAD = CFSTR ("NJAD");
 static CFStringRef kMenuItem_Bypass = CFSTR ("Bypass");
 
-static CFStringRef kParameterAName = CFSTR("Air");
-static CFStringRef kParameterBName = CFSTR("Mid");
-static CFStringRef kParameterCName = CFSTR("Low");
-static CFStringRef kParameterDName = CFSTR("Sub");
-static CFStringRef kParameterEName = CFSTR("XvM-L");
-static CFStringRef kParameterFName = CFSTR("XvL-S");
-static CFStringRef kParameterGName = CFSTR("Zoom");
-static CFStringRef kParameterHName = CFSTR("DarkF");
-static CFStringRef kParameterIName = CFSTR("Ratio");
-static CFStringRef kParameterJName = CFSTR("Dither");
+static CFStringRef kParameterAName = CFSTR("Glue");
+static CFStringRef kParameterBName = CFSTR("Scope");
+static CFStringRef kParameterCName = CFSTR("Skronk");
+static CFStringRef kParameterDName = CFSTR("Girth");
+static CFStringRef kParameterEName = CFSTR("Drive");
+static CFStringRef kParameterFName = CFSTR("Dither");
 
 enum {
 	kParam_A =0,
@@ -96,12 +88,8 @@ enum {
 	kParam_D =3,
 	kParam_E =4,
 	kParam_F =5,
-	kParam_G =6,
-	kParam_H =7,
-	kParam_I =8,
-	kParam_J =9,
 	//Add your parameters here...
-	kNumberOfParameters=10
+	kNumberOfParameters=6
 };
 
 #pragma mark ____Mastering
