@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -2928,6 +2928,26 @@ I honestly think this works better as an instrument and didn't work as a capital
 Oh… because the delay works like you're speeding up the tape more and more, if you crank it all the way to the left for minimum delay, it's probably eating more CPU. For predelay keep it in the middle and it should be fine for that. The reason it goes that much faster is, you can tune the delay to bass notes like a monstrous Karplus-Strong oscillator which then drives (overdrives) a small room. And this is such a horrifying, awesome sound that I had to let you have it.
 
 I'll have more legit stuff coming soon. For now, have fun with the new monstrosity. It won't behave, but nothing you have will make noises like it, and that's always part of what I do :)
+
+############ kGuitarHall accentuates loud midrange skronk!
+
+What if reverb, but skronk?
+
+kGuitarHall exists to pursue a particular sound experience I had: when I was a kid, the first concert I ever saw was at a hockey rink, at which Night Ranger played. The whole story's a wild one but for the purposes of kGuitarHall, the important part is that they played so loud the air crackled. A lot of that had to do with how echoey the place was… and I've never found any reverb to convey that sensation.
+
+This is my attempt to do that sensation, but as a plugin.
+
+Skronk is a word that's barely made it into any dictionary: I think the music critic Lester Bangs made it up. Wiktionary describes it as "A raw, discordant sound produced with electric guitars." You've just seen me include it as a slider on the plugin, Mastering: it's sort of the upper midrange between the air band and the next band down on the Kalman filter. It corresponds to 'fire' in the Stonefire plugin, and that's another hint. But simple EQ, even of the most strident upper midranges, won't get you Skronk.
+
+So, kGuitarHall draws on my experience evolving kCathedral to essentially go the other direction. A ridiculous number of reverb algorithms got generated, measured and tested, to zero in on which ones would produce the most aggressive, saturated tone in the noisy midrange where guitars talk. It's a balancing act between maximum loudness (which also contributes to how sonorous the reverb tones can be) and just plain unpleasant metallic tonalities. This is independent of 'feedback', by the way: it's exploring how the actual reverb algorithm is constructed, and seeking a different 'color' than just 'clean and pure and free of overtones'.
+
+It'd be pretty useless without Discontinuity (the Top dB slider) which, importantly, is inside the reverb's regeneration, not simply on the output. And it'd be pretty ear-splitting… without DeRez, which is able to use Bezier curves to make an interesting-sounding undersampling of the system. That not only makes the reverb work at all sample rates with about the same cost in CPU… but also lets you drop it down to subterranean, vast spaces that barely have any treble or upper mids at all.
+
+And when you do that, the skronk is pitched down as well, and turns into strange cavernous sounds as the 'room size' and maximum sustain expands. So, if the ear-splittyness of kGuitarHall doesn't float your boat, you can drown in a sea of reverb with a selection of distinct tone characters by using Derez to darken everything up.
+
+kGuitarHall is an experiment, after some years spent trying not to allow metallic skronky reverbs to happen. I don't know if you'll like or hate it, but I feel certain it'll get a strong response either way. So, if there's one person who's like 'oh cool, just what I needed!', then, are you stuck with having that skronk option available?
+
+Trick question. I am that person. Enjoy or totally avoid kGuitarHall as you see fit :)
 
 ############ kPlate140 is a next-generation Airwindows plate reverb.
 
