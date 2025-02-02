@@ -29,7 +29,7 @@ Dynamics: Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Log
 
 Effects: Dubly3, Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: Parametric, Stonefire, Isolator3, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: Parametric, Stonefire, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -304,6 +304,32 @@ Except, it’s not. It doesn’t know what a frequency is. It’s only ‘dither
 On top of that, its noise floor is WEIRD. Dark gates into silence, sort of well-behavedly. Normal dithers become noise seamlessly. Beam goes nuts and screams, and the only thing I can say for it is, raw truncation is worse. It’s super weird… and yet, even while it’s doing that, the background audio retains a startling depth and personality. Or at least so it seems… even more than Dark, with this one you turn up DeRez and nothing happens to the sound at all. You don’t even hear the noise until it’s silly loud. (there will be a series of dither reissues with DeRez, both for auditioning and for lo-fi duties.) It might even be a ‘sonic maximizer’, putting tone qualities into the audio that weren’t there to begin with.
 
 I admit I don’t know what to make of this at all. I know how I got it, and I know it’s doing what I made it to do. But nobody knows what you get if you sculpt audio, not by frequencies or loudness, but by reinforcing certain waveform slope angles, because to my knowledge nobody has ever wanted to do that or had a way to make it happen, even in subtle ways like this. And now that I’ve done it, I’m not certain it’s better than Dark. I understand what Dark’s doing, and why that’s useful. This is a wilder beast. Looking forward to getting people’s reactions… because one of these may replace NJAD in my flagship Airwindows plugin, Monitoring. (followup: turns out it is Dark in Monitoring2)
+
+############ BezEQ is a strange, alien three-band shelving EQ.
+
+You don't have an EQ anything like this. Nobody does. This is guaranteed new.
+
+The reason is, nobody with audio training would try to apply Bezier curves to audio reconstruction (since it doesn't make sense, though it's nice and efficient to do), and if you did you'd get my latest DeRez which doesn't work like a normal frequency crush and so that would scare more people off, and then if you tried to use two DeRezzes in series as brickwall filters for a three-band shelving EQ, you'd so quickly run into problems (for instance, with test tones) that you'd immediately run away, never to return, knowing it would be impossible to get away with it.
+
+And more fool anybody who did try ALL of these things and then gave up… because this is a hell of a thing, and now it's mine, which means now it's yours. I do Patreon so it doesn't matter if one of my plugins is scorned as an EQ and behaves terribly in testing. I can put it out anyway! And even explore the idea of building it into ConsoleH… but that's in development, and BezEQ is yours right now.
+
+If you keep Treble, Mid and Bass exactly the same volume (any value, the settings will match) it will behave quite perfectly. Doesn't matter what the crossovers do. They're assembled subtractively so they'll add up to perfect, every time, if they're set to 'flat'. I often do that with 'general purpose' EQs or with things like StoneFire: it's good to have 'flat' be really, really free from issues. It's the opposite of breaking things into an FFT transform or an mp3 and then reconstructing them from the (limited) data.
+
+Then, if you shut off Treble, the output is DeRez3 using the X control between Treble and Mid to set the cutoff.
+
+And if you shut off Treble and Mid, the output is DeRez3 using the X control between Mid and Bass.
+
+And if you shut off everything BUT Treble, it's the dry signal MINUS the first DeRez3. It's only the highs from what would've been a de-rezzed, pseudo-brickwall cutoff.
+
+And if you have Treble AND Bass, you have that plus the derezzed Bass, which is what remains after the Mid goes through another 'filter' that's not really a filter. Same with if you only have Mid: it's derezzed treble-removed, but with the other derez subtracted.
+
+Except you'll quickly learn that none of these are clean crossovers at all: you'll get a strange overtone that comes out at the filter cutoff and acts weird. You can add a LOT of deep bass and an extra tone, like a ring mod, through boosting bass and adjusting that cutoff. You can add bass through that extra tone by CUTTING bass and adjusting the cutoff. It's a bizarre toy but it works predictably and has its own sound, to love or hate.
+
+And that's not even getting into when you do this, and then make the cutoffs fight each other by setting TxM very low and MxB very high, causing the distortions to distort and interact… you can get into a lot of trouble with this, and so totally reinvent the sound that it becomes unrecognizable.
+
+And then dial it back to as subtle as you like, simply by making Treble, Mid and Bass be closer to each other.
+
+Have fun and don't say I didn't warn you :)
 
 ############ BigAmp is a very flexible amplike thing with a taste for the bizarre.
 
