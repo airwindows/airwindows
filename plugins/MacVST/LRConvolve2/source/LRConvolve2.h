@@ -17,8 +17,7 @@
 
 enum {
 	kParamA =0,
-	kParamB =1,
-  kNumParameters = 2
+  kNumParameters = 1
 }; //
 
 const int kNumPrograms = 0;
@@ -54,9 +53,6 @@ private:
     std::set< std::string > _canDo;
     
     float A;
-    float B;
-
-	double iirSample;
 
 	uint32_t fpdL;
 	uint32_t fpdR;

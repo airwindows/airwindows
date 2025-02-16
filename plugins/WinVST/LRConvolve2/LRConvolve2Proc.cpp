@@ -18,8 +18,7 @@ void LRConvolve2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	double smooth = pow(A,4)*(0.5/overallscale);
-	double channel = B;
+	double soar = 0.3-(A*0.3);
 	
     while (--sampleFrames >= 0)
     {
@@ -28,17 +27,15 @@ void LRConvolve2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		double carrier = inputSampleL;
-		double modulate = fabs(inputSampleR);
-		if (channel > 0.5) {
-			carrier = inputSampleR;
-			modulate = fabs(inputSampleL);
-		}
-		if (iirSample < modulate) iirSample = modulate;
-		modulate = (iirSample*smooth)+(modulate*(1.0-smooth));
-		if (carrier > 0.0) carrier = sqrt(carrier*modulate);
-		if (carrier < 0.0) carrier = -sqrt(-carrier*modulate);
-		inputSampleL = inputSampleR = carrier;
+		//blame Jannik Asfaig (BoyXx76) for this (and me) :D
+		double out = 0.0;
+		double inL = fabs(inputSampleL)+(soar*soar);
+		double inR = fabs(inputSampleR)+(soar*soar);		
+		if (inputSampleL > 0.0 && inputSampleR > 0.0) out = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		if (inputSampleL < 0.0 && inputSampleR > 0.0) out = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleL > 0.0 && inputSampleR < 0.0) out = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleL < 0.0 && inputSampleR < 0.0) out = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		inputSampleL = inputSampleR = out;
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -70,8 +67,7 @@ void LRConvolve2::processDoubleReplacing(double **inputs, double **outputs, VstI
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
 	
-	double smooth = pow(A,4)*(0.5/overallscale);
-	double channel = B;
+	double soar = 0.3-(A*0.3);
 	
     while (--sampleFrames >= 0)
     {
@@ -80,17 +76,15 @@ void LRConvolve2::processDoubleReplacing(double **inputs, double **outputs, VstI
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		double carrier = inputSampleL;
-		double modulate = fabs(inputSampleR);
-		if (channel > 0.5) {
-			carrier = inputSampleR;
-			modulate = fabs(inputSampleL);
-		}
-		if (iirSample < modulate) iirSample = modulate;
-		modulate = (iirSample*smooth)+(modulate*(1.0-smooth));
-		if (carrier > 0.0) carrier = sqrt(carrier*modulate);
-		if (carrier < 0.0) carrier = -sqrt(-carrier*modulate);
-		inputSampleL = inputSampleR = carrier;
+		//blame Jannik Asfaig (BoyXx76) for this (and me) :D
+		double out = 0.0;
+		double inL = fabs(inputSampleL)+(soar*soar);
+		double inR = fabs(inputSampleR)+(soar*soar);		
+		if (inputSampleL > 0.0 && inputSampleR > 0.0) out = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		if (inputSampleL < 0.0 && inputSampleR > 0.0) out = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleL > 0.0 && inputSampleR < 0.0) out = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleL < 0.0 && inputSampleR < 0.0) out = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		inputSampleL = inputSampleR = out;
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

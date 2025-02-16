@@ -19,7 +19,8 @@ enum {
 	kParamA =0,
 	kParamB =1,
 	kParamC =2,
-  kNumParameters = 3
+	kParamD =3,
+  kNumParameters = 4
 }; //
 
 const int kNumPrograms = 0;
@@ -57,6 +58,7 @@ private:
     float A;
     float B;
     float C;
+    float D;
 	
 	double sinePosL;
 	double sinePosR;

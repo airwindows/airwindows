@@ -14,7 +14,8 @@ void SweetWide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	double blend = -(A-0.5);
+	double soar = 0.3-(A*0.3);
+	double blend = -(B-0.5);
 		
     while (--sampleFrames >= 0)
     {
@@ -25,12 +26,12 @@ void SweetWide::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		
 		double outL = 0.0;		
 		double outR = 0.0;
-		
-		if (inputSampleL > 0.0) outL = sqrt(inputSampleL*fabs(inputSampleR));
-		if (inputSampleL < 0.0) outL = -sqrt(-inputSampleL*fabs(inputSampleR));
-		
-		if (inputSampleR > 0.0) outR = sqrt(inputSampleR*fabs(inputSampleL));
-		if (inputSampleR < 0.0) outR = -sqrt(-inputSampleR*fabs(inputSampleL));
+		double inL = fabs(inputSampleL)+(soar*soar);
+		double inR = fabs(inputSampleR)+(soar*soar);
+		if (inputSampleL > 0.0) outL = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		if (inputSampleL < 0.0) outL = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleR > 0.0) outR = fmax((sqrt(inL/inR)*inR)-soar,0.0);
+		if (inputSampleR < 0.0) outR = fmin((-sqrt(inL/inR)*inR)+soar,0.0);
 		
 		inputSampleL = (outL * blend) + (inputSampleL * (1.0-blend));
 		inputSampleR = (outR * blend) + (inputSampleR * (1.0-blend));
@@ -61,7 +62,8 @@ void SweetWide::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* out1 = outputs[0];
     double* out2 = outputs[1];
 
-	double blend = -(A-0.5);
+	double soar = 0.3-(A*0.3);
+	double blend = -(B-0.5);
 	
     while (--sampleFrames >= 0)
     {
@@ -72,12 +74,12 @@ void SweetWide::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		
 		double outL = 0.0;		
 		double outR = 0.0;
-		
-		if (inputSampleL > 0.0) outL = sqrt(inputSampleL*fabs(inputSampleR));
-		if (inputSampleL < 0.0) outL = -sqrt(-inputSampleL*fabs(inputSampleR));
-		
-		if (inputSampleR > 0.0) outR = sqrt(inputSampleR*fabs(inputSampleL));
-		if (inputSampleR < 0.0) outR = -sqrt(-inputSampleR*fabs(inputSampleL));
+		double inL = fabs(inputSampleL)+(soar*soar);
+		double inR = fabs(inputSampleR)+(soar*soar);
+		if (inputSampleL > 0.0) outL = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		if (inputSampleL < 0.0) outL = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleR > 0.0) outR = fmax((sqrt(inL/inR)*inR)-soar,0.0);
+		if (inputSampleR < 0.0) outR = fmin((-sqrt(inL/inR)*inR)+soar,0.0);
 		
 		inputSampleL = (outL * blend) + (inputSampleL * (1.0-blend));
 		inputSampleR = (outR * blend) + (inputSampleR * (1.0-blend));

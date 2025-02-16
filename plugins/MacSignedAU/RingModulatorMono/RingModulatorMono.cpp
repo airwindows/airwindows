@@ -61,6 +61,7 @@ RingModulatorMono::RingModulatorMono(AudioUnit component)
 	Globals()->UseIndexedParameters(kNumberOfParameters);
 	SetParameter(kParam_A, kDefaultValue_ParamA );
 	SetParameter(kParam_B, kDefaultValue_ParamB );
+	SetParameter(kParam_C, kDefaultValue_ParamC );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -111,7 +112,14 @@ ComponentResult			RingModulatorMono::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamB;
                 break;
-           default:
+            case kParam_C:
+                AUBase::FillInParameterName (outParameterInfo, kParameterCName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamC;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
             }
@@ -188,7 +196,8 @@ void		RingModulatorMono::RingModulatorMonoKernel::Process(	const Float32 	*inSou
 	overallscale *= GetSampleRate();
 
 	incA = incB; incB = pow(GetParameter( kParam_A ),5)/overallscale;
-	double wet = pow(GetParameter( kParam_B ),2);
+	double soar = 0.3-(GetParameter( kParam_B )*0.3);
+	double wet = pow(GetParameter( kParam_C ),2);
 	
 	while (nSampleFrames-- > 0) {
 		double inputSample = *sourceP;
@@ -202,17 +211,17 @@ void		RingModulatorMono::RingModulatorMonoKernel::Process(	const Float32 	*inSou
 		if (sinePos > 6.283185307179586) sinePos -= 6.283185307179586;
 		double sinResult = sin(sinePos);
 		double out = 0.0;
-		double snM = fabs(sinResult);
+		double snM = fabs(sinResult)+(soar*soar);
 		double inM = fabs(inputSample);
 		if (inM < snM) {
 			inM = fabs(sinResult);
-			snM = fabs(inputSample);
+			snM = fabs(inputSample)+(soar*soar);
 		}
 		
-		if (inputSample > 0.0 && sinResult > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSample < 0.0 && sinResult > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSample > 0.0 && sinResult < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSample < 0.0 && sinResult < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSample > 0.0 && sinResult > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-soar,0.0);
+		if (inputSample < 0.0 && sinResult > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+soar,0.0);
+		if (inputSample > 0.0 && sinResult < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+soar,0.0);
+		if (inputSample < 0.0 && sinResult < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-soar,0.0);
 		inputSample = out;
 
 		if (wet !=1.0) {

@@ -60,6 +60,7 @@ SweetWide::SweetWide(AudioUnit component)
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
 	SetParameter(kParam_A, kDefaultValue_ParamA );
+	SetParameter(kParam_B, kDefaultValue_ParamB );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -103,7 +104,14 @@ ComponentResult			SweetWide::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamA;
                 break;
-           default:
+            case kParam_B:
+                AUBase::FillInParameterName (outParameterInfo, kParameterBName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamB;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
             }
@@ -192,7 +200,8 @@ OSStatus		SweetWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
 
-	double blend = -(GetParameter( kParam_A )-0.5);
+	double soar = 0.3-(GetParameter( kParam_A )*0.3);
+	double blend = -(GetParameter( kParam_B )-0.5);
 	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
@@ -202,12 +211,12 @@ OSStatus		SweetWide::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		
 		double outL = 0.0;		
 		double outR = 0.0;
-		
-		if (inputSampleL > 0.0) outL = sqrt(inputSampleL*fabs(inputSampleR));
-		if (inputSampleL < 0.0) outL = -sqrt(-inputSampleL*fabs(inputSampleR));
-		
-		if (inputSampleR > 0.0) outR = sqrt(inputSampleR*fabs(inputSampleL));
-		if (inputSampleR < 0.0) outR = -sqrt(-inputSampleR*fabs(inputSampleL));
+		double inL = fabs(inputSampleL)+(soar*soar);
+		double inR = fabs(inputSampleR)+(soar*soar);
+		if (inputSampleL > 0.0) outL = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		if (inputSampleL < 0.0) outL = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleR > 0.0) outR = fmax((sqrt(inL/inR)*inR)-soar,0.0);
+		if (inputSampleR < 0.0) outR = fmin((-sqrt(inL/inR)*inR)+soar,0.0);
 				
 		inputSampleL = (outL * blend) + (inputSampleL * (1.0-blend));
 		inputSampleR = (outR * blend) + (inputSampleR * (1.0-blend));

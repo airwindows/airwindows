@@ -60,8 +60,7 @@ LRConvolve2::LRConvolve2(AudioUnit component)
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
 	SetParameter(kParam_A, kDefaultValue_ParamA );
-	SetParameter(kParam_B, kDefaultValue_ParamB );
-         
+
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
 #endif
@@ -103,13 +102,6 @@ ComponentResult			LRConvolve2::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamA;
-                break;
-            case kParam_B:
-                AUBase::FillInParameterName (outParameterInfo, kParameterBName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamB;
                 break;
 			default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -181,7 +173,6 @@ ComponentResult LRConvolve2::Initialize()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ComponentResult		LRConvolve2::Reset(AudioUnitScope inScope, AudioUnitElement inElement)
 {
-	iirSample = 0.0;
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
@@ -200,12 +191,8 @@ OSStatus		LRConvolve2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 	Float32 * outputL = (Float32*)(outBuffer.mBuffers[0].mData);
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
-	double overallscale = 1.0;
-	overallscale /= 44100.0;
-	overallscale *= GetSampleRate();
 	
-	double smooth = pow(GetParameter( kParam_A ),4)*(0.5/overallscale);
-	double channel = GetParameter( kParam_B );
+	double soar = 0.3-(GetParameter( kParam_A )*0.3);
 	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
@@ -213,18 +200,16 @@ OSStatus		LRConvolve2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionF
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;		
 		
-		double carrier = inputSampleL;
-		double modulate = fabs(inputSampleR);
-		if (channel > 0.5) {
-			carrier = inputSampleR;
-			modulate = fabs(inputSampleL);
-		}
-		if (iirSample < modulate) iirSample = modulate;
-		modulate = (iirSample*smooth)+(modulate*(1.0-smooth));
-		if (carrier > 0.0) carrier = sqrt(carrier*modulate);
-		if (carrier < 0.0) carrier = -sqrt(-carrier*modulate);
-		inputSampleL = inputSampleR = carrier;
-
+		//blame Jannik Asfaig (BoyXx76) for this (and me) :D
+		double out = 0.0;
+		double inL = fabs(inputSampleL)+(soar*soar);
+		double inR = fabs(inputSampleR)+(soar*soar);		
+		if (inputSampleL > 0.0 && inputSampleR > 0.0) out = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		if (inputSampleL < 0.0 && inputSampleR > 0.0) out = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleL > 0.0 && inputSampleR < 0.0) out = fmin((-sqrt(inR/inL)*inL)+soar,0.0);
+		if (inputSampleL < 0.0 && inputSampleR < 0.0) out = fmax((sqrt(inR/inL)*inL)-soar,0.0);
+		inputSampleL = inputSampleR = out;
+		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;

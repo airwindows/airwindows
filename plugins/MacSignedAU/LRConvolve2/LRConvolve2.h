@@ -55,15 +55,12 @@
 
 // parameters
 static const float kDefaultValue_ParamA = 0.0;
-static const float kDefaultValue_ParamB = 0.0;
 
-static CFStringRef kParameterAName = CFSTR("Smooth");
-static CFStringRef kParameterBName = CFSTR("Channel");
+static CFStringRef kParameterAName = CFSTR("Soar");
 
 enum {
 	kParam_A =0,
-	kParam_B =1,
-	kNumberOfParameters=2
+	kNumberOfParameters=1
 };
 
 #pragma mark ____LRConvolve2
@@ -110,7 +107,6 @@ public:
 	virtual ComponentResult		Version() { return kLRConvolve2Version; }
 	
 	private:
-	double iirSample;
 	uint32_t fpdL;
 	uint32_t fpdR;
 };

@@ -21,7 +21,8 @@ void RingModulator::processReplacing(float **inputs, float **outputs, VstInt32 s
 	
 	incLA = incLB; incLB = pow(A,5)/overallscale;
 	incRA = incRB; incRB = pow(B,5)/overallscale;
-	double wet = pow(C,2);
+	double soar = 0.3-(C*0.3);
+	double wet = pow(D,2);
 	
     while (--sampleFrames >= 0)
     {
@@ -44,31 +45,31 @@ void RingModulator::processReplacing(float **inputs, float **outputs, VstInt32 s
 		double sinResultR = sin(sinePosR);
 		
 		double out = 0.0;
-		double snM = fabs(sinResultL);
+		double snM = fabs(sinResultL)+(soar*soar);
 		double inM = fabs(inputSampleL);
 		if (inM < snM) {
 			inM = fabs(sinResultL);
-			snM = fabs(inputSampleL);
+			snM = fabs(inputSampleL)+(soar*soar);
 		}
 		
-		if (inputSampleL > 0.0 && sinResultL > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSampleL < 0.0 && sinResultL > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleL > 0.0 && sinResultL < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleL < 0.0 && sinResultL < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSampleL > 0.0 && sinResultL > 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
+		if (inputSampleL < 0.0 && sinResultL > 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleL > 0.0 && sinResultL < 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleL < 0.0 && sinResultL < 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
 		inputSampleL = out;
 		
 		out = 0.0;
-		snM = fabs(sinResultR);
+		snM = fabs(sinResultR)+(soar*soar);
 		inM = fabs(inputSampleR);
 		if (inM < snM) {
 			inM = fabs(sinResultR);
-			snM = fabs(inputSampleR);
+			snM = fabs(inputSampleR)+(soar*soar);
 		}
 		
-		if (inputSampleR > 0.0 && sinResultR > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSampleR < 0.0 && sinResultR > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleR > 0.0 && sinResultR < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleR < 0.0 && sinResultR < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSampleR > 0.0 && sinResultR > 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
+		if (inputSampleR < 0.0 && sinResultR > 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleR > 0.0 && sinResultR < 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleR < 0.0 && sinResultR < 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
 		inputSampleR = out;
 		
 		if (wet != 1.0) {
@@ -110,7 +111,8 @@ void RingModulator::processDoubleReplacing(double **inputs, double **outputs, Vs
 	
 	incLA = incLB; incLB = pow(A,5)/overallscale;
 	incRA = incRB; incRB = pow(B,5)/overallscale;
-	double wet = pow(C,2);
+	double soar = 0.3-(C*0.3);
+	double wet = pow(D,2);
 	
     while (--sampleFrames >= 0)
     {
@@ -133,31 +135,31 @@ void RingModulator::processDoubleReplacing(double **inputs, double **outputs, Vs
 		double sinResultR = sin(sinePosR);
 		
 		double out = 0.0;
-		double snM = fabs(sinResultL);
+		double snM = fabs(sinResultL)+(soar*soar);
 		double inM = fabs(inputSampleL);
 		if (inM < snM) {
 			inM = fabs(sinResultL);
-			snM = fabs(inputSampleL);
+			snM = fabs(inputSampleL)+(soar*soar);
 		}
 		
-		if (inputSampleL > 0.0 && sinResultL > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSampleL < 0.0 && sinResultL > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleL > 0.0 && sinResultL < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleL < 0.0 && sinResultL < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSampleL > 0.0 && sinResultL > 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
+		if (inputSampleL < 0.0 && sinResultL > 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleL > 0.0 && sinResultL < 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleL < 0.0 && sinResultL < 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
 		inputSampleL = out;
 		
 		out = 0.0;
-		snM = fabs(sinResultR);
+		snM = fabs(sinResultR)+(soar*soar);
 		inM = fabs(inputSampleR);
 		if (inM < snM) {
 			inM = fabs(sinResultR);
-			snM = fabs(inputSampleR);
+			snM = fabs(inputSampleR)+(soar*soar);
 		}
 		
-		if (inputSampleR > 0.0 && sinResultR > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSampleR < 0.0 && sinResultR > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleR > 0.0 && sinResultR < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleR < 0.0 && sinResultR < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSampleR > 0.0 && sinResultR > 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
+		if (inputSampleR < 0.0 && sinResultR > 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleR > 0.0 && sinResultR < 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleR < 0.0 && sinResultR < 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
 		inputSampleR = out;
 		
 		if (wet != 1.0) {

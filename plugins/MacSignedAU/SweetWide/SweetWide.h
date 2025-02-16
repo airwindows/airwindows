@@ -54,14 +54,17 @@
 #pragma mark ____SweetWide Parameters
 
 // parameters
-static const float kDefaultValue_ParamA = 0.5;
+static const float kDefaultValue_ParamA = 0.0;
+static const float kDefaultValue_ParamB = 0.5;
 
-static CFStringRef kParameterAName = CFSTR("Un/Wide");
+static CFStringRef kParameterAName = CFSTR("Soar");
+static CFStringRef kParameterBName = CFSTR("Un/Wide");
 
 enum {
 	kParam_A = 0,
+	kParam_B = 1,
 	//Add your parameters here...
-	kNumberOfParameters=1
+	kNumberOfParameters=2
 };
 
 #pragma mark ____SweetWide
@@ -107,9 +110,9 @@ public:
 	/*! @method Version */
 	virtual ComponentResult		Version() { return kSweetWideVersion; }
 	
-		private: 
-		uint32_t fpdL;
-		uint32_t fpdR;
+	private: 
+	uint32_t fpdL;
+	uint32_t fpdR;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

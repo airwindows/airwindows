@@ -37,7 +37,7 @@ Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat,
 
 Reverb: Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
-Saturation: Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
+Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
 Stereo: Srsly3, Srsly2, Srsly, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTimer, Sidepass, SideDull
 
@@ -4406,6 +4406,28 @@ If you set it halfway, it becomes very close to peaking at exactly 0 dB. If you 
 So, I wanted to do something nice for my peeps since everybody has been so kind and supportive. Turns out my muse thought that was the sweetest intention ever, and really came through for me. Enjoy Spiral2: you’ll find that Presence is quite a striking effect. I think in extreme cases it’s TOO much air, but that’s why it’s on a slider, which is really just a crossfader between the two ‘circuits’, normal and with the one sample delay on the ‘sense’ circuit.
 
 See ya soon, and I hope you like Spiral2. If you would have dropped $50 on this without a moment’s hesitation once you hear what it can do by trying it, please do that using the Patreon. I’m looking to keep expanding and be more ambitious, if that’s OK. It’s more fun being ambitious with a budget, and food and shelter and stuff :)
+
+############ SquareRoot has new discoveries in soft saturation!
+
+What if saturation, but not flat-topping, because it was a kind that literally never reaches a 'top' but always keeps producing louder output the harder you drive it?
+
+Well, that would defeat the purpose of safety clipping, first of all, but then let's see what else we can do :)
+
+I don't think sqrt() commonly gets used for saturation effects, for several reasons. First, it's wildly inaccurate at tiny values. Second, it won't safety clip (obviously). Third, if you DO try to use it even though it's wildly inaccurate at tiny values, it turns and bites you, throwing in a crossover distortion that can be really distracting. You've heard it… if you heard LRConvolve, because that uses a square root to compensate for how you're multiplying one channel by the other.
+
+There's no solution to these things, but is there a workaround? YES. And it's called 'Soar'.
+
+Turns out you can adjust how the square root works to get a smooth contour that still gives you that infinitely-extended softclip. It's a useful effect, that feels kinda like how our ears respond to loudness. If you have something like a drum track that's all spikey and doesn't sound anything like being there, SquareRoot at some level of drive (you can add as much as 12 dB in the plugin, and nearly a hundred dB with BitShiftGain in front of it) will immediately give it that 'there in the room' feel while still distinguishing dynamics for you.
+
+And then there's 'Soar' sitting there: all it does is change this adjustment from full smoothness… to uncorrected, nonlinear square root quirkiness. And that throws in controllable amounts of crossover distortion, Class B or AB distortion (since it's not a sharp edge but increasingly weird curves) and that makes quiet details louder, unnaturally so.
+
+It lets you keep that effect subtle (like the eccentricities of a big push-pull tube amp, or a grungey Hammond B3) or make it really obnoxious: then if you overdrive the input harder, that Soar coloration will become more subtle again, because you'll have to turn the output down. If even the plain output with no 'Soar' is too intense, you get a dry/wet control that should be able to help you find just the right intensity for whatever SquareRoot can produce.
+
+Soar is originally from a story by Mixerman, who used a stray knob to appease a difficult record label exec sitting in on a session. In the story, it was not real. But this is! Right down to the dangers of adding TOO MUCH soar and ruining everything. So, be prudent and don't soar too much!
+
+This is bonkers for getting retro tones, for simulating acoustic loudness (you can put it in front of Discontinuity for even more loudness cues!) and for giving certain instruments their natural color, like big amps and wonky organs. The effect exists in guitar stompboxes as a notoriously aggro pedal: ZVex's Machine pedal. But this plugin is not that, it's a separate effect with its own purposes that happens to be one of the few effects to work with crossover distortion, normally not a popular effect, but now rendered accessible and useful.
+
+I know I'll be finding uses for all this, and I hope you do too :)
 
 ############ Srsly is a psychoacoustic stereo processor.
 

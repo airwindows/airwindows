@@ -56,15 +56,18 @@
 // parameters
 static const float kDefaultValue_ParamA = 0.5;
 static const float kDefaultValue_ParamB = 0.0;
+static const float kDefaultValue_ParamC = 0.0;
 
 static CFStringRef kParameterAName = CFSTR("Freq");
-static CFStringRef kParameterBName = CFSTR("Dry/Wet");
+static CFStringRef kParameterBName = CFSTR("Soar");
+static CFStringRef kParameterCName = CFSTR("Dry/Wet");
 
 enum {
 	kParam_A =0,
 	kParam_B =1,
+	kParam_C =2,
 	//Add your parameters here...
-	kNumberOfParameters=2
+	kNumberOfParameters=3
 };
 
 #pragma mark ____RingModulatorMono

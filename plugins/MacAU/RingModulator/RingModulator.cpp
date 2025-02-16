@@ -62,6 +62,7 @@ RingModulator::RingModulator(AudioUnit component)
 	SetParameter(kParam_A, kDefaultValue_ParamA );
 	SetParameter(kParam_B, kDefaultValue_ParamB );
 	SetParameter(kParam_C, kDefaultValue_ParamC );
+	SetParameter(kParam_D, kDefaultValue_ParamD );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -119,7 +120,14 @@ ComponentResult			RingModulator::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamC;
                 break;
-           default:
+            case kParam_D:
+                AUBase::FillInParameterName (outParameterInfo, kParameterDName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamD;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
             }
@@ -217,7 +225,8 @@ OSStatus		RingModulator::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 
 	incLA = incLB; incLB = pow(GetParameter( kParam_A ),5)/overallscale;
 	incRA = incRB; incRB = pow(GetParameter( kParam_B ),5)/overallscale;
-	double wet = pow(GetParameter( kParam_C ),2);
+	double soar = 0.3-(GetParameter( kParam_C )*0.3);
+	double wet = pow(GetParameter( kParam_D ),2);
 	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
@@ -239,31 +248,31 @@ OSStatus		RingModulator::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		double sinResultR = sin(sinePosR);
 		
 		double out = 0.0;
-		double snM = fabs(sinResultL);
+		double snM = fabs(sinResultL)+(soar*soar);
 		double inM = fabs(inputSampleL);
 		if (inM < snM) {
 			inM = fabs(sinResultL);
-			snM = fabs(inputSampleL);
+			snM = fabs(inputSampleL)+(soar*soar);
 		}
 		
-		if (inputSampleL > 0.0 && sinResultL > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSampleL < 0.0 && sinResultL > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleL > 0.0 && sinResultL < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleL < 0.0 && sinResultL < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSampleL > 0.0 && sinResultL > 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
+		if (inputSampleL < 0.0 && sinResultL > 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleL > 0.0 && sinResultL < 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleL < 0.0 && sinResultL < 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
 		inputSampleL = out;
 		
 		out = 0.0;
-		snM = fabs(sinResultR);
+		snM = fabs(sinResultR)+(soar*soar);
 		inM = fabs(inputSampleR);
 		if (inM < snM) {
 			inM = fabs(sinResultR);
-			snM = fabs(inputSampleR);
+			snM = fabs(inputSampleR)+(soar*soar);
 		}
 		
-		if (inputSampleR > 0.0 && sinResultR > 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
-		if (inputSampleR < 0.0 && sinResultR > 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleR > 0.0 && sinResultR < 0.0) out = fmin((-sqrt((fabs(inM)/snM))*snM)+0.0575,0.0);
-		if (inputSampleR < 0.0 && sinResultR < 0.0) out = fmax((sqrt((fabs(inM)/snM))*snM)-0.0575,0.0);
+		if (inputSampleR > 0.0 && sinResultR > 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
+		if (inputSampleR < 0.0 && sinResultR > 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleR > 0.0 && sinResultR < 0.0) out = fmin((-sqrt(inM/snM)*snM)+soar,0.0);
+		if (inputSampleR < 0.0 && sinResultR < 0.0) out = fmax((sqrt(inM/snM)*snM)-soar,0.0);
 		inputSampleR = out;
 		
 		if (wet != 1.0) {

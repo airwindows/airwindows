@@ -13,9 +13,6 @@ LRConvolve2::LRConvolve2(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.0;
-	B = 0.0;
-
-	iirSample = 0.0;
 	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
@@ -51,7 +48,6 @@ VstInt32 LRConvolve2::getChunk (void** data, bool isPreset)
 {
 	float *chunkData = (float *)calloc(kNumParameters, sizeof(float));
 	chunkData[0] = A;
-	chunkData[1] = B;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -64,7 +60,6 @@ VstInt32 LRConvolve2::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {	
 	float *chunkData = (float *)data;
 	A = pinParameter(chunkData[0]);
-	B = pinParameter(chunkData[1]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -75,7 +70,6 @@ VstInt32 LRConvolve2::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 void LRConvolve2::setParameter(VstInt32 index, float value) {
     switch (index) {
         case kParamA: A = value; break;
-        case kParamB: B = value; break;
         default: throw; // unknown parameter, shouldn't happen!
     }
 }
@@ -83,15 +77,13 @@ void LRConvolve2::setParameter(VstInt32 index, float value) {
 float LRConvolve2::getParameter(VstInt32 index) {
     switch (index) {
         case kParamA: return A; break;
-        case kParamB: return B; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
 
 void LRConvolve2::getParameterName(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: vst_strncpy (text, "Smooth", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "Channel", kVstMaxParamStrLen); break;
+        case kParamA: vst_strncpy (text, "Soar", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -99,7 +91,6 @@ void LRConvolve2::getParameterName(VstInt32 index, char *text) {
 void LRConvolve2::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
-        case kParamB: float2string (B, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -107,7 +98,6 @@ void LRConvolve2::getParameterDisplay(VstInt32 index, char *text) {
 void LRConvolve2::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }
