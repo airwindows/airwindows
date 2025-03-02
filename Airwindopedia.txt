@@ -47,7 +47,7 @@ Tape: ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, 
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
+Utility: CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -3175,6 +3175,20 @@ This plugin has no controls and will show up as a blank space, possibly with its
 There will be offshoots of this that are more normal. This is just the raw craziness of it in its purest form. If this is the plugin for you, you know who you are! And are probably already playing with it and not listening to me anymore.
 
 So, carry on, and I'll come up with some more variations that do different things :)
+
+############ LRConvolve2 multiplies each channel by the other, plus Soar!
+
+We've had this (along with its strange demonstration audio) and you've already seen this 'Soar' control on the recent 'SquareRoot' plugin, which is going to be a lot more generally useful.
+
+But have you heard the essence of the Soar control turned into a plugin, to most drastically demonstrate what it does?
+
+Nope, because SquareRoot typically sounds fine however you set it. But now you can!
+
+I don't remove plugins that work, so this doesn't replace LRConvolve (I'm not sure who would care if it did, but it's the principle of the thing). But you can get the LRConvolve sound out of it easily enough by turning Soar up ALL the way. So there's a start: the 'crazy' can be dialed back through turning down the Soar control. Both channels still completely convolve and phase-flip each other, and it still results in an intense mess of audio.
+
+But when you run more typical sounds against each other (rather than using something predictable like a full-amplitude sine), suddenly a whole new behavior emerges. Turns out, if you reduce Soar on this algorithm and have two sounds convolving each other, there's a full range of behavior between 'mostly choked out' and 'hypercompressed and exaggerated'! This will also apply to some extent to SquareRoot, except that LRConvolve2 highlights the behavior because more sounds will be forced into the 'quiet' zone where Soar operates.
+
+For that reason, it might come in handy just sussing out how the algorithm works as it's used in SquareRoot: or, using it like the original LRConvolve but with additional tonal control that's unique to what that plugin is. I'm working on other plugins such as the Bezier-curve compressor for ConsoleH, plus a wild project (sort of an art project) around making literal buotique stompboxes, so if this isn't the plugin for you, wait a week and I'll make another :)
 
 ############ LRFlipTimer is a utility that swaps Left with Right every few (1-10) minutes.
 
