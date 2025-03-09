@@ -27,7 +27,7 @@ Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither,
 
 Dynamics: Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
-Effects: Dubly3, Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
+Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
 Filter: Parametric, Stonefire, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
@@ -4154,6 +4154,20 @@ The audible clipping happens when you push your LUFS levels beyond the target. A
 What’s happening is, the saturation from the Spiral algorithm is being fed into ShortBuss, which fills the energy back into the mix in the form of second harmonic. This is what gives Righteous4 its tone and extra warmth, and it’s a nice fullness and bloom UNLESS you’re slamming it (it’s calibrated using the slider, where you select your target). If you are too loud, you’ll hear it. Your peak energy will still be going up to the real clipping threshold, just as before, but your RMS energy will tell you how loud you should go.
 
 It’s that simple. You don’t have to use it to hit LUFS targets, but since it’s got Spiral in there it also broadens the heck out of the ‘target range’ so you can pick whatever seems right to you, and it’ll guide you. If you find you need to push louder, you can set Righteous4 for a higher target, and that will clean it right up and let you push harder into the internal ADClip. If you’re looking for big dynamic range, you can set Righteous4’s target lower, or simply set it for Apple or YouTube loudnesses and then just don’t push into it very hard: this will give you dynamics, but the replay-gain services will be kinder to the result because it’s somewhat saturated and compressed, just in a very gentle way if you’re hitting it that gently. And of course the output’s optimized for whatever bit depth you’ve selected, so you can directly target CD or 24/96 or ’32 bit file to send to further mastering’ if you still need to mix into something more organic than a hard, brittle digital mix buss with all the charm of math :)
+
+############ RingModulator repitches sounds mathematically, not harmonically.
+
+Here's an effect not for every day or the master buss! (pause, for fans to immediately insist that they use it on their master buss and it changed their life)
+
+So, this is probably the major offshoot from SquareRoot apart from its use as an overdrive. RingModulator is like LRConvolve, except you always have the most polite possible convolver (a sine) and you get to control it to do whatever you like, from subsonic LFO throbs to very high pitches. In fact, when you're in stereo you get two independent sines to play with!
+
+The rest is simply a ring modulator, the device that makes voices into Daleks or electric pianos into oddly clangy discordant inharmonic sounds. Ring modulators can produce mathematically, not harmonically, related sounds. That means it 'tracks' quickly to whatever your raw sound is, but the notes it adds are out of tune: going off, or even going in the reverse of your original note's direction.
+
+That's because if you take a note, and convolve it by a nearby note, you'll produce a higher note but also a strong subharmonic. Since the ring modulator is flipping phase at musical frequencies, it can produce an apparent note way lower than itself or the source note, through that interference. It'll also tend to cut the lows in the source audio if it's at a high frequency, because if you're constantly flipping the phase of a bass note it kinda goes away on you.
+
+Then to top it off, RingModulator has the Soar control… so you can wildly alter the texture of the additional notes (including stereo added notes when you've got the Freq controls set to different settings) by either reducing Soar for a gatey, thin sound, or boosting it for a dense and lively sound! The reason Soar's important here is because convolving stuff is multiplying, and if you square something (multiply it by itself) and then take a square root you get the original thing back. So Soar is my way of restoring the density of the original sound coming in, except that it opens up a new way to alter the tone of things.
+
+Hope you like it!
 
 ############ SampleDelay is three delays combined: millisecond, sample and subsample.
 
