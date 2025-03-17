@@ -90,12 +90,16 @@ void Air4::processReplacing(float **inputs, float **outputs, VstInt32 sampleFram
 		if (temp - air[lastSL] > sinew) temp = air[lastSL] + sinew;
 		if (-(temp - air[lastSL]) > sinew) temp = air[lastSL] - sinew;
 		air[lastSL] = temp;
+		if (air[lastSL] > 1.0) air[lastSL] = 1.0; 
+		if (air[lastSL] < -1.0) air[lastSL] = -1.0; 
 		inputSampleL = (inputSampleL * (1.0-depthSinew))+(air[lastSL]*depthSinew);		
 		temp = inputSampleR; if (temp > 1.0) temp = 1.0; if (temp < -1.0) temp = -1.0;
 		sinew = threshSinew * cos(air[lastSR]*air[lastSR]);
 		if (temp - air[lastSR] > sinew) temp = air[lastSR] + sinew;
 		if (-(temp - air[lastSR]) > sinew) temp = air[lastSR] - sinew;
 		air[lastSR] = temp;
+		if (air[lastSR] > 1.0) air[lastSR] = 1.0; 
+		if (air[lastSR] < -1.0) air[lastSR] = -1.0; 
 		inputSampleR = (inputSampleR * (1.0-depthSinew))+(air[lastSR]*depthSinew);
 		//run Sinew to stop excess slews, but run a dry/wet to allow a range of brights		
 		
@@ -201,12 +205,16 @@ void Air4::processDoubleReplacing(double **inputs, double **outputs, VstInt32 sa
 		if (temp - air[lastSL] > sinew) temp = air[lastSL] + sinew;
 		if (-(temp - air[lastSL]) > sinew) temp = air[lastSL] - sinew;
 		air[lastSL] = temp;
+		if (air[lastSL] > 1.0) air[lastSL] = 1.0; 
+		if (air[lastSL] < -1.0) air[lastSL] = -1.0; 
 		inputSampleL = (inputSampleL * (1.0-depthSinew))+(air[lastSL]*depthSinew);		
 		temp = inputSampleR; if (temp > 1.0) temp = 1.0; if (temp < -1.0) temp = -1.0;
 		sinew = threshSinew * cos(air[lastSR]*air[lastSR]);
 		if (temp - air[lastSR] > sinew) temp = air[lastSR] + sinew;
 		if (-(temp - air[lastSR]) > sinew) temp = air[lastSR] - sinew;
 		air[lastSR] = temp;
+		if (air[lastSR] > 1.0) air[lastSR] = 1.0; 
+		if (air[lastSR] < -1.0) air[lastSR] = -1.0; 
 		inputSampleR = (inputSampleR * (1.0-depthSinew))+(air[lastSR]*depthSinew);
 		//run Sinew to stop excess slews, but run a dry/wet to allow a range of brights		
 		

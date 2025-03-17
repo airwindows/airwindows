@@ -20,7 +20,7 @@ void ConsoleLABuss::processReplacing(float **inputs, float **outputs, VstInt32 s
 	overallscale *= getSampleRate();
 	
 	gainA = gainB;
-	gainB = sqrt(A); //smoothed master fader from Z2 filters //was A
+	gainB = sqrt(A); //smoothed master fader from Z2 filters
 	//this will be applied three times: this is to make the various tone alterations
 	//hit differently at different master fader drive levels.
 	//in particular, backing off the master fader tightens the super lows
@@ -98,20 +98,20 @@ void ConsoleLABuss::processReplacing(float **inputs, float **outputs, VstInt32 s
 		
 		temp = inputSampleL;
 		double clamp = inputSampleL - lastSinewL;
-		if (lastSinewL > 1.0) lastSinewL = 1.0;
-		if (lastSinewL < -1.0) lastSinewL = -1.0;
 		double sinew = threshSinew * cos(lastSinewL);
 		if (clamp > sinew) temp = lastSinewL + sinew;
 		if (-clamp > sinew) temp = lastSinewL - sinew;
 		inputSampleL = lastSinewL = temp;
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
 		temp = inputSampleR;
 		clamp = inputSampleR - lastSinewR;
-		if (lastSinewR > 1.0) lastSinewR = 1.0;
-		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		sinew = threshSinew * cos(lastSinewR);
 		if (clamp > sinew) temp = lastSinewR + sinew;
 		if (-clamp > sinew) temp = lastSinewR - sinew;
 		inputSampleR = lastSinewR = temp;
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		
 		if (gain < 1.0) {
 			inputSampleL *= gain;
@@ -229,20 +229,20 @@ void ConsoleLABuss::processDoubleReplacing(double **inputs, double **outputs, Vs
 		
 		temp = inputSampleL;
 		double clamp = inputSampleL - lastSinewL;
-		if (lastSinewL > 1.0) lastSinewL = 1.0;
-		if (lastSinewL < -1.0) lastSinewL = -1.0;
 		double sinew = threshSinew * cos(lastSinewL);
 		if (clamp > sinew) temp = lastSinewL + sinew;
 		if (-clamp > sinew) temp = lastSinewL - sinew;
 		inputSampleL = lastSinewL = temp;
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
 		temp = inputSampleR;
 		clamp = inputSampleR - lastSinewR;
-		if (lastSinewR > 1.0) lastSinewR = 1.0;
-		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		sinew = threshSinew * cos(lastSinewR);
 		if (clamp > sinew) temp = lastSinewR + sinew;
 		if (-clamp > sinew) temp = lastSinewR - sinew;
 		inputSampleR = lastSinewR = temp;
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		
 		if (gain < 1.0) {
 			inputSampleL *= gain;

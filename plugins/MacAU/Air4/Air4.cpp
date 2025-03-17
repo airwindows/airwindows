@@ -244,6 +244,8 @@ void		Air4::Air4Kernel::Process(	const Float32 	*inSourceP,
 		if (temp - air[lastSL] > sinew) temp = air[lastSL] + sinew;
 		if (-(temp - air[lastSL]) > sinew) temp = air[lastSL] - sinew;
 		air[lastSL] = temp;
+		if (air[lastSL] > 1.0) air[lastSL] = 1.0; 
+		if (air[lastSL] < -1.0) air[lastSL] = -1.0; 
 		inputSample = (inputSample * (1.0-depthSinew))+(air[lastSL]*depthSinew);
 		//run Sinew to stop excess slews, but run a dry/wet to allow a range of brights		
 		

@@ -191,6 +191,9 @@ void		Sinew::SinewKernel::Process(	const Float32 	*inSourceP,
 		if (-clamp > sinew) temp = lastSinew - sinew;
 		inputSample = lastSinew = temp;
 		
+		if (lastSinew > 1.0) lastSinew = 1.0;
+		if (lastSinew < -1.0) lastSinew = -1.0;
+		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;

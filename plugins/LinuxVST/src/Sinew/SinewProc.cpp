@@ -34,12 +34,18 @@ void Sinew::processReplacing(float **inputs, float **outputs, VstInt32 sampleFra
 		if (-clamp > sinew) temp = lastSinewL - sinew;
 		inputSampleL = lastSinewL = temp;
 		
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
+		
 		temp = inputSampleR;
 		clamp = inputSampleR - lastSinewR;
 		sinew = threshSinew * cos(lastSinewR*lastSinewR);
 		if (clamp > sinew) temp = lastSinewR + sinew;
 		if (-clamp > sinew) temp = lastSinewR - sinew;
 		inputSampleR = lastSinewR = temp;
+		
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
@@ -87,12 +93,18 @@ void Sinew::processDoubleReplacing(double **inputs, double **outputs, VstInt32 s
 		if (-clamp > sinew) temp = lastSinewL - sinew;
 		inputSampleL = lastSinewL = temp;
 		
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
+
 		temp = inputSampleR;
 		clamp = inputSampleR - lastSinewR;
 		sinew = threshSinew * cos(lastSinewR*lastSinewR);
 		if (clamp > sinew) temp = lastSinewR + sinew;
 		if (-clamp > sinew) temp = lastSinewR - sinew;
 		inputSampleR = lastSinewR = temp;
+		
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

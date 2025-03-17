@@ -276,20 +276,20 @@ OSStatus		ConsoleLABuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		
 		temp = inputSampleL;
 		double clamp = inputSampleL - lastSinewL;
-		if (lastSinewL > 1.0) lastSinewL = 1.0;
-		if (lastSinewL < -1.0) lastSinewL = -1.0;
 		double sinew = threshSinew * cos(lastSinewL);
 		if (clamp > sinew) temp = lastSinewL + sinew;
 		if (-clamp > sinew) temp = lastSinewL - sinew;
 		inputSampleL = lastSinewL = temp;
+		if (lastSinewL > 1.0) lastSinewL = 1.0;
+		if (lastSinewL < -1.0) lastSinewL = -1.0;
 		temp = inputSampleR;
 		clamp = inputSampleR - lastSinewR;
-		if (lastSinewR > 1.0) lastSinewR = 1.0;
-		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		sinew = threshSinew * cos(lastSinewR);
 		if (clamp > sinew) temp = lastSinewR + sinew;
 		if (-clamp > sinew) temp = lastSinewR - sinew;
 		inputSampleR = lastSinewR = temp;
+		if (lastSinewR > 1.0) lastSinewR = 1.0;
+		if (lastSinewR < -1.0) lastSinewR = -1.0;
 		
 		if (gain < 1.0) {
 			inputSampleL *= gain;

@@ -237,12 +237,16 @@ OSStatus		DubPlate::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		if (inputSampleL - lastSinewAL > sinew) temp = lastSinewAL + sinew;
 		if (-(inputSampleL - lastSinewAL) > sinew) temp = lastSinewAL - sinew;
 		lastSinewAL = temp;
+		if (lastSinewAL > 1.0) lastSinewAL = 1.0;
+		if (lastSinewAL < -1.0) lastSinewAL = -1.0;
 		inputSampleL = (inputSampleL * 0.5)+(lastSinewAL * 0.5);
 		
 		sinew = threshSinewB * cos(lastSinewBL*lastSinewBL);
 		if (inputSampleL - lastSinewBL > sinew) temp = lastSinewBL + sinew;
 		if (-(inputSampleL - lastSinewBL) > sinew) temp = lastSinewBL - sinew;
 		lastSinewBL = temp;
+		if (lastSinewBL > 1.0) lastSinewBL = 1.0;
+		if (lastSinewBL < -1.0) lastSinewBL = -1.0;
 		inputSampleL = (inputSampleL * 0.414)+(lastSinewBL * 0.586);
 				
 		temp = inputSampleR;
@@ -250,12 +254,16 @@ OSStatus		DubPlate::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFlag
 		if (inputSampleR - lastSinewAR > sinew) temp = lastSinewAR + sinew;
 		if (-(inputSampleR - lastSinewAR) > sinew) temp = lastSinewAR - sinew;
 		lastSinewAR = temp;
+		if (lastSinewAR > 1.0) lastSinewAR = 1.0;
+		if (lastSinewAR < -1.0) lastSinewAR = -1.0;
 		inputSampleR = (inputSampleR * 0.5)+(lastSinewAR * 0.5);
 				
 		sinew = threshSinewB * cos(lastSinewBR*lastSinewBR);
 		if (inputSampleR - lastSinewBR > sinew) temp = lastSinewBR + sinew;
 		if (-(inputSampleR - lastSinewBR) > sinew) temp = lastSinewBR - sinew;
 		lastSinewBR = temp;
+		if (lastSinewBR > 1.0) lastSinewBR = 1.0;
+		if (lastSinewBR < -1.0) lastSinewBR = -1.0;
 		inputSampleR = (inputSampleR * 0.414)+(lastSinewBR * 0.586);
 		//run Sinew to stop excess slews, two layers to make it more audible
 		
