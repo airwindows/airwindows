@@ -27,7 +27,7 @@ Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither,
 
 Dynamics: Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
-Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
+Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
 Filter: Parametric, Stonefire, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
@@ -1677,6 +1677,20 @@ Discontinuity does its frequency modulation using sample buffers. For that reaso
 Depending on who you are and what you've dreamed of being able to make sound do, you might immediately not care about any of that, and immediately start using it on everything and never stop. That's me. It's like when I invented Console, only more so. The interesting thing is how useful I find the quiet, subtle settings when getting a mix to gel and come alive like it's a real sonic event happening. I can set very delicate and quiet, against super loud, and have them all just work.
 
 Discontinuity is a fundamental part of ConsoleX, which I'm still working on. I hope you like getting a little piece of the mixing revolution early, so you can learn about it :)
+
+############ Disintegrate is Discontinuity on steroids.
+
+So what if you had a distortion that wasn't actually about distortion?
+
+Disintegrate extends Discontinuity to the point of total unreality.
+
+This algorithm was invented to emulate the asymmetrical compression of air, and already exists in Discontinuity and ConsoleX. You set it according to what at the point of clipping, would be the physical loudness in air, and it applies a delay modulation that distorts the sound. It's meant to reproduce what happens when a huge rocket launch, heard from miles away, turns into strange air crackles (a natural phenomenon having to do with pressure discontinuities in the speed of sound). This happens in all sound transmitted through air, all of the time, and Discontinuity scales it appropriately.
+
+Thing is, Discontinuity is designed to sound nice and not too crazy. So… why not go for broke?
+
+All the controls on Disintegrate are things that are under the hood on Discontinuity. It's designed to let you get inappropriate noises, unnatural sounds. Typically it sounds like distortions, but it's not: it's a stack of modulating delay lines, but rather than modulating by an LFO, the sound's modulated by itself, over and over. When you get into distortion-like edge, that's mostly the frequencies stacking up, though it does have the ability to overdrive internally. In particular, Disintegrate takes pains to overdrive internally, the better to sonically obliterate and destroy.
+
+Hope you like Disintegrate! I'll work on more realistic things soon! :)
 
 ############ Distance is a sound design or reverb far-away-izer.
 
