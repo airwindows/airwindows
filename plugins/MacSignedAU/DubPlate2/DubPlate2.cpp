@@ -62,10 +62,6 @@ DubPlate2::DubPlate2(AudioUnit component)
 	SetParameter(kParam_A, kDefaultValue_ParamA );
 	SetParameter(kParam_B, kDefaultValue_ParamB );
 	SetParameter(kParam_C, kDefaultValue_ParamC );
-	SetParameter(kParam_D, kDefaultValue_ParamD );
-	SetParameter(kParam_E, kDefaultValue_ParamE );
-	SetParameter(kParam_F, kDefaultValue_ParamF );
-	SetParameter(kParam_G, kDefaultValue_ParamG );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -122,34 +118,6 @@ ComponentResult			DubPlate2::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamC;
-                break;
-            case kParam_D:
-                AUBase::FillInParameterName (outParameterInfo, kParameterDName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 2.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamD;
-                break;
-            case kParam_E:
-                AUBase::FillInParameterName (outParameterInfo, kParameterEName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 2.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamE;
-                break;
-            case kParam_F:
-                AUBase::FillInParameterName (outParameterInfo, kParameterFName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 2.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamF;
-                break;
-            case kParam_G:
-                AUBase::FillInParameterName (outParameterInfo, kParameterGName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 2.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamG;
                 break;
            default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -227,7 +195,6 @@ ComponentResult		DubPlate2::Reset(AudioUnitScope inScope, AudioUnitElement inEle
 	iirB = 0.0;
 	iirC = 0.0;
 	iirD = 0.0;
-	fpFlip = true;
 	lastSinewAL = 0.0;
 	lastSinewAR = 0.0;
 	lastSinewBL = 0.0;
@@ -253,11 +220,6 @@ OSStatus		DubPlate2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
-
-	double D = GetParameter( kParam_D );
-	double E = GetParameter( kParam_E );
-	double F = GetParameter( kParam_F );
-	double G = GetParameter( kParam_G );
 	
 	double inputGain = pow(GetParameter( kParam_A )*2.0,2.0);
 	double trebleGain = pow(GetParameter( kParam_B )*2.0,2.0);
@@ -287,12 +249,11 @@ OSStatus		DubPlate2::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	baxL[bax_b1] = 2.0 * (K * K - 1.0) * norm;
 	baxL[bax_b2] = (1.0 - K / baxL[bax_reso] + K * K) * norm;
 	//end bax lowpass
-		
-	double rangescale = 0.1 / overallscale;
-	double iirSide = (D*0.2) * rangescale;
-	double iirMid = (E*0.2) * rangescale;
-	double threshSinewA = (F*0.2) / overallscale;
-	double threshSinewB = (G*0.2) / overallscale;	
+	
+	double iirSide = 0.01862 / overallscale;
+	double iirMid = 0.01102 / overallscale;
+	double threshSinewA = 0.1442 / overallscale;
+	double threshSinewB = 0.0274 / overallscale;	
 	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;

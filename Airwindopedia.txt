@@ -47,7 +47,7 @@ Tape: ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, 
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
+Utility: DubPlate2, DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -2005,7 +2005,7 @@ It starts with Dubly3, and once I've got ToTape8 done, you'll have everything To
 
 Next, a ToTape8, but in weeks rather than another couple years. And then… more work on ConsoleX :)
 
-############ DubPlate is like a busy mastering house for electronic music.
+############ DubPlate is ruthless dubplate mastering for electronic music.
 
 It's possible you need this to make your music sound its best. I've used this literal plugin to put out a record! Just now, on something that I'd tried to get right for years!
 
@@ -2028,6 +2028,26 @@ If on the other hand your reach exceeds your grasp, you can put together creativ
 So, go into DubPlate… pad your stuff down with PurestGain if you have to, the output might peak louder even if it is pulling the subs back… and let the uncaring mastering chain strip down your sound into the gutsy heart of its intention. If it's hyperpop you wanted, maybe you check out right there. But if you're looking for size and depth and power and the sound of the dubplate era calls to you… maybe this brings your music the rest of the way there.
 
 Hope you like it! I put out a record (Dragons Dub Plate Edition) specifically because I had music literally from that era made using those methods, and the plugin instantly turned it into the experience it was always meant to be. That record's at the usual bandcamp price but DubPlate is open source and free! See if it helps you out :)
+
+############ DubPlate2 is like an ITB mastering house for electronic music.
+
+By request, more DubPlate… and new instructions on how to get this sound.
+
+Turned out the audio reference I used to chart a path from digital audio master to the sound of that very dubplate, wasn't as simple as I'd thought it to be. I didn't have the real master… and then, when I was fortunate enough to get it, it turned out there wouldn't be a simple way to go from that to the correct sound. The plate had been cut from an earlier mix, and the mastering engineer had complained about how bright it was, and applied more than a bit of EQ. That meant I couldn't treat it like it was a simple one-step process. I'd have to build in an EQ to do what the engineer did, before I could apply the same stuff DubPlate used. On the bright side, that would let the 'lathe' be cleaner, less aggressive. But there would have to be controls that matched what had happened to my reference in real life.
+
+But there was an EQ I hadn't revisited for a while… that turned out to be just right for the job. My Baxandall EQ had gone to version 2 already, stripping out some early 'analog effects' I'd used in the first version.
+
+Turned out that adding an input trim control, adding the analog effects back again (I'd used the Console5 processing for this), running this into DubPlate and readjusting it using the real reference audio but this time also doing the EQing and then compensating for the changes that no longer needed to be handled by the lathe… got me what I'd wanted in the first place.
+
+Provided, that is, you operate it properly… so here's the new version of how to get a dub plate sound using DubPlate2.
+
+Firstly, if your audio is perfect and you run it flat, you only need to pad it down with the input control until you have NO, repeat NO clips. The processing even without EQing can produce overs. Baxandall3 (built into DubPlate) is able to peak some way hotter than 0dB, to the point that you'd need a safety clipper like ADClip8 or ClipOnly2. Do not use one! Don't use a limiter, or anything like that, just pad the Input until there are no clips at all on your output.
+
+This is important because you can't put a safety clipper between your audio and the lathe. The corners produced by a clipper are hell on lathes, high frequency energy that can burn the cutting head right out. The EQ and things like the elliptical filter and normal highpasses that are part of the circuitry are able to rearrange your audio a bit, stopping it from having the digital clips and brickwalls it might have, generating smoother peaks that don't follow the usual digital rules for where energy sits. To get a real dub plate sound, get your loudness through midrange, not through clipping the peaks.
+
+But you have an EQ, so what if you need to use that? It's a very gentle filter, Baxandall3. You can certainly lift the highs or lows, or indeed cut them if that's what you need. The thing is, you have to follow the same rule. Even more so, as Baxandall3 is an analog-style filter that's capable of saturating when pushed! You can add deep lows to work around the bass loss from the lathe and elliptical filter. This will only get you so far, plus you'll discover that it eats up your loudness without giving you that much in return. You can add extreme highs, and the same thing will happen. You'll be fighting the lathe all to produce a more untrackable record that won't even be loud… since, remember, you have to pad the level until it doesn't clip. Otherwise you'll automatically not get a dubplate-type sound.
+
+So, think in terms of midrange, allow the record to act like a record, and you should be able to get your ideal dubplate sound out of DubPlate2. You can use Meter to really dial in your results, but even without it the work should be pretty straightforward. Let it give you the sonic peaks your sound deserves, and DubPlate2 will be able to do its job :)
 
 ############ DubSub is a fully featured bass doctor.
 
