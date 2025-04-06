@@ -29,7 +29,7 @@ Dynamics: Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Log
 
 Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: Parametric, Stonefire, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: Parametric, Stonefire, AngleEQ, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -171,6 +171,26 @@ As seen in the video, if you adjust DarkF it produces a hard limit on the slews.
 To use it the way I use it, maybe lower the DarkF a bit, and then sneak Ratio back from full crank. What'll happen is, the spikes will gradually creep up towards their original volume, forming a spread-out cloud rather than a hard clipped line, except they'll be quieter than they were. The idea is to find the loudness you want for these bright peaks, and then work out how wide a range they're to cover. Doing this gives you brightness, but without the brittle harshness of digital treble boosting.
 
 I hope you like Air4! I'm working on ConsoleX every day now, and it'll get there. It's a LOT of work.
+
+############ AngleEQ is a strange and colorful EQ.
+
+This would have been amazing, had it worked. Instead, it's astonishing, and is never going to be your main EQ, or mine, ever.
+
+Seriously, it'd be a world of hurt, and don't do it. Not even while sandwiching it with uLaw plugins.
+
+Since you can't use it for real work, what good is it? Also, why can't you use it for real work?
+
+It's not just that its response is irregular and non-flat. You could deal with that. The trouble is, it's a new attempt at filtering, meant to do a super-sharp but non-resonant lowpass for a crossover.
+
+And it does a lot of that! But in the process, it scrambles the audio so pervasively that if you try to assemble an EQ out of subtracting it from the dry signal (a neat trick for making 'flat' be pristine beyond all reason) the 'highpass' you get from subtracting the lowpass, is a complete mess full of phase-rotated bass.
+
+So I came up with a way to get a real highpass, even with multiple stages of this filtering. And I got one, and even that is decidedly strange.
+
+So, AngleEQ is a highpass for a treble band, a lowpass for a bass band, and a midrange that has a separate highpass and lowpass, just because they will not combine in any suitable way anyhow. Then you've got a dry/wet because combining any of these bands with dry brings even more havoc, and then the dry/wet also is an attenuverter and lets you apply the EQ inverted because it wasn't doing enough damage already.
+
+How does it sound? Very opaque, weirdly resonant, perhaps like the largest color-style EQ on the biggest most overdesigned mixing board ever. Nothing about it is well behaved, it cannot do 'clean' to save its life, it exists only to make sonic trouble and produce strange pungent tones full of resonances and cancellations.
+
+Just because it's not a proper EQ doesn't mean you can't have fun. Hope you enjoy AngleEQ!
 
 ############ Apicolypse is a re-release of my old API-style color adder, exacly as it was.
 
