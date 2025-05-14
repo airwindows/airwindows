@@ -25,7 +25,7 @@ Distortion: Distortion, Edge, Dirt, Mackity, ZOutputStage, Density2, Zoom, Densi
 
 Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither, NotJustAnotherCD, Beam, TapeDither, SpatializeDither, VinylDither, DoublePaul, Ditherbox, BuildATPDF, NodeDither, StudioTan, DitherMeTimbers, DitherMeDiskers, RawTimbers, RawGlitters, NaturalizeDither, HighGlossDither, DitherFloat
 
-Dynamics: Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
+Dynamics: BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
 Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -47,7 +47,7 @@ Tape: ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, 
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: DubPlate2, DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
+Utility: SoftClock, DubPlate2, DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, ContentHideD
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -350,6 +350,32 @@ And that's not even getting into when you do this, and then make the cutoffs fig
 And then dial it back to as subtle as you like, simply by making Treble, Mid and Bass be closer to each other.
 
 Have fun and don't say I didn't warn you :)
+
+############ BeziComp is a radical compressor that eliminates aliasing!
+
+Funny how many of my Bezier curve experiments make plugins with powerful weird colorations… and then, this one is the opposite.
+
+Or at least, appears to be the opposite… until you dig a little deeper, and unleash the madness.
+
+So this is an experiment. The full range of the experiment is available, meaning 'good' settings might occupy small and fussy settings on the controls. It's Bezier curves as the result of literal sound density, so it's a compressor without attack or release, just a curve that goes wild based on what's under it, audio-wise. There are three controls that can either harness this, or just turn it loose to be weird and unexpected.
+
+Comp drives the Bezier curve: it acts like your threshold. Everything you do ends up interacting not so much with 'compressed level', as if you can set the threshold and it'll be smoothly compressed below it… no, BeziComp works largely with HOW you hit this threshold and interact with it, because if you crank Comp way up it will wrap around not to a flat amplitude, but silence. That's intentional, because the output is meant to work with what you might call a 'live' curve rather than flatten things into a featureless dynamic line. So there's a start: Comp is how much BeziComp reacts, but it flattens out to silence, not audio, so you keep Comp in check (unless you are specifically just isolating attacks in Wet using this behavior).
+
+Speed is basically DeRez, except the range goes way deeper into subsonic frequencies than usual. It still goes way up into the audio band if you like. The key here is, this sets the energy level of the Bezier curve based on a loudness window that's directly related to the Bezier curve itself. So in theory, it would smooth things out completely, except we often don't use compressors for that, do we? We slow attacks and speed releases to get sonic effects. Turns out that's what happens here, because as BeziComp reacts, the reaction is slowed by having to analyse the audio, and so as you slow it more you get a broader and broader attack on the sound. If Speed is high, it's real twitchy and will jump on transients quickly, but if Speed is real slow, you have a slower 'swing' that can be timed to a beat and used to accentuate the groove. So far, basically normal (ish).
+
+Dry/Wet is basically your ratio control, but extra. Since BeziComp wraps around to dynamically invert, Dry/Wet is the only way you can get continued sound if you're pushing Comp real hard. Anything over about halfway gets you into territories that act like vari-mu tones: the 'squish' abilities here are very extreme. Even when keeping Comp and Speed in check, when using BeziComp on something like mix buss, it will probably still be almost all Dry, because that's the only way you can force it to have a relatively low ratio. Expect to not use full Wet in many cases, treat it like full wet is sort of 'isolated delta of the effect', a more exaggerated version of what you want.
+
+Now, here's where things start to go off the rails a bit.
+
+BeziComp is modulating a Bezier curve, not following an attack and release. Speed does profoundly affect this, but not in the sense of setting a maximum speed for the behavior, instead it fixes a tightest corner with which the curve can TURN… and it's constantly willing to use that sharpest corner, and it will apply that corner to anything.
+
+That means if you have full silence followed by full density, BeziComp will attack harder and compress more than if you have just as hot a peak, but less audio behind it. It is NOT a limiter, or even a normal compressor, If you have loud audio and then sudden silence, it will begin swooping up in loudness not instantly, but on the same curve (and minimum curve radius) and then it's gonna put another curve radius on there as it hits silence, rather than simply 'switching' to full volume.
+
+This means BeziComp is more free from aliasing than any other compressor, period, even at high Speed settings. Nothing you do can make it suddenly hit the threshold and start to turn down. The amplitude modulation IS the Bezier curve, meaning it can only contain harmonics below what you set, meaning no matter what you do it can't produce an artifact over its own curve radius. And at low Speed settings, that radius is VERY wide.
+
+So, BeziComp is both able to make unexpected moves (since its maximum gain-change speed is not an Attack or Release, but whatever its Bezier curve allows it to do) and also hard to hear (because you can't go by artifacts, there are none). It's disgustingly transparent but also capable of being quirky and throwing odd bursts of loudness or silence in there. No matter how extreme you make it act, it hides the extremeness through using the Bezier curve on dynamic modulation… and no matter how well it hides its moves, it's still capable of unexpected quirks, because of that fact that the attack and release speeds aren't really just 'speeds' but curve radiuses.
+
+We're not used to using compressors that do that. Time we learned, because I think it'll be good :)
 
 ############ BigAmp is a very flexible amplike thing with a taste for the bizarre.
 
@@ -3061,6 +3087,25 @@ Oh… because the delay works like you're speeding up the tape more and more, if
 
 I'll have more legit stuff coming soon. For now, have fun with the new monstrosity. It won't behave, but nothing you have will make noises like it, and that's always part of what I do :)
 
+
+############ kCosmos is infinite space ambient, or titanic hall.
+
+It's not the first time I've tried to make a space ambient type reverb, but there are a number of firsts here nevertheless.
+
+kCosmos uses the 5x5 Householder matrix design I've used in recent reverbs like kGuitarHall, but rather than just finding a new arrangement of delays, it's riding a wave of new developments in reverb development. Rather than taking days to evaluate ten or a hundred thousand possible reverbs before critical listening, I revamped the program I was using, to hundreds of MILLIONS per night. Since the method is not unlike the genetic algorithm in that it's trying variations against fitness functions, this wildly improved tone quality.
+
+I went from evaluating recurring delay lengths based on where they were in the reverb tail, to mapping out spacings between echo returns, and evaluating the distribution of these spacings. This changed the whole texture of the reverbs from 'artifical' to more of a natural, invisible spaciousness that blends in better.
+
+And I went from running an extra 3x3 matrix just for early reflections, to running no early reflections at all, to running a whole other parallel unfiltered 5x5 matrix… JUST for early reflections. That's the EarlyRF slider, which can be used in conjuction with Dry/Wet, predelay, and the Filter control, to help transition from the raw sounds to the deep reverb space.
+
+I've added an FIR brickwall filter for the main regenerating section (though not inside the regeneration) and worked out my own sinc interpolation, and have a plugin coming along those lines, and used it for the regenerating filter section. I've included a simple averaging for non-full-crank settings of this filter, so kCosmos can switch on the fly between extended highs at infinite sustain, and a maximal-depth version that gradually loses highs in a way that sounds like distance.
+
+And I've refined the concept of 'gradually restraining the infinite sustain when new audio is coming in', so that in normal use as an infinite verb, you can layer stuff all day without the reverb running away with you. It's so effective that subtle noises can have a slight feedback bias: when you start with very quiet layers, they will creep up in volume to about -18 dB total, at which point they'll balance. So it's an infinite reverb specifically designed for live performace as an ambient musician doing deep space explorations, and it'll adapt to the way you play audio into it.
+
+And lastly it has both CreamCoat style undersampling, and CrunchCoat style, at the same time. Meaning, set to full crank it uses the CreamCoat method for applying Bezier undersampling without artifacts, and as soon as you go away from Derez of 1.0, it switches to the continuous adjustment range of CrunchCoat, sometimes described as 'cursed digital derezzing'. Except this time, the Derez control is control-smoothed, and use of the filter tends to mask the 'cursed' quality completely. It's just that the giant reverbing space can be cleanly pitched up and down as you go, or dropped to an eerie rumble and murmur.
+
+There will be further experiments, but kCosmos stakes out a position as the most epic (and playable) Airwindows reverb. I hope you like it :)
+
 ############ kGuitarHall accentuates loud midrange skronk!
 
 What if reverb, but skronk?
@@ -4500,6 +4545,38 @@ If you wanted an Airwindows five-band, or seven-band, or 31-band EQ this is how 
 SmoothEQ is a simple three-band version of this. Now that I know I can do it, I can do a future ConsoleO (orchestral) and really do a good job of keeping the tone even through filtering. This is not a linear phase EQ but does not need to be, since everything is either perfect or some degree of the tone produced by extreme EQ isolations: whatever that sound, if you add only a tiny amount of filtering you automatically get only a tiny amount of that tone color. That's why I build it in that peculiar way, to get that result.
 
 It's going to be fun running with this technique and making stuff sound better, and I hope you like SmoothEQ :)
+
+############ SoftClock is a groove-oriented time reference.
+
+By special request, here's SoftClock before I can properly demo and use it. I'll have to play catch-up!
+
+SoftClock is a timing reference, like a click track… but far more powerful, because it does not synchronize machines so much as it synchronizes HUMANS. You put it on an unused track, and route it to another track AS AUDIO which you then record, in the arrange window as just another audio file. This can be done as you lay down an initial track while listening to the SoftClock output.
+
+What's the noise it makes? Frequency swoops, of a tone. It doesn't turn on and off, there's no attack or decay… a continuous tone which drops in volume as the pitch drops, but otherwise is just a drone… and this is your new click track.
+
+The next question is 'for the love of God, why would you do such a thing?' Because not only is this not a percussive sound, it doesn't even have a definable attack, and yet it proposes to replace click tracks, and in fact wants to become a timing reference for a world of 'human played' music where nothing is snapped to grid. There will be no grid, just human-played tracks riffing over SoftClock.
+
+The reason is, Entrainment. The 'swoop' of the tone mimicks the swing of a drummer's arm, or the strum of a guitar… or a dancer's body. It's digitally accurate, but directs the listener not toward an inhumanly accurate 'tick' but towards a motion… and when many players are moving in synchrony, that's when you have a powerful groove.
+
+But there's more. It's also a reference to where you are in the bar. The non-accented beats ebb down to a lower tone, and then ramp up again toward the One, which is the loudest and highest-pitched swoop of the tone. The amount of variation can be controlled, as can the basic pitch. Bear in mind the volume does modulate, but not in such a way as to produce an attack, even at the fastest speed settings. You dial it in to mimic the motion of your body playing, whether that's groovy or laid-back or hammering, and the non-accented beats always show you where you are in the bar, in an easy-to-hear way, even if the beats are themselves swung or the backbeat is slowed to add weight and bombast.
+
+What about those accented beats? Firstly, they're louder and higher-pitched, but they're also spaced out in an interesting way. You see, SoftClock can give you 4/4, or eighth notes, or four bars of 4/4… but it will also give you odd times beyond your humble sevens and elevens. It'll give variations on funny times when you've gone beyond 4/4. Here's the list, and how they're counted:
+
+1, 2, and 3 are counted as you'd expect. 4 is counted as 2,2. 5 is counted as 3,2 (in other words: one two three one two, with one being the accent). 6 is 3-3, and 7 is counted backwards from how Pink Floyd's 'Money' had it: 4-3, one two three four one two three. 8 is 4-4, 9 is 3-3-3, 10 is 5-5.
+
+Then things get more complicated. Note that Count numbers 8, 16, 24 and 32 are reserved for 4/4 with accents every eight beats, so you can have normal time but hear the unaccented beats guide you around one, two, three or four bars and highlight the first One.
+
+11 is counted four ways: 3332, 443, 551, 65.
+13 is counted three ways: 3334, 445, 553.
+17 is counted four ways: 44441, 5552, 773, 881. 
+19 is counted four ways: 44443, 5554, 775, 883.
+23 is counted four ways: 444443, 5558, 7772, 887.
+
+Count the accents and they'll come in these spacings. It's options for 'sub-phrases', repetitions or modulations up front and a variation for a turn-around, orienting you to the odd rhythm. The idea is for the repetitions to themselves be easily countable, and ideally seem to fit into a 'four sections but one is different' or 'three sections but one is different' model.
+
+This is in line with a music arrangement game I've been developing that's more likely to see life as a video-game now than as the card game I'd intended. Point being, SoftClock can do normal metronome things (except using entrainment rather than ticking at you) and orientation things as far as locating you in the bar, but it can also combine all that into a baffling proggy rhythm that nevertheless guides you into grooving and memorable riffs of many kinds. If the standard variations on freaky prime-numbered prog-meters aren't enough, you can play with Swing and the delay of BigBeat (accented beats) until you've gone full Beefheart: or, rather, full Magic Band and John French drum parts.
+
+Dive as deep as you like, or keep it more simple: SoftClock has you covered. You may be surprised at how much easier it is to hear, entrain, and orient yourself when using a click track that refuses to click. Remember, lay it down as a track, don't try to match it to a normal click, don't grid anything! SoftClock is for gridless grooves, and music that sounds human because it moves like humans. See how it feels.
 
 ############ SoftGate is a gate that can mute hiss and smooth sample tails.
 
