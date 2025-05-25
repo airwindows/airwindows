@@ -29,7 +29,7 @@ Dynamics: BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, Digital
 
 Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: SmoothEQ, Parametric, Stonefire, AngleEQ, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: SmoothEQ, Parametric, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -191,6 +191,16 @@ So, AngleEQ is a highpass for a treble band, a lowpass for a bass band, and a mi
 How does it sound? Very opaque, weirdly resonant, perhaps like the largest color-style EQ on the biggest most overdesigned mixing board ever. Nothing about it is well behaved, it cannot do 'clean' to save its life, it exists only to make sonic trouble and produce strange pungent tones full of resonances and cancellations.
 
 Just because it's not a proper EQ doesn't mean you can't have fun. Hope you enjoy AngleEQ!
+
+############ AngleFilter is the synth-style extension of AngleEQ.
+
+So while I do stuff like make new forms of reverb (going from 5x5 matrices to 6x6!) and try to invent genres of music, there's this funny little filter…
+
+AngleFilter is an offshoot of AngleEQ, which was too strange by itself but ended up turning into the EQs used in PointyGuitar and ChimeyGuitar. This is probably why those can get weird when you set the controls too strangely, and AngleFilter gets even weirder. It was meant to be a nonresonant filter, just a very steep brickwall type thing, but instead it does crazy things with phase around the cutoff, and grows steeper and more intense the more you lower that cutoff.
+
+Since it was so untameable I just put a full-on waveshaper on the output, so its excesses won't blow up to huge dB spikes. There's a Hard control, and what it does is it makes life hard for you in setting the other controls. Mostly it goes insane over lower bassy settings, but it can be set to produce a dull roar at higher frequencies too, and the whole design of the plugin is for letting you modulate the cutoff hyper-aggressively without problems.
+
+I'm working on things like very serious reverb upgrades, but sometimes you just gotta have fun too :)
 
 ############ Apicolypse is a re-release of my old API-style color adder, exacly as it was.
 
