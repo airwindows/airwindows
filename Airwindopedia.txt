@@ -9,7 +9,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 Ambience: ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
-Amp Sims: PointyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
+Amp Sims: PointyGuitar, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
 Bass: DubSub2, OrbitKick, Elliptical, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
@@ -29,7 +29,7 @@ Dynamics: BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, Digital
 
 Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: SmoothEQ, Parametric, Stonefire, AngleEQ, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: SmoothEQ, Parametric, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -191,6 +191,16 @@ So, AngleEQ is a highpass for a treble band, a lowpass for a bass band, and a mi
 How does it sound? Very opaque, weirdly resonant, perhaps like the largest color-style EQ on the biggest most overdesigned mixing board ever. Nothing about it is well behaved, it cannot do 'clean' to save its life, it exists only to make sonic trouble and produce strange pungent tones full of resonances and cancellations.
 
 Just because it's not a proper EQ doesn't mean you can't have fun. Hope you enjoy AngleEQ!
+
+############ AngleFilter is the synth-style extension of AngleEQ.
+
+So while I do stuff like make new forms of reverb (going from 5x5 matrices to 6x6!) and try to invent genres of music, there's this funny little filter…
+
+AngleFilter is an offshoot of AngleEQ, which was too strange by itself but ended up turning into the EQs used in PointyGuitar and ChimeyGuitar. This is probably why those can get weird when you set the controls too strangely, and AngleFilter gets even weirder. It was meant to be a nonresonant filter, just a very steep brickwall type thing, but instead it does crazy things with phase around the cutoff, and grows steeper and more intense the more you lower that cutoff.
+
+Since it was so untameable I just put a full-on waveshaper on the output, so its excesses won't blow up to huge dB spikes. There's a Hard control, and what it does is it makes life hard for you in setting the other controls. Mostly it goes insane over lower bassy settings, but it can be set to produce a dull roar at higher frequencies too, and the whole design of the plugin is for letting you modulate the cutoff hyper-aggressively without problems.
+
+I'm working on things like very serious reverb upgrades, but sometimes you just gotta have fun too :)
 
 ############ Apicolypse is a re-release of my old API-style color adder, exacly as it was.
 
@@ -910,6 +920,24 @@ The new settings are ‘Teac’ and ‘Mackie’. That’s right, old school hou
 You can still have your fancy desk models (only better: the ultrasonic filtering brings just the right additional distinction to the models) but now you can go cheap and get the tone and vibe of some house music warhorses. The sonic reshaping these low end models do is just the ticket for sculpting relentlessly synthetic sounds into an appealing result. And since it’s Channel… it won’t have the noise of the real ones, it won’t have weird extra colorations, it’ll honor more of your real mix as it reshapes it: sort of best of both worlds! You can always add funky colorations or noise to your digital mix, but you can’t remove that stuff from the real mixers. Channel9 will shape your sound in ‘classic’ ways but along Airwindows lines: getting out of the way so your sound is interfered with as little as possible.
 
 Channel9 can be used anywhere you like. If you’re doing a Console mix, I’d put it after ConsoleBuss. If you’re not doing a Console mix, you can literally do anything you want with it: it’s a subtle distortion/fattener combined with a set of careful tone shaping algorithms. Hope you like it!
+
+############ ChimeyGuitar is a supremely compressible instrument amp.
+
+Here's a followup to PointyGuitar. What if, instead of distort, the imaginary amp compressed?
+
+The tone stack works the same: in fact, it's exactly as it was in PointyGuitar, as is the cab simulation (a highpass and lowpass made out of AngleEQ, which is able to be very resonant and colorful). That's on purpose. I want it to be familiar, so the way the tone shaping works is exactly like PointyGuitar, and if you can dial one in, you can dial the other.
+
+But instead of the basic distortion as found in 'FireAmp', what's there? BeziComp. Not even a normal compressor, no, it's the new experimental one that turns the amplification factor into a Bezier curve… but BeziComp has one instance of itself in play. ChimeyGuitar?
+
+ChimeyGuitar has eight, at full crank.
+
+Stacking compressors like this isn't unheard of: the FMR Really Nice Compressor has 'Super Nice' mode, which cascades three compressors in series. It's just that ChimeyGuitar does eight, of a new design which I don't think existed until I started it. That also means it's on me to sort out what the strengths and weaknesses of this new kind of compression are, seeing as we have as many as eight of them in between every EQ stage now.
+
+First, it can react very quickly, but refuses to alias since it will not apply a volume 'corner' above its minimum radius. This matters less used inside ChimeyGuitar because plugins like this repeatedly filter out aliasing harmonics anyhow, but it's significant because usually as you have compression kick in you hear continued interaction between the sound, and the speed of attack. That lets you dial in a squished, unvarying sound by hearing that overtone as if it was a form of distortion (which it is), but BeziComp and ChimeyGuitar don't have any of that compression artifact at all.
+
+Instead, you'll hear an odd warble when you push ChimeyGuitar too far. It's similar to when you're using DeRez3: while Bezier curves can sound like a brickwall filter, there's an strange resonance associated with it. In a compressor, when pushed hard, we hear this as tremblings of the loudness, as if trying to squish the signal makes it more jittery. It can come off like an old Arp Pro Soloist trying to imitate a trombone, but the thing to bear in mind is that you can always back off the Compres control until it cleans up again. The transparency of BeziComp means it'll clean up a whole bunch while still being compressed.
+
+This is my go-to for articulate guitars and basses that don't seem to have saturation or distortion. It's got the flexibility of PointyGuitar, but super clean, or with strange new forms of saturation that are like derezzing. Hope you like it!
 
 ############ Chorus is a mono chorus, also works as a vibrato.
 
