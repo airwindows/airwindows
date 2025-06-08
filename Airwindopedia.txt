@@ -41,7 +41,7 @@ Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spi
 
 Stereo: Srsly3, Srsly2, Srsly, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTimer, Sidepass, SideDull
 
-Subtlety: Mastering, Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
+Subtlety: Mastering2, Mastering, Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
 
 Tape: ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
 
@@ -3398,6 +3398,18 @@ This is not for loudenating. This is for getting your PEAKS to slam in exactly t
 Lastly, Dither lets you bypass (for instance, if you're using a later dither to do 16 bit CD audio: this only does 24 bit dither for modern day work), or use Dark (same as Monitoring2), or Ten Nines (same as Monitoring3), or TPDFWide, PaulWide, or Not Just Another Dither (same as the original Monitoring). It's more or less in order of 'liveliness', and since it's 24 bit it's entirely subliminal and you can't really do any harm with it. If you've got a favorite, choose that, or try to get a sense of what suits a given project or track. Other adjustments will have more effect, but you get to choose among Dark/TenNines/TPDFWide/PaulWide/NJAD/Bypass as inspiration for your other adjustments. It's like Ditherbox, but up to date. If you don't want to be fancy and you're producing 24 bit output, just use TPDFWide, which is regulation TPDF that just happens to resist picking random values that act like it's mono dither :)
 
 This is not mastering as you know it, but it's Airwindows Mastering. I'm confident this will work for me (I won't be trying to master over headphones in real world use, though!) and if you were interested in getting things bent to your will in Airwindows Meter, you'll find this surprisingly effective. Have fun!
+
+############ Mastering2 is Airwindows style, and can do elliptical EQ now!
+
+This update to Mastering adds the control at the top, which is elliptical EQ, and defaults to zero like Glue does. Not hard to explain: it cuts bass in the side channel, as if you were mastering a vinyl record, though this has uses in nearly any stereo environment. Below a sufficiently low frequency, stereo bass becomes meaningless if it's stereo enough. Purely out of phase stuff will cancel out.
+
+High time I put it out: been working on the reverbs so much that I have to dig into the backlog for a proper plugin. It's also funny that the addition of Sidepass makes yet another control where it's quite hard to hear what it's doing. Mastering in general is a plugin all about doing little subtle hard-to-hear corrections, or dialing things in using Airwindows Meter. For instance, if you see red spikes on the slew section of Meter, Glue on this will let you control those without damaging apparent high-end. Scope lets you boost or ease back on detail again without apparently changing 'treble', and Girth enhances or eases back sub hugeness without apparently changing 'bass' that much.
+
+Then there's Drive which really doesn't act much like a saturation because it is really Airwindows Zoom, except in a multi-band version that applies to the 'EQ bands', except they're actually Kalman filters. And of course there's dither, but it's for modern formats so it is all to 24 bit. To the extent you can even register that, it goes in rough order of 'how much excitement and brightness and focus there is', up to Bypass which lets full floating point audio pass.
+
+You should probably run this in conjunction with Airwindows Meter, because it's all about massaging peak energy and 'invisible transients' to shape them exactly the way you want. My idea there was to be able to maximize that type of 'invisible' audio for the greatest possible effect, and I use Meter to observe what's happening rather than just trying to vibe it. The hope is, tuning that stuff just right, produces audio that immediately sounds correct, whether the obvious parts are loud or soft, bright or dark. It's not a replacement for remixing: I don't consider mastering to be doing the same things as mixing but differently. Mastering should be tailoring the spell cast by the mixer, and that's what Mastering2 is all about.
+
+Won't work for everybody, but for those who appreciate this plugin, having an invisible elliptical filter in there is probably a great upgrade. It all runs on the 64-bit dithered-to-32 floating point buss, so that's one more area you can dial in to be just right, within the plugin's processing. It ought to interact with Girth very nicely.
 
 ############ MatrixVerb is a wildly adjustable, strangely colorful reverb for deep and flexible spaces.
 
