@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -5522,6 +5522,32 @@ But if you extend the reverb tail in Verbity2, it's a hybrid. For each channel, 
 There are also adjustments to tone control: the Darkness control is replaced with a control for Mulch. This is meant to be a kind of naturalness factor: Verbity, like Galactic, tends to hang on to thunderous bass, as if it expands into huge caverns. Mulch means the sound can darken, but it can also absorb some of the extreme lows, mimicking a physical room made out of wood and plaster, not stone or concrete. I should be able to expand on this a lot.
 
 So Verbity2 is a new level of reverb realism from me. Looking forward to further developments of this!
+
+############ VerbSixes is a calibrated reference reverb plugin for Householder matrices.
+
+The only thing small about this is the interface, and there's a reason for that.
+
+VerbSixes applies Householder matrices to produce reverb, and it's named VerbSixes because it escalates things up to the point of 6x6 matrices. Normally you get 4x4 matrices in conjuction with allpass filters which smear out the sound (example: my CloudCoat plugin is made up entirely out of allpass filters, as is MV). There's a reason other matrix sizes aren't popular: firstly, you can use multiple 4x4 matricdes, and secondly the math is messier with other sizes. With the 4x4 you can feed all the delays into all the other delays at unity gain, just flipping the polarity.
+
+A 3x3 matrix gives you 27 distinct echoes out of 9 different delay lines.
+
+A 4x4 matrix gives you 256 distinct echoes out of 16 different delay lines, only 7 more, and the math is quite straightforward.
+
+A 5x5 matrix, which I've been doing for all the kVerbs I've made, uses only 9 more delays to get 3125 distinct echoes… which is an impressive jump from 256, especially when you're using the ability of a Householder matrix to feed back into the input again. That'll quickly get you lots of echo density, though it'll sound repetitive with smaller matrices like 3x3 or 4x4. 3125 with regen is a lot, though the math requires multiplications by -2 and 3.
+
+A 6x6 matrix gives you 46,656 distinct echoes BEFORE regen. And all the math is either unity gain or times 2… which of course we know as BitShiftGain, a math operation that only changes the exponent and doesn't alter the mantissa of the floating point number in any way (one of the secrets of the old Midiverb, which didn't have floating point math capable of complicated multiplication).
+
+VerbSixes comes with a built-in 6x6 matrix with a calibrated amount of regeneration, so it's the most recent generation of Householder matrices, prepared to produce extremely lush fluid reverb, in spite of having no filtering or allpasses whatsoever. In fact it has no controls either: it gives exactly one RT60 no matter what the reverb is.
+
+That's because VerbSixes is also set up to demonstrate 5x5 reverbs. And 4x4. And 3x3… and ANY COMBINATION of those things.
+
+So if you're making a 4x4 matrix, generating variations on them with my program IntoTheMatrix, you can compare the results knowing they're going to be consistent. They're also pretty consistent with the other matrix sizes (to the best of my ability) and a full range of delay lengths (smaller spaces will tend to get louder). It's a reference reverb maker, running all wet, and you can put it on an aux or just wallow in depth, and if you can get the VerbSixes code to compile and also run IntoTheMatrix, you can generate anything and try it.
+
+Or you can use it just as a plugin, which is a 6x6 giant hall… times an entirely separate 4x4 matrix, so call it 256 giant halls laid end to end.
+
+Just short of 12 MILLION echoes, even without regen. And they both have regen.
+
+I'll give you more reverbs based on this technique, but enjoy the new bigger-than-Cosmos space :)
 
 ############ Vibrato lets you vibrato, chorus, flange, and make odd FM noises.
 
