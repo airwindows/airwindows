@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -3050,6 +3050,23 @@ If you can transform how you hear away from 'frequency' and hear things in terms
 
 There will be more like this, as seen in the video. But Kalman is here now. You're welcome to begin playing with it. If it fights you, don't give up on it too easy. You might be able to do more with less. I think in many cases that inv/wet control is going to hover nearly exactly halfway. It won't take much to get this plugin doing obvious texture shaping. The rest is up to you…
 
+############ kBeyond is a recital hall.
+
+Turns out there's a technology to beat all AI: the genetic algorithm. GA. And if you know how to steer it, you can do anything.
+
+kBeyond is a first real example of what that can do. It's two different reverb matrices in one plugin, the first generating early reflections and the second expanding them into an eerily believable acoustic space.
+
+I did it by telling the genetic algorithm to try millions upon millions of different matrices, and evaluate them in various ways. Like, constructing all the end-result echoes from the Householder matrix, and then seeing how many of those combinations were primes (people are used to putting primes in the individual delays of the matrix, but it does nothing! It's how many of the end results add up to a prime). Or measuring the gaps between echo returns, and seeing if they're similar or all different (this increases the depth and naturalness of the sound). Or working out what the intersample peaking of the reverb will be, and preferring lower treble energy out of it. Or wanting the first echoes to happen almost immediately, which means there has to be a path through the matrix that is very short.
+
+I put together a small hall out of this, without too much furniture or weird architecture (yes, I can specify that too) and it's yours now. It's using a 3x3 and a 6x6 Householder matrix inside, so before it even gets into regeneration it's producing 1.25 million echo returns (previous kVerbs before VerbSixes? 3125, for not much if any CPU savings). It's using Bezier undersampling to sound right at high sample rates with no penalty in CPU to speak of. It's got just enough controls to adapt to many needs, but is essentially simple to use: keep things near default, tune your RT60 and loudness of early reflections and the filtering on the deep reverb to tune the brightness of the hall. Use Derez if you want to scale it up while darkening it.
+
+There will be more grandiose spaces (heck, you have VerbSixes for that). But in certain ways, there won't be more impressive spaces for a while, because whatever sound you put into kBeyond, it ought to sound like you've just gone on the road and into a hall and put up some mics. It's not even a texture, it's just there, invisibly, making things real.
+
+Compare this to, say, ClearCoat, and you can see why I didn't stop there.
+
+Expect more. All the reverbs kinda need an update now that I can do this…
+
+
 ############ kCathedral is a giant reverby space.
 
 Here's a neat little experiment! As always with the K reverbs, it's a dedicated sound space with its own unique algorithm… but there are some new twists making kCathedral a step along an interesting path. This is the first of the Bricasti-inspired reverbs!
@@ -5527,7 +5544,7 @@ So Verbity2 is a new level of reverb realism from me. Looking forward to further
 
 The only thing small about this is the interface, and there's a reason for that.
 
-VerbSixes applies Householder matrices to produce reverb, and it's named VerbSixes because it escalates things up to the point of 6x6 matrices. Normally you get 4x4 matrices in conjuction with allpass filters which smear out the sound (example: my CloudCoat plugin is made up entirely out of allpass filters, as is MV). There's a reason other matrix sizes aren't popular: firstly, you can use multiple 4x4 matricdes, and secondly the math is messier with other sizes. With the 4x4 you can feed all the delays into all the other delays at unity gain, just flipping the polarity.
+VerbSixes applies Householder matrices to produce reverb, and it's named VerbSixes because it escalates things up to the point of 6x6 matrices. Normally you get 4x4 matrices in conjuction with allpass filters which smear out the sound (example: my CloudCoat plugin is made up entirely out of allpass filters, as is MV). There's a reason other matrix sizes aren't popular: firstly, you can use multiple 4x4 matrices, and secondly the math is messier with other sizes. With the 4x4 you can feed all the delays into all the other delays at unity gain, just flipping the polarity.
 
 A 3x3 matrix gives you 27 distinct echoes out of 9 different delay lines.
 
