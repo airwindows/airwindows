@@ -35,13 +35,13 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
 Stereo: Srsly3, Srsly2, Srsly, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTimer, Sidepass, SideDull
 
-Subtlety: Mastering, Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
+Subtlety: Mastering2, Mastering, Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
 
 Tape: ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
 
@@ -3050,6 +3050,23 @@ If you can transform how you hear away from 'frequency' and hear things in terms
 
 There will be more like this, as seen in the video. But Kalman is here now. You're welcome to begin playing with it. If it fights you, don't give up on it too easy. You might be able to do more with less. I think in many cases that inv/wet control is going to hover nearly exactly halfway. It won't take much to get this plugin doing obvious texture shaping. The rest is up to you…
 
+############ kBeyond is a recital hall.
+
+Turns out there's a technology to beat all AI: the genetic algorithm. GA. And if you know how to steer it, you can do anything.
+
+kBeyond is a first real example of what that can do. It's two different reverb matrices in one plugin, the first generating early reflections and the second expanding them into an eerily believable acoustic space.
+
+I did it by telling the genetic algorithm to try millions upon millions of different matrices, and evaluate them in various ways. Like, constructing all the end-result echoes from the Householder matrix, and then seeing how many of those combinations were primes (people are used to putting primes in the individual delays of the matrix, but it does nothing! It's how many of the end results add up to a prime). Or measuring the gaps between echo returns, and seeing if they're similar or all different (this increases the depth and naturalness of the sound). Or working out what the intersample peaking of the reverb will be, and preferring lower treble energy out of it. Or wanting the first echoes to happen almost immediately, which means there has to be a path through the matrix that is very short.
+
+I put together a small hall out of this, without too much furniture or weird architecture (yes, I can specify that too) and it's yours now. It's using a 3x3 and a 6x6 Householder matrix inside, so before it even gets into regeneration it's producing 1.25 million echo returns (previous kVerbs before VerbSixes? 3125, for not much if any CPU savings). It's using Bezier undersampling to sound right at high sample rates with no penalty in CPU to speak of. It's got just enough controls to adapt to many needs, but is essentially simple to use: keep things near default, tune your RT60 and loudness of early reflections and the filtering on the deep reverb to tune the brightness of the hall. Use Derez if you want to scale it up while darkening it.
+
+There will be more grandiose spaces (heck, you have VerbSixes for that). But in certain ways, there won't be more impressive spaces for a while, because whatever sound you put into kBeyond, it ought to sound like you've just gone on the road and into a hall and put up some mics. It's not even a texture, it's just there, invisibly, making things real.
+
+Compare this to, say, ClearCoat, and you can see why I didn't stop there.
+
+Expect more. All the reverbs kinda need an update now that I can do this…
+
+
 ############ kCathedral is a giant reverby space.
 
 Here's a neat little experiment! As always with the K reverbs, it's a dedicated sound space with its own unique algorithm… but there are some new twists making kCathedral a step along an interesting path. This is the first of the Bricasti-inspired reverbs!
@@ -3398,6 +3415,18 @@ This is not for loudenating. This is for getting your PEAKS to slam in exactly t
 Lastly, Dither lets you bypass (for instance, if you're using a later dither to do 16 bit CD audio: this only does 24 bit dither for modern day work), or use Dark (same as Monitoring2), or Ten Nines (same as Monitoring3), or TPDFWide, PaulWide, or Not Just Another Dither (same as the original Monitoring). It's more or less in order of 'liveliness', and since it's 24 bit it's entirely subliminal and you can't really do any harm with it. If you've got a favorite, choose that, or try to get a sense of what suits a given project or track. Other adjustments will have more effect, but you get to choose among Dark/TenNines/TPDFWide/PaulWide/NJAD/Bypass as inspiration for your other adjustments. It's like Ditherbox, but up to date. If you don't want to be fancy and you're producing 24 bit output, just use TPDFWide, which is regulation TPDF that just happens to resist picking random values that act like it's mono dither :)
 
 This is not mastering as you know it, but it's Airwindows Mastering. I'm confident this will work for me (I won't be trying to master over headphones in real world use, though!) and if you were interested in getting things bent to your will in Airwindows Meter, you'll find this surprisingly effective. Have fun!
+
+############ Mastering2 is Airwindows style, and can do elliptical EQ now!
+
+This update to Mastering adds the control at the top, which is elliptical EQ, and defaults to zero like Glue does. Not hard to explain: it cuts bass in the side channel, as if you were mastering a vinyl record, though this has uses in nearly any stereo environment. Below a sufficiently low frequency, stereo bass becomes meaningless if it's stereo enough. Purely out of phase stuff will cancel out.
+
+High time I put it out: been working on the reverbs so much that I have to dig into the backlog for a proper plugin. It's also funny that the addition of Sidepass makes yet another control where it's quite hard to hear what it's doing. Mastering in general is a plugin all about doing little subtle hard-to-hear corrections, or dialing things in using Airwindows Meter. For instance, if you see red spikes on the slew section of Meter, Glue on this will let you control those without damaging apparent high-end. Scope lets you boost or ease back on detail again without apparently changing 'treble', and Girth enhances or eases back sub hugeness without apparently changing 'bass' that much.
+
+Then there's Drive which really doesn't act much like a saturation because it is really Airwindows Zoom, except in a multi-band version that applies to the 'EQ bands', except they're actually Kalman filters. And of course there's dither, but it's for modern formats so it is all to 24 bit. To the extent you can even register that, it goes in rough order of 'how much excitement and brightness and focus there is', up to Bypass which lets full floating point audio pass.
+
+You should probably run this in conjunction with Airwindows Meter, because it's all about massaging peak energy and 'invisible transients' to shape them exactly the way you want. My idea there was to be able to maximize that type of 'invisible' audio for the greatest possible effect, and I use Meter to observe what's happening rather than just trying to vibe it. The hope is, tuning that stuff just right, produces audio that immediately sounds correct, whether the obvious parts are loud or soft, bright or dark. It's not a replacement for remixing: I don't consider mastering to be doing the same things as mixing but differently. Mastering should be tailoring the spell cast by the mixer, and that's what Mastering2 is all about.
+
+Won't work for everybody, but for those who appreciate this plugin, having an invisible elliptical filter in there is probably a great upgrade. It all runs on the 64-bit dithered-to-32 floating point buss, so that's one more area you can dial in to be just right, within the plugin's processing. It ought to interact with Girth very nicely.
 
 ############ MatrixVerb is a wildly adjustable, strangely colorful reverb for deep and flexible spaces.
 
@@ -5510,6 +5539,32 @@ But if you extend the reverb tail in Verbity2, it's a hybrid. For each channel, 
 There are also adjustments to tone control: the Darkness control is replaced with a control for Mulch. This is meant to be a kind of naturalness factor: Verbity, like Galactic, tends to hang on to thunderous bass, as if it expands into huge caverns. Mulch means the sound can darken, but it can also absorb some of the extreme lows, mimicking a physical room made out of wood and plaster, not stone or concrete. I should be able to expand on this a lot.
 
 So Verbity2 is a new level of reverb realism from me. Looking forward to further developments of this!
+
+############ VerbSixes is a calibrated reference reverb plugin for Householder matrices.
+
+The only thing small about this is the interface, and there's a reason for that.
+
+VerbSixes applies Householder matrices to produce reverb, and it's named VerbSixes because it escalates things up to the point of 6x6 matrices. Normally you get 4x4 matrices in conjuction with allpass filters which smear out the sound (example: my CloudCoat plugin is made up entirely out of allpass filters, as is MV). There's a reason other matrix sizes aren't popular: firstly, you can use multiple 4x4 matrices, and secondly the math is messier with other sizes. With the 4x4 you can feed all the delays into all the other delays at unity gain, just flipping the polarity.
+
+A 3x3 matrix gives you 27 distinct echoes out of 9 different delay lines.
+
+A 4x4 matrix gives you 256 distinct echoes out of 16 different delay lines, only 7 more, and the math is quite straightforward.
+
+A 5x5 matrix, which I've been doing for all the kVerbs I've made, uses only 9 more delays to get 3125 distinct echoes… which is an impressive jump from 256, especially when you're using the ability of a Householder matrix to feed back into the input again. That'll quickly get you lots of echo density, though it'll sound repetitive with smaller matrices like 3x3 or 4x4. 3125 with regen is a lot, though the math requires multiplications by -2 and 3.
+
+A 6x6 matrix gives you 46,656 distinct echoes BEFORE regen. And all the math is either unity gain or times 2… which of course we know as BitShiftGain, a math operation that only changes the exponent and doesn't alter the mantissa of the floating point number in any way (one of the secrets of the old Midiverb, which didn't have floating point math capable of complicated multiplication).
+
+VerbSixes comes with a built-in 6x6 matrix with a calibrated amount of regeneration, so it's the most recent generation of Householder matrices, prepared to produce extremely lush fluid reverb, in spite of having no filtering or allpasses whatsoever. In fact it has no controls either: it gives exactly one RT60 no matter what the reverb is.
+
+That's because VerbSixes is also set up to demonstrate 5x5 reverbs. And 4x4. And 3x3… and ANY COMBINATION of those things.
+
+So if you're making a 4x4 matrix, generating variations on them with my program IntoTheMatrix, you can compare the results knowing they're going to be consistent. They're also pretty consistent with the other matrix sizes (to the best of my ability) and a full range of delay lengths (smaller spaces will tend to get louder). It's a reference reverb maker, running all wet, and you can put it on an aux or just wallow in depth, and if you can get the VerbSixes code to compile and also run IntoTheMatrix, you can generate anything and try it.
+
+Or you can use it just as a plugin, which is a 6x6 giant hall… times an entirely separate 4x4 matrix, so call it 256 giant halls laid end to end.
+
+Just short of 12 MILLION echoes, even without regen. And they both have regen.
+
+I'll give you more reverbs based on this technique, but enjoy the new bigger-than-Cosmos space :)
 
 ############ Vibrato lets you vibrato, chorus, flange, and make odd FM noises.
 
