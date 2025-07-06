@@ -29,7 +29,7 @@ Dynamics: BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, Digital
 
 Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: SmoothEQ, Parametric, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: SmoothEQ, Parametric, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -4091,6 +4091,24 @@ This plugin builds on 2017’s Pressure4 in numerous ways. I made it for my own 
 Pressure is a compressor with some unusual controls: there’s a ‘mewiness’ control that manages the way the ratio engages. You can dial in the intensity with which it ‘dynamic inverts’ and super-squishes the audio. It’s got a very wide speed range that can go real fast for a dense, distorted sort of sound, and it’s now got an additional control that nobody else has: ‘PawClaw’. This manages the way ‘mewiness’ handles transients, the intent being to extra-squish the spiky transients on ‘Paw’ or to let them through more on ‘Claw’. It’s very subtle, but it’s there to tailor the way stuff hits the compression in an entirely unique way. I don’t think anything else has a ‘PawClaw’ control, but now you have one :)
 
 The other part of Pressure5 is the output stage: Pressure5’s output control has the capacity to boost, into a built-in ClipOnly2. So it’s got that chunky, non-edgy hard clipping drive, that works at all sample rates, as part of the plugin. I intend Pressure5 to be used as a final buss comp/clip stage letting you dial in whatever you need, and then just taking the output and dithering it and being done. If you don’t want to go direct to final release, pad the output control so you’re not clipping anymore and ClipOnly2 will bypass itself like it’s not even there, serving as only a safety clipper.
+
+############ PrimeFIR is a mostly linear-phase brickwall with a taste for the bizarre!
+
+It's experiment time again! Inspired by the original filter in Baconpaul's Six Sines FM synth (which I recommend the heck out of, by the way) I got busy trying to make a similar type of filter. This is not how I usually filter. I have a great distaste for the smearyness of linear phase and the weird vibe the pre-ring gives off, but it was amazing in Six Sines, partly because of the incredibly tiny and CPU-efficient window, and so I had a whack at the problem.
+
+As usual I had a whack at it in pinata fashion, so rather than do it properly I came up with a way to implement the sinc function I needed for the brickwall, with a sin() based window, and for good measure I made the post-ring longer than the pre-ring just because I could, and made the window size variable so you could filter right down to moderately low frequencies, and that's the first part of the experiment.
+
+And then I thought it would be fun to calculate out the sinc function for what it would need to be if you took, not every sample, but every PRIME sample in that window, and used that. Only some of the samples, but across a much MUCH broader time window for the same number of filter positions. And also those positions wouldn't be reinforcing each other, because they're prime numbers. How hard could it be?
+
+So, when you turn the 'prime' control over 0.5, you get a completely different filter, if that's still an appropriate name for it. In theory it'll filter down lower, except it completely fails to be a brickwall. It's sort of like a shelf? And sort of phasey, and sort of diffuse, and it's yours to play with. You're hearing only a window of the prime-numbered samples peeking through and acting like it's a filter or something resembling one.
+
+And you've heard something like it before… because nearly twenty (!) years ago, my plugin Iron Oxide came out, and one of the things it does is build tone shaping out of prime-spaced successions of samples. No kidding: this technique hasn't really been played with since Iron Oxide and variations on BrightAmbience. Here it's a way to broaden the range of frequencies a brickwall filter can 'reach', except that since it's such a sparse set of filter coefficients, it stops working like any normal brickwall filter and turns into something else.
+
+If I wanted to make it be a similarly inefficient highpass, merely including an 'Inv/Wet' control wouldn't be enough, I'd need to doctor the filter so instead it was accepting the nonprimes and omitting the primes, run the brickwall, and then subtract that.
+
+This (not the prime version) is also what I've been trying for the last two reverbs, and some folks love that but others cried foul. I'm going to broaden my filter palette a bit for the reverbs, though now I know what this one can do (a sort of slick flashy effect) and will most likely turn to the Pear filter with nonlinearity for the next few reverbs. I've got about four different methods not counting simple biquads that will do different things. Even one (BezEQ!) that will produce gnarly artifacts for texture, for certain kinds of special effects.
+
+For now, enjoy playing with the experimental PrimeFIR. It might just lead to an interesting sort of highpass for livening up things as significant as lead vocals… more on that later. Have fun :)
 
 ############ PurestAir is a brightness experiment.
 
