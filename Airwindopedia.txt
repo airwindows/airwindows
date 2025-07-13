@@ -25,7 +25,7 @@ Distortion: Distortion, Edge, Dirt, Mackity, ZOutputStage, Density2, Zoom, Densi
 
 Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither, NotJustAnotherCD, Beam, TapeDither, SpatializeDither, VinylDither, DoublePaul, Ditherbox, BuildATPDF, NodeDither, StudioTan, DitherMeTimbers, DitherMeDiskers, RawTimbers, RawGlitters, NaturalizeDither, HighGlossDither, DitherFloat
 
-Dynamics: BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
+Dynamics: Pressure6, BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
 Effects: RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
@@ -4091,6 +4091,22 @@ This plugin builds on 2017’s Pressure4 in numerous ways. I made it for my own 
 Pressure is a compressor with some unusual controls: there’s a ‘mewiness’ control that manages the way the ratio engages. You can dial in the intensity with which it ‘dynamic inverts’ and super-squishes the audio. It’s got a very wide speed range that can go real fast for a dense, distorted sort of sound, and it’s now got an additional control that nobody else has: ‘PawClaw’. This manages the way ‘mewiness’ handles transients, the intent being to extra-squish the spiky transients on ‘Paw’ or to let them through more on ‘Claw’. It’s very subtle, but it’s there to tailor the way stuff hits the compression in an entirely unique way. I don’t think anything else has a ‘PawClaw’ control, but now you have one :)
 
 The other part of Pressure5 is the output stage: Pressure5’s output control has the capacity to boost, into a built-in ClipOnly2. So it’s got that chunky, non-edgy hard clipping drive, that works at all sample rates, as part of the plugin. I intend Pressure5 to be used as a final buss comp/clip stage letting you dial in whatever you need, and then just taking the output and dithering it and being done. If you don’t want to go direct to final release, pad the output control so you’re not clipping anymore and ClipOnly2 will bypass itself like it’s not even there, serving as only a safety clipper.
+
+############ Pressure6 refines the Pressure compressor and how it moves.
+
+Until now, the most recent compressor I've made was BeziComp, which takes compression and applies Bezier curves to clean up the dynamics until there are no artifacts at all… which is not what you usually get with compressors and limiters! I put it out as a plugin, and I used it in ChimeyGuitar, where it modulates things with perfect smoothness… and yet. Turns out it just doesn't seem to move right. Yes, perfect smoothness and freeness from artifact, but the way it moves seems odd.
+
+Back to the drawing board! (though as always, the previous try remains available to all, because who knows when it'll come in handy.)
+
+Pressure6 is the result of refactoring the Pressure compression algorithm as it's never been refactored before. It probably runs more efficiently on modern CPUs (which are happier doing math than they are keeping around extra variables). It also has an entirely new sound, from having isolated some of the strangest and trickiest qualities of the original Pressure. No longer is it as much of a mystery: in fact, I can probably do more variations on the theme. But this time around, my target was '2-buss Compressor'.
+
+This isn't the same as 'limiter' or 'loudenator'. It's more like 'glue' compressor. You can get it to squish things radically… if you drive it fully into dynamic inversion, as it's still a variation on Vari-Mu. But the ability to control its internal attack and release speeds (which has always been a distinguishing factor for Pressure) meant I could control how it imposed movement into a mix, way better than I'd ever been able to before.
+
+When used as a glue compressor, Pressure6 imparts dramatic movement to, and inside, a mix. Across all kinds of transient attacks, Pressure6 has a springy force that lets the music pounce forward eagerly, clarifying and heightening attacks. It highlights peak energy in a way compressors don't often manage. Used on drums, it lets sustaining elements of the kit hang steady, hypes dense parts of the beat like the snare, and heightens the impact of the kick.
+
+When you move towards lower ratios (this is a modified dry/wet) it blends in the dry signal but also starts to pad the output of the compressor, before it hits a soft saturation (like the original Pressure) to manage attack spikes. Doing this subtly raises the energy of those spikes even as you merge them with the dry signal using Ratio. The result is a compressor fit for 2-buss duties (for many, possibly not all, genres) which has a slightly touchy Compres control (as its behavior is dependent on you setting that just right) but an extremely forgiving and useful Ratio control, in which a broad range of settings sound good.
+
+I think this'll be useful and I hope you enjoy it :)
 
 ############ PrimeFIR is a mostly linear-phase brickwall with a taste for the bizarre!
 
