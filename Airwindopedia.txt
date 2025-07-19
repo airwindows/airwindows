@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -3133,6 +3133,18 @@ So basically this ought to work for the genre going forward. If you thought Crea
 I feel this ought to work really well for many purposes: just listen to it. It's still trying to be an Airwindows-style reverb rather than 'front and center instrument for making all possible sounds', but within the context of cathedral-style deep verb, I think this obliterates the first two AND completely abandons the 'over-simplified' thing I tried valiantly to make work.
 
 Hope you like it, let me know what you think.
+
+############ kCathedral4 is the Cathedral sound expressed as distant space.
+
+Flagship reverb takes whatever the newest technology is, and expresses it in the flashiest possible way. kCathedral's always been that for me, but the technology's come a long way over the years. And it turns out even kBeyond was only a preview, and there's major upgrades in store. kBeyond was using a literal million echo returns out of 3x3 and 6x6 matrices, but as the 3x3 only produces 27 echoes for early reflections I hadn't bothered to implemented it as a full Householder matrix (involving multiplications for non-4x4 matrices, and some of the feedback being inverted, and the 3x3 doesn't actually use local feedback even)
+
+And then I tried it… the video shows the two files I made to see what would happen, and the one done like it is in kBeyond is sparkly and complex, and the one with the real Householder is a quantum leap in depth and realism.
+
+And that's what's in kCathedral4, along with the Pear2 algorithm for filtering the deep-field reverb feed. It can do deep verb even unfiltered and bright, but when you mute it down to Bricasti degrees of darkness, you get a spaciousness that's beyond anything I've had.
+
+The algorithm is generated using the genetic algorithm: trying 'populations' of reverb constants and measuring how well they produce a result. I've learned things like how the total delay lengths of matrix paths added together are what need to add up to primes to sound right: it's been really complicated, but worth it. I'm going to have some amazing small rooms and loud halls too, chambers, you name it. We're just going back to the Cathedral, because it's a really cool sound. You could put choirs or pipe organs or Tangerine Dream in it, but you can also put whatever you like in there. Doesn't matter what you start with, you'll end up with sound you can bathe in.
+
+I'll keep working: remember, each reverb plugin is designed around a dedicated algorithm tuned using the Genetic Algorithm to optimize for whatever its vibe requires, so the character of each one will be different in ways beyond just adjustment of the parameters. You do get parameters though: regen, filter for the deep field, loudness of the early reflection section. I'm working on extending this and look forward to doing more with it, but kCathedral4 is for you to enjoy right now :)
 
 ############ kChamberAR is a take on tape echo into chamber echo.
 
