@@ -272,10 +272,7 @@ ComponentResult		kGuitarHall2::Reset(AudioUnitScope inScope, AudioUnitElement in
 	f6AL = f6BL = f6CL = f6DL = f6EL = f6FL = 0.0;
 	f6FR = f6LR = f6RR = f6XR = f6ZER = f6ZKR = 0.0;
 	avg6L = avg6R = 0.0;	
-	
-	for(int count = 0; count < predelay+2; count++) {aZL[count] = 0.0; aZR[count] = 0.0;}
-	countZ = 1;	
-	
+		
 	for (int x = 0; x < bez_total; x++) bez[x] = 0.0;
 	bez[bez_cycle] = 1.0;
 	
@@ -310,7 +307,16 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	if (derez < 0.0005) derez = 0.0005; if (derez > 1.0) derez = 1.0;
 	double freq = GetParameter( kParam_C )+0.02;
 	double earlyLoudness = GetParameter( kParam_D );
-	int adjPredelay = predelay*GetParameter( kParam_E )*derez;
+	int start = (int)(GetParameter( kParam_E ) * 27.0);
+	int ld3G = early[start]; 
+	int ld3H = early[start+1]; 
+	int ld3D = early[start+2]; 
+	int ld3A = early[start+3]; 
+	int ld3E = early[start+4]; 
+	int ld3I = early[start+5];
+	int ld3F = early[start+6];
+	int ld3B = early[start+7]; 
+	int ld3C = early[start+8];
 	double wet = GetParameter( kParam_F );
 		
 	while (nSampleFrames-- > 0) {
@@ -327,15 +333,7 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		bez[bez_InL] = inputSampleL; bez[bez_InR] = inputSampleR;
 		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
 			bez[bez_cycle] = 0.0;
-			
-			//predelay
-			aZL[countZ] = bez[bez_SampL];
-			aZR[countZ] = bez[bez_SampR];
-			countZ++; if (countZ < 0 || countZ > adjPredelay) countZ = 0;
-			bez[bez_SampL] = aZL[countZ-((countZ > adjPredelay)?adjPredelay+1:0)];
-			bez[bez_SampR] = aZR[countZ-((countZ > adjPredelay)?adjPredelay+1:0)];
-			//end predelay
-			
+						
 			inputSampleL = bez[bez_SampL];
 			inputSampleR = bez[bez_SampR];
 			
@@ -347,19 +345,19 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			a3FR[c3FR] = inputSampleR;// + (f3FR * reg3n);
 			a3IR[c3IR] = inputSampleR;// + (f3IR * reg3n);
 			
-			c3AL++; if (c3AL < 0 || c3AL > d3A) c3AL = 0;
-			c3BL++; if (c3BL < 0 || c3BL > d3B) c3BL = 0;
-			c3CL++; if (c3CL < 0 || c3CL > d3C) c3CL = 0;
-			c3CR++; if (c3CR < 0 || c3CR > d3C) c3CR = 0;
-			c3FR++; if (c3FR < 0 || c3FR > d3F) c3FR = 0;
-			c3IR++; if (c3IR < 0 || c3IR > d3I) c3IR = 0;
+			c3AL++; if (c3AL < 0 || c3AL > ld3A) c3AL = 0;
+			c3BL++; if (c3BL < 0 || c3BL > ld3B) c3BL = 0;
+			c3CL++; if (c3CL < 0 || c3CL > ld3C) c3CL = 0;
+			c3CR++; if (c3CR < 0 || c3CR > ld3C) c3CR = 0;
+			c3FR++; if (c3FR < 0 || c3FR > ld3F) c3FR = 0;
+			c3IR++; if (c3IR < 0 || c3IR > ld3I) c3IR = 0;
 			
-			double o3AL = a3AL[c3AL-((c3AL > d3A)?c3AL+1:0)];
-			double o3BL = a3BL[c3BL-((c3BL > d3B)?c3BL+1:0)];
-			double o3CL = a3CL[c3CL-((c3CL > d3C)?c3CL+1:0)];
-			double o3CR = a3CR[c3CR-((c3CR > d3C)?c3CR+1:0)];
-			double o3FR = a3FR[c3FR-((c3FR > d3F)?c3FR+1:0)];
-			double o3IR = a3IR[c3IR-((c3IR > d3I)?c3IR+1:0)];
+			double o3AL = a3AL[c3AL-((c3AL > ld3A)?c3AL+1:0)];
+			double o3BL = a3BL[c3BL-((c3BL > ld3B)?c3BL+1:0)];
+			double o3CL = a3CL[c3CL-((c3CL > ld3C)?c3CL+1:0)];
+			double o3CR = a3CR[c3CR-((c3CR > ld3C)?c3CR+1:0)];
+			double o3FR = a3FR[c3FR-((c3FR > ld3F)?c3FR+1:0)];
+			double o3IR = a3IR[c3IR-((c3IR > ld3I)?c3IR+1:0)];
 			
 			a3DL[c3DL] = (((o3BL + o3CL) * -2.0) + o3AL);
 			a3EL[c3EL] = (((o3AL + o3CL) * -2.0) + o3BL);
@@ -368,19 +366,19 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			a3ER[c3ER] = (((o3CR + o3IR) * -2.0) + o3FR);
 			a3HR[c3HR] = (((o3CR + o3FR) * -2.0) + o3IR);
 			
-			c3DL++; if (c3DL < 0 || c3DL > d3D) c3DL = 0;
-			c3EL++; if (c3EL < 0 || c3EL > d3E) c3EL = 0;
-			c3FL++; if (c3FL < 0 || c3FL > d3F) c3FL = 0;
-			c3BR++; if (c3BR < 0 || c3BR > d3B) c3BR = 0;
-			c3ER++; if (c3ER < 0 || c3ER > d3E) c3ER = 0;
-			c3HR++; if (c3HR < 0 || c3HR > d3H) c3HR = 0;
+			c3DL++; if (c3DL < 0 || c3DL > ld3D) c3DL = 0;
+			c3EL++; if (c3EL < 0 || c3EL > ld3E) c3EL = 0;
+			c3FL++; if (c3FL < 0 || c3FL > ld3F) c3FL = 0;
+			c3BR++; if (c3BR < 0 || c3BR > ld3B) c3BR = 0;
+			c3ER++; if (c3ER < 0 || c3ER > ld3E) c3ER = 0;
+			c3HR++; if (c3HR < 0 || c3HR > ld3H) c3HR = 0;
 			
-			double o3DL = a3DL[c3DL-((c3DL > d3D)?c3DL+1:0)];
-			double o3EL = a3EL[c3EL-((c3EL > d3E)?c3EL+1:0)];
-			double o3FL = a3FL[c3FL-((c3FL > d3F)?c3FL+1:0)];
-			double o3BR = a3BR[c3BR-((c3BR > d3B)?c3BR+1:0)];
-			double o3ER = a3ER[c3ER-((c3ER > d3E)?c3ER+1:0)];
-			double o3HR = a3HR[c3HR-((c3HR > d3H)?c3HR+1:0)];
+			double o3DL = a3DL[c3DL-((c3DL > ld3D)?c3DL+1:0)];
+			double o3EL = a3EL[c3EL-((c3EL > ld3E)?c3EL+1:0)];
+			double o3FL = a3FL[c3FL-((c3FL > ld3F)?c3FL+1:0)];
+			double o3BR = a3BR[c3BR-((c3BR > ld3B)?c3BR+1:0)];
+			double o3ER = a3ER[c3ER-((c3ER > ld3E)?c3ER+1:0)];
+			double o3HR = a3HR[c3HR-((c3HR > ld3H)?c3HR+1:0)];
 			
 			a3GL[c3GL] = (((o3EL + o3FL) * -2.0) + o3DL);
 			a3HL[c3HL] = (((o3DL + o3FL) * -2.0) + o3EL);
@@ -389,19 +387,19 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			a3DR[c3DR] = (((o3BR + o3HR) * -2.0) + o3ER);
 			a3GR[c3GR] = (((o3BR + o3ER) * -2.0) + o3HR);
 			
-			c3GL++; if (c3GL < 0 || c3GL > d3G) c3GL = 0;
-			c3HL++; if (c3HL < 0 || c3HL > d3H) c3HL = 0;
-			c3IL++; if (c3IL < 0 || c3IL > d3I) c3IL = 0;
-			c3AR++; if (c3AR < 0 || c3AR > d3A) c3AR = 0;
-			c3DR++; if (c3DR < 0 || c3DR > d3D) c3DR = 0;
-			c3GR++; if (c3GR < 0 || c3GR > d3G) c3GR = 0;
+			c3GL++; if (c3GL < 0 || c3GL > ld3G) c3GL = 0;
+			c3HL++; if (c3HL < 0 || c3HL > ld3H) c3HL = 0;
+			c3IL++; if (c3IL < 0 || c3IL > ld3I) c3IL = 0;
+			c3AR++; if (c3AR < 0 || c3AR > ld3A) c3AR = 0;
+			c3DR++; if (c3DR < 0 || c3DR > ld3D) c3DR = 0;
+			c3GR++; if (c3GR < 0 || c3GR > ld3G) c3GR = 0;
 			
-			double o3GL = a3GL[c3GL-((c3GL > d3G)?c3GL+1:0)];
-			double o3HL = a3HL[c3HL-((c3HL > d3H)?c3HL+1:0)];
-			double o3IL = a3IL[c3IL-((c3IL > d3I)?c3IL+1:0)];
-			double o3AR = a3AR[c3AR-((c3AR > d3A)?c3AR+1:0)];
-			double o3DR = a3DR[c3DR-((c3DR > d3D)?c3DR+1:0)];
-			double o3GR = a3GR[c3GR-((c3GR > d3G)?c3GR+1:0)];
+			double o3GL = a3GL[c3GL-((c3GL > ld3G)?c3GL+1:0)];
+			double o3HL = a3HL[c3HL-((c3HL > ld3H)?c3HL+1:0)];
+			double o3IL = a3IL[c3IL-((c3IL > ld3I)?c3IL+1:0)];
+			double o3AR = a3AR[c3AR-((c3AR > ld3A)?c3AR+1:0)];
+			double o3DR = a3DR[c3DR-((c3DR > ld3D)?c3DR+1:0)];
+			double o3GR = a3GR[c3GR-((c3GR > ld3G)?c3GR+1:0)];
 			
 			double inputSampleL = (o3GL + o3HL + o3IL)*0.03125;
 			double inputSampleR = (o3AR + o3DR + o3GR)*0.03125;

@@ -9,7 +9,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 Ambience: ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
-Amp Sims: PointyGuitar, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
+Amp Sims: PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
 Bass: DubSub2, OrbitKick, Elliptical, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
@@ -3971,6 +3971,30 @@ That’s your warning. Point is kind of like a ZVex Fuzz Factory or some such ma
 The reason I leave behaviors like that in there, in a plugin like Point, is that some people will want the full range of Point’s output, and will be following it with something to manage Point’s outbursts. If you’ve got it surrounded with plugins to tame it, I want you to be able to use Point settings near or at 1.0, and if you set it near that, you’ll immediately hear how intense it’s being so it won’t come as too much of a shock to discover it’s become an unstable isotope of transient destruction.
 
 :)
+
+############ PointyDeluxe devours all mix space.
+
+So this is one of the strangest things I've ever made. This is not normal.
+
+What happens with PointyGuitar is, successive stages of EQ and saturation zero in on the tone of a guitar sound, which is also gated and run through a separate filterbank that's just a very steep and intensely colorful cutoff. You get intense tone shaping and the type of sonic confinement a speaker cab would give, at least to some extent: and though the colorfulness twists the phase like a physical speaker might, there are no resonances or colorations so there's a sonority there.
+
+So what happens when you remove the gate and also the extra filterbank and use all the controls solely for fine-grained control over the core amp engine?
+
+Terrifying, bad things :)
+
+The thing is, PointyGuitar has the same number of bands PointyDeluxe has. Internally, it uses double the filter bands that you see in the controls. What it's doing is splitting the difference, smoothing the curve by applying intermediate settings.
+
+With PointyDeluxe, you get to make a radical departure from this, and boost or cut much narrower bands… but it's using the AngleEQ code, which is not as stable as you'd think. So, in the same way that PointyGuitar can get frisky when you twist the knobs too much, PointyDeluxe can be unstable… more. In particular, if you boost a band and try to cut the band just below it, things get real messy. If you boost any band, that's where added gain comes from: it'll track whatever is the loudest band and set the gain from that. If you cut, there's a built-in pad which attenuates the whole output based on which band is the least. Any band set to zero will silence the plugin. If you set bands to almost nearly zero… it will probably not stop PointyDeluxe from exploding with strange howling noise.
+
+Such are the fates of deeply abnormal plugins… at least Airwindows ones. This is one of the best plugins I've ever made for resembling a strange circuit board found in a drawer, which delivers wild pungent noises before it burns out. However, PointyDeluxe, being software, needn't burn out.
+
+When you try to use it for good, what happens? The bands are named after Slipperman's Distorted Guitars From Hell, which seems appropriate. You can take a suitable band like 'Pick' and crank it up until it chugs. You can cut back the top two bands, Fizz and Hell (as in 'road to hell, lose a windshield up here') until the chug isn't that grating. You'll have to dial back the lows as the boost affects them too, and you'll have to make two slopes, one dialing it back until you reach another boost at H Meat or L Meat, and then below that you'll have to dial it back more, though you can't go too steep. All the 'sweet spots' for every band will be very fussy. But because of the topology of PointyDeluxe, you can do it. It'll be trying to blow up every second… some settings will sound like the amp is literally melting… but it can be done, you can replicate the tonal signature of a huge high-gain amp in PointyDeluxe.
+
+And it sounds totally insane. What is it? It's distilled essence of heavy guitar without any blur or coloration. It's the searing intensity of a heavy amp (because of up to fifteen stages of EQ and overdrive) but this applies only to the chug, and because of how high gain distortion works, the full range sound is also constantly present around the edges. Functionally, that means the guitar sound gets shaped into chug or other sorts of intensity, but it also takes up ALL the space. There's no gloss to the highs, no rumble to the lows, it's stripped and bare in the weirdest way and three guitars of high gain PointyDeluxe might as well be a hundred.
+
+My hope was to make the densest, most brutal heavy guitar tone ever. Didn't occur to me to ask 'is there such a thing as too brutal?' until I'd fired it up, using a new budget extended range guitar I got just for the purpose, and heard what I'd made.
+
+There is probably such a thing as too brutal, and this is probably it. If you have a place for that, have fun!
 
 ############ PointyGuitar is a supremely adaptable instrument amp.
 

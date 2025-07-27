@@ -79,9 +79,6 @@ kGuitarHall2::kGuitarHall2(audioMasterCallback audioMaster) :
 	f6FR = f6LR = f6RR = f6XR = f6ZER = f6ZKR = 0.0;
 	avg6L = avg6R = 0.0;	
 	
-	for(int count = 0; count < predelay+2; count++) {aZL[count] = 0.0; aZR[count] = 0.0;}
-	countZ = 1;	
-	
 	for (int x = 0; x < bez_total; x++) bez[x] = 0.0;
 	bez[bez_cycle] = 1.0;
 	
@@ -180,7 +177,7 @@ void kGuitarHall2::getParameterName(VstInt32 index, char *text) {
 		case kParamB: vst_strncpy (text, "Derez", kVstMaxParamStrLen); break;
 		case kParamC: vst_strncpy (text, "Filter", kVstMaxParamStrLen); break;
 		case kParamD: vst_strncpy (text, "EarlyRF", kVstMaxParamStrLen); break;
-		case kParamE: vst_strncpy (text, "Predlay", kVstMaxParamStrLen); break;
+		case kParamE: vst_strncpy (text, "Positin", kVstMaxParamStrLen); break;
 		case kParamF: vst_strncpy (text, "Dry/Wet", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host

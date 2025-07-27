@@ -65,7 +65,7 @@ static CFStringRef kParameterAName = CFSTR("Regen");
 static CFStringRef kParameterBName = CFSTR("Derez");
 static CFStringRef kParameterCName = CFSTR("Filter");
 static CFStringRef kParameterDName = CFSTR("EarlyRf");
-static CFStringRef kParameterEName = CFSTR("Predlay");
+static CFStringRef kParameterEName = CFSTR("Positin");
 static CFStringRef kParameterFName = CFSTR("Dry/Wet");
 
 enum {
@@ -79,14 +79,14 @@ enum {
 	kNumberOfParameters=6
 };
 
-const int predelay = 15000;
-
 const int d3A = 2639; const int d3B = 4367; const int d3C = 4370;
 const int d3D = 2549; const int d3E = 2706; const int d3F = 3376;
 const int d3G = 2029; const int d3H = 2261; const int d3I = 2712;
 #define THREEBYTHREE true
 const int d6A = 1498; const int d6B = 82; const int d6C = 631; const int d6D = 762; const int d6E = 1241; const int d6F = 79; const int d6G = 821; const int d6H = 1315; const int d6I = 2261; const int d6J = 2029; const int d6K = 108; const int d6L = 2712; const int d6M = 305; const int d6N = 671; const int d6O = 13; const int d6P = 913; const int d6Q = 1999; const int d6R = 600; const int d6S = 826; const int d6T = 3376; const int d6U = 969; const int d6V = 2639; const int d6W = 915; const int d6X = 1173; const int d6Y = 1345; const int d6ZA = 4370; const int d6ZB = 4367; const int d6ZC = 2549; const int d6ZD = 227; const int d6ZE = 696; const int d6ZF = 1332; const int d6ZG = 1503; const int d6ZH = 627; const int d6ZI = 322; const int d6ZJ = 451; const int d6ZK = 2706; //18 to 377 ms, 4660 seat arena  
 #define SIXBYSIX true //4660-GEBBDI-HHDXFK6 kAlienSpaceship
+
+const int early[] = {13, 79, 82, 108, 227, 305, 322, 451, 600, 627, 631, 671, 696, 762, 821, 826, 913, 915, 969, 1173, 1241, 1315, 1332, 1345, 1498, 1503, 1999, 2029, 2261, 2549, 2639, 2706, 2712, 3376, 4367, 4370};
 
 #pragma mark ____kAlienSpaceship
 class kAlienSpaceship : public AUEffectBase
@@ -236,11 +236,7 @@ private:
 	double f6AL,f6BL,f6CL,f6DL,f6EL,f6FL;
 	double f6FR,f6LR,f6RR,f6XR,f6ZER,f6ZKR;
 	double avg6L,avg6R; 
-	
-	double aZL[predelay+5];
-	double aZR[predelay+5];
-	int countZ;
-	
+		
 	enum {
 		bez_AL,
 		bez_AR,

@@ -34,6 +34,8 @@ const int d3G = 575; const int d3H = 771; const int d3I = 1257;
 const int d6A = 121; const int d6B = 1396; const int d6C = 784; const int d6D = 184; const int d6E = 132; const int d6F = 434; const int d6G = 91; const int d6H = 144; const int d6I = 155; const int d6J = 771; const int d6K = 122; const int d6L = 1288; const int d6M = 191; const int d6N = 224; const int d6O = 108; const int d6P = 35; const int d6Q = 1257; const int d6R = 575; const int d6S = 504; const int d6T = 264; const int d6U = 198; const int d6V = 14; const int d6W = 246; const int d6X = 81; const int d6Y = 17; const int d6ZA = 71; const int d6ZB = 1015; const int d6ZC = 1258; const int d6ZD = 24; const int d6ZE = 7; const int d6ZF = 255; const int d6ZG = 72; const int d6ZH = 68; const int d6ZI = 117; const int d6ZJ = 1188; const int d6ZK = 339; //6 to 156 ms, 784 seat theater  
 #define SIXBYSIX true //784-EFCCFE-JLBY6 kGuitarHall2
 
+const int early[] = {7, 14, 17, 24, 35, 68, 71, 72, 81, 91, 108, 117, 121, 122, 132, 144, 155, 184, 191, 198, 224, 246, 255, 264, 339, 434, 504, 575, 771, 784, 1015, 1188, 1257, 1258, 1288, 1396};
+
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
@@ -177,11 +179,7 @@ private:
 	double f6AL,f6BL,f6CL,f6DL,f6EL,f6FL;
 	double f6FR,f6LR,f6RR,f6XR,f6ZER,f6ZKR;
 	double avg6L,avg6R; 
-	
-	double aZL[predelay+5];
-	double aZR[predelay+5];
-	int countZ;
-	
+		
 	enum {
 		bez_AL,
 		bez_AR,
