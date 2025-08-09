@@ -21,11 +21,40 @@ void kAlienSpaceship::processReplacing(float **inputs, float **outputs, VstInt32
 	double fdb6ck = (0.0009765625+0.0009765625+0.001953125)*0.3333333;
 	double reg6n = (1.0-pow(1.0-A,3.0))*fdb6ck;
 	//start this but pad it in the loop by volume of output?
-	double derez = B/overallscale;
-	derez = 1.0 / ((int)(1.0/derez));
-	if (derez < 0.0005) derez = 0.0005; if (derez > 1.0) derez = 1.0;
-	double derezFreq = pow(C,3.0)+0.01;
-	if (derezFreq > 1.0) derezFreq = 1.0;
+	
+	double derez = B*2.0;
+	bool stepped = true; // Revised Bezier Undersampling
+	if (derez > 1.0) {  // has full rez at center, stepped
+		stepped = false; // to left, continuous to right
+		derez = 1.0-(derez-1.0);
+	} //if it's set up like that it's the revised algorithm
+	derez = fmin(fmax(derez/overallscale,0.0005),1.0);
+	int bezFraction = (int)(1.0/derez);
+	double bezTrim = (double)bezFraction/(bezFraction+1.0);
+	if (stepped) { //this hard-locks derez to exact subdivisions of 1.0
+		derez = 1.0 / bezFraction;
+		bezTrim = 1.0-(derez*bezTrim);
+	} else { //this makes it match the 1.0 case using stepped
+		derez /= (2.0/pow(overallscale,0.5-((overallscale-1.0)*0.0375)));
+		bezTrim = 1.0-pow(derez*0.5,1.0/(derez*0.5));
+	} //the revision more accurately connects the bezier curves
+	
+	double derezFreq = C*2.0;
+	bool steppedFreq = true; // Revised Bezier Undersampling
+	if (derezFreq > 1.0) {  // has full rez at center, stepped
+		steppedFreq = false; // to left, continuous to right
+		derezFreq = 1.0-(derezFreq-1.0);
+	} //if it's set up like that it's the revised algorithm
+	derezFreq = fmin(fmax(derezFreq,0.0005),1.0); //note: no overallscale, already inside undersampling
+	int bezFreqFraction = (int)(1.0/derezFreq);
+	double bezFreqTrim = (double)bezFreqFraction/(bezFreqFraction+1.0);
+	if (steppedFreq) { //this hard-locks derez to exact subdivisions of 1.0
+		derezFreq = 1.0 / bezFreqFraction;
+		bezFreqTrim = 1.0-(derezFreq*bezFreqTrim);
+	} else { //this makes it match the 1.0 case using stepped
+		bezFreqTrim = 1.0-pow(derezFreq*0.5,1.0/(derezFreq*0.5));
+	} //the revision more accurately connects the bezier curves
+	
 	double earlyLoudness = D;
 	int start = (int)(E * 27.0);
 	int ld3G = early[start]; 
@@ -53,10 +82,13 @@ void kAlienSpaceship::processReplacing(float **inputs, float **outputs, VstInt32
 		bez[bez_SampR] += ((inputSampleR+bez[bez_InR]) * derez);
 		bez[bez_InL] = inputSampleL; bez[bez_InR] = inputSampleR;
 		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
-			bez[bez_cycle] = 0.0;
+			if (stepped) bez[bez_cycle] = 0.0;
+			else bez[bez_cycle] -= 1.0;
 						
-			inputSampleL = bez[bez_SampL];
-			inputSampleR = bez[bez_SampR];
+			inputSampleL = (bez[bez_SampL]+bez[bez_AvgInSampL])*0.5;
+			bez[bez_AvgInSampL] = bez[bez_SampL];
+			inputSampleR = (bez[bez_SampR]+bez[bez_AvgInSampR])*0.5;
+			bez[bez_AvgInSampR] = bez[bez_SampR];
 			
 			a3AL[c3AL] = inputSampleL;// + (f3AL * reg3n);
 			a3BL[c3BL] = inputSampleL;// + (f3BL * reg3n);
@@ -130,22 +162,28 @@ void kAlienSpaceship::processReplacing(float **inputs, float **outputs, VstInt32
 			bezF[bez_SampR] += ((inputSampleL+bezF[bez_InR]) * derezFreq);
 			bezF[bez_InL] = inputSampleL; bezF[bez_InR] = inputSampleR;
 			if (bezF[bez_cycle] > 1.0) { //hit the end point and we do a filter sample
-				bezF[bez_cycle] -= 1.0;
+				if (steppedFreq) bezF[bez_cycle] = 0.0;
+				else bezF[bez_cycle] -= 1.0;
 				bezF[bez_CL] = bezF[bez_BL];
 				bezF[bez_BL] = bezF[bez_AL];
-				bezF[bez_AL] = inputSampleL;
-				bezF[bez_SampL] = 0.0;
+				bezF[bez_AL] = (bezF[bez_SampL]+bezF[bez_AvgInSampL])*0.5;
+				bezF[bez_AvgInSampL] = bezF[bez_SampL]; bezF[bez_SampL] = 0.0;
 				bezF[bez_CR] = bezF[bez_BR];
 				bezF[bez_BR] = bezF[bez_AR];
-				bezF[bez_AR] = inputSampleR;
-				bezF[bez_SampR] = 0.0;
+				bezF[bez_AR] = (bezF[bez_SampR]+bezF[bez_AvgInSampR])*0.5;
+				bezF[bez_AvgInSampR] = bezF[bez_SampR]; bezF[bez_SampR] = 0.0;
 			}
-			double CBLfreq = (bezF[bez_CL]*(1.0-bezF[bez_cycle]))+(bezF[bez_BL]*bezF[bez_cycle]);
-			double BALfreq = (bezF[bez_BL]*(1.0-bezF[bez_cycle]))+(bezF[bez_AL]*bezF[bez_cycle]);
-			inputSampleL = (bezF[bez_BL]+(CBLfreq*(1.0-bezF[bez_cycle]))+(BALfreq*bezF[bez_cycle]))*0.5;
-			double CBRfreq = (bezF[bez_CR]*(1.0-bezF[bez_cycle]))+(bezF[bez_BR]*bezF[bez_cycle]);
-			double BARfreq = (bezF[bez_BR]*(1.0-bezF[bez_cycle]))+(bezF[bez_AR]*bezF[bez_cycle]);
-			inputSampleR = (bezF[bez_BR]+(CBRfreq*(1.0-bezF[bez_cycle]))+(BARfreq*bezF[bez_cycle]))*0.5;
+			double X = bezF[bez_cycle]*bezFreqTrim;
+			double CBLfreq = (bezF[bez_CL]*(1.0-X))+(bezF[bez_BL]*X);
+			double BALfreq = (bezF[bez_BL]*(1.0-X))+(bezF[bez_AL]*X);
+			double CBALfreq = (bezF[bez_BL]+(CBLfreq*(1.0-X))+(BALfreq*X))*0.0625;
+			double CBRfreq = (bezF[bez_CR]*(1.0-X))+(bezF[bez_BR]*X);
+			double BARfreq = (bezF[bez_BR]*(1.0-X))+(bezF[bez_AR]*X);
+			double CBARfreq = (bezF[bez_BR]+(CBRfreq*(1.0-X))+(BARfreq*X))*0.0625;
+			inputSampleL = CBALfreq+bezF[bez_AvgOutSampL];
+			bezF[bez_AvgOutSampL] = CBALfreq;
+			inputSampleR = CBARfreq+bezF[bez_AvgOutSampR];
+			bezF[bez_AvgOutSampR] = CBARfreq;
 			
 			double earlyReflectionL = inputSampleL;
 			double earlyReflectionR = inputSampleR; //for more alienness, early reflections are DeRezzed
@@ -448,14 +486,15 @@ void kAlienSpaceship::processReplacing(float **inputs, float **outputs, VstInt32
 			bez[bez_AR] = inputSampleR;
 			bez[bez_SampR] = 0.0;
 		}
-		double CBL = (bez[bez_CL]*(1.0-bez[bez_cycle]))+(bez[bez_BL]*bez[bez_cycle]);
-		double CBR = (bez[bez_CR]*(1.0-bez[bez_cycle]))+(bez[bez_BR]*bez[bez_cycle]);
-		double BAL = (bez[bez_BL]*(1.0-bez[bez_cycle]))+(bez[bez_AL]*bez[bez_cycle]);
-		double BAR = (bez[bez_BR]*(1.0-bez[bez_cycle]))+(bez[bez_AR]*bez[bez_cycle]);
-		double CBAL = (bez[bez_BL]+(CBL*(1.0-bez[bez_cycle]))+(BAL*bez[bez_cycle]))*-0.125;
-		double CBAR = (bez[bez_BR]+(CBR*(1.0-bez[bez_cycle]))+(BAR*bez[bez_cycle]))*-0.125;
-		inputSampleL = CBAL;
-		inputSampleR = CBAR;
+		double X = bez[bez_cycle]*bezTrim;
+		double CBL = (bez[bez_CL]*(1.0-X))+(bez[bez_BL]*X);
+		double CBR = (bez[bez_CR]*(1.0-X))+(bez[bez_BR]*X);
+		double BAL = (bez[bez_BL]*(1.0-X))+(bez[bez_AL]*X);
+		double BAR = (bez[bez_BR]*(1.0-X))+(bez[bez_AR]*X);
+		double CBAL = (bez[bez_BL]+(CBL*(1.0-X))+(BAL*X))*-0.0625;
+		double CBAR = (bez[bez_BR]+(CBR*(1.0-X))+(BAR*X))*-0.0625;
+		inputSampleL = CBAL+bez[bez_AvgOutSampL]; bez[bez_AvgOutSampL] = CBAL;
+		inputSampleR = CBAR+bez[bez_AvgOutSampR]; bez[bez_AvgOutSampR] = CBAR;
 		
 		inputSampleL = (inputSampleL * wet)+(drySampleL * (1.0-wet));
 		inputSampleR = (inputSampleR * wet)+(drySampleR * (1.0-wet));
@@ -493,11 +532,40 @@ void kAlienSpaceship::processDoubleReplacing(double **inputs, double **outputs, 
 	double fdb6ck = (0.0009765625+0.0009765625+0.001953125)*0.3333333;
 	double reg6n = (1.0-pow(1.0-A,3.0))*fdb6ck;
 	//start this but pad it in the loop by volume of output?
-	double derez = B/overallscale;
-	derez = 1.0 / ((int)(1.0/derez));
-	if (derez < 0.0005) derez = 0.0005; if (derez > 1.0) derez = 1.0;
-	double derezFreq = pow(C,3.0)+0.01;
-	if (derezFreq > 1.0) derezFreq = 1.0;
+	
+	double derez = B*2.0;
+	bool stepped = true; // Revised Bezier Undersampling
+	if (derez > 1.0) {  // has full rez at center, stepped
+		stepped = false; // to left, continuous to right
+		derez = 1.0-(derez-1.0);
+	} //if it's set up like that it's the revised algorithm
+	derez = fmin(fmax(derez/overallscale,0.0005),1.0);
+	int bezFraction = (int)(1.0/derez);
+	double bezTrim = (double)bezFraction/(bezFraction+1.0);
+	if (stepped) { //this hard-locks derez to exact subdivisions of 1.0
+		derez = 1.0 / bezFraction;
+		bezTrim = 1.0-(derez*bezTrim);
+	} else { //this makes it match the 1.0 case using stepped
+		derez /= (2.0/pow(overallscale,0.5-((overallscale-1.0)*0.0375)));
+		bezTrim = 1.0-pow(derez*0.5,1.0/(derez*0.5));
+	} //the revision more accurately connects the bezier curves
+	
+	double derezFreq = C*2.0;
+	bool steppedFreq = true; // Revised Bezier Undersampling
+	if (derezFreq > 1.0) {  // has full rez at center, stepped
+		steppedFreq = false; // to left, continuous to right
+		derezFreq = 1.0-(derezFreq-1.0);
+	} //if it's set up like that it's the revised algorithm
+	derezFreq = fmin(fmax(derezFreq,0.0005),1.0); //note: no overallscale, already inside undersampling
+	int bezFreqFraction = (int)(1.0/derezFreq);
+	double bezFreqTrim = (double)bezFreqFraction/(bezFreqFraction+1.0);
+	if (steppedFreq) { //this hard-locks derez to exact subdivisions of 1.0
+		derezFreq = 1.0 / bezFreqFraction;
+		bezFreqTrim = 1.0-(derezFreq*bezFreqTrim);
+	} else { //this makes it match the 1.0 case using stepped
+		bezFreqTrim = 1.0-pow(derezFreq*0.5,1.0/(derezFreq*0.5));
+	} //the revision more accurately connects the bezier curves
+	
 	double earlyLoudness = D;
 	int start = (int)(E * 27.0);
 	int ld3G = early[start]; 
@@ -525,10 +593,13 @@ void kAlienSpaceship::processDoubleReplacing(double **inputs, double **outputs, 
 		bez[bez_SampR] += ((inputSampleR+bez[bez_InR]) * derez);
 		bez[bez_InL] = inputSampleL; bez[bez_InR] = inputSampleR;
 		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
-			bez[bez_cycle] = 0.0;
+			if (stepped) bez[bez_cycle] = 0.0;
+			else bez[bez_cycle] -= 1.0;
 						
-			inputSampleL = bez[bez_SampL];
-			inputSampleR = bez[bez_SampR];
+			inputSampleL = (bez[bez_SampL]+bez[bez_AvgInSampL])*0.5;
+			bez[bez_AvgInSampL] = bez[bez_SampL];
+			inputSampleR = (bez[bez_SampR]+bez[bez_AvgInSampR])*0.5;
+			bez[bez_AvgInSampR] = bez[bez_SampR];
 			
 			a3AL[c3AL] = inputSampleL;// + (f3AL * reg3n);
 			a3BL[c3BL] = inputSampleL;// + (f3BL * reg3n);
@@ -602,22 +673,28 @@ void kAlienSpaceship::processDoubleReplacing(double **inputs, double **outputs, 
 			bezF[bez_SampR] += ((inputSampleL+bezF[bez_InR]) * derezFreq);
 			bezF[bez_InL] = inputSampleL; bezF[bez_InR] = inputSampleR;
 			if (bezF[bez_cycle] > 1.0) { //hit the end point and we do a filter sample
-				bezF[bez_cycle] -= 1.0;
+				if (steppedFreq) bezF[bez_cycle] = 0.0;
+				else bezF[bez_cycle] -= 1.0;
 				bezF[bez_CL] = bezF[bez_BL];
 				bezF[bez_BL] = bezF[bez_AL];
-				bezF[bez_AL] = inputSampleL;
-				bezF[bez_SampL] = 0.0;
+				bezF[bez_AL] = (bezF[bez_SampL]+bezF[bez_AvgInSampL])*0.5;
+				bezF[bez_AvgInSampL] = bezF[bez_SampL]; bezF[bez_SampL] = 0.0;
 				bezF[bez_CR] = bezF[bez_BR];
 				bezF[bez_BR] = bezF[bez_AR];
-				bezF[bez_AR] = inputSampleR;
-				bezF[bez_SampR] = 0.0;
+				bezF[bez_AR] = (bezF[bez_SampR]+bezF[bez_AvgInSampR])*0.5;
+				bezF[bez_AvgInSampR] = bezF[bez_SampR]; bezF[bez_SampR] = 0.0;
 			}
-			double CBLfreq = (bezF[bez_CL]*(1.0-bezF[bez_cycle]))+(bezF[bez_BL]*bezF[bez_cycle]);
-			double BALfreq = (bezF[bez_BL]*(1.0-bezF[bez_cycle]))+(bezF[bez_AL]*bezF[bez_cycle]);
-			inputSampleL = (bezF[bez_BL]+(CBLfreq*(1.0-bezF[bez_cycle]))+(BALfreq*bezF[bez_cycle]))*0.5;
-			double CBRfreq = (bezF[bez_CR]*(1.0-bezF[bez_cycle]))+(bezF[bez_BR]*bezF[bez_cycle]);
-			double BARfreq = (bezF[bez_BR]*(1.0-bezF[bez_cycle]))+(bezF[bez_AR]*bezF[bez_cycle]);
-			inputSampleR = (bezF[bez_BR]+(CBRfreq*(1.0-bezF[bez_cycle]))+(BARfreq*bezF[bez_cycle]))*0.5;
+			double X = bezF[bez_cycle]*bezFreqTrim;
+			double CBLfreq = (bezF[bez_CL]*(1.0-X))+(bezF[bez_BL]*X);
+			double BALfreq = (bezF[bez_BL]*(1.0-X))+(bezF[bez_AL]*X);
+			double CBALfreq = (bezF[bez_BL]+(CBLfreq*(1.0-X))+(BALfreq*X))*0.0625;
+			double CBRfreq = (bezF[bez_CR]*(1.0-X))+(bezF[bez_BR]*X);
+			double BARfreq = (bezF[bez_BR]*(1.0-X))+(bezF[bez_AR]*X);
+			double CBARfreq = (bezF[bez_BR]+(CBRfreq*(1.0-X))+(BARfreq*X))*0.0625;
+			inputSampleL = CBALfreq+bezF[bez_AvgOutSampL];
+			bezF[bez_AvgOutSampL] = CBALfreq;
+			inputSampleR = CBARfreq+bezF[bez_AvgOutSampR];
+			bezF[bez_AvgOutSampR] = CBARfreq;
 			
 			double earlyReflectionL = inputSampleL;
 			double earlyReflectionR = inputSampleR; //for more alienness, early reflections are DeRezzed
@@ -920,14 +997,15 @@ void kAlienSpaceship::processDoubleReplacing(double **inputs, double **outputs, 
 			bez[bez_AR] = inputSampleR;
 			bez[bez_SampR] = 0.0;
 		}
-		double CBL = (bez[bez_CL]*(1.0-bez[bez_cycle]))+(bez[bez_BL]*bez[bez_cycle]);
-		double CBR = (bez[bez_CR]*(1.0-bez[bez_cycle]))+(bez[bez_BR]*bez[bez_cycle]);
-		double BAL = (bez[bez_BL]*(1.0-bez[bez_cycle]))+(bez[bez_AL]*bez[bez_cycle]);
-		double BAR = (bez[bez_BR]*(1.0-bez[bez_cycle]))+(bez[bez_AR]*bez[bez_cycle]);
-		double CBAL = (bez[bez_BL]+(CBL*(1.0-bez[bez_cycle]))+(BAL*bez[bez_cycle]))*-0.125;
-		double CBAR = (bez[bez_BR]+(CBR*(1.0-bez[bez_cycle]))+(BAR*bez[bez_cycle]))*-0.125;
-		inputSampleL = CBAL;
-		inputSampleR = CBAR;
+		double X = bez[bez_cycle]*bezTrim;
+		double CBL = (bez[bez_CL]*(1.0-X))+(bez[bez_BL]*X);
+		double CBR = (bez[bez_CR]*(1.0-X))+(bez[bez_BR]*X);
+		double BAL = (bez[bez_BL]*(1.0-X))+(bez[bez_AL]*X);
+		double BAR = (bez[bez_BR]*(1.0-X))+(bez[bez_AR]*X);
+		double CBAL = (bez[bez_BL]+(CBL*(1.0-X))+(BAL*X))*-0.0625;
+		double CBAR = (bez[bez_BR]+(CBR*(1.0-X))+(BAR*X))*-0.0625;
+		inputSampleL = CBAL+bez[bez_AvgOutSampL]; bez[bez_AvgOutSampL] = CBAL;
+		inputSampleR = CBAR+bez[bez_AvgOutSampR]; bez[bez_AvgOutSampR] = CBAR;
 		
 		inputSampleL = (inputSampleL * wet)+(drySampleL * (1.0-wet));
 		inputSampleR = (inputSampleR * wet)+(drySampleR * (1.0-wet));

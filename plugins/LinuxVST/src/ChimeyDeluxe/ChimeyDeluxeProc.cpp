@@ -52,8 +52,8 @@ void ChimeyDeluxe::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	angG[10] = J+0.5;
 	if (pad > angG[10]) pad = angG[10];
 	if (drive < angG[10]) drive = angG[10];
-	angG[11] = 1.0;
-	angG[12] = 1.0;
+	angG[11] = (angG[10]+1.0)*0.5;
+	angG[12] = (angG[11]+1.0)*0.5;
 	double tune = 0.618+(overallscale*0.0055);	
 	double threshold = 1.0-(drive*0.23);
 	double adjSpd = ((drive*120.0)+50.0)*overallscale;
@@ -189,8 +189,8 @@ void ChimeyDeluxe::processDoubleReplacing(double **inputs, double **outputs, Vst
 	angG[10] = J+0.5;
 	if (pad > angG[10]) pad = angG[10];
 	if (drive < angG[10]) drive = angG[10];
-	angG[11] = 1.0;
-	angG[12] = 1.0;
+	angG[11] = (angG[10]+1.0)*0.5;
+	angG[12] = (angG[11]+1.0)*0.5;
 	double tune = 0.618+(overallscale*0.0055);	
 	double threshold = 1.0-(drive*0.23);
 	double adjSpd = ((drive*120.0)+50.0)*overallscale;

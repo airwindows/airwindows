@@ -302,9 +302,24 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	
 	double fdb6ck = (0.0009765625+0.0009765625+0.001953125)*0.3333333;
 	double reg6n = (1.0-pow(1.0-GetParameter( kParam_A ),3.0))*fdb6ck;
-	double derez = GetParameter( kParam_B )/overallscale;
-	derez = 1.0 / ((int)(1.0/derez));
-	if (derez < 0.0005) derez = 0.0005; if (derez > 1.0) derez = 1.0;
+	
+	double derez = GetParameter( kParam_B )*2.0;
+	bool stepped = true; // Revised Bezier Undersampling
+	if (derez > 1.0) {  // has full rez at center, stepped
+		stepped = false; // to left, continuous to right
+		derez = 1.0-(derez-1.0);
+	} //if it's set up like that it's the revised algorithm
+	derez = fmin(fmax(derez/overallscale,0.0005),1.0);
+	int bezFraction = (int)(1.0/derez);
+	double bezTrim = (double)bezFraction/(bezFraction+1.0);
+	if (stepped) { //this hard-locks derez to exact subdivisions of 1.0
+		derez = 1.0 / bezFraction;
+		bezTrim = 1.0-(derez*bezTrim);
+	} else { //this makes it match the 1.0 case using stepped
+		derez /= (2.0/pow(overallscale,0.5-((overallscale-1.0)*0.0375)));
+		bezTrim = 1.0-pow(derez*0.5,1.0/(derez*0.5));
+	} //the revision more accurately connects the bezier curves
+	
 	double freq = GetParameter( kParam_C )+0.02;
 	double earlyLoudness = GetParameter( kParam_D );
 	int start = (int)(GetParameter( kParam_E ) * 27.0);
@@ -332,10 +347,13 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		bez[bez_SampR] += ((inputSampleR+bez[bez_InR]) * derez);
 		bez[bez_InL] = inputSampleL; bez[bez_InR] = inputSampleR;
 		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
-			bez[bez_cycle] = 0.0;
+			if (stepped) bez[bez_cycle] = 0.0;
+			else bez[bez_cycle] -= 1.0;
 						
-			inputSampleL = bez[bez_SampL];
-			inputSampleR = bez[bez_SampR];
+			inputSampleL = (bez[bez_SampL]+bez[bez_AvgInSampL])*0.5;
+			bez[bez_AvgInSampL] = bez[bez_SampL];
+			inputSampleR = (bez[bez_SampR]+bez[bez_AvgInSampR])*0.5;
+			bez[bez_AvgInSampR] = bez[bez_SampR];
 			
 			a3AL[c3AL] = inputSampleL;// + (f3AL * reg3n);
 			a3BL[c3BL] = inputSampleL;// + (f3BL * reg3n);
@@ -408,7 +426,7 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			double earlyReflectionR = inputSampleR;
 			
 			if (freq < 1.0) {
-				double di = fabs(freq*(1.0+(inputSampleL))); if (di > 1.0) di = 1.0;
+				double di = fabs(freq*(1.0+(inputSampleL*0.125))); if (di > 1.0) di = 1.0;
 				double slew = ((inputSampleL - pear[prevSampL1]) + pear[prevSlewL1])*di*0.5;
 				pear[prevSampL1] = inputSampleL = (di * inputSampleL) + ((1.0-di) * (pear[prevSampL1] + pear[prevSlewL1]));
 				pear[prevSlewL1] = slew;
@@ -421,7 +439,7 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 				pear[prevSampL3] = inputSampleL = (di * inputSampleL) + ((1.0-di) * (pear[prevSampL3] + pear[prevSlewL3]));
 				pear[prevSlewL3] = slew;
 				
-				di = fabs(freq*(1.0+(inputSampleR))); if (di > 1.0) di = 1.0;
+				di = fabs(freq*(1.0+(inputSampleR*0.125))); if (di > 1.0) di = 1.0;
 				slew = ((inputSampleR - pear[prevSampR1]) + pear[prevSlewR1])*di*0.5;
 				pear[prevSampR1] = inputSampleR = (di * inputSampleR) + ((1.0-di) * (pear[prevSampR1] + pear[prevSlewR1]));
 				pear[prevSlewR1] = slew;
@@ -733,14 +751,15 @@ OSStatus		kGuitarHall2::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			bez[bez_AR] = inputSampleR;
 			bez[bez_SampR] = 0.0;
 		}
-		double CBL = (bez[bez_CL]*(1.0-bez[bez_cycle]))+(bez[bez_BL]*bez[bez_cycle]);
-		double CBR = (bez[bez_CR]*(1.0-bez[bez_cycle]))+(bez[bez_BR]*bez[bez_cycle]);
-		double BAL = (bez[bez_BL]*(1.0-bez[bez_cycle]))+(bez[bez_AL]*bez[bez_cycle]);
-		double BAR = (bez[bez_BR]*(1.0-bez[bez_cycle]))+(bez[bez_AR]*bez[bez_cycle]);
-		double CBAL = (bez[bez_BL]+(CBL*(1.0-bez[bez_cycle]))+(BAL*bez[bez_cycle]))*-0.125;
-		double CBAR = (bez[bez_BR]+(CBR*(1.0-bez[bez_cycle]))+(BAR*bez[bez_cycle]))*-0.125;
-		inputSampleL = CBAL;
-		inputSampleR = CBAR;
+		double X = bez[bez_cycle]*bezTrim;
+		double CBL = (bez[bez_CL]*(1.0-X))+(bez[bez_BL]*X);
+		double CBR = (bez[bez_CR]*(1.0-X))+(bez[bez_BR]*X);
+		double BAL = (bez[bez_BL]*(1.0-X))+(bez[bez_AL]*X);
+		double BAR = (bez[bez_BR]*(1.0-X))+(bez[bez_AR]*X);
+		double CBAL = (bez[bez_BL]+(CBL*(1.0-X))+(BAL*X))*-0.0625;
+		double CBAR = (bez[bez_BR]+(CBR*(1.0-X))+(BAR*X))*-0.0625;
+		inputSampleL = CBAL+bez[bez_AvgOutSampL]; bez[bez_AvgOutSampL] = CBAL;
+		inputSampleR = CBAR+bez[bez_AvgOutSampR]; bez[bez_AvgOutSampR] = CBAR;
 		
 		inputSampleL = (inputSampleL * wet)+(drySampleL * (1.0-wet));
 		inputSampleR = (inputSampleR * wet)+(drySampleR * (1.0-wet));

@@ -55,10 +55,10 @@
 
 // parameters
 static const float kDefaultValue_ParamA = 0.5;
-static const float kDefaultValue_ParamB = 1.0;
+static const float kDefaultValue_ParamB = 0.5;
 static const float kDefaultValue_ParamC = 0.5;
 static const float kDefaultValue_ParamD = 0.5;
-static const float kDefaultValue_ParamE = 0.0;
+static const float kDefaultValue_ParamE = 0.5;
 static const float kDefaultValue_ParamF = 0.5;
 
 static CFStringRef kParameterAName = CFSTR("Regen");
@@ -250,6 +250,10 @@ private:
 		bez_UnInR,
 		bez_SampL,
 		bez_SampR,
+		bez_AvgInSampL,
+		bez_AvgInSampR,
+		bez_AvgOutSampL,
+		bez_AvgOutSampR,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction

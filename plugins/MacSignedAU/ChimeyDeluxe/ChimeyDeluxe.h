@@ -151,18 +151,13 @@ public:
         virtual void		Reset();
 		
 		private: 
-		double angS[18][16];
-		double angA[18][16];
-		double angG[16];
+		double angS[18][15];
+		double angA[18][15];
+		double angG[15];
 		
 		double muComp;
 		double muSpd;
-		
-		double lastSample;
-		double intermediate[16];
-		bool wasPosClip;
-		bool wasNegClip;		
-		
+				
 		uint32_t fpd;
 	};
 };

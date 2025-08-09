@@ -55,10 +55,10 @@
 
 // parameters
 static const float kDefaultValue_ParamA = 0.5;
-static const float kDefaultValue_ParamB = 1.0;
+static const float kDefaultValue_ParamB = 0.5	;
 static const float kDefaultValue_ParamC = 0.5;
 static const float kDefaultValue_ParamD = 0.5;
-static const float kDefaultValue_ParamE = 0.0;
+static const float kDefaultValue_ParamE = 0.5;
 static const float kDefaultValue_ParamF = 0.5;
 
 static CFStringRef kParameterAName = CFSTR("Regen");
@@ -79,14 +79,13 @@ enum {
 	kNumberOfParameters=6
 };
 
-const int d3A = 1015; const int d3B = 1288; const int d3C = 1396;
-const int d3D = 784; const int d3E = 1188; const int d3F = 1258;
-const int d3G = 575; const int d3H = 771; const int d3I = 1257;
+const int d3A = 874; const int d3B = 1168; const int d3C = 1315;
+const int d3D = 590; const int d3E = 1060; const int d3F = 1162;
+const int d3G = 545; const int d3H = 574; const int d3I = 1146;
 #define THREEBYTHREE true
-const int d6A = 121; const int d6B = 1396; const int d6C = 784; const int d6D = 184; const int d6E = 132; const int d6F = 434; const int d6G = 91; const int d6H = 144; const int d6I = 155; const int d6J = 771; const int d6K = 122; const int d6L = 1288; const int d6M = 191; const int d6N = 224; const int d6O = 108; const int d6P = 35; const int d6Q = 1257; const int d6R = 575; const int d6S = 504; const int d6T = 264; const int d6U = 198; const int d6V = 14; const int d6W = 246; const int d6X = 81; const int d6Y = 17; const int d6ZA = 71; const int d6ZB = 1015; const int d6ZC = 1258; const int d6ZD = 24; const int d6ZE = 7; const int d6ZF = 255; const int d6ZG = 72; const int d6ZH = 68; const int d6ZI = 117; const int d6ZJ = 1188; const int d6ZK = 339; //6 to 156 ms, 784 seat theater  
-#define SIXBYSIX true //784-EFCCFE-JLBY6 kGuitarHall2
-
-const int early[] = {7, 14, 17, 24, 35, 68, 71, 72, 81, 91, 108, 117, 121, 122, 132, 144, 155, 184, 191, 198, 224, 246, 255, 264, 339, 434, 504, 575, 771, 784, 1015, 1188, 1257, 1258, 1288, 1396};
+const int d6A = 1315; const int d6B = 32; const int d6C = 459; const int d6D = 97; const int d6E = 358; const int d6F = 65; const int d6G = 47; const int d6H = 67; const int d6I = 1146; const int d6J = 312; const int d6K = 296; const int d6L = 17; const int d6M = 35; const int d6N = 1162; const int d6O = 1060; const int d6P = 355; const int d6Q = 56; const int d6R = 250; const int d6S = 161; const int d6T = 8; const int d6U = 45; const int d6V = 545; const int d6W = 543; const int d6X = 203; const int d6Y = 590; const int d6ZA = 24; const int d6ZB = 121; const int d6ZC = 35; const int d6ZD = 52; const int d6ZE = 874; const int d6ZF = 15; const int d6ZG = 574; const int d6ZH = 343; const int d6ZI = 24; const int d6ZJ = 102; const int d6ZK = 1168; //2 to 140 ms, 612 seat theater  
+#define SIXBYSIX true //612-GGCCGF-JLBX6 kGuitarHall2
+const int early[] = {8, 15, 17, 24, 24, 32, 35, 35, 45, 47, 52, 56, 65, 67, 97, 102, 121, 161, 203, 250, 296, 312, 343, 355, 358, 459, 543, 545, 574, 590, 874, 1060, 1146, 1162, 1168, 1315};
 
 #pragma mark ____kGuitarHall2
 class kGuitarHall2 : public AUEffectBase
@@ -250,6 +249,10 @@ public:
 		bez_UnInR,
 		bez_SampL,
 		bez_SampR,
+		bez_AvgInSampL,
+		bez_AvgInSampR,
+		bez_AvgOutSampL,
+		bez_AvgOutSampR,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction

@@ -23,23 +23,14 @@ ChimeyDeluxe::ChimeyDeluxe(audioMasterCallback audioMaster) :
 	I = 0.5;
 	J = 0.5;
 	
-	for(int x=0; x<21; x++) {
-		for(int y=0; y<11; y++) {
+	for(int x=0; x<17; x++) {
+		for(int y=0; y<14; y++) {
 			angSL[x][y] = 0.0;angAL[x][y] = 0.0;
 			angSR[x][y] = 0.0;angAR[x][y] = 0.0;
 		}
 	}
-	for(int y=0; y<11; y++) angG[y] = 0.0;
-	for(int count = 0; count < 36; count++) {
-		iirHPositionL[count] = 0.0;
-		iirHAngleL[count] = 0.0;
-		iirBPositionL[count] = 0.0;
-		iirBAngleL[count] = 0.0;
-		iirHPositionR[count] = 0.0;
-		iirHAngleR[count] = 0.0;
-		iirBPositionR[count] = 0.0;
-		iirBAngleR[count] = 0.0;
-	}
+	for(int y=0; y<14; y++) angG[y] = 0.0;
+
 	muCompL = 1.0;
 	muSpdL = 100.0;
 	muCompR = 1.0;

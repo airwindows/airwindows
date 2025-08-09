@@ -26,7 +26,7 @@ enum {
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
-const unsigned long kUniqueId = 'dblz';    //Change this to what the AU identity is!
+const unsigned long kUniqueId = 'dblx';    //Change this to what the AU identity is!
 
 class Dubly3 : 
     public AudioEffectX 

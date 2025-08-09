@@ -25,8 +25,6 @@ enum {
 	kNumParameters = 6
 }; //
 
-const int predelay = 15000;
-
 const int d3A = 2639; const int d3B = 4367; const int d3C = 4370;
 const int d3D = 2549; const int d3E = 2706; const int d3F = 3376;
 const int d3G = 2029; const int d3H = 2261; const int d3I = 2712;
@@ -193,6 +191,10 @@ private:
 		bez_UnInR,
 		bez_SampL,
 		bez_SampR,
+		bez_AvgInSampL,
+		bez_AvgInSampR,
+		bez_AvgOutSampL,
+		bez_AvgOutSampR,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction

@@ -13,10 +13,10 @@ kGuitarHall2::kGuitarHall2(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
 	A = 0.5;
-	B = 1.0;
+	B = 0.5;
 	C = 0.5;
 	D = 0.5;
-	E = 0.0;
+	E = 0.5;
 	F = 0.5;
 	
 	for(int x = 0; x < d3A+2; x++) {a3AL[x] = 0.0; a3AR[x] = 0.0;}

@@ -72,25 +72,17 @@ private:
     float I;
     float J;
 	
-	double angSL[18][12];
-	double angAL[18][12];
-	double iirHPositionL[37];
-	double iirHAngleL[37];
-	double iirBPositionL[37];
-	double iirBAngleL[37];
+	double angSL[18][15];
+	double angAL[18][15];
 	double muCompL;
 	double muSpdL;
 	
-	double angSR[18][12];
-	double angAR[18][12];
-	double iirHPositionR[37];
-	double iirHAngleR[37];
-	double iirBPositionR[37];
-	double iirBAngleR[37];
+	double angSR[18][15];
+	double angAR[18][15];
 	double muCompR;
 	double muSpdR;
 	
-	double angG[12];
+	double angG[15];
 		
 	uint32_t fpdL;
 	uint32_t fpdR;
