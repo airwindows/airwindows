@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kCathedral5, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -3145,6 +3145,32 @@ And that's what's in kCathedral4, along with the Pear2 algorithm for filtering t
 The algorithm is generated using the genetic algorithm: trying 'populations' of reverb constants and measuring how well they produce a result. I've learned things like how the total delay lengths of matrix paths added together are what need to add up to primes to sound right: it's been really complicated, but worth it. I'm going to have some amazing small rooms and loud halls too, chambers, you name it. We're just going back to the Cathedral, because it's a really cool sound. You could put choirs or pipe organs or Tangerine Dream in it, but you can also put whatever you like in there. Doesn't matter what you start with, you'll end up with sound you can bathe in.
 
 I'll keep working: remember, each reverb plugin is designed around a dedicated algorithm tuned using the Genetic Algorithm to optimize for whatever its vibe requires, so the character of each one will be different in ways beyond just adjustment of the parameters. You do get parameters though: regen, filter for the deep field, loudness of the early reflection section. I'm working on extending this and look forward to doing more with it, but kCathedral4 is for you to enjoy right now :)
+
+############ kCathedral5 lets you place yourself anywhere you like in the space.
+
+It's high time I moved on to the many other sonic spaces I've promised to cover, but there's reasons why this immediately follows kCathedral4.
+
+Yes, I'd hit upon using a proper Householder matrix for the 3x3 early reflection matrix, yes the work on the genetic algorithm was giving me better sounding reverbs every day, yes I'd worked out ways to measure the results for peak energy over RMS in a way that exactly translated to 'actually sounding far away rather than just a wash…
+
+But two problems remained, only one of which I was aware of.
+
+Firstly, early reflections were weird. They totally replaced pre-delay: the pre-delay included in kCathedral4 proved nearly useless as it was always too much delay, you couldn't turn it down and sit things in the reverb. Turns out I had to invent a whole new way of doing these early reflections, still taking only values from the big reverb for tonal consistency, but instead using a spread of delays, always in order of bigness, and not only 'the ones on the end' but any set of delays in the reverb. I thought it'd be best to only use the longest delays, but the need for less predelay forced my hand.
+
+At which point I learned that doing it let you move the sound source in the room, from right up next to the mic to back against the back wall. And every position sounded distinct and different, yet part of the space. And very low positions sounded like the instrument was right up against the wall, and adjusting that was just like moving drums out into the room and searching for that ideal spot, just like musicians and producers and engineers have done in real rooms back in the glory days of recording in studios…
+
+And then it turned out I'd been doing undersampling wrong this WHOLE time (which showed up as one user observed a funny burst of energy over 30k when recording at 96k, and wondered what it was)
+
+This was something I saw too. I'd run a test and at very high frequency there'd be this little ripple. And I experimented around and discovered: yes, and it comes from counting both the beginning sample and the end sample (of a downsampling Bezier calculation) rather than having them work as effectively the same sample. It involved a tricky little calculation, and then another for when the Bezier undersampling was continuous rather than stepped, and I ended up sorting it out.
+
+Only to learn that the Bezier filtering used exactly the same fix. And the Bezier de-rezzing, which is about the same thing but has a bitcrush… And that every single reverb plugin I had going, including ones I was actively using in music, required this fix on every plugin for every build and every platform and every version…
+
+I've been doing that. kCathedral5 shows you what is coming. I know I'm very interested in exploring the much smaller reverbs as people have asked for: kBeyond isn't representative because it doesn't have this fix and also doesn't have proper Householder early reflections, or the ability to position at different places in the room. It does have the 6x6 matrix, though. Think of it as on the right track but more bright and tizzy than it has to be, and without nearly enough depth compared to what is possible. Sheesh, every time I name a plugin 'kBestEverSeriouslyGuys' it's not a week before I find out something better to do…
+
+Having done a whole bunch of revising and fixing, I'm pretty tired, so I'm going to step away and take a little time just to decompress until early or mid September. I've got all my firewood in and my fuel oil paid for, so I can gather my strength for the further sprint that will be 'finishing up the component parts for, and the dedicated plugins of, ConsoleH' which I've promised by 2026.
+
+It seems like a great time to try to do something nice for people, so hang in there while I take a few weeks to breathe, and then it's going to be the universe of hip-hop sound reinvention. We'll probably see the 'Donuts' plugin. It's NOT going to be 'a clone of the thing Dilla used' because I don't do those, but all the same I think I can get the vibe.
+
+Talk to you folks in a few weeks, and I hope you enjoy kCathedral5. :)
 
 ############ kChamberAR is a take on tape echo into chamber echo.
 
