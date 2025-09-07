@@ -29,7 +29,7 @@ Dynamics: Pressure6, BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, P
 
 Effects: TakeCare, RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: SmoothEQ, Parametric, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: SmoothEQ2, SmoothEQ, Parametric, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -4732,6 +4732,24 @@ If you wanted an Airwindows five-band, or seven-band, or 31-band EQ this is how 
 SmoothEQ is a simple three-band version of this. Now that I know I can do it, I can do a future ConsoleO (orchestral) and really do a good job of keeping the tone even through filtering. This is not a linear phase EQ but does not need to be, since everything is either perfect or some degree of the tone produced by extreme EQ isolations: whatever that sound, if you add only a tiny amount of filtering you automatically get only a tiny amount of that tone color. That's why I build it in that peculiar way, to get that result.
 
 It's going to be fun running with this technique and making stuff sound better, and I hope you like SmoothEQ :)
+
+############ SmoothEQ2 is a wildly intuitive vibe EQ with clarity and intensity.
+
+Turns out there was a lot of potential in SmoothEQ.
+
+The idea here was to go to a four-band, like the parametric in ConsoleX, but instead of peaks and notches make it fully use shelves in the manner of the original SmoothEQ, so it can deliver ultimate clarity when subtlety is needed.
+
+Then, with the addition of a simpler type of filter (thanks to my livestream chat for knowing exactly how to specify these with great accuracy) it was possible to use even higher orders of filtering, even steeper crossovers for the shelves.
+
+Then, the question 'still Bessel, or go with Butterworth for the Q factor?' got drastically derailed by the stranger question 'why not just have all these Q factors vary according to the frequency settings of the bands?'
+
+Not the settings of the crossovers, no… the settings of the BANDS. Sweeping a band moves both crossovers bordering it. So does that move a flat shelf around, which sounds like a nice thing to do?
+
+Nope, because if you make the resonances track how close each center frequency is to each other, you get shelves that are also tilt EQs accentuating where in the band's travel the band is. So if you push high-mid up, the cutoff against high gets steeper, and the cutoff against low-mid gets shallower, more Bessel-like. Hard to explain. You have a frequency band that is also a tilt EQ for just that shelf, and that follows a center 'resonant peak' which isn't actually there at all.
+
+What does this mean? Try it. Boost or cut stuff, sweep the bands around, see how they act like sweepable resonances but are actually tilting shelves. If you can (I know it's unusual) and you have the four joystick design I had Yaeltex make for me, put fingers on all four joysticks and morph a sound into whatever you like on all bands simultaneously. The way this tracks your intentions with EQ, I think that would actually work. Or, any other way you can dedicate eight knobs to a bank of EQs, give that a try too. Or it'll work perfectly fine just in the DAW as sliders, it's just that this one lends itself incredibly well to hands-on control. There's controllers for cheap that have tiny vertical faders with panpots over them: have the vertical faders be band volumes, and the panpot above it be the corresponding frequency.
+
+This one I'm building into a Console version just for me :) but here it is, way earlier than that, so you can see what's going into a Console version that comes after the promised ConsoleH. I told you I was going to let you swap out many different Consoles on a track-by-track basis, and I've got ideas for just that. Hope you like the preview that is SmoothEQ2.
 
 ############ SoftClock is a groove-oriented time reference.
 
