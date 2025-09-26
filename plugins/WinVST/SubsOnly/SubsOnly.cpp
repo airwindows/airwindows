@@ -65,6 +65,9 @@ SubsOnly::SubsOnly(audioMasterCallback audioMaster) :
 	iirSampleXR = 0.0;
 	iirSampleYR = 0.0;
 	iirSampleZR = 0.0;
+
+	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
+	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	
     _canDo.insert("plugAsChannelInsert"); // plug-in can be used as a channel insert effect.
     _canDo.insert("plugAsSend"); // plug-in can be used as a send effect.
