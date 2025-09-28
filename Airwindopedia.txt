@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kGuitarHall2, kCathedral5, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kStation, kGuitarHall2, kCathedral5, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -3348,6 +3348,22 @@ You're not going to get the sheer scale of the difference off competing plugins,
 So even though it's purely software, the tube circuitry is plainly obvious as a contrast to the other three with their hybrid sound. How is this done? Partly through tuning everything (and selecting the actual reverb matrices) to suit the target sound. And partly through literally coding each of them a little differently, with kPlateD being by far the most distinct, its internal saturation algorithms being a whole different type.
 
 So if I can do this, why didn't I do it with kPlateA, B and C? For the same reason the Beatles album Abbey Road and the Pink Floyd album Dark Side of the Moon wouldn't automatically be better if they were cut on the old REDD consoles. Each sound serves a purpose. They convey distinct atmospheres, which your ear can learn and remember, so rather than struggling to adapt all manner of strange controls you can do 'this should have kPlateB' and then concentrate on what music's meant to go into it. Hope you enjoy the atmosphere of the classic kPlateD :)
+
+############ kStation is a realistic small room modeled after David Bowie's vocal reverb.
+
+Turns out I'm getting asked for smaller reverbs for a reason.
+
+Comparatively small spaces can merge with a sound in an interesting way. Rather than adding a sustain, the reverb can turn into part of the tone, thickening and glamorizing it to the point that, if you listened to just the dry signal, it'd be a bit shocking… especially if it was recorded in a dead place like a studio or under a tent of blankets or what have you.
+
+This is kStation, another extension of Airwindows reverbs in the direction I'm going. It takes everything you had in kGuitarHall2, the unusual midrange depth that comes across even on a cellphone, the ability to position your source in the virtual room, and it brings it to a tiny space that acts like a room, but isn't inspired by one.
+
+Because it's inspired by David Bowie's vocal sound on Station To Station, and that's probably one of the very first digital reverbs.
+
+No effort is being made to emulate vintage digital reverb things. None. There's a kind of darkness out of those old discrete converter circuits: that's handled instead by Bezier undersampling and filtering. You can get funny overtones by setting kStation's filter over 0.5 (like the undersampling, the Bezier filter goes two ways) but they aren't vintage-digital overtones, they're something else, something new. You get depth but it's not from modeling an antique reverb, it's from where Airwindows algorithm development is going.
+
+It's a unique algorithm, generated to do just this, and it's there to merge with your vocal (or whatever else you wish) and sound like a hit record. Specifically, it wants to give you the richness and sumptuousness of Bowie circa Station To Station. You'll have to sing or it won't work, but this and perhaps some Silken (also a nice trick for that stuff) and you can get a giant head start.
+
+There'll be more, but this one is gonna come in real handy. I hope you like it :)
 
 ############ LeadAmp is an amp sim with a clear, penetrating, vocal tone.
 
