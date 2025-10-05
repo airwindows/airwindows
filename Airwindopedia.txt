@@ -3928,6 +3928,20 @@ So if you liked weirdness like the Y series filters, this is your new toy. Back 
 
 Yeah, let's just call it 'more' ;)
 
+############ PearEQ is a six-band Pear-based graphic EQ.
+
+Turns out Pear wasn't done, even though it's been around for years. Pear, Pear2 for more nonlinearity, ConsoleMC and MD, ConsoleLA… all based on my filter derived from the Holt filter. I've done it by itself, I've stacked it up in the traditional way for making a steep multipole filter, I've taken those and made multi-band units nineteen Pear filters deep.
+
+And all of that was before I started fooling with AngleEQ, which is incapable of doing what Pear or a biquad filter can do. Angle screws up the phase so thoroughly that if you generate a a rolled-off filtered crossover, and subtract the filtered part from dry, the result still has just as much bass as before.
+
+So, the trick was reconstructing the original sound out of however many bands you have, EACH pole of the filter. Seemingly a pointless endeavor, but when you do that… suddenly the weird filter is able to filter both ways. So what happens if you do that to a biquad filter that was already able to do both things?
+
+You get SmoothEQ2. That's what I did to make the hyper-flexible filter with tilty shelves. And that's great, and Pear was just sitting there, waiting for me to try it.
+
+PearEQ combines an intensely natural, analog-sounding character around the sharpness of the filter edges, with a steepness otherwise unavailable to that kind of sound. It's a completely different sound from any other way you'd get that Q factor. You can take any biquad filter (for instance, any DAW standard filter) and crank up the steepness, and you'll get that sharp of a crossover… with obvious resonance, and it'll sound totally different. You can construct an isolator filter out of biquads and it'll still act different: Pear produces an increasingly steep drop-off into the stopband, and biquads won't. It's just different, and PearEQ lets you use that differentness either for great subtlety and natural tone… or to rip and boost frequencies WAY more than you should.
+
+Go right ahead, and I'll keep working on more out of all this, as it comes together and shows its usefulness :)
+
 ############ PhaseNudge is a phase rotator/allpass filter.
 
 Here’s a simple little utility plugin, Airwindows-ized. Except, it seems like this isn’t part of typical DAWs and plugin collections. Can’t see why, it’s a pretty basic tool.
