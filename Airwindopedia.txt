@@ -35,7 +35,7 @@ Lo-Fi: Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kStation, kGuitarHall2, kCathedral5, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kStation, kGuitarHall2, kCathedral5, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -3090,6 +3090,18 @@ If you can transform how you hear away from 'frequency' and hear things in terms
 
 There will be more like this, as seen in the video. But Kalman is here now. You're welcome to begin playing with it. If it fights you, don't give up on it too easy. You might be able to do more with less. I think in many cases that inv/wet control is going to hover nearly exactly halfway. It won't take much to get this plugin doing obvious texture shaping. The rest is up to you…
 
+############ kAlienSpaceship is an unreal realistic reverb.
+
+Though I've got a lot of other irons in the fire, my work on reverbs is ramping up something fierce. I'm going through millions of possibilities with a genetic algorithm, then turning around and rendering out dozens (hundreds!) of possibilities, mostly in the area of small spaces like kStation because they seem to lend themselves to what I'm doing.
+
+And then there's kAlienSpaceship. If I can top this one, I will, but the work's going in the other direction at the moment, so it's time to put out the mothership.
+
+This one works like recent reverbs do: it's got the same controls such as a DeRez and a Filter control that are both Bezier undersampling, and both two-way controls with 'brightest or highest sample rate' at the center, left for stepped and 'good sounding' tones, and right for an edgier, stranger take. Moving DeRez to the right can produce a 'pitch dive' effect while the effect is still running: move it to the left to cleanly shift the entire reverb down in pitch and make it even more massive in size.
+
+The intention here is to make an 'unreal realistic' reverb. Not a giant real-world room or hall, but more like an imaginary space… indeed, a spaceship. It's so vast it doesn't come off like a real room, but neither does it have the abstractness of something like Galactic. Instead it suggests strange geometries, unusual shapes. It was designed back when I was still debugging Bezier Undersampling, and had an odd alien quality, but it's up to speed with my current work so there's a realism factor too. It's synthetic and realistic, pristine but quirky. Not as much as the earlier reverb that acted like there was a slapback integrated into the reverb, but enough to produce a real character.
+
+Use kAlienSpaceship if you're looking for a very big hall or stadium, or if you're doing a synthetic thing and want to gloss it up with deep shimmery ambience, or if you need to expand something out into seemingly infinite space. You can set it to be many kinds of realistic, but it'll also go way beyond that into spaces that bear no relation to reality. I find it to have a fun imaginary quality that sits well with artifical sounds, but you needn't stop there. Hope you like the new spaceship to go play music in! :)
+
 ############ kBeyond is a recital hall.
 
 Turns out there's a technology to beat all AI: the genetic algorithm. GA. And if you know how to steer it, you can do anything.
@@ -3932,7 +3944,7 @@ Yeah, let's just call it 'more' ;)
 
 Turns out Pear wasn't done, even though it's been around for years. Pear, Pear2 for more nonlinearity, ConsoleMC and MD, ConsoleLA… all based on my filter derived from the Holt filter. I've done it by itself, I've stacked it up in the traditional way for making a steep multipole filter, I've taken those and made multi-band units nineteen Pear filters deep.
 
-And all of that was before I started fooling with AngleEQ, which is incapable of doing what Pear or a biquad filter can do. Angle screws up the phase so thoroughly that if you generate a a rolled-off filtered crossover, and subtract the filtered part from dry, the result still has just as much bass as before.
+And all of that was before I started fooling with AngleEQ, which is incapable of doing what Pear or a biquad filter can do. Angle screws up the phase so thoroughly that if you generate a rolled-off filtered crossover, and subtract the filtered part from dry, the result still has just as much bass as before.
 
 So, the trick was reconstructing the original sound out of however many bands you have, EACH pole of the filter. Seemingly a pointless endeavor, but when you do that… suddenly the weird filter is able to filter both ways. So what happens if you do that to a biquad filter that was already able to do both things?
 
