@@ -9,7 +9,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 Ambience: ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
-Amp Sims: PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
+Amp Sims: Cabs2, PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
 Bass: DubSub2, OrbitKick, Elliptical, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
@@ -730,6 +730,30 @@ And track through them because the whole rig (when using entirely Airwindows plu
 And then unlike any real amp situation… once you’ve got the final mix done, you can wiggle any of these parameters to where they need to be for THE SONG and tune the tones to best suit whatever else is there, even if it didn’t exist when you were tracking it. This is a freedom of the DAW experience (don’t go too overboard, make decisions!) and it might bring you the results you need.
 
 And all of this can be lightly applied to any other tone: real genuine amp-and-cab that was tracked too quietly or didn’t pick up enough mojo, synths, drums, you name it!
+
+############ Cabs2 uses really phasey filters to be a speaker cabinet simulator.
+
+There's been many ways I've tried to do speaker sounds. Impulse responses, dynamic modifications of them, filtering, loudness factors… lots of things to try. This is the second Cabs plugin but not even the second time I've tried this.
+
+This is the first time I ended up wanting to put it in a Console plugin and build it into the mixing desk, for every channel, though.
+
+Cabs2 follows the line of experimentation PointyGuitar began. It started with PointyGuitar, delivering an interesting amplike tone entirely in the box. Set that up right and it's very Airwindows: a pungent, intense tone that's not produced by ANY of the normal means for doing such a thing. It all comes out of a very poorly behaved filter (AngleFilter, specifically) that gets stacked up to make a strange sort of hyper-saturation that repeatedly filters between gain stages using the same method I use on SmoothEQ2 and the recent PearEQ. PointyGuitar was that used on the most unhinged, raw filter code I could make. The same code was used in the speaker simulation for PointyGuitar.
+
+PointyDeluxe went even harder. Those filters can go crazy if adjacent bands are too different, and PointyGuitar actually has twice the filter bands you'd think it does: there are buffer bands between the ones you use, smoothing the behavior. So PointyDeluxe takes away everything else and just gives you the bands, even if the sound's going to go crazy, and it removes the speaker simulating and tries to do it all with the one algorithm. PointyDeluxe is a monster, and either the worst sounding junk you could imagine, or the best brutal industrial metal sound you could imagine. This is because, when you distort the way PointyDeluxe does, you're hypersaturating a certain frequency range but that brings out all the other frequencies as well, until the result is the most mix-filling, dense, full-range sound ever. Two guitars and there's no room for anything else, automatically.
+
+Cabs2 is another pivot. Yes, you can 100 percent run it after PointyDeluxe and have a speaker-cabinet style tone again. It will roll highs like a speaker if you set it just right, and reshape bass like a big cabinet which will fatten it up and move some more air, and both of these are why you'd use a cabinet simulator… though in fact Cabs2 really is not a speaker model at all. What it's doing is showing you how the phase gets really messy and nonlinear when you're running into a real live speaker. It does all that phase messiness just from what kind of filter it is. If you always made filters to be 'correct' you'd never stumble across it in a million years.
+
+But… what if you just started using it for everything?
+
+And that's where it started showing its stuff. You see, exactly modeling a speaker cab is complicated. It's not simply an EQ curve, sure, but it's also about as complicated as simulating a live room, only tiny. These things honk and resonate and buzz and the cones break up in bell mode resonances you don't even get in a room, and when they do they burn up energy in physical distortion that affects the length of the resonance and its character. This is why I've been thinking in terms of trying to design a mix speaker that's more NS-10-ey than NS-10s: if you accept that the breakup modes of the flat-sided cone are part of how that classic mix speaker 'gets out of the way' of the sound so quickly, you can imagine other ways to do that.
+
+Meanwhile, Cabs2 is just a bandpass (a lowpass up high, and a highpass down low). But it's a bandpass that screws up the phase in both places, always to steepen the cutoff at all costs… but without any of the resonances or other behaviors from a real speaker. It's like a purified cab sim without the cab: just the essence, through a weird algorithm that shall we say is not phase linear. A 'bad EQ' in the way a speaker is a 'bad EQ'.
+
+We can use the heck out of this.
+
+So, now you don't have to put PointyGuitar on non-guitar-related things to shape the sound in this way. When ConsoleX came out, it had (and has) lowpass and highpass filters based on my Isolator filter, which is purely a biquad-designed 'real' filter for isolating frequencies without totally screwing them up. It's not phase-linear or anything, but Isolator is still relatively 'nice'. Cabs2 is not. It's kind of messy, but in a good way. I think it's very likely that if you want to go for highpasses and lowpasses in mix, you might want to not only cut away the frequencies but also transition in that speakerlike way, the colorful way. And I think it'll work great for any situation in mix where you're trying to sit something in the mix and have it feel right.
+
+This is finding its way into ConsoleX2, but I'm doing all I can to invent ConsoleH first: let me know if this speaker-y textural thing is also what you'd want for a hiphop Console, try it on stuff. I've not yet decided whether the highpass/lowpass role in that should be this type of filter, or something more radical like a BezEQ concept where it's gritty and reeks of bad digital. I feel like I can get enough abrasion into ConsoleH in other ways and maybe I should use this to unleash totally different textures. Hope you like it!
 
 ############ Calibre is a re-release of another old Character plugin.
 
@@ -3100,7 +3124,7 @@ This one works like recent reverbs do: it's got the same controls such as a DeRe
 
 The intention here is to make an 'unreal realistic' reverb. Not a giant real-world room or hall, but more like an imaginary space… indeed, a spaceship. It's so vast it doesn't come off like a real room, but neither does it have the abstractness of something like Galactic. Instead it suggests strange geometries, unusual shapes. It was designed back when I was still debugging Bezier Undersampling, and had an odd alien quality, but it's up to speed with my current work so there's a realism factor too. It's synthetic and realistic, pristine but quirky. Not as much as the earlier reverb that acted like there was a slapback integrated into the reverb, but enough to produce a real character.
 
-Use kAlienSpaceship if you're looking for a very big hall or stadium, or if you're doing a synthetic thing and want to gloss it up with deep shimmery ambience, or if you need to expand something out into seemingly infinite space. You can set it to be many kinds of realistic, but it'll also go way beyond that into spaces that bear no relation to reality. I find it to have a fun imaginary quality that sits well with artifical sounds, but you needn't stop there. Hope you like the new spaceship to go play music in! :)
+Use kAlienSpaceship if you're looking for a very big hall or stadium, or if you're doing a synthetic thing and want to gloss it up with deep shimmery ambience, or if you need to expand something out into seemingly infinite space. You can set it to be many kinds of realistic, but it'll also go way beyond that into spaces that bear no relation to reality. I find it to have a fun imaginary quality that sits well with artificial sounds, but you needn't stop there. Hope you like the new spaceship to go play music in! :)
 
 ############ kBeyond is a recital hall.
 
