@@ -54,46 +54,47 @@
 #pragma mark ____ConsoleX2Channel Parameters
 
 // parameters
-static const float kDefaultValue_ParamA = 0.5;
-static const float kDefaultValue_ParamB = 0.5;
+static const int kDefaultValue_ParamA = 1;
+static const float kDefaultValue_ParamB = 0.0;
 static const float kDefaultValue_ParamC = 0.5;
 static const float kDefaultValue_ParamD = 0.5;
 static const float kDefaultValue_ParamE = 0.5;
 static const float kDefaultValue_ParamF = 0.5;
 static const float kDefaultValue_ParamG = 0.5;
 static const float kDefaultValue_ParamH = 0.5;
-static const float kDefaultValue_ParamI = 1.0;
+static const float kDefaultValue_ParamI = 0.5;
 static const float kDefaultValue_ParamJ = 0.5;
-static const float kDefaultValue_ParamK = 0.5;
-static const float kDefaultValue_ParamL = 0.0;
-static const float kDefaultValue_ParamM = 1.0;
+static const float kDefaultValue_ParamK = 1.0;
+static const float kDefaultValue_ParamL = 0.5;
+static const float kDefaultValue_ParamM = 0.5;
 static const float kDefaultValue_ParamN = 0.0;
-static const float kDefaultValue_ParamO = 0.0;
-static const float kDefaultValue_ParamP = 0.5;
+static const float kDefaultValue_ParamO = 1.0;
+static const float kDefaultValue_ParamP = 0.0;
 static const float kDefaultValue_ParamQ = 0.5;
+static const float kDefaultValue_ParamR = 0.5;
 
-static CFStringRef kParameterAUnit = CFSTR("eq");
-static CFStringRef kParameterAName = CFSTR("High");
-static CFStringRef kParameterBName = CFSTR("HMid");
-static CFStringRef kParameterCName = CFSTR("LMid");
-static CFStringRef kParameterDName = CFSTR("Bass");
-static CFStringRef kParameterEUnit = CFSTR("freq");
-static CFStringRef kParameterEName = CFSTR("HighF");
-static CFStringRef kParameterFName = CFSTR("HMidF");
-static CFStringRef kParameterGName = CFSTR("LMidF");
-static CFStringRef kParameterHName = CFSTR("BassF");
-static CFStringRef kParameterIUnit = CFSTR("dyn");
-static CFStringRef kParameterIName = CFSTR("Thresh");
-static CFStringRef kParameterJName = CFSTR("Attack");
-static CFStringRef kParameterKName = CFSTR("Release");
-static CFStringRef kParameterLName = CFSTR("Gate");
-static CFStringRef kParameterMUnit = CFSTR("fltr");
-static CFStringRef kParameterMName = CFSTR("Lowpass");
-static CFStringRef kParameterNName = CFSTR("Hipass");
-static CFStringRef kParameterOUnit = CFSTR("+");
-static CFStringRef kParameterOName = CFSTR("More");
-static CFStringRef kParameterPName = CFSTR("Pan");
-static CFStringRef kParameterQName = CFSTR("Fader");
+static CFStringRef kParameterAName = CFSTR("Trim");
+static CFStringRef kParameterBName = CFSTR("More");
+static CFStringRef kParameterCUnit = CFSTR("eq");
+static CFStringRef kParameterCName = CFSTR("High");
+static CFStringRef kParameterDName = CFSTR("HMid");
+static CFStringRef kParameterEName = CFSTR("LMid");
+static CFStringRef kParameterFName = CFSTR("Bass");
+static CFStringRef kParameterGUnit = CFSTR("freq");
+static CFStringRef kParameterGName = CFSTR("HighF");
+static CFStringRef kParameterHName = CFSTR("HMidF");
+static CFStringRef kParameterIName = CFSTR("LMidF");
+static CFStringRef kParameterJName = CFSTR("BassF");
+static CFStringRef kParameterKUnit = CFSTR("dyn");
+static CFStringRef kParameterKName = CFSTR("Thresh");
+static CFStringRef kParameterLName = CFSTR("Attack");
+static CFStringRef kParameterMName = CFSTR("Release");
+static CFStringRef kParameterNName = CFSTR("Gate");
+static CFStringRef kParameterOUnit = CFSTR("fltr");
+static CFStringRef kParameterOName = CFSTR("Lowpass");
+static CFStringRef kParameterPName = CFSTR("Hipass");
+static CFStringRef kParameterQName = CFSTR("Pan");
+static CFStringRef kParameterRName = CFSTR("Fader");
 
 enum {
 	kParam_A =0,
@@ -113,8 +114,9 @@ enum {
 	kParam_O =14,
 	kParam_P =15,
 	kParam_Q =16,
+	kParam_R =17,
 	//Add your parameters here...
-	kNumberOfParameters=17
+	kNumberOfParameters=18
 };
 
 const int dscBuf = 256;
@@ -242,6 +244,23 @@ public:
 	double dBaPosR;
 	int dBaXR;
 	//Discontapeity
+	
+	double avg32L[33];
+	double avg32R[33];
+	double avg16L[17];
+	double avg16R[17];
+	double avg8L[9];
+	double avg8R[9];
+	double avg4L[5];
+	double avg4R[5];
+	double avg2L[3];
+	double avg2R[3];
+	int avgPos;
+	double lastSlewL;
+	double lastSlewR;
+	double lastSlewpleL;
+	double lastSlewpleR;
+	//preTapeHack	
 	
 	double panA;
 	double panB;

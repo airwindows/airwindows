@@ -70,12 +70,6 @@ ConsoleX2Buss::ConsoleX2Buss(AudioUnit component)
 	SetParameter(kParam_I, kDefaultValue_ParamI );
 	SetParameter(kParam_J, kDefaultValue_ParamJ );
 	SetParameter(kParam_K, kDefaultValue_ParamK );
-	SetParameter(kParam_L, kDefaultValue_ParamL );
-	SetParameter(kParam_M, kDefaultValue_ParamM );
-	SetParameter(kParam_N, kDefaultValue_ParamN );
-	SetParameter(kParam_O, kDefaultValue_ParamO );
-	SetParameter(kParam_P, kDefaultValue_ParamP );
-	SetParameter(kParam_Q, kDefaultValue_ParamQ );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -192,50 +186,6 @@ ComponentResult			ConsoleX2Buss::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamK;
                 break;
-            case kParam_L:
-                AUBase::FillInParameterName (outParameterInfo, kParameterLName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamL;
-                break;
-            case kParam_M:
-                AUBase::FillInParameterName (outParameterInfo, kParameterMName, false);
- 				outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
-				outParameterInfo.unitName = kParameterMUnit;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamM;
-                break;
-            case kParam_N:
-                AUBase::FillInParameterName (outParameterInfo, kParameterNName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamN;
-                break;
-            case kParam_O:
-                AUBase::FillInParameterName (outParameterInfo, kParameterOName, false);
-  				outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
-				outParameterInfo.unitName = kParameterOUnit;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamO;
-                break;
-            case kParam_P:
-                AUBase::FillInParameterName (outParameterInfo, kParameterPName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamP;
-                break;
-            case kParam_Q:
-                AUBase::FillInParameterName (outParameterInfo, kParameterQName, false);
-                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
-                outParameterInfo.minValue = 0.0;
-                outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamQ;
-                break;
            default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
@@ -327,40 +277,22 @@ ComponentResult		ConsoleX2Buss::Reset(AudioUnitScope inScope, AudioUnitElement i
 	
 	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
 	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
-	bezCompS[bez_cycle] = 1.0; bezGate = 2.0;
+	bezCompS[bez_cycle] = 1.0;
 	//Dynamics2
 	
-	for(int count = 0; count < 22; count++) {
-		iirHPositionL[count] = 0.0;
-		iirHAngleL[count] = 0.0;
-		iirHPositionR[count] = 0.0;
-		iirHAngleR[count] = 0.0;
-	}
-	hBypass = false;
+	for (int x = 0; x < 33; x++) {avg32L[x] = 0.0; avg32R[x] = 0.0;}
+	for (int x = 0; x < 17; x++) {avg16L[x] = 0.0; avg16R[x] = 0.0;}
+	for (int x = 0; x < 9; x++) {avg8L[x] = 0.0; avg8R[x] = 0.0;}
+	for (int x = 0; x < 5; x++) {avg4L[x] = 0.0; avg4R[x] = 0.0;}
+	for (int x = 0; x < 3; x++) {avg2L[x] = 0.0; avg2R[x] = 0.0;}
+	avgPos = 0;
+	lastSlewL = 0.0; lastSlewR = 0.0;
+	lastSlewpleL = 0.0; lastSlewpleR = 0.0;
+	//preTapeHack
 	
-	for(int count = 0; count < 14; count++) {
-		iirLPositionL[count] = 0.0;
-		iirLAngleL[count] = 0.0;
-		iirLPositionR[count] = 0.0;
-		iirLAngleR[count] = 0.0;
-	}
-	lBypass = false;	
-	//Cabs2
-	
-	for(int count = 0; count < dscBuf+2; count++) {
-		dBaL[count] = 0.0;
-		dBaR[count] = 0.0;
-	}
-	dBaPosL = 0.0;
-	dBaPosR = 0.0;
-	dBaXL = 1;
-	dBaXR = 1;
-	//Discontapeity
-		
-	lFreqA = 1.0; lFreqB = 1.0;
-	hFreqA = 0.0; hFreqB = 0.0;
 	panA = 0.5; panB = 0.5;
 	inTrimA = 0.5; inTrimB = 0.5;
+	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;
 	return noErr;
@@ -382,6 +314,8 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= GetSampleRate();
+	int spacing = floor(overallscale*2.0);
+	if (spacing < 2) spacing = 2; if (spacing > 32) spacing = 32;
 
 	double trebleGain = (GetParameter( kParam_A )-0.5)*2.0;
 	trebleGain = 1.0+(trebleGain*fabs(trebleGain)*fabs(trebleGain));
@@ -408,8 +342,8 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	highC[biq_freq] = highB[biq_freq] = highA[biq_freq] = fmax(fmin(highA[biq_freq],0.4999),0.00025);
 	double highFreq = pow(highF,3)*20000.0;
 	double omega = 2.0*M_PI*(highFreq/GetSampleRate());
-	double K = 2.0-cos(omega);
-	double highCoef = -sqrt((K*K)-1.0)+K;
+	double biqK = 2.0-cos(omega);
+	double highCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	highA[biq_reso] = 2.24697960 * highQ;
 	highB[biq_reso] = 0.80193774 * highQ;
 	highC[biq_reso] = 0.55495813 * highQ;
@@ -418,8 +352,8 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	midC[biq_freq] = midB[biq_freq] = midA[biq_freq] = fmax(fmin(midA[biq_freq],0.4999),0.00025);	
 	double midFreq = pow(midF,3)*20000.0;
 	omega = 2.0*M_PI*(midFreq/GetSampleRate());
-	K = 2.0-cos(omega);
-	double midCoef = -sqrt((K*K)-1.0)+K;
+	biqK = 2.0-cos(omega);
+	double midCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	midA[biq_reso] = 2.24697960 * midQ;
 	midB[biq_reso] = 0.80193774 * midQ;
 	midC[biq_reso] = 0.55495813 * midQ;
@@ -428,99 +362,90 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 	lowC[biq_freq] = lowB[biq_freq] = lowA[biq_freq] = fmax(fmin(lowA[biq_freq],0.4999),0.00025);
 	double lowFreq = pow(bassF,3)*20000.0;
 	omega = 2.0*M_PI*(lowFreq/GetSampleRate());
-	K = 2.0-cos(omega);
-	double lowCoef = -sqrt((K*K)-1.0)+K;
+	biqK = 2.0-cos(omega);
+	double lowCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	lowA[biq_reso] = 2.24697960 * lowQ;
 	lowB[biq_reso] = 0.80193774 * lowQ;
 	lowC[biq_reso] = 0.55495813 * lowQ;
 	
-	K = tan(M_PI * highA[biq_freq]);
-	double norm = 1.0 / (1.0 + K / highA[biq_reso] + K * K);
-	highA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * highA[biq_freq]);
+	double norm = 1.0 / (1.0 + biqK / highA[biq_reso] + biqK * biqK);
+	highA[biq_a0] = biqK * biqK * norm;
 	highA[biq_a1] = 2.0 * highA[biq_a0];
 	highA[biq_a2] = highA[biq_a0];
-	highA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highA[biq_b2] = (1.0 - K / highA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * highB[biq_freq]);
-	norm = 1.0 / (1.0 + K / highB[biq_reso] + K * K);
-	highB[biq_a0] = K * K * norm;
+	highA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highA[biq_b2] = (1.0 - biqK / highA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * highB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / highB[biq_reso] + biqK * biqK);
+	highB[biq_a0] = biqK * biqK * norm;
 	highB[biq_a1] = 2.0 * highB[biq_a0];
 	highB[biq_a2] = highB[biq_a0];
-	highB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highB[biq_b2] = (1.0 - K / highB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * highC[biq_freq]);
-	norm = 1.0 / (1.0 + K / highC[biq_reso] + K * K);
-	highC[biq_a0] = K * K * norm;
+	highB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highB[biq_b2] = (1.0 - biqK / highB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * highC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / highC[biq_reso] + biqK * biqK);
+	highC[biq_a0] = biqK * biqK * norm;
 	highC[biq_a1] = 2.0 * highC[biq_a0];
 	highC[biq_a2] = highC[biq_a0];
-	highC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highC[biq_b2] = (1.0 - K / highC[biq_reso] + K * K) * norm;
+	highC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highC[biq_b2] = (1.0 - biqK / highC[biq_reso] + biqK * biqK) * norm;
 	
-	K = tan(M_PI * midA[biq_freq]);
-	norm = 1.0 / (1.0 + K / midA[biq_reso] + K * K);
-	midA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * midA[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midA[biq_reso] + biqK * biqK);
+	midA[biq_a0] = biqK * biqK * norm;
 	midA[biq_a1] = 2.0 * midA[biq_a0];
 	midA[biq_a2] = midA[biq_a0];
-	midA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midA[biq_b2] = (1.0 - K / midA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * midB[biq_freq]);
-	norm = 1.0 / (1.0 + K / midB[biq_reso] + K * K);
-	midB[biq_a0] = K * K * norm;
+	midA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midA[biq_b2] = (1.0 - biqK / midA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * midB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midB[biq_reso] + biqK * biqK);
+	midB[biq_a0] = biqK * biqK * norm;
 	midB[biq_a1] = 2.0 * midB[biq_a0];
 	midB[biq_a2] = midB[biq_a0];
-	midB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midB[biq_b2] = (1.0 - K / midB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * midC[biq_freq]);
-	norm = 1.0 / (1.0 + K / midC[biq_reso] + K * K);
-	midC[biq_a0] = K * K * norm;
+	midB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midB[biq_b2] = (1.0 - biqK / midB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * midC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midC[biq_reso] + biqK * biqK);
+	midC[biq_a0] = biqK * biqK * norm;
 	midC[biq_a1] = 2.0 * midC[biq_a0];
 	midC[biq_a2] = midC[biq_a0];
-	midC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midC[biq_b2] = (1.0 - K / midC[biq_reso] + K * K) * norm;
+	midC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midC[biq_b2] = (1.0 - biqK / midC[biq_reso] + biqK * biqK) * norm;
 	
-	K = tan(M_PI * lowA[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowA[biq_reso] + K * K);
-	lowA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * lowA[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowA[biq_reso] + biqK * biqK);
+	lowA[biq_a0] = biqK * biqK * norm;
 	lowA[biq_a1] = 2.0 * lowA[biq_a0];
 	lowA[biq_a2] = lowA[biq_a0];
-	lowA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowA[biq_b2] = (1.0 - K / lowA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * lowB[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowB[biq_reso] + K * K);
-	lowB[biq_a0] = K * K * norm;
+	lowA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowA[biq_b2] = (1.0 - biqK / lowA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * lowB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowB[biq_reso] + biqK * biqK);
+	lowB[biq_a0] = biqK * biqK * norm;
 	lowB[biq_a1] = 2.0 * lowB[biq_a0];
 	lowB[biq_a2] = lowB[biq_a0];
-	lowB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowB[biq_b2] = (1.0 - K / lowB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * lowC[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowC[biq_reso] + K * K);
-	lowC[biq_a0] = K * K * norm;
+	lowB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowB[biq_b2] = (1.0 - biqK / lowB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * lowC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowC[biq_reso] + biqK * biqK);
+	lowC[biq_a0] = biqK * biqK * norm;
 	lowC[biq_a1] = 2.0 * lowC[biq_a0];
 	lowC[biq_a2] = lowC[biq_a0];
-	lowC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowC[biq_b2] = (1.0 - K / lowC[biq_reso] + K * K) * norm;
+	lowC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowC[biq_b2] = (1.0 - biqK / lowC[biq_reso] + biqK * biqK) * norm;
 	//SmoothEQ2
 	
 	double bezCThresh = pow(1.0-GetParameter( kParam_I ), 6.0) * 8.0;
-	double bezRez = pow(1.0-GetParameter( kParam_J ), 8.0) / overallscale; 
-	double sloRez = pow(1.0-GetParameter( kParam_K ),12.0) / overallscale;
-	sloRez = fmin(fmax(sloRez-(bezRez*0.5),0.00001),1.0);
-	bezRez = fmin(fmax(bezRez,0.0001),1.0);
-	double gate = pow(pow(GetParameter( kParam_L ),4.0),sqrt(bezCThresh+1.0));
+	double bezRez = pow(1.0-GetParameter( kParam_I ), 12.360679774997898) / overallscale;
+	double sloRez = pow(1.0-GetParameter( kParam_I ),10.0) / overallscale;
+	sloRez = fmin(fmax(sloRez,0.00001),1.0);
+	bezRez = fmin(fmax(bezRez,0.00001),1.0);
 	//Dynamics2
-	
-	lFreqA = lFreqB; lFreqB = pow(fmax(GetParameter( kParam_M ),0.002),overallscale); //the lowpass
-	hFreqA = hFreqB; hFreqB = pow(GetParameter( kParam_N ),overallscale+2.0); //the highpass
-	//Cabs2
-	
-	double moreDiscontinuity = fmax(pow(GetParameter( kParam_O )*0.42,3.0)*overallscale,0.00001);
-	double moreTapeHack = (GetParameter( kParam_O )*1.4152481)+1.2;
-	//Discontapeity
-	
-	panA = panB; panB = GetParameter( kParam_P )*1.57079633;
-	inTrimA = inTrimB; inTrimB = GetParameter( kParam_Q )*2.0;
+			
+	panA = panB; panB = GetParameter( kParam_J )*1.57079633;
+	inTrimA = inTrimB; inTrimB = GetParameter( kParam_K )*2.0;
 	//Console
-
+	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
 		double inputSampleR = *inputR;
@@ -672,10 +597,7 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		inputSampleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);		
 		//fourth stage of three crossovers is the exponential filters
 		//SmoothEQ2
-		
-		if (fmax(fabs(inputSampleL),fabs(inputSampleR)) > gate+(sloRez*bezGate)) bezGate = ((bezGate*overallscale*3.0)+3.0)*(0.25/overallscale);
-		else bezGate = fmax(0.0, bezGate-(sloRez*sloRez));
-		
+				
 		if (bezCThresh > 0.0) {
 			inputSampleL *= ((bezCThresh*0.5)+1.0);
 			inputSampleR *= ((bezCThresh*0.5)+1.0);
@@ -688,21 +610,14 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		
 		if (bezCompF[bez_cycle] > 1.0) {
 			bezCompF[bez_cycle] -= 1.0;
-			
-			if (bezMaxF < gate) bezCompF[bez_SampL] = bezMaxF/gate; //note: SampL is a control voltage,
-			if (bezCompF[bez_SampL]<gate) bezCompF[bez_SampL] = 0.0; //not a bipolar audio signal
 			bezCompF[bez_CL] = bezCompF[bez_BL];
 			bezCompF[bez_BL] = bezCompF[bez_AL];
 			bezCompF[bez_AL] = bezCompF[bez_SampL];
 			bezCompF[bez_SampL] = 0.0;
-			
-			if (bezMaxF < gate) bezCompF[bez_SampR] = bezMaxF/gate; //note: SampR is a control voltage,
-			if (bezCompF[bez_SampR]<gate) bezCompF[bez_SampR] = 0.0; //not a bipolar audio signal
 			bezCompF[bez_CR] = bezCompF[bez_BR];
 			bezCompF[bez_BR] = bezCompF[bez_AR];
 			bezCompF[bez_AR] = bezCompF[bez_SampR];
 			bezCompF[bez_SampR] = 0.0;
-			
 			bezMaxF = 0.0;
 		}
 		bezCompS[bez_cycle] += sloRez;
@@ -710,14 +625,10 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
 		if (bezCompS[bez_cycle] > 1.0) {
 			bezCompS[bez_cycle] -= 1.0;
-			
-			if (bezCompS[bez_SampL]<gate) bezCompS[bez_SampL] = 0.0;
 			bezCompS[bez_CL] = bezCompS[bez_BL];
 			bezCompS[bez_BL] = bezCompS[bez_AL];
 			bezCompS[bez_AL] = bezCompS[bez_SampL];
 			bezCompS[bez_SampL] = 0.0;
-			
-			if (bezCompS[bez_SampR]<gate) bezCompS[bez_SampR] = 0.0;
 			bezCompS[bez_CR] = bezCompS[bez_BR];
 			bezCompS[bez_BR] = bezCompS[bez_AR];
 			bezCompS[bez_AR] = bezCompS[bez_SampR];
@@ -742,74 +653,61 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));
-		
-		if (bezGate < 1.0 && gate > 0.0) {inputSampleL *= bezGate; inputSampleR *= bezGate;}
 		//Dynamics2
 		
 		const double temp = (double)nSampleFrames/inFramesToProcess;
-		const double hFreq = (hFreqA*temp)+(hFreqB*(1.0-temp));
-		if (hFreq > 0.0) {
-			double lowSampleL = inputSampleL;
-			double lowSampleR = inputSampleR;
-			for(int count = 0; count < 21; count++) {
-				iirHAngleL[count] = (iirHAngleL[count]*(1.0-hFreq))+((lowSampleL-iirHPositionL[count])*hFreq);
-				lowSampleL = ((iirHPositionL[count]+(iirHAngleL[count]*hFreq))*(1.0-hFreq))+(lowSampleL*hFreq);
-				iirHPositionL[count] = ((iirHPositionL[count]+(iirHAngleL[count]*hFreq))*(1.0-hFreq))+(lowSampleL*hFreq);
-				inputSampleL -= (lowSampleL * (1.0/21.0));//left
-				iirHAngleR[count] = (iirHAngleR[count]*(1.0-hFreq))+((lowSampleR-iirHPositionR[count])*hFreq);
-				lowSampleR = ((iirHPositionR[count]+(iirHAngleR[count]*hFreq))*(1.0-hFreq))+(lowSampleR*hFreq);
-				iirHPositionR[count] = ((iirHPositionR[count]+(iirHAngleR[count]*hFreq))*(1.0-hFreq))+(lowSampleR*hFreq);
-				inputSampleR -= (lowSampleR * (1.0/21.0));//right
-			} //the highpass
-			hBypass = false;
-		} else {
-			if (!hBypass) {
-				hBypass = true;
-				for(int count = 0; count < 22; count++) {
-					iirHPositionL[count] = 0.0;
-					iirHAngleL[count] = 0.0;
-					iirHPositionR[count] = 0.0;
-					iirHAngleR[count] = 0.0;
-				}
-			} //blank out highpass if jut switched off
-		}
-		const double lFreq = (lFreqA*temp)+(lFreqB*(1.0-temp));
-		if (lFreq < 1.0) {
-			for(int count = 0; count < 13; count++) {
-				iirLAngleL[count] = (iirLAngleL[count]*(1.0-lFreq))+((inputSampleL-iirLPositionL[count])*lFreq);
-				inputSampleL = ((iirLPositionL[count]+(iirLAngleL[count]*lFreq))*(1.0-lFreq))+(inputSampleL*lFreq);
-				iirLPositionL[count] = ((iirLPositionL[count]+(iirLAngleL[count]*lFreq))*(1.0-lFreq))+(inputSampleL*lFreq);//left
-				iirLAngleR[count] = (iirLAngleR[count]*(1.0-lFreq))+((inputSampleR-iirLPositionR[count])*lFreq);
-				inputSampleR = ((iirLPositionR[count]+(iirLAngleR[count]*lFreq))*(1.0-lFreq))+(inputSampleR*lFreq);
-				iirLPositionR[count] = ((iirLPositionR[count]+(iirLAngleR[count]*lFreq))*(1.0-lFreq))+(inputSampleR*lFreq);//right
-			} //the lowpass
-			lBypass = false;
-		} else {
-			if (!lBypass) {
-				lBypass = true;
-				for(int count = 0; count < 14; count++) {
-					iirLPositionL[count] = 0.0;
-					iirLAngleL[count] = 0.0;
-					iirLPositionR[count] = 0.0;
-					iirLAngleR[count] = 0.0;
-				}
-			} //blank out lowpass if just switched off
-		}
-		//Cabs2
+		double gainR = (panA*temp)+(panB*(1.0-temp));
+		double gainL = 1.57079633-gainR;
+		gainR = sin(gainR); gainL = sin(gainL);
+		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
+		if (gain > 1.0) gain *= gain;
+		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
+		gain *= 2.0;
 		
+		inputSampleL = inputSampleL * gainL * gain;
+		inputSampleR = inputSampleR * gainR * gain;
+		//applies pan section, and smoothed fader gain
 		
-		//begin Discontinuity section
-		inputSampleL *= moreDiscontinuity;
-		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
-		dBaPosL = fmin(dBaPosL,1.0);
-		int dBdly = floor(dBaPosL*dscBuf);
-		double dBi = (dBaPosL*dscBuf)-dBdly;
-		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
-		inputSampleL /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL*moreTapeHack,2.305929007734908),-2.305929007734908);
+		double darkSampleL = inputSampleL;
+		double darkSampleR = inputSampleR;
+		if (avgPos > 31) avgPos = 0;
+		if (spacing > 31) {
+			avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
+			darkSampleL /= 32.0; darkSampleR /= 32.0;
+		} if (spacing > 15) {
+			avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
+			darkSampleL /= 16.0; darkSampleR /= 16.0;
+		} if (spacing > 7) {
+			avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
+			darkSampleL /= 8.0; darkSampleR /= 8.0;
+		} if (spacing > 3) {
+			avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
+			darkSampleL /= 4.0; darkSampleR /= 4.0;
+		} if (spacing > 1) {
+			avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
+			darkSampleL /= 2.0; darkSampleR /= 2.0; 
+		} avgPos++;
+		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
+		double avgSlewL = fmin(lastSlewL,1.0);
+		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
+		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
+		double avgSlewR = fmin(lastSlewR,1.0);
+		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
+		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);
+		
+		//begin TapeHack section
+		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
 		double addtwo = inputSampleL * inputSampleL;
 		double empower = inputSampleL * addtwo; // inputSampleL to the third power
 		inputSampleL -= (empower / 6.0);
@@ -822,21 +720,11 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		empower *= addtwo; //eleventh
 		inputSampleL -= (empower / 9979200.0f);
 		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleL *= 0.9239;
+		inputSampleL *= 0.92;
 		//end TapeHack section
 		
-		//begin Discontinuity section
-		inputSampleR *= moreDiscontinuity;
-		dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
-		dBaPosR = fmin(dBaPosR,1.0);
-		dBdly = floor(dBaPosR*dscBuf);
-		dBi = (dBaPosR*dscBuf)-dBdly;
-		inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
-		inputSampleR /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR*moreTapeHack,2.305929007734908),-2.305929007734908);
+		//begin TapeHack section
+		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
 		addtwo = inputSampleR * inputSampleR;
 		empower = inputSampleR * addtwo; // inputSampleR to the third power
 		inputSampleR -= (empower / 6.0);
@@ -849,21 +737,9 @@ OSStatus		ConsoleX2Buss::ProcessBufferLists(AudioUnitRenderActionFlags & ioActio
 		empower *= addtwo; //eleventh
 		inputSampleR -= (empower / 9979200.0f);
 		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleR *= 0.9239;
+		inputSampleR *= 0.92;
 		//end TapeHack section
 		//Discontapeity
-
-		double gainR = (panA*temp)+(panB*(1.0-temp));
-		double gainL = 1.57079633-gainR;
-		gainR = sin(gainR); gainL = sin(gainL);
-		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		if (gain > 1.0) gain *= gain;
-		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 2.0;
-		
-		inputSampleL = inputSampleL * gainL * gain;
-		inputSampleR = inputSampleR * gainR * gain;
-		//applies pan section, and smoothed fader gain
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);

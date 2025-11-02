@@ -65,12 +65,6 @@ static const float kDefaultValue_ParamH = 0.5;
 static const float kDefaultValue_ParamI = 1.0;
 static const float kDefaultValue_ParamJ = 0.5;
 static const float kDefaultValue_ParamK = 0.5;
-static const float kDefaultValue_ParamL = 0.0;
-static const float kDefaultValue_ParamM = 1.0;
-static const float kDefaultValue_ParamN = 0.0;
-static const float kDefaultValue_ParamO = 0.0;
-static const float kDefaultValue_ParamP = 0.5;
-static const float kDefaultValue_ParamQ = 0.5;
 
 static CFStringRef kParameterAUnit = CFSTR("eq");
 static CFStringRef kParameterAName = CFSTR("High");
@@ -84,16 +78,8 @@ static CFStringRef kParameterGName = CFSTR("LMidF");
 static CFStringRef kParameterHName = CFSTR("BassF");
 static CFStringRef kParameterIUnit = CFSTR("dyn");
 static CFStringRef kParameterIName = CFSTR("Thresh");
-static CFStringRef kParameterJName = CFSTR("Attack");
-static CFStringRef kParameterKName = CFSTR("Release");
-static CFStringRef kParameterLName = CFSTR("Gate");
-static CFStringRef kParameterMUnit = CFSTR("fltr");
-static CFStringRef kParameterMName = CFSTR("Lowpass");
-static CFStringRef kParameterNName = CFSTR("Hipass");
-static CFStringRef kParameterOUnit = CFSTR("+");
-static CFStringRef kParameterOName = CFSTR("More");
-static CFStringRef kParameterPName = CFSTR("Pan");
-static CFStringRef kParameterQName = CFSTR("Fader");
+static CFStringRef kParameterJName = CFSTR("Pan");
+static CFStringRef kParameterKName = CFSTR("Fader");
 
 enum {
 	kParam_A =0,
@@ -107,17 +93,9 @@ enum {
 	kParam_I =8,
 	kParam_J =9,
 	kParam_K =10,
-	kParam_L =11,
-	kParam_M =12,
-	kParam_N =13,
-	kParam_O =14,
-	kParam_P =15,
-	kParam_Q =16,
 	//Add your parameters here...
-	kNumberOfParameters=17
+	kNumberOfParameters=11
 };
-
-const int dscBuf = 256;
 
 #pragma mark ____ConsoleX2Buss
 class ConsoleX2Buss : public AUEffectBase
@@ -216,32 +194,24 @@ public:
 	double bezCompF[bez_total];
 	double bezMaxF;
 	double bezCompS[bez_total];
-	double bezGate;
 	//Dynamics2
 	
-	double iirHPositionL[23];
-	double iirHAngleL[23];
-	double iirHPositionR[23];
-	double iirHAngleR[23];
-	bool hBypass;
-	double iirLPositionL[15];
-	double iirLAngleL[15];
-	double iirLPositionR[15];
-	double iirLAngleR[15];
-	bool lBypass;
-	double lFreqA;
-	double lFreqB; //the lowpass
-	double hFreqA;
-	double hFreqB; //the highpass
-	//Cabs2
-	
-	double dBaL[dscBuf+5];
-	double dBaPosL;
-	int dBaXL;
-	double dBaR[dscBuf+5];
-	double dBaPosR;
-	int dBaXR;
-	//Discontapeity
+	double avg32L[33];
+	double avg32R[33];
+	double avg16L[17];
+	double avg16R[17];
+	double avg8L[9];
+	double avg8R[9];
+	double avg4L[5];
+	double avg4R[5];
+	double avg2L[3];
+	double avg2R[3];
+	int avgPos;
+	double lastSlewL;
+	double lastSlewR;
+	double lastSlewpleL;
+	double lastSlewpleR;
+	//preTapeHack
 	
 	double panA;
 	double panB;

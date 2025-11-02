@@ -18,20 +18,33 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
+	int spacing = floor(overallscale*2.0);
+	if (spacing < 2) spacing = 2; if (spacing > 32) spacing = 32;
 	
-	double trebleGain = (A-0.5)*2.0;
+	double moreTapeHack = (B*2.0)+1.0;
+	switch ((int)(A*4.0)){
+		case 0: moreTapeHack *= 0.5; break;
+		case 1: break;
+		case 2: moreTapeHack *= 2.0; break;
+		case 3: moreTapeHack *= 4.0; break;
+		case 4: moreTapeHack *= 8.0; break;
+	}
+	double moreDiscontinuity = fmax(pow(B*0.42,3.0)*overallscale,0.00001);
+	//Discontapeity	
+	
+	double trebleGain = (C-0.5)*2.0;
 	trebleGain = 1.0+(trebleGain*fabs(trebleGain)*fabs(trebleGain));
-	double highmidGain = (B-0.5)*2.0;
+	double highmidGain = (D-0.5)*2.0;
 	highmidGain = 1.0+(highmidGain*fabs(highmidGain)*fabs(highmidGain));
-	double lowmidGain = (C-0.5)*2.0;
+	double lowmidGain = (E-0.5)*2.0;
 	lowmidGain = 1.0+(lowmidGain*fabs(lowmidGain)*fabs(lowmidGain));
-	double bassGain = (D-0.5)*2.0;
+	double bassGain = (F-0.5)*2.0;
 	bassGain = 1.0+(bassGain*fabs(bassGain)*fabs(bassGain));
 	
-	double trebleRef = E-0.5;
-	double highmidRef = F-0.5;
-	double lowmidRef = G-0.5;
-	double bassRef = H-0.5;
+	double trebleRef = G-0.5;
+	double highmidRef = H-0.5;
+	double lowmidRef = I-0.5;
+	double bassRef = J-0.5;
 	double highF = 0.75 + ((trebleRef+trebleRef+trebleRef+highmidRef)*0.125);
 	double bassF = 0.25 + ((lowmidRef+bassRef+bassRef+bassRef)*0.125);
 	double midF = (highF*0.5) + (bassF*0.5) + ((highmidRef+lowmidRef)*0.125);
@@ -44,8 +57,8 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 	highC[biq_freq] = highB[biq_freq] = highA[biq_freq] = fmax(fmin(highA[biq_freq],0.4999),0.00025);
 	double highFreq = pow(highF,3)*20000.0;
 	double omega = 2.0*M_PI*(highFreq/getSampleRate());
-	double K = 2.0-cos(omega);
-	double highCoef = -sqrt((K*K)-1.0)+K;
+	double biqK = 2.0-cos(omega);
+	double highCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	highA[biq_reso] = 2.24697960 * highQ;
 	highB[biq_reso] = 0.80193774 * highQ;
 	highC[biq_reso] = 0.55495813 * highQ;
@@ -54,8 +67,8 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 	midC[biq_freq] = midB[biq_freq] = midA[biq_freq] = fmax(fmin(midA[biq_freq],0.4999),0.00025);	
 	double midFreq = pow(midF,3)*20000.0;
 	omega = 2.0*M_PI*(midFreq/getSampleRate());
-	K = 2.0-cos(omega);
-	double midCoef = -sqrt((K*K)-1.0)+K;
+	biqK = 2.0-cos(omega);
+	double midCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	midA[biq_reso] = 2.24697960 * midQ;
 	midB[biq_reso] = 0.80193774 * midQ;
 	midC[biq_reso] = 0.55495813 * midQ;
@@ -64,97 +77,93 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 	lowC[biq_freq] = lowB[biq_freq] = lowA[biq_freq] = fmax(fmin(lowA[biq_freq],0.4999),0.00025);
 	double lowFreq = pow(bassF,3)*20000.0;
 	omega = 2.0*M_PI*(lowFreq/getSampleRate());
-	K = 2.0-cos(omega);
-	double lowCoef = -sqrt((K*K)-1.0)+K;
+	biqK = 2.0-cos(omega);
+	double lowCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	lowA[biq_reso] = 2.24697960 * lowQ;
 	lowB[biq_reso] = 0.80193774 * lowQ;
 	lowC[biq_reso] = 0.55495813 * lowQ;
 	
-	K = tan(M_PI * highA[biq_freq]);
-	double norm = 1.0 / (1.0 + K / highA[biq_reso] + K * K);
-	highA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * highA[biq_freq]);
+	double norm = 1.0 / (1.0 + biqK / highA[biq_reso] + biqK * biqK);
+	highA[biq_a0] = biqK * biqK * norm;
 	highA[biq_a1] = 2.0 * highA[biq_a0];
 	highA[biq_a2] = highA[biq_a0];
-	highA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highA[biq_b2] = (1.0 - K / highA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * highB[biq_freq]);
-	norm = 1.0 / (1.0 + K / highB[biq_reso] + K * K);
-	highB[biq_a0] = K * K * norm;
+	highA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highA[biq_b2] = (1.0 - biqK / highA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * highB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / highB[biq_reso] + biqK * biqK);
+	highB[biq_a0] = biqK * biqK * norm;
 	highB[biq_a1] = 2.0 * highB[biq_a0];
 	highB[biq_a2] = highB[biq_a0];
-	highB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highB[biq_b2] = (1.0 - K / highB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * highC[biq_freq]);
-	norm = 1.0 / (1.0 + K / highC[biq_reso] + K * K);
-	highC[biq_a0] = K * K * norm;
+	highB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highB[biq_b2] = (1.0 - biqK / highB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * highC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / highC[biq_reso] + biqK * biqK);
+	highC[biq_a0] = biqK * biqK * norm;
 	highC[biq_a1] = 2.0 * highC[biq_a0];
 	highC[biq_a2] = highC[biq_a0];
-	highC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highC[biq_b2] = (1.0 - K / highC[biq_reso] + K * K) * norm;
+	highC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highC[biq_b2] = (1.0 - biqK / highC[biq_reso] + biqK * biqK) * norm;
 	
-	K = tan(M_PI * midA[biq_freq]);
-	norm = 1.0 / (1.0 + K / midA[biq_reso] + K * K);
-	midA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * midA[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midA[biq_reso] + biqK * biqK);
+	midA[biq_a0] = biqK * biqK * norm;
 	midA[biq_a1] = 2.0 * midA[biq_a0];
 	midA[biq_a2] = midA[biq_a0];
-	midA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midA[biq_b2] = (1.0 - K / midA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * midB[biq_freq]);
-	norm = 1.0 / (1.0 + K / midB[biq_reso] + K * K);
-	midB[biq_a0] = K * K * norm;
+	midA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midA[biq_b2] = (1.0 - biqK / midA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * midB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midB[biq_reso] + biqK * biqK);
+	midB[biq_a0] = biqK * biqK * norm;
 	midB[biq_a1] = 2.0 * midB[biq_a0];
 	midB[biq_a2] = midB[biq_a0];
-	midB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midB[biq_b2] = (1.0 - K / midB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * midC[biq_freq]);
-	norm = 1.0 / (1.0 + K / midC[biq_reso] + K * K);
-	midC[biq_a0] = K * K * norm;
+	midB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midB[biq_b2] = (1.0 - biqK / midB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * midC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midC[biq_reso] + biqK * biqK);
+	midC[biq_a0] = biqK * biqK * norm;
 	midC[biq_a1] = 2.0 * midC[biq_a0];
 	midC[biq_a2] = midC[biq_a0];
-	midC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midC[biq_b2] = (1.0 - K / midC[biq_reso] + K * K) * norm;
+	midC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midC[biq_b2] = (1.0 - biqK / midC[biq_reso] + biqK * biqK) * norm;
 	
-	K = tan(M_PI * lowA[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowA[biq_reso] + K * K);
-	lowA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * lowA[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowA[biq_reso] + biqK * biqK);
+	lowA[biq_a0] = biqK * biqK * norm;
 	lowA[biq_a1] = 2.0 * lowA[biq_a0];
 	lowA[biq_a2] = lowA[biq_a0];
-	lowA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowA[biq_b2] = (1.0 - K / lowA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * lowB[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowB[biq_reso] + K * K);
-	lowB[biq_a0] = K * K * norm;
+	lowA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowA[biq_b2] = (1.0 - biqK / lowA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * lowB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowB[biq_reso] + biqK * biqK);
+	lowB[biq_a0] = biqK * biqK * norm;
 	lowB[biq_a1] = 2.0 * lowB[biq_a0];
 	lowB[biq_a2] = lowB[biq_a0];
-	lowB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowB[biq_b2] = (1.0 - K / lowB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * lowC[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowC[biq_reso] + K * K);
-	lowC[biq_a0] = K * K * norm;
+	lowB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowB[biq_b2] = (1.0 - biqK / lowB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * lowC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowC[biq_reso] + biqK * biqK);
+	lowC[biq_a0] = biqK * biqK * norm;
 	lowC[biq_a1] = 2.0 * lowC[biq_a0];
 	lowC[biq_a2] = lowC[biq_a0];
-	lowC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowC[biq_b2] = (1.0 - K / lowC[biq_reso] + K * K) * norm;
+	lowC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowC[biq_b2] = (1.0 - biqK / lowC[biq_reso] + biqK * biqK) * norm;
 	//SmoothEQ2
 	
-	double bezCThresh = pow(1.0-I, 6.0) * 8.0;
-	double bezRez = pow(1.0-J, 8.0) / overallscale; 
-	double sloRez = pow(1.0-K,12.0) / overallscale;
+	double bezCThresh = pow(1.0-K, 6.0) * 8.0;
+	double bezRez = pow(1.0-L, 8.0) / overallscale; 
+	double sloRez = pow(1.0-M,12.0) / overallscale;
 	sloRez = fmin(fmax(sloRez-(bezRez*0.5),0.00001),1.0);
 	bezRez = fmin(fmax(bezRez,0.0001),1.0);
-	double gate = pow(pow(L,4.0),sqrt(bezCThresh+1.0));
+	double gate = pow(pow(N,4.0),sqrt(bezCThresh+1.0));
 	//Dynamics2
 	
-	lFreqA = lFreqB; lFreqB = pow(fmax(M,0.002),overallscale); //the lowpass
-	hFreqA = hFreqB; hFreqB = pow(N,overallscale+2.0); //the highpass
+	lFreqA = lFreqB; lFreqB = pow(fmax(O,0.002),overallscale); //the lowpass
+	hFreqA = hFreqB; hFreqB = pow(P,overallscale+2.0); //the highpass
 	//Cabs2
 	
-	double moreDiscontinuity = fmax(pow(O*0.42,3.0)*overallscale,0.00001);
-	double moreTapeHack = (O*1.4152481)+1.2;
-	//Discontapeity
-	
-	panA = panB; panB = P*1.57079633;
-	inTrimA = inTrimB; inTrimB = Q*2.0;
+	panA = panB; panB = Q*1.57079633;
+	inTrimA = inTrimB; inTrimB = R*2.0;
 	//Console
 	
     while (--sampleFrames >= 0)
@@ -163,6 +172,99 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		
+		double darkSampleL = inputSampleL;
+		double darkSampleR = inputSampleR;
+		if (avgPos > 31) avgPos = 0;
+		if (spacing > 31) {
+			avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
+			darkSampleL /= 32.0; darkSampleR /= 32.0;
+		} if (spacing > 15) {
+			avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
+			darkSampleL /= 16.0; darkSampleR /= 16.0;
+		} if (spacing > 7) {
+			avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
+			darkSampleL /= 8.0; darkSampleR /= 8.0;
+		} if (spacing > 3) {
+			avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
+			darkSampleL /= 4.0; darkSampleR /= 4.0;
+		} if (spacing > 1) {
+			avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
+			darkSampleL /= 2.0; darkSampleR /= 2.0; 
+		} avgPos++;
+		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
+		double avgSlewL = fmin(lastSlewL,1.0);
+		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
+		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
+		double avgSlewR = fmin(lastSlewR,1.0);
+		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
+		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);		
+		
+		//begin Discontinuity section
+		inputSampleL *= moreTapeHack;
+		inputSampleL *= moreDiscontinuity;
+		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
+		dBaPosL = fmin(dBaPosL,1.0);
+		int dBdly = floor(dBaPosL*dscBuf);
+		double dBi = (dBaPosL*dscBuf)-dBdly;
+		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
+		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
+		inputSampleL /= moreDiscontinuity;
+		//end Discontinuity section, begin TapeHack section
+		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
+		double addtwo = inputSampleL * inputSampleL;
+		double empower = inputSampleL * addtwo; // inputSampleL to the third power
+		inputSampleL -= (empower / 6.0);
+		empower *= addtwo; // to the fifth power
+		inputSampleL += (empower / 69.0);
+		empower *= addtwo; //seventh
+		inputSampleL -= (empower / 2530.08);
+		empower *= addtwo; //ninth
+		inputSampleL += (empower / 224985.6);
+		empower *= addtwo; //eleventh
+		inputSampleL -= (empower / 9979200.0f);
+		//this is a degenerate form of a Taylor Series to approximate sin()
+		//end TapeHack section
+		
+		//begin Discontinuity section
+		inputSampleR *= moreTapeHack;
+		inputSampleR *= moreDiscontinuity;
+		dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
+		dBaPosR = fmin(dBaPosR,1.0);
+		dBdly = floor(dBaPosR*dscBuf);
+		dBi = (dBaPosR*dscBuf)-dBdly;
+		inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
+		dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
+		inputSampleR /= moreDiscontinuity;
+		//end Discontinuity section, begin TapeHack section
+		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
+		addtwo = inputSampleR * inputSampleR;
+		empower = inputSampleR * addtwo; // inputSampleR to the third power
+		inputSampleR -= (empower / 6.0);
+		empower *= addtwo; // to the fifth power
+		inputSampleR += (empower / 69.0);
+		empower *= addtwo; //seventh
+		inputSampleR -= (empower / 2530.08);
+		empower *= addtwo; //ninth
+		inputSampleR += (empower / 224985.6);
+		empower *= addtwo; //eleventh
+		inputSampleR -= (empower / 9979200.0f);
+		//this is a degenerate form of a Taylor Series to approximate sin()
+		//end TapeHack section
+		//Discontapeity
 		
 		double trebleL = inputSampleL;		
 		double outSample = (trebleL * highA[biq_a0]) + highA[biq_sL1];
@@ -423,62 +525,7 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 			} //blank out lowpass if just switched off
 		}		
 		//Cabs2
-		
-		//begin Discontinuity section
-		inputSampleL *= moreDiscontinuity;
-		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
-		dBaPosL = fmin(dBaPosL,1.0);
-		int dBdly = floor(dBaPosL*dscBuf);
-		double dBi = (dBaPosL*dscBuf)-dBdly;
-		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
-		inputSampleL /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL*moreTapeHack,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleL *= 0.9239;
-		//end TapeHack section
-		
-		//begin Discontinuity section
-		inputSampleR *= moreDiscontinuity;
-		dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
-		dBaPosR = fmin(dBaPosR,1.0);
-		dBdly = floor(dBaPosR*dscBuf);
-		dBi = (dBaPosR*dscBuf)-dBdly;
-		inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
-		inputSampleR /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR*moreTapeHack,2.305929007734908),-2.305929007734908);
-		addtwo = inputSampleR * inputSampleR;
-		empower = inputSampleR * addtwo; // inputSampleR to the third power
-		inputSampleR -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleR += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleR -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleR += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleR -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleR *= 0.9239;
-		//end TapeHack section
-		//Discontapeity
-		
+				
 		double gainR = (panA*temp)+(panB*(1.0-temp));
 		double gainL = 1.57079633-gainR;
 		gainR = sin(gainR); gainL = sin(gainL);
@@ -486,19 +533,16 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
 		if (gain > 1.0) gain *= gain;
 		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 0.763932022500211;
 		
 		inputSampleL = inputSampleL * gainL * gain;
 		inputSampleR = inputSampleR * gainR * gain;
 		//applies pan section, and smoothed fader gain
 		
-		inputSampleL *= 0.618033988749895;
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		else if (inputSampleL > 0.0) inputSampleL = -expm1((log1p(-inputSampleL) * 1.618033988749895));
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		else if (inputSampleL < 0.0) inputSampleL = expm1((log1p(inputSampleL) * 1.618033988749895));
 		
-		inputSampleR *= 0.618033988749895;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		else if (inputSampleR > 0.0) inputSampleR = -expm1((log1p(-inputSampleR) * 1.618033988749895));
 		if (inputSampleR < -1.0) inputSampleR = -1.0;
@@ -534,20 +578,33 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 	double overallscale = 1.0;
 	overallscale /= 44100.0;
 	overallscale *= getSampleRate();
+	int spacing = floor(overallscale*2.0);
+	if (spacing < 2) spacing = 2; if (spacing > 32) spacing = 32;
 	
-	double trebleGain = (A-0.5)*2.0;
+	double moreTapeHack = (B*2.0)+1.0;
+	switch ((int)(A*4.0)){
+		case 0: moreTapeHack *= 0.5; break;
+		case 1: break;
+		case 2: moreTapeHack *= 2.0; break;
+		case 3: moreTapeHack *= 4.0; break;
+		case 4: moreTapeHack *= 8.0; break;
+	}
+	double moreDiscontinuity = fmax(pow(B*0.42,3.0)*overallscale,0.00001);
+	//Discontapeity	
+	
+	double trebleGain = (C-0.5)*2.0;
 	trebleGain = 1.0+(trebleGain*fabs(trebleGain)*fabs(trebleGain));
-	double highmidGain = (B-0.5)*2.0;
+	double highmidGain = (D-0.5)*2.0;
 	highmidGain = 1.0+(highmidGain*fabs(highmidGain)*fabs(highmidGain));
-	double lowmidGain = (C-0.5)*2.0;
+	double lowmidGain = (E-0.5)*2.0;
 	lowmidGain = 1.0+(lowmidGain*fabs(lowmidGain)*fabs(lowmidGain));
-	double bassGain = (D-0.5)*2.0;
+	double bassGain = (F-0.5)*2.0;
 	bassGain = 1.0+(bassGain*fabs(bassGain)*fabs(bassGain));
 	
-	double trebleRef = E-0.5;
-	double highmidRef = F-0.5;
-	double lowmidRef = G-0.5;
-	double bassRef = H-0.5;
+	double trebleRef = G-0.5;
+	double highmidRef = H-0.5;
+	double lowmidRef = I-0.5;
+	double bassRef = J-0.5;
 	double highF = 0.75 + ((trebleRef+trebleRef+trebleRef+highmidRef)*0.125);
 	double bassF = 0.25 + ((lowmidRef+bassRef+bassRef+bassRef)*0.125);
 	double midF = (highF*0.5) + (bassF*0.5) + ((highmidRef+lowmidRef)*0.125);
@@ -560,8 +617,8 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 	highC[biq_freq] = highB[biq_freq] = highA[biq_freq] = fmax(fmin(highA[biq_freq],0.4999),0.00025);
 	double highFreq = pow(highF,3)*20000.0;
 	double omega = 2.0*M_PI*(highFreq/getSampleRate());
-	double K = 2.0-cos(omega);
-	double highCoef = -sqrt((K*K)-1.0)+K;
+	double biqK = 2.0-cos(omega);
+	double highCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	highA[biq_reso] = 2.24697960 * highQ;
 	highB[biq_reso] = 0.80193774 * highQ;
 	highC[biq_reso] = 0.55495813 * highQ;
@@ -570,8 +627,8 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 	midC[biq_freq] = midB[biq_freq] = midA[biq_freq] = fmax(fmin(midA[biq_freq],0.4999),0.00025);	
 	double midFreq = pow(midF,3)*20000.0;
 	omega = 2.0*M_PI*(midFreq/getSampleRate());
-	K = 2.0-cos(omega);
-	double midCoef = -sqrt((K*K)-1.0)+K;
+	biqK = 2.0-cos(omega);
+	double midCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	midA[biq_reso] = 2.24697960 * midQ;
 	midB[biq_reso] = 0.80193774 * midQ;
 	midC[biq_reso] = 0.55495813 * midQ;
@@ -580,97 +637,93 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 	lowC[biq_freq] = lowB[biq_freq] = lowA[biq_freq] = fmax(fmin(lowA[biq_freq],0.4999),0.00025);
 	double lowFreq = pow(bassF,3)*20000.0;
 	omega = 2.0*M_PI*(lowFreq/getSampleRate());
-	K = 2.0-cos(omega);
-	double lowCoef = -sqrt((K*K)-1.0)+K;
+	biqK = 2.0-cos(omega);
+	double lowCoef = -sqrt((biqK*biqK)-1.0)+biqK;
 	lowA[biq_reso] = 2.24697960 * lowQ;
 	lowB[biq_reso] = 0.80193774 * lowQ;
 	lowC[biq_reso] = 0.55495813 * lowQ;
 	
-	K = tan(M_PI * highA[biq_freq]);
-	double norm = 1.0 / (1.0 + K / highA[biq_reso] + K * K);
-	highA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * highA[biq_freq]);
+	double norm = 1.0 / (1.0 + biqK / highA[biq_reso] + biqK * biqK);
+	highA[biq_a0] = biqK * biqK * norm;
 	highA[biq_a1] = 2.0 * highA[biq_a0];
 	highA[biq_a2] = highA[biq_a0];
-	highA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highA[biq_b2] = (1.0 - K / highA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * highB[biq_freq]);
-	norm = 1.0 / (1.0 + K / highB[biq_reso] + K * K);
-	highB[biq_a0] = K * K * norm;
+	highA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highA[biq_b2] = (1.0 - biqK / highA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * highB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / highB[biq_reso] + biqK * biqK);
+	highB[biq_a0] = biqK * biqK * norm;
 	highB[biq_a1] = 2.0 * highB[biq_a0];
 	highB[biq_a2] = highB[biq_a0];
-	highB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highB[biq_b2] = (1.0 - K / highB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * highC[biq_freq]);
-	norm = 1.0 / (1.0 + K / highC[biq_reso] + K * K);
-	highC[biq_a0] = K * K * norm;
+	highB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highB[biq_b2] = (1.0 - biqK / highB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * highC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / highC[biq_reso] + biqK * biqK);
+	highC[biq_a0] = biqK * biqK * norm;
 	highC[biq_a1] = 2.0 * highC[biq_a0];
 	highC[biq_a2] = highC[biq_a0];
-	highC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	highC[biq_b2] = (1.0 - K / highC[biq_reso] + K * K) * norm;
+	highC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	highC[biq_b2] = (1.0 - biqK / highC[biq_reso] + biqK * biqK) * norm;
 	
-	K = tan(M_PI * midA[biq_freq]);
-	norm = 1.0 / (1.0 + K / midA[biq_reso] + K * K);
-	midA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * midA[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midA[biq_reso] + biqK * biqK);
+	midA[biq_a0] = biqK * biqK * norm;
 	midA[biq_a1] = 2.0 * midA[biq_a0];
 	midA[biq_a2] = midA[biq_a0];
-	midA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midA[biq_b2] = (1.0 - K / midA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * midB[biq_freq]);
-	norm = 1.0 / (1.0 + K / midB[biq_reso] + K * K);
-	midB[biq_a0] = K * K * norm;
+	midA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midA[biq_b2] = (1.0 - biqK / midA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * midB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midB[biq_reso] + biqK * biqK);
+	midB[biq_a0] = biqK * biqK * norm;
 	midB[biq_a1] = 2.0 * midB[biq_a0];
 	midB[biq_a2] = midB[biq_a0];
-	midB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midB[biq_b2] = (1.0 - K / midB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * midC[biq_freq]);
-	norm = 1.0 / (1.0 + K / midC[biq_reso] + K * K);
-	midC[biq_a0] = K * K * norm;
+	midB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midB[biq_b2] = (1.0 - biqK / midB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * midC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / midC[biq_reso] + biqK * biqK);
+	midC[biq_a0] = biqK * biqK * norm;
 	midC[biq_a1] = 2.0 * midC[biq_a0];
 	midC[biq_a2] = midC[biq_a0];
-	midC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	midC[biq_b2] = (1.0 - K / midC[biq_reso] + K * K) * norm;
+	midC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	midC[biq_b2] = (1.0 - biqK / midC[biq_reso] + biqK * biqK) * norm;
 	
-	K = tan(M_PI * lowA[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowA[biq_reso] + K * K);
-	lowA[biq_a0] = K * K * norm;
+	biqK = tan(M_PI * lowA[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowA[biq_reso] + biqK * biqK);
+	lowA[biq_a0] = biqK * biqK * norm;
 	lowA[biq_a1] = 2.0 * lowA[biq_a0];
 	lowA[biq_a2] = lowA[biq_a0];
-	lowA[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowA[biq_b2] = (1.0 - K / lowA[biq_reso] + K * K) * norm;
-	K = tan(M_PI * lowB[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowB[biq_reso] + K * K);
-	lowB[biq_a0] = K * K * norm;
+	lowA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowA[biq_b2] = (1.0 - biqK / lowA[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * lowB[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowB[biq_reso] + biqK * biqK);
+	lowB[biq_a0] = biqK * biqK * norm;
 	lowB[biq_a1] = 2.0 * lowB[biq_a0];
 	lowB[biq_a2] = lowB[biq_a0];
-	lowB[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowB[biq_b2] = (1.0 - K / lowB[biq_reso] + K * K) * norm;
-	K = tan(M_PI * lowC[biq_freq]);
-	norm = 1.0 / (1.0 + K / lowC[biq_reso] + K * K);
-	lowC[biq_a0] = K * K * norm;
+	lowB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowB[biq_b2] = (1.0 - biqK / lowB[biq_reso] + biqK * biqK) * norm;
+	biqK = tan(M_PI * lowC[biq_freq]);
+	norm = 1.0 / (1.0 + biqK / lowC[biq_reso] + biqK * biqK);
+	lowC[biq_a0] = biqK * biqK * norm;
 	lowC[biq_a1] = 2.0 * lowC[biq_a0];
 	lowC[biq_a2] = lowC[biq_a0];
-	lowC[biq_b1] = 2.0 * (K * K - 1.0) * norm;
-	lowC[biq_b2] = (1.0 - K / lowC[biq_reso] + K * K) * norm;
+	lowC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+	lowC[biq_b2] = (1.0 - biqK / lowC[biq_reso] + biqK * biqK) * norm;
 	//SmoothEQ2
 	
-	double bezCThresh = pow(1.0-I, 6.0) * 8.0;
-	double bezRez = pow(1.0-J, 8.0) / overallscale; 
-	double sloRez = pow(1.0-K,12.0) / overallscale;
+	double bezCThresh = pow(1.0-K, 6.0) * 8.0;
+	double bezRez = pow(1.0-L, 8.0) / overallscale; 
+	double sloRez = pow(1.0-M,12.0) / overallscale;
 	sloRez = fmin(fmax(sloRez-(bezRez*0.5),0.00001),1.0);
 	bezRez = fmin(fmax(bezRez,0.0001),1.0);
-	double gate = pow(pow(L,4.0),sqrt(bezCThresh+1.0));
+	double gate = pow(pow(N,4.0),sqrt(bezCThresh+1.0));
 	//Dynamics2
 	
-	lFreqA = lFreqB; lFreqB = pow(fmax(M,0.002),overallscale); //the lowpass
-	hFreqA = hFreqB; hFreqB = pow(N,overallscale+2.0); //the highpass
+	lFreqA = lFreqB; lFreqB = pow(fmax(O,0.002),overallscale); //the lowpass
+	hFreqA = hFreqB; hFreqB = pow(P,overallscale+2.0); //the highpass
 	//Cabs2
 	
-	double moreDiscontinuity = fmax(pow(O*0.42,3.0)*overallscale,0.00001);
-	double moreTapeHack = (O*1.4152481)+1.2;
-	//Discontapeity
-	
-	panA = panB; panB = P*1.57079633;
-	inTrimA = inTrimB; inTrimB = Q*2.0;
+	panA = panB; panB = Q*1.57079633;
+	inTrimA = inTrimB; inTrimB = R*2.0;
 	//Console
 	
     while (--sampleFrames >= 0)
@@ -679,6 +732,99 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
+		
+		double darkSampleL = inputSampleL;
+		double darkSampleR = inputSampleR;
+		if (avgPos > 31) avgPos = 0;
+		if (spacing > 31) {
+			avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
+			darkSampleL /= 32.0; darkSampleR /= 32.0;
+		} if (spacing > 15) {
+			avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
+			darkSampleL /= 16.0; darkSampleR /= 16.0;
+		} if (spacing > 7) {
+			avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
+			darkSampleL /= 8.0; darkSampleR /= 8.0;
+		} if (spacing > 3) {
+			avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
+			darkSampleL /= 4.0; darkSampleR /= 4.0;
+		} if (spacing > 1) {
+			avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
+			darkSampleL = 0.0; darkSampleR = 0.0;
+			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
+			darkSampleL /= 2.0; darkSampleR /= 2.0; 
+		} avgPos++;
+		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
+		double avgSlewL = fmin(lastSlewL,1.0);
+		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
+		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
+		double avgSlewR = fmin(lastSlewR,1.0);
+		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
+		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);		
+		
+		//begin Discontinuity section
+		inputSampleL *= moreTapeHack;
+		inputSampleL *= moreDiscontinuity;
+		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
+		dBaPosL = fmin(dBaPosL,1.0);
+		int dBdly = floor(dBaPosL*dscBuf);
+		double dBi = (dBaPosL*dscBuf)-dBdly;
+		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
+		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
+		inputSampleL /= moreDiscontinuity;
+		//end Discontinuity section, begin TapeHack section
+		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
+		double addtwo = inputSampleL * inputSampleL;
+		double empower = inputSampleL * addtwo; // inputSampleL to the third power
+		inputSampleL -= (empower / 6.0);
+		empower *= addtwo; // to the fifth power
+		inputSampleL += (empower / 69.0);
+		empower *= addtwo; //seventh
+		inputSampleL -= (empower / 2530.08);
+		empower *= addtwo; //ninth
+		inputSampleL += (empower / 224985.6);
+		empower *= addtwo; //eleventh
+		inputSampleL -= (empower / 9979200.0f);
+		//this is a degenerate form of a Taylor Series to approximate sin()
+		//end TapeHack section
+		
+		//begin Discontinuity section
+		inputSampleR *= moreTapeHack;
+		inputSampleR *= moreDiscontinuity;
+		dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
+		dBaPosR = fmin(dBaPosR,1.0);
+		dBdly = floor(dBaPosR*dscBuf);
+		dBi = (dBaPosR*dscBuf)-dBdly;
+		inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+		dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
+		dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
+		inputSampleR /= moreDiscontinuity;
+		//end Discontinuity section, begin TapeHack section
+		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
+		addtwo = inputSampleR * inputSampleR;
+		empower = inputSampleR * addtwo; // inputSampleR to the third power
+		inputSampleR -= (empower / 6.0);
+		empower *= addtwo; // to the fifth power
+		inputSampleR += (empower / 69.0);
+		empower *= addtwo; //seventh
+		inputSampleR -= (empower / 2530.08);
+		empower *= addtwo; //ninth
+		inputSampleR += (empower / 224985.6);
+		empower *= addtwo; //eleventh
+		inputSampleR -= (empower / 9979200.0f);
+		//this is a degenerate form of a Taylor Series to approximate sin()
+		//end TapeHack section
+		//Discontapeity
 		
 		double trebleL = inputSampleL;		
 		double outSample = (trebleL * highA[biq_a0]) + highA[biq_sL1];
@@ -940,61 +1086,6 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 		}		
 		//Cabs2
 		
-		//begin Discontinuity section
-		inputSampleL *= moreDiscontinuity;
-		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
-		dBaPosL = fmin(dBaPosL,1.0);
-		int dBdly = floor(dBaPosL*dscBuf);
-		double dBi = (dBaPosL*dscBuf)-dBdly;
-		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
-		inputSampleL /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL*moreTapeHack,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleL *= 0.9239;
-		//end TapeHack section
-		
-		//begin Discontinuity section
-		inputSampleR *= moreDiscontinuity;
-		dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
-		dBaPosR = fmin(dBaPosR,1.0);
-		dBdly = floor(dBaPosR*dscBuf);
-		dBi = (dBaPosR*dscBuf)-dBdly;
-		inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
-		inputSampleR /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR*moreTapeHack,2.305929007734908),-2.305929007734908);
-		addtwo = inputSampleR * inputSampleR;
-		empower = inputSampleR * addtwo; // inputSampleR to the third power
-		inputSampleR -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleR += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleR -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleR += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleR -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleR *= 0.9239;
-		//end TapeHack section
-		//Discontapeity
-		
 		double gainR = (panA*temp)+(panB*(1.0-temp));
 		double gainL = 1.57079633-gainR;
 		gainR = sin(gainR); gainL = sin(gainL);
@@ -1002,19 +1093,16 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
 		if (gain > 1.0) gain *= gain;
 		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 0.763932022500211;
 		
 		inputSampleL = inputSampleL * gainL * gain;
 		inputSampleR = inputSampleR * gainR * gain;
 		//applies pan section, and smoothed fader gain
 		
-		inputSampleL *= 0.618033988749895;
 		if (inputSampleL > 1.0) inputSampleL = 1.0;
 		else if (inputSampleL > 0.0) inputSampleL = -expm1((log1p(-inputSampleL) * 1.618033988749895));
 		if (inputSampleL < -1.0) inputSampleL = -1.0;
 		else if (inputSampleL < 0.0) inputSampleL = expm1((log1p(inputSampleL) * 1.618033988749895));
 		
-		inputSampleR *= 0.618033988749895;
 		if (inputSampleR > 1.0) inputSampleR = 1.0;
 		else if (inputSampleR > 0.0) inputSampleR = -expm1((log1p(-inputSampleR) * 1.618033988749895));
 		if (inputSampleR < -1.0) inputSampleR = -1.0;

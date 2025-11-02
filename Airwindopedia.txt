@@ -47,7 +47,7 @@ Tape: TapeHack, ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, Ir
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: SoftClock, DubPlate2, DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
+Utility: SoftClock2, SoftClock, DubPlate2, DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -4922,6 +4922,34 @@ Count the accents and they'll come in these spacings. It's options for 'sub-phra
 This is in line with a music arrangement game I've been developing that's more likely to see life as a video-game now than as the card game I'd intended. Point being, SoftClock can do normal metronome things (except using entrainment rather than ticking at you) and orientation things as far as locating you in the bar, but it can also combine all that into a baffling proggy rhythm that nevertheless guides you into grooving and memorable riffs of many kinds. If the standard variations on freaky prime-numbered prog-meters aren't enough, you can play with Swing and the delay of BigBeat (accented beats) until you've gone full Beefheart: or, rather, full Magic Band and John French drum parts.
 
 Dive as deep as you like, or keep it more simple: SoftClock has you covered. You may be surprised at how much easier it is to hear, entrain, and orient yourself when using a click track that refuses to click. Remember, lay it down as a track, don't try to match it to a normal click, don't grid anything! SoftClock is for gridless grooves, and music that sounds human because it moves like humans. See how it feels.
+
+############ SoftClock2 is a groove-oriented time reference.
+
+SoftClock2, entrainment boogaloo!
+
+You might or might not have heard of the first SoftClock. It came out shortly after I'd developed it because people desperately wanted to play with it, and before I was able to use it much. (still can't, too busy with plugins.) It's the metronome made of waving, wobbling tones where the beat is always a swoop of a (mostly) sine wave that goes up to a high point. Inspired by a joke metronome of dog woofs that proved strangely inspiring to play along to, SoftClock is the machine tempo with perfect regularity but no actual beat, where you have to place the 'click' of your notes wherever it SEEMS to be.
+
+Turns out there are some refinements to be made with SoftClock2. None of them involve ever specifying exactly where a click really is, or letting it sync with a DAW grid. The click is ONLY where you think it to be, and at its best the click is a shape in time defined by your riffs, a terrific way to swing along with really grooving time or dramatic flourishes. It's the anti-machine rhythm.
+
+This is because SoftClock2 swings along with the 'entrainment' of your limbs and musical gestures. Generally you don't play music in sudden microsecond-long bursts of your arms or fingers. You have to swing your arm or lean into a kick or, if you're Les Claypool, stomp your foot along to the beat to get yourself moving to the music. The weight of your motion helps you to keep things steady.
+
+SoftClock2 gives an audio picture of that motion, not of any specific point where the note hits. That makes it a lot more friendly and encouraging to play along to than a traditional click.
+
+And this, you'll need, if you take advantage of SoftClock2's capacity for strange grooves and polyrhythms. Here's where one of the updates is found: on at least the generic VST version of the plugin, the 'Count' control tells you not only which beat it's doing, but after that, the time signature. Many times that's predictable, like a 5 or a 7 or a 4/4. But then you have many variations on 11, 13, 17, 19, 23… just a wide gamut of freaky proggy things to count. The count always works like this: the nonaccented notes start high with the One, swing down to halfway, and then ramp up again to the One. The accents follow patterns: if you want to interpret the count differently (or just have a steady pulse) that's fine, but it's meant to give you subdivisions, typically repeated long subdivisions ending with a short one. For instance, all the 19s are counted that way, like going 5-5-5-4 because the idea is a good weird groove sets up patterns you can track, and a departure at the end. So, SoftClock2 was always designed to do that.
+
+There's a change, though. The original had a 'BigBeat' control and a Swing control. Swing hesitated alternate beats up to and beyond doing a triplet shuffle feel, and BigBeat always took the 'valley' and treated it as the snare hit, which you could hesitate to make a weightier backbeat or a pocket backbeat. Doesn't take much.
+
+The trouble is, people kept hearing the peak as the snare backbeat.
+
+So, SoftClock2 simply lets you decide. This is most relevant to simpler beats, and the weird crazy time signatures may still sound best with the beats ramping up to the One. But if you're just doing a 4 or an 8, or need to reverse the feel of something, or you're doing a reggae where the One is the valley but you need it to hit well behind the beat to groove properly… increase the Valley control instead, and now that accent is slowed. Or, if you're using a simple beat but you hear it ramping up to the snare hit, increase the Peak control and it gets more weight and swing behind it. You can sync it with settings of Swing too, or even construct perfectly steady but wonky grooves this way.
+
+If you're using an AU version, or a DAW where it's not constantly redrawing the plugin labelling, or if you're using Consolidated and it doesn't update what's next to Count quickly enough, I found that closing and opening the plugin interface does seem to update what's shown to the current setting. It's just that some DAWs live-draw this label constantly, and others cache it and stop recalculating it. I can't control that part, but you can get a reference to what you did with a little extra trouble. Count it, it should be doing spaced accents with a departure right at the end to give you the funny time. You, too, can do 17s and 19s that are actually catchy, if you make 'em out of sub-riffs in this way.
+
+And then if you want to be really annoying you can lay down SoftClock with whatever you're doing, and what if you'd like to overdub a complete departure? Like you're in 4/4 but you'd like to put down part of the riff where it's 7 notes in the space of 4?
+
+Cheat. Start with Tuple in 4 to lay down the main riff, and then elsewhere in the arrange window, do a separate pass with Tuple set to 7. It'll be quite a bit faster. Groove whatever you want to that, get a good snippet, and then fly that over to the middle of your 4 groove… and it will line up perfectly with the notes you did in 4, because Tuple is just as accurate in 7 as it is in 4. It'll do the math for you, so you can construct all sorts of peculiar things but make them groove like anything.
+
+Play with it, have fun. There's no wrong way to use this, and you don't have to make it over-fancy. It's just able to scale up to the most unreasonable things and make them seem like you have amazing powers of odd-time-having. The best part is, you do it all playing live to the wobbling tone in SoftClock, so it won't seem artificial. Just kind of alien :)
 
 ############ SoftGate is a gate that can mute hiss and smooth sample tails.
 

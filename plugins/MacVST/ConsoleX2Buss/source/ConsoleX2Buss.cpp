@@ -23,12 +23,6 @@ ConsoleX2Buss::ConsoleX2Buss(audioMasterCallback audioMaster) :
 	I = 1.0;
 	J = 0.5;
 	K = 0.5;
-	L = 0.0;
-	M = 1.0;
-	N = 0.0;
-	O = 0.0;
-	P = 0.5;
-	Q = 0.5;
 	
 	for (int x = 0; x < biq_total; x++) {
 		highA[x] = 0.0;
@@ -51,38 +45,19 @@ ConsoleX2Buss::ConsoleX2Buss(audioMasterCallback audioMaster) :
 	
 	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
 	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
-	bezCompS[bez_cycle] = 1.0; bezGate = 2.0;
+	bezCompS[bez_cycle] = 1.0;
 	//Dynamics2
 	
-	for(int count = 0; count < 22; count++) {
-		iirHPositionL[count] = 0.0;
-		iirHAngleL[count] = 0.0;
-		iirHPositionR[count] = 0.0;
-		iirHAngleR[count] = 0.0;
-	}
-	hBypass = false;
+	for (int x = 0; x < 33; x++) {avg32L[x] = 0.0; avg32R[x] = 0.0;}
+	for (int x = 0; x < 17; x++) {avg16L[x] = 0.0; avg16R[x] = 0.0;}
+	for (int x = 0; x < 9; x++) {avg8L[x] = 0.0; avg8R[x] = 0.0;}
+	for (int x = 0; x < 5; x++) {avg4L[x] = 0.0; avg4R[x] = 0.0;}
+	for (int x = 0; x < 3; x++) {avg2L[x] = 0.0; avg2R[x] = 0.0;}
+	avgPos = 0;
+	lastSlewL = 0.0; lastSlewR = 0.0;
+	lastSlewpleL = 0.0; lastSlewpleR = 0.0;
+	//preTapeHack
 	
-	for(int count = 0; count < 14; count++) {
-		iirLPositionL[count] = 0.0;
-		iirLAngleL[count] = 0.0;
-		iirLPositionR[count] = 0.0;
-		iirLAngleR[count] = 0.0;
-	}
-	lBypass = false;	
-	//Cabs2
-	
-	for(int count = 0; count < dscBuf+2; count++) {
-		dBaL[count] = 0.0;
-		dBaR[count] = 0.0;
-	}
-	dBaPosL = 0.0;
-	dBaPosR = 0.0;
-	dBaXL = 1;
-	dBaXR = 1;
-	//Discontapeity
-	
-	lFreqA = 1.0; lFreqB = 1.0;
-	hFreqA = 0.0; hFreqB = 0.0;
 	panA = 0.5; panB = 0.5;
 	inTrimA = 0.5; inTrimB = 0.5;
 	
@@ -130,12 +105,6 @@ VstInt32 ConsoleX2Buss::getChunk (void** data, bool isPreset)
 	chunkData[8] = I;
 	chunkData[9] = J;
 	chunkData[10] = K;
-	chunkData[11] = L;
-	chunkData[12] = M;
-	chunkData[13] = N;
-	chunkData[14] = O;
-	chunkData[15] = P;
-	chunkData[16] = Q;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -158,12 +127,6 @@ VstInt32 ConsoleX2Buss::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	I = pinParameter(chunkData[8]);
 	J = pinParameter(chunkData[9]);
 	K = pinParameter(chunkData[10]);
-	L = pinParameter(chunkData[11]);
-	M = pinParameter(chunkData[12]);
-	N = pinParameter(chunkData[13]);
-	O = pinParameter(chunkData[14]);
-	P = pinParameter(chunkData[15]);
-	Q = pinParameter(chunkData[16]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -184,12 +147,6 @@ void ConsoleX2Buss::setParameter(VstInt32 index, float value) {
         case kParamI: I = value; break;
         case kParamJ: J = value; break;
         case kParamK: K = value; break;
-        case kParamL: L = value; break;
-        case kParamM: M = value; break;
-        case kParamN: N = value; break;
-        case kParamO: O = value; break;
-        case kParamP: P = value; break;
-        case kParamQ: Q = value; break;
         default: throw; // unknown parameter, shouldn't happen!
     }
 }
@@ -207,12 +164,6 @@ float ConsoleX2Buss::getParameter(VstInt32 index) {
         case kParamI: return I; break;
         case kParamJ: return J; break;
         case kParamK: return K; break;
-        case kParamL: return L; break;
-        case kParamM: return M; break;
-        case kParamN: return N; break;
-        case kParamO: return O; break;
-        case kParamP: return P; break;
-        case kParamQ: return Q; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
@@ -228,14 +179,8 @@ void ConsoleX2Buss::getParameterName(VstInt32 index, char *text) {
 		case kParamG: vst_strncpy (text, "LMidF", kVstMaxParamStrLen); break;
 		case kParamH: vst_strncpy (text, "BassF", kVstMaxParamStrLen); break;
 		case kParamI: vst_strncpy (text, "Thresh", kVstMaxParamStrLen); break;
-		case kParamJ: vst_strncpy (text, "Attack", kVstMaxParamStrLen); break;
-		case kParamK: vst_strncpy (text, "Release", kVstMaxParamStrLen); break;
-		case kParamL: vst_strncpy (text, "Gate", kVstMaxParamStrLen); break;
-		case kParamM: vst_strncpy (text, "Lowpass", kVstMaxParamStrLen); break;
-		case kParamN: vst_strncpy (text, "Hipass", kVstMaxParamStrLen); break;
-		case kParamO: vst_strncpy (text, "More", kVstMaxParamStrLen); break;
-		case kParamP: vst_strncpy (text, "Pan", kVstMaxParamStrLen); break;
-		case kParamQ: vst_strncpy (text, "Fader", kVstMaxParamStrLen); break;
+		case kParamJ: vst_strncpy (text, "Pan", kVstMaxParamStrLen); break;
+		case kParamK: vst_strncpy (text, "Fader", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -253,12 +198,6 @@ void ConsoleX2Buss::getParameterDisplay(VstInt32 index, char *text) {
         case kParamI: float2string (I, text, kVstMaxParamStrLen); break;
         case kParamJ: float2string (J, text, kVstMaxParamStrLen); break;
         case kParamK: float2string (K, text, kVstMaxParamStrLen); break;
-        case kParamL: float2string (L, text, kVstMaxParamStrLen); break;
-        case kParamM: float2string (M, text, kVstMaxParamStrLen); break;
-        case kParamN: float2string (N, text, kVstMaxParamStrLen); break;
-        case kParamO: float2string (O, text, kVstMaxParamStrLen); break;
-        case kParamP: float2string (P, text, kVstMaxParamStrLen); break;
-        case kParamQ: float2string (Q, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -276,12 +215,6 @@ void ConsoleX2Buss::getParameterLabel(VstInt32 index, char *text) {
         case kParamI: vst_strncpy (text, "dyn", kVstMaxParamStrLen); break;
         case kParamJ: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamK: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamL: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamM: vst_strncpy (text, "fltr", kVstMaxParamStrLen); break;
-        case kParamN: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamO: vst_strncpy (text, "+", kVstMaxParamStrLen); break;
-        case kParamP: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamQ: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }

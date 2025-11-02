@@ -12,22 +12,22 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new C
 ConsoleX2Pre::ConsoleX2Pre(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.5;
-	B = 0.5;
+	A = 0.25;
+	B = 0.0;
 	C = 0.5;
 	D = 0.5;
 	E = 0.5;
 	F = 0.5;
 	G = 0.5;
 	H = 0.5;
-	I = 1.0;
+	I = 0.5;
 	J = 0.5;
-	K = 0.5;
-	L = 0.0;
-	M = 1.0;
+	K = 1.0;
+	L = 0.5;
+	M = 0.5;
 	N = 0.0;
-	O = 0.0;
-	P = 0.5;
+	O = 1.0;
+	P = 0.0;
 	Q = 0.5;
 	
 	for (int x = 0; x < biq_total; x++) {
@@ -81,9 +81,18 @@ ConsoleX2Pre::ConsoleX2Pre(audioMasterCallback audioMaster) :
 	dBaXR = 1;
 	//Discontapeity
 	
+	for (int x = 0; x < 33; x++) {avg32L[x] = 0.0; avg32R[x] = 0.0;}
+	for (int x = 0; x < 17; x++) {avg16L[x] = 0.0; avg16R[x] = 0.0;}
+	for (int x = 0; x < 9; x++) {avg8L[x] = 0.0; avg8R[x] = 0.0;}
+	for (int x = 0; x < 5; x++) {avg4L[x] = 0.0; avg4R[x] = 0.0;}
+	for (int x = 0; x < 3; x++) {avg2L[x] = 0.0; avg2R[x] = 0.0;}
+	avgPos = 0;
+	lastSlewL = 0.0; lastSlewR = 0.0;
+	lastSlewpleL = 0.0; lastSlewpleR = 0.0;
+	//preTapeHack	
+	
 	lFreqA = 1.0; lFreqB = 1.0;
 	hFreqA = 0.0; hFreqB = 0.0;
-	panA = 0.5; panB = 0.5;
 	inTrimA = 0.5; inTrimB = 0.5;
 	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
@@ -219,22 +228,22 @@ float ConsoleX2Pre::getParameter(VstInt32 index) {
 
 void ConsoleX2Pre::getParameterName(VstInt32 index, char *text) {
     switch (index) {
-		case kParamA: vst_strncpy (text, "High", kVstMaxParamStrLen); break;
-		case kParamB: vst_strncpy (text, "HMid", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "LMid", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Bass", kVstMaxParamStrLen); break;
-		case kParamE: vst_strncpy (text, "HighF", kVstMaxParamStrLen); break;
-		case kParamF: vst_strncpy (text, "HMidF", kVstMaxParamStrLen); break;
-		case kParamG: vst_strncpy (text, "LMidF", kVstMaxParamStrLen); break;
-		case kParamH: vst_strncpy (text, "BassF", kVstMaxParamStrLen); break;
-		case kParamI: vst_strncpy (text, "Thresh", kVstMaxParamStrLen); break;
-		case kParamJ: vst_strncpy (text, "Attack", kVstMaxParamStrLen); break;
-		case kParamK: vst_strncpy (text, "Release", kVstMaxParamStrLen); break;
-		case kParamL: vst_strncpy (text, "Gate", kVstMaxParamStrLen); break;
-		case kParamM: vst_strncpy (text, "Lowpass", kVstMaxParamStrLen); break;
-		case kParamN: vst_strncpy (text, "Hipass", kVstMaxParamStrLen); break;
-		case kParamO: vst_strncpy (text, "More", kVstMaxParamStrLen); break;
-		case kParamP: vst_strncpy (text, "Pan", kVstMaxParamStrLen); break;
+		case kParamA: vst_strncpy (text, "Trim", kVstMaxParamStrLen); break;
+		case kParamB: vst_strncpy (text, "More", kVstMaxParamStrLen); break;
+		case kParamC: vst_strncpy (text, "High", kVstMaxParamStrLen); break;
+		case kParamD: vst_strncpy (text, "HMid", kVstMaxParamStrLen); break;
+		case kParamE: vst_strncpy (text, "LMid", kVstMaxParamStrLen); break;
+		case kParamF: vst_strncpy (text, "Bass", kVstMaxParamStrLen); break;
+		case kParamG: vst_strncpy (text, "HighF", kVstMaxParamStrLen); break;
+		case kParamH: vst_strncpy (text, "HMidF", kVstMaxParamStrLen); break;
+		case kParamI: vst_strncpy (text, "LMidF", kVstMaxParamStrLen); break;
+		case kParamJ: vst_strncpy (text, "BassF", kVstMaxParamStrLen); break;
+		case kParamK: vst_strncpy (text, "Thresh", kVstMaxParamStrLen); break;
+		case kParamL: vst_strncpy (text, "Attack", kVstMaxParamStrLen); break;
+		case kParamM: vst_strncpy (text, "Release", kVstMaxParamStrLen); break;
+		case kParamN: vst_strncpy (text, "Gate", kVstMaxParamStrLen); break;
+		case kParamO: vst_strncpy (text, "Lowpass", kVstMaxParamStrLen); break;
+		case kParamP: vst_strncpy (text, "Hipass", kVstMaxParamStrLen); break;
 		case kParamQ: vst_strncpy (text, "Fader", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
@@ -242,7 +251,7 @@ void ConsoleX2Pre::getParameterName(VstInt32 index, char *text) {
 
 void ConsoleX2Pre::getParameterDisplay(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
+        case kParamA: int2string ((int)(A*4.0), text, kVstMaxParamStrLen); break;
         case kParamB: float2string (B, text, kVstMaxParamStrLen); break;
         case kParamC: float2string (C, text, kVstMaxParamStrLen); break;
         case kParamD: float2string (D, text, kVstMaxParamStrLen); break;
@@ -265,21 +274,21 @@ void ConsoleX2Pre::getParameterDisplay(VstInt32 index, char *text) {
 
 void ConsoleX2Pre::getParameterLabel(VstInt32 index, char *text) {
     switch (index) {
-        case kParamA: vst_strncpy (text, "eq", kVstMaxParamStrLen); break;
+        case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamC: vst_strncpy (text, "", kVstMaxParamStrLen); break;
+        case kParamC: vst_strncpy (text, "eq", kVstMaxParamStrLen); break;
         case kParamD: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamE: vst_strncpy (text, "freq", kVstMaxParamStrLen); break;
+        case kParamE: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamF: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamG: vst_strncpy (text, "", kVstMaxParamStrLen); break;
+        case kParamG: vst_strncpy (text, "freq", kVstMaxParamStrLen); break;
         case kParamH: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamI: vst_strncpy (text, "dyn", kVstMaxParamStrLen); break;
+        case kParamI: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamJ: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamK: vst_strncpy (text, "", kVstMaxParamStrLen); break;
+        case kParamK: vst_strncpy (text, "dyn", kVstMaxParamStrLen); break;
         case kParamL: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamM: vst_strncpy (text, "fltr", kVstMaxParamStrLen); break;
+        case kParamM: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamN: vst_strncpy (text, "", kVstMaxParamStrLen); break;
-        case kParamO: vst_strncpy (text, "+", kVstMaxParamStrLen); break;
+        case kParamO: vst_strncpy (text, "fltr", kVstMaxParamStrLen); break;
         case kParamP: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamQ: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!

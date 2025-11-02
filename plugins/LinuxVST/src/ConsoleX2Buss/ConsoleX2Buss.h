@@ -27,15 +27,8 @@ enum {
 	kParamI =8,
 	kParamJ =9,
 	kParamK =10,
-	kParamL =11,
-	kParamM =12,
-	kParamN =13,
-	kParamO =14,
-	kParamP =15,
-	kParamQ =16,
-  kNumParameters = 17
+  kNumParameters = 11
 }; //
-const int dscBuf = 256;
 
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
@@ -80,12 +73,6 @@ private:
     float I;
     float J;
     float K;
-    float L;
-    float M;
-    float N;
-    float O;
-    float P;
-    float Q;
 
 	enum {
 		biq_freq,
@@ -139,33 +126,25 @@ private:
 	double bezCompF[bez_total];
 	double bezMaxF;
 	double bezCompS[bez_total];
-	double bezGate;
 	//Dynamics2
-	
-	double iirHPositionL[23];
-	double iirHAngleL[23];
-	double iirHPositionR[23];
-	double iirHAngleR[23];
-	bool hBypass;
-	double iirLPositionL[15];
-	double iirLAngleL[15];
-	double iirLPositionR[15];
-	double iirLAngleR[15];
-	bool lBypass;
-	double lFreqA;
-	double lFreqB; //the lowpass
-	double hFreqA;
-	double hFreqB; //the highpass
-	//Cabs2
-	
-	double dBaL[dscBuf+5];
-	double dBaPosL;
-	int dBaXL;
-	double dBaR[dscBuf+5];
-	double dBaPosR;
-	int dBaXR;
-	//Discontapeity
-	
+
+	double avg32L[33];
+	double avg32R[33];
+	double avg16L[17];
+	double avg16R[17];
+	double avg8L[9];
+	double avg8R[9];
+	double avg4L[5];
+	double avg4R[5];
+	double avg2L[3];
+	double avg2R[3];
+	int avgPos;
+	double lastSlewL;
+	double lastSlewR;
+	double lastSlewpleL;
+	double lastSlewpleR;
+	//preTapeHack
+		
 	double panA;
 	double panB;
 	double inTrimA;
