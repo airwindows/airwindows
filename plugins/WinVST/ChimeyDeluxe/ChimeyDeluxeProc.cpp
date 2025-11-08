@@ -20,43 +20,46 @@ void ChimeyDeluxe::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	
 	double drive = 1.0;
 	double pad = 1.0;
-	angG[1] = A+0.5;
+	angG[1] = (A+1.5)*0.5;
 	if (pad > angG[1]) pad = angG[1];
 	if (drive < angG[1]) drive = angG[1];
 	angG[0] = (1.0+angG[1])*0.5; //if boost, boost half
 	if (angG[0] > angG[1]) angG[0] = angG[1];
-	angG[2] = B+0.5;
+	angG[2] = (B+1.5)*0.5;
 	if (pad > angG[2]) pad = angG[2];
 	if (drive < angG[2]) drive = angG[2];
-	angG[3] = C+0.5;
+	angG[3] = (C+1.5)*0.5;
 	if (pad > angG[3]) pad = angG[3];
 	if (drive < angG[3]) drive = angG[3];
-	angG[4] = D+0.5;
+	angG[4] = (D+1.5)*0.5;
 	if (pad > angG[4]) pad = angG[4];
 	if (drive < angG[4]) drive = angG[4];
-	angG[5] = E+0.5;
+	angG[5] = (E+1.5)*0.5;
 	if (pad > angG[5]) pad = angG[5];
 	if (drive < angG[5]) drive = angG[5];
-	angG[6] = F+0.5;
+	angG[6] = (F+1.5)*0.5;
 	if (pad > angG[6]) pad = angG[6];
 	if (drive < angG[6]) drive = angG[6];
-	angG[7] = G+0.5;
+	angG[7] = (G+1.5)*0.5;
 	if (pad > angG[7]) pad = angG[7];
 	if (drive < angG[7]) drive = angG[7];
-	angG[8] = H+0.5;
+	angG[8] = (H+1.5)*0.5;
 	if (pad > angG[8]) pad = angG[8];
 	if (drive < angG[8]) drive = angG[8];
-	angG[9] = I+0.5;
+	angG[9] = (I+1.5)*0.5;
 	if (pad > angG[9]) pad = angG[9];
 	if (drive < angG[9]) drive = angG[9];
-	angG[10] = J+0.5;
+	angG[10] = (J+1.5)*0.5;
 	if (pad > angG[10]) pad = angG[10];
 	if (drive < angG[10]) drive = angG[10];
-	angG[11] = (angG[10]+1.0)*0.5;
-	angG[12] = (angG[11]+1.0)*0.5;
-	double tune = 0.618+(overallscale*0.0055);	
-	double threshold = 1.0-(drive*0.23);
-	double adjSpd = ((drive*120.0)+50.0)*overallscale;
+	angG[12] = angG[11] = angG[10];
+	if (drive > 1.0) drive = pow(drive,drive*2.0);
+	double tune = 0.618+(overallscale*0.0055);
+	double bezRez = (pad * drive * 0.0005)/overallscale;
+	int bezFreqFraction = (int)(1.0/bezRez);
+	double bezFreqTrim = (double)bezFreqFraction/(bezFreqFraction+1.0);
+	bezRez = 1.0 / bezFreqFraction;
+	bezFreqTrim = 1.0-(bezRez*bezFreqTrim);
 	
     while (--sampleFrames >= 0)
     {
@@ -67,64 +70,56 @@ void ChimeyDeluxe::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		
 		for (int x = 0; x < 16; x++) {
 			double fr = (0.92/overallscale)+(overallscale*0.01);
-			double band = inputSampleL; inputSampleL = 0.0;
+			double bandL = inputSampleL; inputSampleL = 0.0;
+			double bandR = inputSampleR; inputSampleR = 0.0;
 			for (int y = 0; y < 12; y++) {
-				angAL[x][y] = (angAL[x][y]*(1.0-fr)) + ((band-angSL[x][y])*fr);
-				double temp = band; band = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(band*fr);
-				angSL[x][y] = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(band*fr);
-				inputSampleL += ((temp-band)*angG[y]);
+				angAL[x][y] = (angAL[x][y]*(1.0-fr)) + ((bandL-angSL[x][y])*fr);
+				double tempL = bandL; bandL = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(bandL*fr);
+				angSL[x][y] = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(bandL*fr);
+				inputSampleL += ((tempL-bandL)*angG[y]);
+				angAR[x][y] = (angAR[x][y]*(1.0-fr)) + ((bandR-angSR[x][y])*fr);
+				double tempR = bandR; bandR = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(bandR*fr);
+				angSR[x][y] = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(bandR*fr);
+				inputSampleR += ((tempR-bandR)*angG[y]);
 				fr *= tune;
 			}
-			inputSampleL += band;
-			inputSampleL *= threshold;
-			inputSampleL *= (muCompL/threshold);
-			if (fabs(inputSampleL) > threshold)
-			{
-				muCompL *= muSpdL;
-				if (threshold/fabs(inputSampleL) < threshold) muCompL += threshold*fabs(inputSampleL);
-				else muCompL -= threshold/fabs(inputSampleL);
-				muCompL /= muSpdL;
-			} else {
-				muCompL *= (muSpdL*muSpdL);
-				muCompL += ((1.1+threshold)-fabs(inputSampleL));
-				muCompL /= (muSpdL*muSpdL);
+			inputSampleL += bandL;
+			inputSampleR += bandR; //end of filter part
+			
+			bezComp[bez_cycle][x] += bezRez;
+			bezComp[bez_SampL][x] += (fabs(inputSampleL) * bezRez);
+			bezComp[bez_SampR][x] += (fabs(inputSampleR) * bezRez);
+			if (bezComp[bez_cycle][x] > 1.0) {
+				bezComp[bez_cycle][x] = 0.0;
+				bezComp[bez_CL][x] = bezComp[bez_BL][x];
+				bezComp[bez_BL][x] = bezComp[bez_AL][x];
+				bezComp[bez_AL][x] = bezComp[bez_SampL][x];
+				bezComp[bez_SampL][x] = 0.0;
+				bezComp[bez_CR][x] = bezComp[bez_BR][x];
+				bezComp[bez_BR][x] = bezComp[bez_AR][x];
+				bezComp[bez_AR][x] = bezComp[bez_SampR][x];
+				bezComp[bez_SampR][x] = 0.0;
 			}
-			muCompL = fmax(fmin(muCompL,1.0),threshold);
-			inputSampleL *= (muCompL*muCompL);
-			muSpdL = fmax(fmin(((muSpdL*(muSpdL-1.0))+(fabs(inputSampleL*adjSpd)))/muSpdL,adjSpd*2.0),adjSpd);
+			double z = bezComp[bez_cycle][x]*bezFreqTrim;
+			double CBL = (bezComp[bez_CL][x]*(1.0-z))+(bezComp[bez_BL][x]*z);
+			double BAL = (bezComp[bez_BL][x]*(1.0-z))+(bezComp[bez_AL][x]*z);
+			double CBAL = (bezComp[bez_BL][x]+(CBL*(1.0-z))+(BAL*z));
+			
+			double CBR = (bezComp[bez_CR][x]*(1.0-z))+(bezComp[bez_BR][x]*z);
+			double BAR = (bezComp[bez_BR][x]*(1.0-z))+(bezComp[bez_AR][x]*z);
+			double CBAR = (bezComp[bez_BR][x]+(CBR*(1.0-z))+(BAR*z));
+			
+			CBAL = fmin(fmax(CBAL*drive*0.23,0.0),M_PI_2);
+			CBAR = fmin(fmax(CBAR*drive*0.23,0.0),M_PI_2);
+			inputSampleL *= 1.0-sin(CBAL);
+			inputSampleR *= 1.0-sin(CBAR);
 		}
-		inputSampleL = sin(fmin(fmax(inputSampleL,-M_PI_2),M_PI_2));
-				
-		for (int x = 0; x < 16; x++) {
-			double fr = (0.92/overallscale)+(overallscale*0.01);
-			double band = inputSampleR; inputSampleR = 0.0;
-			for (int y = 0; y < 12; y++) {
-				angAR[x][y] = (angAR[x][y]*(1.0-fr)) + ((band-angSR[x][y])*fr);
-				double temp = band; band = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(band*fr);
-				angSR[x][y] = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(band*fr);
-				inputSampleR += ((temp-band)*angG[y]);
-				fr *= tune;
-			}
-			inputSampleR += band;
-			inputSampleR *= threshold;
-			inputSampleR *= (muCompR/threshold);
-			if (fabs(inputSampleR) > threshold)
-			{
-				muCompR *= muSpdR;
-				if (threshold/fabs(inputSampleR) < threshold) muCompR += threshold*fabs(inputSampleR);
-				else muCompR -= threshold/fabs(inputSampleR);
-				muCompR /= muSpdR;
-			} else {
-				muCompR *= (muSpdR*muSpdR);
-				muCompR += ((1.1+threshold)-fabs(inputSampleR));
-				muCompR /= (muSpdR*muSpdR);
-			}
-			muCompR = fmax(fmin(muCompR,1.0),threshold);
-			inputSampleR *= (muCompR*muCompR);
-			muSpdR = fmax(fmin(((muSpdR*(muSpdR-1.0))+(fabs(inputSampleR*adjSpd)))/muSpdR,adjSpd*2.0),adjSpd);
-		}
-		inputSampleR = sin(fmin(fmax(inputSampleR,-M_PI_2),M_PI_2));
-				
+		inputSampleL /= drive;
+		inputSampleR /= drive;
+		
+		inputSampleL = fmin(fmax(inputSampleL*pad,-1.0),1.0);
+		inputSampleR = fmin(fmax(inputSampleR*pad,-1.0),1.0);
+		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
@@ -157,43 +152,46 @@ void ChimeyDeluxe::processDoubleReplacing(double **inputs, double **outputs, Vst
 	
 	double drive = 1.0;
 	double pad = 1.0;
-	angG[1] = A+0.5;
+	angG[1] = (A+1.5)*0.5;
 	if (pad > angG[1]) pad = angG[1];
 	if (drive < angG[1]) drive = angG[1];
 	angG[0] = (1.0+angG[1])*0.5; //if boost, boost half
 	if (angG[0] > angG[1]) angG[0] = angG[1];
-	angG[2] = B+0.5;
+	angG[2] = (B+1.5)*0.5;
 	if (pad > angG[2]) pad = angG[2];
 	if (drive < angG[2]) drive = angG[2];
-	angG[3] = C+0.5;
+	angG[3] = (C+1.5)*0.5;
 	if (pad > angG[3]) pad = angG[3];
 	if (drive < angG[3]) drive = angG[3];
-	angG[4] = D+0.5;
+	angG[4] = (D+1.5)*0.5;
 	if (pad > angG[4]) pad = angG[4];
 	if (drive < angG[4]) drive = angG[4];
-	angG[5] = E+0.5;
+	angG[5] = (E+1.5)*0.5;
 	if (pad > angG[5]) pad = angG[5];
 	if (drive < angG[5]) drive = angG[5];
-	angG[6] = F+0.5;
+	angG[6] = (F+1.5)*0.5;
 	if (pad > angG[6]) pad = angG[6];
 	if (drive < angG[6]) drive = angG[6];
-	angG[7] = G+0.5;
+	angG[7] = (G+1.5)*0.5;
 	if (pad > angG[7]) pad = angG[7];
 	if (drive < angG[7]) drive = angG[7];
-	angG[8] = H+0.5;
+	angG[8] = (H+1.5)*0.5;
 	if (pad > angG[8]) pad = angG[8];
 	if (drive < angG[8]) drive = angG[8];
-	angG[9] = I+0.5;
+	angG[9] = (I+1.5)*0.5;
 	if (pad > angG[9]) pad = angG[9];
 	if (drive < angG[9]) drive = angG[9];
-	angG[10] = J+0.5;
+	angG[10] = (J+1.5)*0.5;
 	if (pad > angG[10]) pad = angG[10];
 	if (drive < angG[10]) drive = angG[10];
-	angG[11] = (angG[10]+1.0)*0.5;
-	angG[12] = (angG[11]+1.0)*0.5;
-	double tune = 0.618+(overallscale*0.0055);	
-	double threshold = 1.0-(drive*0.23);
-	double adjSpd = ((drive*120.0)+50.0)*overallscale;
+	angG[12] = angG[11] = angG[10];
+	if (drive > 1.0) drive = pow(drive,drive*2.0);
+	double tune = 0.618+(overallscale*0.0055);
+	double bezRez = (pad * drive * 0.0005)/overallscale;
+	int bezFreqFraction = (int)(1.0/bezRez);
+	double bezFreqTrim = (double)bezFreqFraction/(bezFreqFraction+1.0);
+	bezRez = 1.0 / bezFreqFraction;
+	bezFreqTrim = 1.0-(bezRez*bezFreqTrim);
 	
     while (--sampleFrames >= 0)
     {
@@ -204,63 +202,55 @@ void ChimeyDeluxe::processDoubleReplacing(double **inputs, double **outputs, Vst
 		
 		for (int x = 0; x < 16; x++) {
 			double fr = (0.92/overallscale)+(overallscale*0.01);
-			double band = inputSampleL; inputSampleL = 0.0;
+			double bandL = inputSampleL; inputSampleL = 0.0;
+			double bandR = inputSampleR; inputSampleR = 0.0;
 			for (int y = 0; y < 12; y++) {
-				angAL[x][y] = (angAL[x][y]*(1.0-fr)) + ((band-angSL[x][y])*fr);
-				double temp = band; band = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(band*fr);
-				angSL[x][y] = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(band*fr);
-				inputSampleL += ((temp-band)*angG[y]);
+				angAL[x][y] = (angAL[x][y]*(1.0-fr)) + ((bandL-angSL[x][y])*fr);
+				double tempL = bandL; bandL = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(bandL*fr);
+				angSL[x][y] = ((angSL[x][y]+(angAL[x][y]*fr)) * (1.0-fr))+(bandL*fr);
+				inputSampleL += ((tempL-bandL)*angG[y]);
+				angAR[x][y] = (angAR[x][y]*(1.0-fr)) + ((bandR-angSR[x][y])*fr);
+				double tempR = bandR; bandR = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(bandR*fr);
+				angSR[x][y] = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(bandR*fr);
+				inputSampleR += ((tempR-bandR)*angG[y]);
 				fr *= tune;
 			}
-			inputSampleL += band;
-			inputSampleL *= threshold;
-			inputSampleL *= (muCompL/threshold);
-			if (fabs(inputSampleL) > threshold)
-			{
-				muCompL *= muSpdL;
-				if (threshold/fabs(inputSampleL) < threshold) muCompL += threshold*fabs(inputSampleL);
-				else muCompL -= threshold/fabs(inputSampleL);
-				muCompL /= muSpdL;
-			} else {
-				muCompL *= (muSpdL*muSpdL);
-				muCompL += ((1.1+threshold)-fabs(inputSampleL));
-				muCompL /= (muSpdL*muSpdL);
+			inputSampleL += bandL;
+			inputSampleR += bandR; //end of filter part
+			
+			bezComp[bez_cycle][x] += bezRez;
+			bezComp[bez_SampL][x] += (fabs(inputSampleL) * bezRez);
+			bezComp[bez_SampR][x] += (fabs(inputSampleR) * bezRez);
+			if (bezComp[bez_cycle][x] > 1.0) {
+				bezComp[bez_cycle][x] = 0.0;
+				bezComp[bez_CL][x] = bezComp[bez_BL][x];
+				bezComp[bez_BL][x] = bezComp[bez_AL][x];
+				bezComp[bez_AL][x] = bezComp[bez_SampL][x];
+				bezComp[bez_SampL][x] = 0.0;
+				bezComp[bez_CR][x] = bezComp[bez_BR][x];
+				bezComp[bez_BR][x] = bezComp[bez_AR][x];
+				bezComp[bez_AR][x] = bezComp[bez_SampR][x];
+				bezComp[bez_SampR][x] = 0.0;
 			}
-			muCompL = fmax(fmin(muCompL,1.0),threshold);
-			inputSampleL *= (muCompL*muCompL);
-			muSpdL = fmax(fmin(((muSpdL*(muSpdL-1.0))+(fabs(inputSampleL*adjSpd)))/muSpdL,adjSpd*2.0),adjSpd);
+			double z = bezComp[bez_cycle][x]*bezFreqTrim;
+			double CBL = (bezComp[bez_CL][x]*(1.0-z))+(bezComp[bez_BL][x]*z);
+			double BAL = (bezComp[bez_BL][x]*(1.0-z))+(bezComp[bez_AL][x]*z);
+			double CBAL = (bezComp[bez_BL][x]+(CBL*(1.0-z))+(BAL*z));
+			
+			double CBR = (bezComp[bez_CR][x]*(1.0-z))+(bezComp[bez_BR][x]*z);
+			double BAR = (bezComp[bez_BR][x]*(1.0-z))+(bezComp[bez_AR][x]*z);
+			double CBAR = (bezComp[bez_BR][x]+(CBR*(1.0-z))+(BAR*z));
+			
+			CBAL = fmin(fmax(CBAL*drive*0.23,0.0),M_PI_2);
+			CBAR = fmin(fmax(CBAR*drive*0.23,0.0),M_PI_2);
+			inputSampleL *= 1.0-sin(CBAL);
+			inputSampleR *= 1.0-sin(CBAR);
 		}
-		inputSampleL = sin(fmin(fmax(inputSampleL,-M_PI_2),M_PI_2));
+		inputSampleL /= drive;
+		inputSampleR /= drive;
 		
-		for (int x = 0; x < 16; x++) {
-			double fr = (0.92/overallscale)+(overallscale*0.01);
-			double band = inputSampleR; inputSampleR = 0.0;
-			for (int y = 0; y < 12; y++) {
-				angAR[x][y] = (angAR[x][y]*(1.0-fr)) + ((band-angSR[x][y])*fr);
-				double temp = band; band = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(band*fr);
-				angSR[x][y] = ((angSR[x][y]+(angAR[x][y]*fr)) * (1.0-fr))+(band*fr);
-				inputSampleR += ((temp-band)*angG[y]);
-				fr *= tune;
-			}
-			inputSampleR += band;
-			inputSampleR *= threshold;
-			inputSampleR *= (muCompR/threshold);
-			if (fabs(inputSampleR) > threshold)
-			{
-				muCompR *= muSpdR;
-				if (threshold/fabs(inputSampleR) < threshold) muCompR += threshold*fabs(inputSampleR);
-				else muCompR -= threshold/fabs(inputSampleR);
-				muCompR /= muSpdR;
-			} else {
-				muCompR *= (muSpdR*muSpdR);
-				muCompR += ((1.1+threshold)-fabs(inputSampleR));
-				muCompR /= (muSpdR*muSpdR);
-			}
-			muCompR = fmax(fmin(muCompR,1.0),threshold);
-			inputSampleR *= (muCompR*muCompR);
-			muSpdR = fmax(fmin(((muSpdR*(muSpdR-1.0))+(fabs(inputSampleR*adjSpd)))/muSpdR,adjSpd*2.0),adjSpd);
-		}
-		inputSampleR = sin(fmin(fmax(inputSampleR,-M_PI_2),M_PI_2));
+		inputSampleL = fmin(fmax(inputSampleL*pad,-1.0),1.0);
+		inputSampleR = fmin(fmax(inputSampleR*pad,-1.0),1.0);
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);

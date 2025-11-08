@@ -24,17 +24,16 @@ ChimeyDeluxe::ChimeyDeluxe(audioMasterCallback audioMaster) :
 	J = 0.5;
 	
 	for(int x=0; x<17; x++) {
+		for (int w = 0; w < bez_total; w++) bezComp[w][x] = 0.0;
+		bezComp[bez_cycle][x] = 1.0;
 		for(int y=0; y<14; y++) {
-			angSL[x][y] = 0.0;angAL[x][y] = 0.0;
-			angSR[x][y] = 0.0;angAR[x][y] = 0.0;
+			angSL[x][y] = 0.0;
+			angAL[x][y] = 0.0;
+			angSR[x][y] = 0.0;
+			angAR[x][y] = 0.0;
 		}
 	}
 	for(int y=0; y<14; y++) angG[y] = 0.0;
-
-	muCompL = 1.0;
-	muSpdL = 100.0;
-	muCompR = 1.0;
-	muSpdR = 100.0;
 	
 	fpdL = 1.0; while (fpdL < 16386) fpdL = rand()*UINT32_MAX;
 	fpdR = 1.0; while (fpdR < 16386) fpdR = rand()*UINT32_MAX;

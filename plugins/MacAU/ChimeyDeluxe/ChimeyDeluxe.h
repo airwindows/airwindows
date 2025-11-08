@@ -154,9 +154,18 @@ public:
 		double angS[18][15];
 		double angA[18][15];
 		double angG[15];
-		
-		double muComp;
-		double muSpd;
+				
+		enum {
+			bez_AL,
+			bez_BL,
+			bez_CL,
+			bez_InL,
+			bez_UnInL,
+			bez_SampL,
+			bez_cycle,
+			bez_total
+		}; //the new undersampling. bez signifies the bezier curve reconstruction
+		double bezComp[bez_total][18];
 				
 		uint32_t fpd;
 	};
