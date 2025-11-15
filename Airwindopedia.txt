@@ -25,7 +25,7 @@ Distortion: Distortion, Edge, Dirt, Mackity, ZOutputStage, Density2, Zoom, Densi
 
 Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither, NotJustAnotherCD, Beam, TapeDither, SpatializeDither, VinylDither, DoublePaul, Ditherbox, BuildATPDF, NodeDither, StudioTan, DitherMeTimbers, DitherMeDiskers, RawTimbers, RawGlitters, NaturalizeDither, HighGlossDither, DitherFloat
 
-Dynamics: Pressure6, BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
+Dynamics: Dynamics2, Pressure6, BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
 
 Effects: TakeCare, RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
@@ -2253,6 +2253,26 @@ Dynamics started with a request: the gate, from CStrip, on its own. Then I thoug
 I think it worked.
 
 Dynamics can be very transparent, or you can crank the speed and intensity to be hyper-squished… but since it's a single plugin, you can hypercompress AND gate as a unit. That means you're triggering the gate off the source audio, you're able to control the closing of the gate like it's raw sound, but the sound you're gating is the compressed one. And that means terrific control and cleanness on the sculpted, tightened sounds. I've designed it so you can make it gate on almost anything, and squish very aggressively. It's unlinked so you can use it on a stereo submix with distinct parts for each side, or put it on a mono track to control and shape it.
+
+############ Dynamics2 is the compressor gate for new Console plugins!
+
+Dynamics is the compressor/gate found in ConsoleX. Well, what's new in compression between last year and this year? BeziComp is what. BeziComp is out, and is my Bezier curve stuff as applied to a compressor. The curve is simply tracking the loudness of the signal and using it as control points.
+
+What's that do? It constructs a compression curve that can react VERY quickly, but doesn't follow the normal rules as far as such curves are concerned. It's a gain change with no aliasing because it can never change gain faster than the speed of the curve: it can never get caught on the edges of a waveform and induce artifacts, because it's generating a curve on the fly that can work up to high speed but never just abruptly change the gain causing a noise.
+
+My plugins Surge and SurgeTide are a bit like this, and just as free of artifact, but they can't compress in the normal sense, and this can… to some extent. You see, BeziComp is a little unpredictable. You can barely hear it until it's doing crazy things, and it's a striking compression style but not very familiar.
+
+So, Dynamics2 adds something else… a whole separate compression routine, also BeziComp, that runs slower. The first compression is run by the Attack control, and you can turn that up to respond extremely fast, or slow it down until attacks are easy to here. Then, the second compression's run by the Release control, and it's always slower than Attack is, and spreads out the response a little. My hope is that it responds more like people need, while retaining the transparency and bounciness BeziCompe can provide.
+
+And then, there's the Gate control. Its release speed is shared with the compressor's release speed, and it's a bit sensitive: if it's not kicking in, you might not have the release speed fast enough. The thing about it is, this is another Bezier-curve feature. So, it can snap off very quickly, but without providing a click on either gating or releasing gating.
+
+I've got more elaborate gates in store (there's this little thing called DeNoise that's coming out) and it's even possible this will see revision before new versions of Console come out, so this is a good place for feedback on whether this is working nicely for people. The whole engine runs on Bezier curves, so it has some characteristics that automatically beat its predecessor, Dynamics, but that's not to say I can't find ways to update it further.
+
+But on a recent livestream, at the end of the day, I asked what people wanted the coming weekend. And I immediately heard back, Dynamics2! And so it is: this week's plugin is a preview or prototype of what goes in ConsoleH, and in ConsoleX2.
+
+AU versions contain an extra 'Dynamics2Mono' version, which is coded N to N, meaning it will run pure mono, but also unlinked stereo and any larger number of channels you like (all the AU plugins with 'mono' in the name do this).
+
+Let me know how this works for you! There's time to fuss with it a little more, before it's 2026 and it gets built into Console systems!
 
 ############ Dyno is a lot like Mojo, but for intensity instead of loudness.
 
