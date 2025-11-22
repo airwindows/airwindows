@@ -57,23 +57,30 @@
 static const float kDefaultValue_ParamA = 0.5;
 static const float kDefaultValue_ParamB = 1.0;
 static const float kDefaultValue_ParamC = 1.0;
-static const float kDefaultValue_ParamD = 1.0;
+static const float kDefaultValue_ParamD = 0.0;
+static const float kDefaultValue_ParamE = 1.0;
 
 static CFStringRef kParameterAName = CFSTR("Replace");
 static CFStringRef kParameterBName = CFSTR("Derez");
 static CFStringRef kParameterCName = CFSTR("Filter");
-static CFStringRef kParameterDName = CFSTR("Dry/Wet");
+static CFStringRef kParameterDName = CFSTR("Wider");
+static CFStringRef kParameterEName = CFSTR("Dry/Wet");
 
 enum {
 	kParam_A =0,
 	kParam_B =1,
 	kParam_C =2,
 	kParam_D =3,
+	kParam_E =4,
 	//Add your parameters here...
-	kNumberOfParameters=4
+	kNumberOfParameters=5
 };
 
-const int d4A = 136; const int d4B = 52; const int d4C = 53; const int d4D = 1261; const int d4E = 209; const int d4F = 473; const int d4G = 549; const int d4H = 29; const int d4I = 92; const int d4J = 1137; const int d4K = 1406; const int d4L = 994; const int d4M = 1314; const int d4N = 191; const int d4O = 1263; const int d4P = 103; //5 to 116 ms, 436 seat theater  
+const int d4A = 136; const int d4B = 52; const int d4C = 53; const int d4D = 1261; 
+const int d4E = 209; const int d4F = 473; const int d4G = 549; const int d4H = 29; 
+const int d4I = 92; const int d4J = 1137; const int d4K = 1406; const int d4L = 994; 
+const int d4M = 1314; const int d4N = 191; const int d4O = 1263; const int d4P = 103; 
+//5 to 116 ms, 436 seat theater  
 #define FOURBYFOUR true // 436seat1365253x4 on 2025-11-09 VerbTiny
 
 #pragma mark ____VerbTiny
@@ -157,6 +164,45 @@ public:
 	int c4AR,c4BR,c4CR,c4DR,c4ER,c4FR,c4GR,c4HR;
 	int c4IR,c4JR,c4KR,c4LR,c4MR,c4NR,c4OR,c4PR;
 	double f4AL,f4BL,f4CL,f4DL,f4DR,f4HR,f4LR,f4PR;
+	//base stereo reverb
+	double b4AL[d4A+5];
+	double b4BL[d4B+5];
+	double b4CL[d4C+5];
+	double b4DL[d4D+5];
+	double b4EL[d4E+5];
+	double b4FL[d4F+5];
+	double b4GL[d4G+5];
+	double b4HL[d4H+5];
+	double b4IL[d4I+5];
+	double b4JL[d4J+5];
+	double b4KL[d4K+5];
+	double b4LL[d4L+5];
+	double b4ML[d4M+5];
+	double b4NL[d4N+5];
+	double b4OL[d4O+5];
+	double b4PL[d4P+5];
+	double b4AR[d4A+5];
+	double b4BR[d4B+5];
+	double b4CR[d4C+5];
+	double b4DR[d4D+5];
+	double b4ER[d4E+5];
+	double b4FR[d4F+5];
+	double b4GR[d4G+5];
+	double b4HR[d4H+5];
+	double b4IR[d4I+5];
+	double b4JR[d4J+5];
+	double b4KR[d4K+5];
+	double b4LR[d4L+5];
+	double b4MR[d4M+5];
+	double b4NR[d4N+5];
+	double b4OR[d4O+5];
+	double b4PR[d4P+5];
+	int e4AL,e4BL,e4CL,e4DL,e4EL,e4FL,e4GL,e4HL;
+	int e4IL,e4JL,e4KL,e4LL,e4ML,e4NL,e4OL,e4PL;		
+	int e4AR,e4BR,e4CR,e4DR,e4ER,e4FR,e4GR,e4HR;
+	int e4IR,e4JR,e4KR,e4LR,e4MR,e4NR,e4OR,e4PR;
+	double g4AL,g4BL,g4CL,g4DL,g4DR,g4HR,g4LR,g4PR;
+	//changed letter is the dual mono, with rearranged grid
 	
 	enum {
 		bez_AL,
@@ -165,8 +211,6 @@ public:
 		bez_BR,
 		bez_CL,
 		bez_CR,	
-		bez_InL,
-		bez_InR,
 		bez_SampL,
 		bez_SampR,
 		bez_cycle,

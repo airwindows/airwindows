@@ -5957,6 +5957,36 @@ Just short of 12 MILLION echoes, even without regen. And they both have regen.
 
 I'll give you more reverbs based on this technique, but enjoy the new bigger-than-Cosmos space :)
 
+############ VerbTiny is a classic artificial reverb that expands reverb shape.
+
+So, why this much simpler reverb? Instead of the more elaborate ones I'm developing starting with the letter k?
+
+Because those ones (like kStation, kGuitarHall2 etc) are meant to simulate an acoustic space of various sorts. And that's interesting, and usually what I want if I'm using reverb for things. And there'll be more of those (for instance, kWoodRoom).
+
+But VerbTiny's made for different purposes. Rather than place sounds in a convincing acoustic environment, it's about merging itself with sounds to alter their texture. I was listening to some old dub techno and noticed that the reverb was… naive. Much like in the 80s and 90s, I was hearing a lot of fake reverb run without any predelay or anything sophisticated, just the 'tssshhhh' of an early reverb device.
+
+Then, experimenting with 4x4 matrices, I hit on one that was kind of special.
+
+It was just another 4x4 matrix, but run through my testing, it made a sound that was weirdly intense with peak energy, beyond anything else I'd ever created. Just a lucky break (through spending days and weeks and months using genetic algorithm to evolve millions and billions of possible reverb matrices, so it's not like it was only an accident). And that's what's in VerbTiny: that one algorithm for making a simple reverb.
+
+Twice.
+
+Because I'd had another idea: yes, it was gonna be 'VerbTiny' because it could sound good but the code would be way simpler than the main ones I'm developing. An example of super-low-CPU digital reverb, complete with my Bezier undersampling so it'd work on all sample rates, and also a Bezier filter so you could make it darker. But what if I ran another copy of it (since it's so simple) and made that one dual-mono?
+
+That would mean a wideness control, because it started out seeming kind of narrow (I can't control this, it's part of the algorithm). If there was a dual mono instance, each side would just feed back into the same side, meaning that stereo would stay as VERY wide stereo, at the cost of destroying the normal stereo image the reverb would have. And running two 4x4 reverbs isn't that demanding.
+
+And then, since the 'normal' stereo reverb was so narrow, that means it had a lot of energy in the mid channel even though it's two stereo channels. So, what if the wideness went from 'normal' to the dual mono one at the center (0.5) and then as you went beyond that, you brought in the original revverb again, but with one channel phase flipped? Then it'd all be side channel energy, against the dual mono.
+
+And so I did.
+
+So most of this reverb acts normally (the regeneration control is a Galactic-style 'replace', the Derez and Filter controls are strictly 'good sounding' Bezier filtering, and the dry wet is as you'd expect). It's designed to be largely an 'old school' reverb, and is in my Basic category in Consolidated because of how simple that is.
+
+And then the Wider control is still easy, but contains subtleties. If you have it exactly at 0, 0.5, or 1, you're wasting half the reverb (of course, you can do that if you want, I'm just saying). But adjust it, and listen to the shape of the 'space'. You'll find 0 is a normal stereo reverb, and then as you bring in the dual-mono version (set up so it blends nicely), the texture changes and becomes richer and it's like turning up a 'stereo wide' control. At 0.5 you have a weird wideness effect done in reverb alone. It's unnatural, but can be neat-sounding. And then as you continue to turn up Wider, you get into a HYPER-wide effect that also produces that richer tone, and it'll really accentuate the stereo space like nothing I've made (short of the Srsly plugins, which you could put on the end of this just for overkill).
+
+I'm looking at making one of these which is the opposite tone: dense, thick, and soupy, for adding body to the sound, rather than depth and spaciousness. This one is for artificial depth and space, but in a way that's more retro and less realistic.
+
+Hope you like it! Again, I would look for 'blends' of normal and dual-mono, either between 0 and 0.5, or between 0.5 and 1. That way you're using both of the reverbs inside. But any way you use this is fine. I'm looking forward to playing with it myself once I've finished some more plugins, perhaps on my Bastl Kastle-based jams. It's intentionally not like my other reverbs, but for some things it is just what I need :)
+
 ############ Vibrato lets you vibrato, chorus, flange, and make odd FM noises.
 
 The heart of Vibrato is the Airwindows moving-delay-tap interpolation code also found in Chorus and Flanger, but here there’s some extra functionality plus ways to partially simulate those other plugins: while you can make the full-wet sound do a nice vibrato (automate to taste), there are other fun things to do. You can use the dry/wet to get a chorusing effect, or with less depth, a flange: or set it to ‘inverse’ to get the same but with a through-zero flange that’ll cancel almost totally to silence. This can also be used as an interesting sort of highpass (or of course, using normal wet, as a sort of lowpassy effect). That’s all with the main vibrato control, which has an extremely wide speed range.
