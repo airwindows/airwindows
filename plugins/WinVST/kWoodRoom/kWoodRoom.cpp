@@ -16,7 +16,7 @@ kWoodRoom::kWoodRoom(audioMasterCallback audioMaster) :
 	B = 0.5;
 	C = 0.25;
 	D = 0.5;
-	E = 0.5;
+	E = 0.75;
 	F = 0.5;
 	
 	for(int x = 0; x < d3A+2; x++) {a3AL[x] = 0.0; a3AR[x] = 0.0;}

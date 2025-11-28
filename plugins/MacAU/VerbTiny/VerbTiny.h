@@ -197,10 +197,6 @@ public:
 	double b4NR[d4N+5];
 	double b4OR[d4O+5];
 	double b4PR[d4P+5];
-	int e4AL,e4BL,e4CL,e4DL,e4EL,e4FL,e4GL,e4HL;
-	int e4IL,e4JL,e4KL,e4LL,e4ML,e4NL,e4OL,e4PL;		
-	int e4AR,e4BR,e4CR,e4DR,e4ER,e4FR,e4GR,e4HR;
-	int e4IR,e4JR,e4KR,e4LR,e4MR,e4NR,e4OR,e4PR;
 	double g4AL,g4BL,g4CL,g4DL,g4DR,g4HR,g4LR,g4PR;
 	//changed letter is the dual mono, with rearranged grid
 	

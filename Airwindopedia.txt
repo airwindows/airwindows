@@ -35,7 +35,7 @@ Lo-Fi: HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pocke
 
 Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kStation, kGuitarHall2, kCathedral5, VerbTiny, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
+Reverb: kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
 Saturation: SquareRoot, Hypersoft, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -5957,6 +5957,20 @@ Just short of 12 MILLION echoes, even without regen. And they both have regen.
 
 I'll give you more reverbs based on this technique, but enjoy the new bigger-than-Cosmos space :)
 
+############ VerbThic is a classic artificial reverb for being opaque and textured.
+
+Turns out VerbTiny has a sibling! And a secret… but that's for later.
+
+VerbThic is a special case. It's exactly like VerbTiny in every respect, with one difference that may or may not be obvious (I'm hoping it is, but you never can tell). All my other reverbs, very much including VerbTiny, are meant to sound as far back as possible. The whole reason VerbTiny came out is, I stumbled across a reverb algorithm for a 4x4 Householder matrix that had unusually high peak energy relative to RMS.
+
+This is not well understood in a world where everything is about making the RMS be louder no matter what,  and where peaks are considered 'unheard' and unimportant, but I've been developing a focus on peak energy for years, and especially with my reverbs where I feel the heightened peak energy makes their spaces feel more distant, rather than 'an up front sound effect'.
+
+So imagine my surprise when I ended up with another algorithm, much like VerbTiny, even a fairly similar room size, except it was the opposite! It produced unusually LOW peak energy. In theory, this would produce a reverb that doesn't sound far away: more like a fog that combines with sounds to thicken them up.
+
+And so, that's VerbThic. Works the same way as VerbTiny, but meant to do the opposite job, spatially. On top of that, I found a way to re-use variables which cut down the size of the plugin considerably… and which very likely improves its memory use in your DAW, so it got more CPU (or at least memory) efficient. And, in the process of making it sound more up-front, I stumbled over a variation of the TapeHack 'altered sin() equation' concept that was all about taking a saturation effect to an extreme: applying a succession of corrections that were ALWAYS scaled through bit-shifting the exponent, even if that was not the correct amount to use. And I got an interesting-sounding saturation effect that sounds very different from TapeHack and also sounds a lot like nothing at all… I'll be exploring that one more in future. VerbThic is there to add body to sounds while seeming to come from the same depth as the sounds, rather than 'distant'. Consider it an interesting twist to try.
+
+Oh, the secret of VerbTiny? The CPU optimization also worked for VerbTiny, running a little more efficiently while not affecting the sound (or saved mixes) the slightest amount. So, I've amended the code and re-uploaded it. Go ahead and redownload it as it's changed since last week, purely in terms of how many variables it uses to do the same thing. Have fun!
+
 ############ VerbTiny is a classic artificial reverb that expands reverb shape.
 
 So, why this much simpler reverb? Instead of the more elaborate ones I'm developing starting with the letter k?
@@ -5975,7 +5989,7 @@ Because I'd had another idea: yes, it was gonna be 'VerbTiny' because it could s
 
 That would mean a wideness control, because it started out seeming kind of narrow (I can't control this, it's part of the algorithm). If there was a dual mono instance, each side would just feed back into the same side, meaning that stereo would stay as VERY wide stereo, at the cost of destroying the normal stereo image the reverb would have. And running two 4x4 reverbs isn't that demanding.
 
-And then, since the 'normal' stereo reverb was so narrow, that means it had a lot of energy in the mid channel even though it's two stereo channels. So, what if the wideness went from 'normal' to the dual mono one at the center (0.5) and then as you went beyond that, you brought in the original revverb again, but with one channel phase flipped? Then it'd all be side channel energy, against the dual mono.
+And then, since the 'normal' stereo reverb was so narrow, that means it had a lot of energy in the mid channel even though it's two stereo channels. So, what if the wideness went from 'normal' to the dual mono one at the center (0.5) and then as you went beyond that, you brought in the original reverb again, but with one channel phase flipped? Then it'd all be side channel energy, against the dual mono.
 
 And so I did.
 
