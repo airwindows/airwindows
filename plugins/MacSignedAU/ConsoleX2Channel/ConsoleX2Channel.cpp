@@ -59,24 +59,24 @@ ConsoleX2Channel::ConsoleX2Channel(AudioUnit component)
 {
 	CreateElements();
 	Globals()->UseIndexedParameters(kNumberOfParameters);
-	SetParameter(kParam_A, kDefaultValue_ParamA );
-	SetParameter(kParam_B, kDefaultValue_ParamB );
-	SetParameter(kParam_C, kDefaultValue_ParamC );
-	SetParameter(kParam_D, kDefaultValue_ParamD );
-	SetParameter(kParam_E, kDefaultValue_ParamE );
-	SetParameter(kParam_F, kDefaultValue_ParamF );
-	SetParameter(kParam_G, kDefaultValue_ParamG );
-	SetParameter(kParam_H, kDefaultValue_ParamH );
-	SetParameter(kParam_I, kDefaultValue_ParamI );
-	SetParameter(kParam_J, kDefaultValue_ParamJ );
-	SetParameter(kParam_K, kDefaultValue_ParamK );
-	SetParameter(kParam_L, kDefaultValue_ParamL );
-	SetParameter(kParam_M, kDefaultValue_ParamM );
-	SetParameter(kParam_N, kDefaultValue_ParamN );
-	SetParameter(kParam_O, kDefaultValue_ParamO );
-	SetParameter(kParam_P, kDefaultValue_ParamP );
-	SetParameter(kParam_Q, kDefaultValue_ParamQ );
-	SetParameter(kParam_R, kDefaultValue_ParamR );
+	SetParameter(kParam_TRM, kDefaultValue_ParamTRM );
+	SetParameter(kParam_MOR, kDefaultValue_ParamMOR );
+	SetParameter(kParam_HIG, kDefaultValue_ParamHIG );
+	SetParameter(kParam_HMG, kDefaultValue_ParamHMG );
+	SetParameter(kParam_LMG, kDefaultValue_ParamLMG );
+	SetParameter(kParam_BSG, kDefaultValue_ParamBSG );
+	SetParameter(kParam_HIF, kDefaultValue_ParamHIF );
+	SetParameter(kParam_HMF, kDefaultValue_ParamHMF );
+	SetParameter(kParam_LMF, kDefaultValue_ParamLMF );
+	SetParameter(kParam_BSF, kDefaultValue_ParamBSF );
+	SetParameter(kParam_THR, kDefaultValue_ParamTHR );
+	SetParameter(kParam_ATK, kDefaultValue_ParamATK );
+	SetParameter(kParam_RLS, kDefaultValue_ParamRLS );
+	SetParameter(kParam_GAT, kDefaultValue_ParamGAT );
+	SetParameter(kParam_LOP, kDefaultValue_ParamLOP );
+	SetParameter(kParam_HIP, kDefaultValue_ParamHIP );
+	SetParameter(kParam_PAN, kDefaultValue_ParamPAN );
+	SetParameter(kParam_FAD, kDefaultValue_ParamFAD );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -113,135 +113,135 @@ ComponentResult			ConsoleX2Channel::GetParameterInfo(AudioUnitScope		inScope,
     if (inScope == kAudioUnitScope_Global) {
         switch(inParameterID)
         {
-            case kParam_A:
-                AUBase::FillInParameterName (outParameterInfo, kParameterAName, false);
+            case kParam_TRM:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTRMName, false);
  				outParameterInfo.unit = kAudioUnitParameterUnit_Indexed;
                 outParameterInfo.minValue = 0;
                 outParameterInfo.maxValue = 4;
-                outParameterInfo.defaultValue = kDefaultValue_ParamA;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTRM;
                 break;
-            case kParam_B:
-                AUBase::FillInParameterName (outParameterInfo, kParameterBName, false);
+            case kParam_MOR:
+                AUBase::FillInParameterName (outParameterInfo, kParameterMORName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamB;
+                outParameterInfo.defaultValue = kDefaultValue_ParamMOR;
                 break;
-            case kParam_C:
-                AUBase::FillInParameterName (outParameterInfo, kParameterCName, false);
+            case kParam_HIG:
+                AUBase::FillInParameterName (outParameterInfo, kParameterHIGName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
-				outParameterInfo.unitName = kParameterCUnit;
+				outParameterInfo.unitName = kParameterHIGUnit;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamC;
+                outParameterInfo.defaultValue = kDefaultValue_ParamHIG;
                 break;
-            case kParam_D:
-                AUBase::FillInParameterName (outParameterInfo, kParameterDName, false);
+            case kParam_HMG:
+                AUBase::FillInParameterName (outParameterInfo, kParameterHMGName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamD;
+                outParameterInfo.defaultValue = kDefaultValue_ParamHMG;
                 break;
-            case kParam_E:
-                AUBase::FillInParameterName (outParameterInfo, kParameterEName, false);
+            case kParam_LMG:
+                AUBase::FillInParameterName (outParameterInfo, kParameterLMGName, false);
  				outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamE;
+                outParameterInfo.defaultValue = kDefaultValue_ParamLMG;
                 break;
-            case kParam_F:
-                AUBase::FillInParameterName (outParameterInfo, kParameterFName, false);
+            case kParam_BSG:
+                AUBase::FillInParameterName (outParameterInfo, kParameterBSGName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamF;
+                outParameterInfo.defaultValue = kDefaultValue_ParamBSG;
                 break;
-            case kParam_G:
-                AUBase::FillInParameterName (outParameterInfo, kParameterGName, false);
+            case kParam_HIF:
+                AUBase::FillInParameterName (outParameterInfo, kParameterHIFName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
-				outParameterInfo.unitName = kParameterGUnit;
+				outParameterInfo.unitName = kParameterHIFUnit;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamG;
+                outParameterInfo.defaultValue = kDefaultValue_ParamHIF;
                 break;
-            case kParam_H:
-                AUBase::FillInParameterName (outParameterInfo, kParameterHName, false);
+            case kParam_HMF:
+                AUBase::FillInParameterName (outParameterInfo, kParameterHMFName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamH;
+                outParameterInfo.defaultValue = kDefaultValue_ParamHMF;
                 break;
-            case kParam_I:
-                AUBase::FillInParameterName (outParameterInfo, kParameterIName, false);
+            case kParam_LMF:
+                AUBase::FillInParameterName (outParameterInfo, kParameterLMFName, false);
  				outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamI;
+                outParameterInfo.defaultValue = kDefaultValue_ParamLMF;
                 break;
-            case kParam_J:
-                AUBase::FillInParameterName (outParameterInfo, kParameterJName, false);
+            case kParam_BSF:
+                AUBase::FillInParameterName (outParameterInfo, kParameterBSFName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamJ;
+                outParameterInfo.defaultValue = kDefaultValue_ParamBSF;
                 break;
-            case kParam_K:
-                AUBase::FillInParameterName (outParameterInfo, kParameterKName, false);
+            case kParam_THR:
+                AUBase::FillInParameterName (outParameterInfo, kParameterTHRName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
-				outParameterInfo.unitName = kParameterKUnit;
+				outParameterInfo.unitName = kParameterTHRUnit;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamK;
+                outParameterInfo.defaultValue = kDefaultValue_ParamTHR;
                 break;
-            case kParam_L:
-                AUBase::FillInParameterName (outParameterInfo, kParameterLName, false);
+            case kParam_ATK:
+                AUBase::FillInParameterName (outParameterInfo, kParameterATKName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamL;
+                outParameterInfo.defaultValue = kDefaultValue_ParamATK;
                 break;
-            case kParam_M:
-                AUBase::FillInParameterName (outParameterInfo, kParameterMName, false);
+            case kParam_RLS:
+                AUBase::FillInParameterName (outParameterInfo, kParameterRLSName, false);
  				outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
 				outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamM;
+                outParameterInfo.defaultValue = kDefaultValue_ParamRLS;
                 break;
-            case kParam_N:
-                AUBase::FillInParameterName (outParameterInfo, kParameterNName, false);
+            case kParam_GAT:
+                AUBase::FillInParameterName (outParameterInfo, kParameterGATName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamN;
+                outParameterInfo.defaultValue = kDefaultValue_ParamGAT;
                 break;
-            case kParam_O:
-                AUBase::FillInParameterName (outParameterInfo, kParameterOName, false);
+            case kParam_LOP:
+                AUBase::FillInParameterName (outParameterInfo, kParameterLOPName, false);
   				outParameterInfo.unit = kAudioUnitParameterUnit_CustomUnit;
-				outParameterInfo.unitName = kParameterOUnit;
+				outParameterInfo.unitName = kParameterLOPUnit;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamO;
+                outParameterInfo.defaultValue = kDefaultValue_ParamLOP;
                 break;
-            case kParam_P:
-                AUBase::FillInParameterName (outParameterInfo, kParameterPName, false);
+            case kParam_HIP:
+                AUBase::FillInParameterName (outParameterInfo, kParameterHIPName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamP;
+                outParameterInfo.defaultValue = kDefaultValue_ParamHIP;
                 break;
-            case kParam_Q:
-                AUBase::FillInParameterName (outParameterInfo, kParameterQName, false);
+            case kParam_PAN:
+                AUBase::FillInParameterName (outParameterInfo, kParameterPANName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamQ;
+                outParameterInfo.defaultValue = kDefaultValue_ParamPAN;
                 break;
-            case kParam_R:
-                AUBase::FillInParameterName (outParameterInfo, kParameterRName, false);
+            case kParam_FAD:
+                AUBase::FillInParameterName (outParameterInfo, kParameterFADName, false);
                 outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
                 outParameterInfo.minValue = 0.0;
                 outParameterInfo.maxValue = 1.0;
-                outParameterInfo.defaultValue = kDefaultValue_ParamR;
+                outParameterInfo.defaultValue = kDefaultValue_ParamFAD;
                 break;
 			default:
                 result = kAudioUnitErr_InvalidParameter;
@@ -332,10 +332,10 @@ ComponentResult		ConsoleX2Channel::Reset(AudioUnitScope inScope, AudioUnitElemen
 	lowRIIR = 0.0;
 	//SmoothEQ2
 	
-	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
-	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
-	bezCompS[bez_cycle] = 1.0; bezGate = 2.0;
-	//Dynamics2
+	for (int x = 0; x < bez_total; x++) bezComp[x] = 0.0;
+	bezComp[bez_cycle] = 1.0; bezMax = 0.0; bezMin = 0.0;
+	bezGate = 2.0;
+	//Dynamics3
 	
 	for(int count = 0; count < 22; count++) {
 		iirHPositionL[count] = 0.0;
@@ -403,149 +403,158 @@ OSStatus		ConsoleX2Channel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAc
 	int spacing = floor(overallscale*2.0);
 	if (spacing < 2) spacing = 2; if (spacing > 32) spacing = 32;
 	
-	double moreTapeHack = (GetParameter( kParam_B )*2.0)+1.0;
-	switch ((int)GetParameter( kParam_A )){
+	double moreTapeHack = (GetParameter( kParam_MOR )*2.0)+1.0;
+	bool tapehackOff = (GetParameter( kParam_MOR ) == 0.0);
+	switch ((int)GetParameter( kParam_TRM )){
 		case 0: moreTapeHack *= 0.5; break;
 		case 1: break;
 		case 2: moreTapeHack *= 2.0; break;
 		case 3: moreTapeHack *= 4.0; break;
 		case 4: moreTapeHack *= 8.0; break;
 	}
-	double moreDiscontinuity = fmax(pow(GetParameter( kParam_B )*0.42,3.0)*overallscale,0.00001);
+	double moreDiscontinuity = fmax(pow(GetParameter( kParam_MOR )*0.42,3.0)*overallscale,0.00001);
 	//Discontapeity	
 
-	double trebleGain = (GetParameter( kParam_C )-0.5)*2.0;
+	double trebleGain = (GetParameter( kParam_HIG )-0.5)*2.0;
 	trebleGain = 1.0+(trebleGain*fabs(trebleGain)*fabs(trebleGain));
-	double highmidGain = (GetParameter( kParam_D )-0.5)*2.0;
+	double highmidGain = (GetParameter( kParam_HMG )-0.5)*2.0;
 	highmidGain = 1.0+(highmidGain*fabs(highmidGain)*fabs(highmidGain));
-	double lowmidGain = (GetParameter( kParam_E )-0.5)*2.0;
+	double lowmidGain = (GetParameter( kParam_LMG )-0.5)*2.0;
 	lowmidGain = 1.0+(lowmidGain*fabs(lowmidGain)*fabs(lowmidGain));
-	double bassGain = (GetParameter( kParam_F )-0.5)*2.0;
+	double bassGain = (GetParameter( kParam_BSG )-0.5)*2.0;
 	bassGain = 1.0+(bassGain*fabs(bassGain)*fabs(bassGain));
+	double highCoef = 0.0;
+	double midCoef = 0.0;
+	double lowCoef = 0.0;
 	
-	double trebleRef = GetParameter( kParam_G )-0.5;
-	double highmidRef = GetParameter( kParam_H )-0.5;
-	double lowmidRef = GetParameter( kParam_I )-0.5;
-	double bassRef = GetParameter( kParam_J )-0.5;
-	double highF = 0.75 + ((trebleRef+trebleRef+trebleRef+highmidRef)*0.125);
-	double bassF = 0.25 + ((lowmidRef+bassRef+bassRef+bassRef)*0.125);
-	double midF = (highF*0.5) + (bassF*0.5) + ((highmidRef+lowmidRef)*0.125);
-	
-	double highQ = fmax(fmin(1.0+(highmidRef-trebleRef),4.0),0.125);
-	double midQ = fmax(fmin(1.0+(lowmidRef-highmidRef),4.0),0.125);
-	double lowQ = fmax(fmin(1.0+(bassRef-lowmidRef),4.0),0.125);
-	
-	highA[biq_freq] = ((pow(highF,3)*20000.0)/GetSampleRate());
-	highC[biq_freq] = highB[biq_freq] = highA[biq_freq] = fmax(fmin(highA[biq_freq],0.4999),0.00025);
-	double highFreq = pow(highF,3)*20000.0;
-	double omega = 2.0*M_PI*(highFreq/GetSampleRate());
-	double biqK = 2.0-cos(omega);
-	double highCoef = -sqrt((biqK*biqK)-1.0)+biqK;
-	highA[biq_reso] = 2.24697960 * highQ;
-	highB[biq_reso] = 0.80193774 * highQ;
-	highC[biq_reso] = 0.55495813 * highQ;
-	
-	midA[biq_freq] = ((pow(midF,3)*20000.0)/GetSampleRate());
-	midC[biq_freq] = midB[biq_freq] = midA[biq_freq] = fmax(fmin(midA[biq_freq],0.4999),0.00025);	
-	double midFreq = pow(midF,3)*20000.0;
-	omega = 2.0*M_PI*(midFreq/GetSampleRate());
-	biqK = 2.0-cos(omega);
-	double midCoef = -sqrt((biqK*biqK)-1.0)+biqK;
-	midA[biq_reso] = 2.24697960 * midQ;
-	midB[biq_reso] = 0.80193774 * midQ;
-	midC[biq_reso] = 0.55495813 * midQ;
-	
-	lowA[biq_freq] = ((pow(bassF,3)*20000.0)/GetSampleRate());
-	lowC[biq_freq] = lowB[biq_freq] = lowA[biq_freq] = fmax(fmin(lowA[biq_freq],0.4999),0.00025);
-	double lowFreq = pow(bassF,3)*20000.0;
-	omega = 2.0*M_PI*(lowFreq/GetSampleRate());
-	biqK = 2.0-cos(omega);
-	double lowCoef = -sqrt((biqK*biqK)-1.0)+biqK;
-	lowA[biq_reso] = 2.24697960 * lowQ;
-	lowB[biq_reso] = 0.80193774 * lowQ;
-	lowC[biq_reso] = 0.55495813 * lowQ;
-	
-	biqK = tan(M_PI * highA[biq_freq]);
-	double norm = 1.0 / (1.0 + biqK / highA[biq_reso] + biqK * biqK);
-	highA[biq_a0] = biqK * biqK * norm;
-	highA[biq_a1] = 2.0 * highA[biq_a0];
-	highA[biq_a2] = highA[biq_a0];
-	highA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	highA[biq_b2] = (1.0 - biqK / highA[biq_reso] + biqK * biqK) * norm;
-	biqK = tan(M_PI * highB[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / highB[biq_reso] + biqK * biqK);
-	highB[biq_a0] = biqK * biqK * norm;
-	highB[biq_a1] = 2.0 * highB[biq_a0];
-	highB[biq_a2] = highB[biq_a0];
-	highB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	highB[biq_b2] = (1.0 - biqK / highB[biq_reso] + biqK * biqK) * norm;
-	biqK = tan(M_PI * highC[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / highC[biq_reso] + biqK * biqK);
-	highC[biq_a0] = biqK * biqK * norm;
-	highC[biq_a1] = 2.0 * highC[biq_a0];
-	highC[biq_a2] = highC[biq_a0];
-	highC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	highC[biq_b2] = (1.0 - biqK / highC[biq_reso] + biqK * biqK) * norm;
-	
-	biqK = tan(M_PI * midA[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / midA[biq_reso] + biqK * biqK);
-	midA[biq_a0] = biqK * biqK * norm;
-	midA[biq_a1] = 2.0 * midA[biq_a0];
-	midA[biq_a2] = midA[biq_a0];
-	midA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	midA[biq_b2] = (1.0 - biqK / midA[biq_reso] + biqK * biqK) * norm;
-	biqK = tan(M_PI * midB[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / midB[biq_reso] + biqK * biqK);
-	midB[biq_a0] = biqK * biqK * norm;
-	midB[biq_a1] = 2.0 * midB[biq_a0];
-	midB[biq_a2] = midB[biq_a0];
-	midB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	midB[biq_b2] = (1.0 - biqK / midB[biq_reso] + biqK * biqK) * norm;
-	biqK = tan(M_PI * midC[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / midC[biq_reso] + biqK * biqK);
-	midC[biq_a0] = biqK * biqK * norm;
-	midC[biq_a1] = 2.0 * midC[biq_a0];
-	midC[biq_a2] = midC[biq_a0];
-	midC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	midC[biq_b2] = (1.0 - biqK / midC[biq_reso] + biqK * biqK) * norm;
-	
-	biqK = tan(M_PI * lowA[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / lowA[biq_reso] + biqK * biqK);
-	lowA[biq_a0] = biqK * biqK * norm;
-	lowA[biq_a1] = 2.0 * lowA[biq_a0];
-	lowA[biq_a2] = lowA[biq_a0];
-	lowA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	lowA[biq_b2] = (1.0 - biqK / lowA[biq_reso] + biqK * biqK) * norm;
-	biqK = tan(M_PI * lowB[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / lowB[biq_reso] + biqK * biqK);
-	lowB[biq_a0] = biqK * biqK * norm;
-	lowB[biq_a1] = 2.0 * lowB[biq_a0];
-	lowB[biq_a2] = lowB[biq_a0];
-	lowB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	lowB[biq_b2] = (1.0 - biqK / lowB[biq_reso] + biqK * biqK) * norm;
-	biqK = tan(M_PI * lowC[biq_freq]);
-	norm = 1.0 / (1.0 + biqK / lowC[biq_reso] + biqK * biqK);
-	lowC[biq_a0] = biqK * biqK * norm;
-	lowC[biq_a1] = 2.0 * lowC[biq_a0];
-	lowC[biq_a2] = lowC[biq_a0];
-	lowC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	lowC[biq_b2] = (1.0 - biqK / lowC[biq_reso] + biqK * biqK) * norm;
+	bool eqOff = (trebleGain == 1.0 && highmidGain == 1.0 && lowmidGain == 1.0 && bassGain == 1.0);
+	//we get to completely bypass EQ if we're truly not using it. The mechanics of it mean that
+	//it cancels out to bit-identical anyhow, but we get to skip the calculation
+	if (!eqOff) {
+		double trebleRef = GetParameter( kParam_HIF )-0.5;
+		double highmidRef = GetParameter( kParam_HMF )-0.5;
+		double lowmidRef = GetParameter( kParam_LMF )-0.5;
+		double bassRef = GetParameter( kParam_BSF )-0.5;
+		double highF = 0.75 + ((trebleRef+trebleRef+trebleRef+highmidRef)*0.125);
+		double bassF = 0.25 + ((lowmidRef+bassRef+bassRef+bassRef)*0.125);
+		double midF = (highF*0.5) + (bassF*0.5) + ((highmidRef+lowmidRef)*0.125);
+		
+		double highQ = fmax(fmin(1.0+(highmidRef-trebleRef),4.0),0.125);
+		double midQ = fmax(fmin(1.0+(lowmidRef-highmidRef),4.0),0.125);
+		double lowQ = fmax(fmin(1.0+(bassRef-lowmidRef),4.0),0.125);
+		
+		highA[biq_freq] = ((pow(highF,3)*20000.0)/GetSampleRate());
+		highC[biq_freq] = highB[biq_freq] = highA[biq_freq] = fmax(fmin(highA[biq_freq],0.4999),0.00025);
+		double highFreq = pow(highF,3)*20000.0;
+		double omega = 2.0*M_PI*(highFreq/GetSampleRate());
+		double biqK = 2.0-cos(omega);
+		highCoef = -sqrt((biqK*biqK)-1.0)+biqK;
+		highA[biq_reso] = 2.24697960 * highQ;
+		highB[biq_reso] = 0.80193774 * highQ;
+		highC[biq_reso] = 0.55495813 * highQ;
+		
+		midA[biq_freq] = ((pow(midF,3)*20000.0)/GetSampleRate());
+		midC[biq_freq] = midB[biq_freq] = midA[biq_freq] = fmax(fmin(midA[biq_freq],0.4999),0.00025);	
+		double midFreq = pow(midF,3)*20000.0;
+		omega = 2.0*M_PI*(midFreq/GetSampleRate());
+		biqK = 2.0-cos(omega);
+		midCoef = -sqrt((biqK*biqK)-1.0)+biqK;
+		midA[biq_reso] = 2.24697960 * midQ;
+		midB[biq_reso] = 0.80193774 * midQ;
+		midC[biq_reso] = 0.55495813 * midQ;
+		
+		lowA[biq_freq] = ((pow(bassF,3)*20000.0)/GetSampleRate());
+		lowC[biq_freq] = lowB[biq_freq] = lowA[biq_freq] = fmax(fmin(lowA[biq_freq],0.4999),0.00025);
+		double lowFreq = pow(bassF,3)*20000.0;
+		omega = 2.0*M_PI*(lowFreq/GetSampleRate());
+		biqK = 2.0-cos(omega);
+		lowCoef = -sqrt((biqK*biqK)-1.0)+biqK;
+		lowA[biq_reso] = 2.24697960 * lowQ;
+		lowB[biq_reso] = 0.80193774 * lowQ;
+		lowC[biq_reso] = 0.55495813 * lowQ;
+		
+		biqK = tan(M_PI * highA[biq_freq]);
+		double norm = 1.0 / (1.0 + biqK / highA[biq_reso] + biqK * biqK);
+		highA[biq_a0] = biqK * biqK * norm;
+		highA[biq_a1] = 2.0 * highA[biq_a0];
+		highA[biq_a2] = highA[biq_a0];
+		highA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		highA[biq_b2] = (1.0 - biqK / highA[biq_reso] + biqK * biqK) * norm;
+		biqK = tan(M_PI * highB[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / highB[biq_reso] + biqK * biqK);
+		highB[biq_a0] = biqK * biqK * norm;
+		highB[biq_a1] = 2.0 * highB[biq_a0];
+		highB[biq_a2] = highB[biq_a0];
+		highB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		highB[biq_b2] = (1.0 - biqK / highB[biq_reso] + biqK * biqK) * norm;
+		biqK = tan(M_PI * highC[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / highC[biq_reso] + biqK * biqK);
+		highC[biq_a0] = biqK * biqK * norm;
+		highC[biq_a1] = 2.0 * highC[biq_a0];
+		highC[biq_a2] = highC[biq_a0];
+		highC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		highC[biq_b2] = (1.0 - biqK / highC[biq_reso] + biqK * biqK) * norm;
+		
+		biqK = tan(M_PI * midA[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / midA[biq_reso] + biqK * biqK);
+		midA[biq_a0] = biqK * biqK * norm;
+		midA[biq_a1] = 2.0 * midA[biq_a0];
+		midA[biq_a2] = midA[biq_a0];
+		midA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		midA[biq_b2] = (1.0 - biqK / midA[biq_reso] + biqK * biqK) * norm;
+		biqK = tan(M_PI * midB[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / midB[biq_reso] + biqK * biqK);
+		midB[biq_a0] = biqK * biqK * norm;
+		midB[biq_a1] = 2.0 * midB[biq_a0];
+		midB[biq_a2] = midB[biq_a0];
+		midB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		midB[biq_b2] = (1.0 - biqK / midB[biq_reso] + biqK * biqK) * norm;
+		biqK = tan(M_PI * midC[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / midC[biq_reso] + biqK * biqK);
+		midC[biq_a0] = biqK * biqK * norm;
+		midC[biq_a1] = 2.0 * midC[biq_a0];
+		midC[biq_a2] = midC[biq_a0];
+		midC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		midC[biq_b2] = (1.0 - biqK / midC[biq_reso] + biqK * biqK) * norm;
+		
+		biqK = tan(M_PI * lowA[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / lowA[biq_reso] + biqK * biqK);
+		lowA[biq_a0] = biqK * biqK * norm;
+		lowA[biq_a1] = 2.0 * lowA[biq_a0];
+		lowA[biq_a2] = lowA[biq_a0];
+		lowA[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		lowA[biq_b2] = (1.0 - biqK / lowA[biq_reso] + biqK * biqK) * norm;
+		biqK = tan(M_PI * lowB[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / lowB[biq_reso] + biqK * biqK);
+		lowB[biq_a0] = biqK * biqK * norm;
+		lowB[biq_a1] = 2.0 * lowB[biq_a0];
+		lowB[biq_a2] = lowB[biq_a0];
+		lowB[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		lowB[biq_b2] = (1.0 - biqK / lowB[biq_reso] + biqK * biqK) * norm;
+		biqK = tan(M_PI * lowC[biq_freq]);
+		norm = 1.0 / (1.0 + biqK / lowC[biq_reso] + biqK * biqK);
+		lowC[biq_a0] = biqK * biqK * norm;
+		lowC[biq_a1] = 2.0 * lowC[biq_a0];
+		lowC[biq_a2] = lowC[biq_a0];
+		lowC[biq_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		lowC[biq_b2] = (1.0 - biqK / lowC[biq_reso] + biqK * biqK) * norm;
+	}
 	//SmoothEQ2
 	
-	double bezCThresh = pow(1.0-GetParameter( kParam_K ), 6.0) * 8.0;
-	double bezRez = pow(1.0-GetParameter( kParam_L ), 8.0) / overallscale; 
-	double sloRez = pow(1.0-GetParameter( kParam_M ),12.0) / overallscale;
-	sloRez = fmin(fmax(sloRez-(bezRez*0.5),0.00001),1.0);
+	double bezThresh = pow(1.0-GetParameter( kParam_THR ), 4.0) * 8.0;
+	double bezRez = pow(1.0-GetParameter( kParam_ATK ), 4.0) / overallscale; 
+	double sloRez = pow(1.0-GetParameter( kParam_RLS ), 4.0) / overallscale;
+	double gate = pow(GetParameter( kParam_GAT ),4.0);
 	bezRez = fmin(fmax(bezRez,0.0001),1.0);
-	double gate = pow(pow(GetParameter( kParam_N ),4.0),sqrt(bezCThresh+1.0));
-	//Dynamics2
+	sloRez = fmin(fmax(sloRez,0.0001),1.0);
+	//Dynamics3
 	
-	lFreqA = lFreqB; lFreqB = pow(fmax(GetParameter( kParam_O ),0.002),overallscale); //the lowpass
-	hFreqA = hFreqB; hFreqB = pow(GetParameter( kParam_P ),overallscale+2.0); //the highpass
+	lFreqA = lFreqB; lFreqB = pow(fmax(GetParameter( kParam_LOP ),0.002),overallscale); //the lowpass
+	hFreqA = hFreqB; hFreqB = pow(GetParameter( kParam_HIP ),overallscale+2.0); //the highpass
 	//Cabs2
 		
-	panA = panB; panB = GetParameter( kParam_Q )*1.57079633;
-	inTrimA = inTrimB; inTrimB = GetParameter( kParam_R )*2.0;
+	panA = panB; panB = GetParameter( kParam_PAN )*1.57079633;
+	inTrimA = inTrimB; inTrimB = GetParameter( kParam_FAD )*2.0;
 	//Console
 	
 	while (nSampleFrames-- > 0) {
@@ -554,307 +563,265 @@ OSStatus		ConsoleX2Channel::ProcessBufferLists(AudioUnitRenderActionFlags & ioAc
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
 		
-		double darkSampleL = inputSampleL;
-		double darkSampleR = inputSampleR;
-		if (avgPos > 31) avgPos = 0;
-		if (spacing > 31) {
-			avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
-			darkSampleL /= 32.0; darkSampleR /= 32.0;
-		} if (spacing > 15) {
-			avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
-			darkSampleL /= 16.0; darkSampleR /= 16.0;
-		} if (spacing > 7) {
-			avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
-			darkSampleL /= 8.0; darkSampleR /= 8.0;
-		} if (spacing > 3) {
-			avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
-			darkSampleL /= 4.0; darkSampleR /= 4.0;
-		} if (spacing > 1) {
-			avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
-			darkSampleL /= 2.0; darkSampleR /= 2.0; 
-		} avgPos++;
-		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
-		double avgSlewL = fmin(lastSlewL,1.0);
-		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
-		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
-		double avgSlewR = fmin(lastSlewR,1.0);
-		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
-		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
-		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);		
-		
-		//begin Discontinuity section
 		inputSampleL *= moreTapeHack;
-		inputSampleL *= moreDiscontinuity;
-		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
-		dBaPosL = fmin(dBaPosL,1.0);
-		int dBdly = floor(dBaPosL*dscBuf);
-		double dBi = (dBaPosL*dscBuf)-dBdly;
-		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
-		inputSampleL /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		//end TapeHack section
-		
-		//begin Discontinuity section
 		inputSampleR *= moreTapeHack;
-		inputSampleR *= moreDiscontinuity;
-		dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
-		dBaPosR = fmin(dBaPosR,1.0);
-		dBdly = floor(dBaPosR*dscBuf);
-		dBi = (dBaPosR*dscBuf)-dBdly;
-		inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
-		inputSampleR /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
-		addtwo = inputSampleR * inputSampleR;
-		empower = inputSampleR * addtwo; // inputSampleR to the third power
-		inputSampleR -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleR += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleR -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleR += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleR -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		//end TapeHack section
-		//Discontapeity
+		//trim control gets to work even when MORE is off
+
+		if (!tapehackOff) {
+			double darkSampleL = inputSampleL;
+			double darkSampleR = inputSampleR;
+			if (avgPos > 31) avgPos = 0;
+			if (spacing > 31) {
+				avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
+				darkSampleL = 0.0; darkSampleR = 0.0;
+				for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
+				darkSampleL /= 32.0; darkSampleR /= 32.0;
+			} if (spacing > 15) {
+				avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
+				darkSampleL = 0.0; darkSampleR = 0.0;
+				for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
+				darkSampleL /= 16.0; darkSampleR /= 16.0;
+			} if (spacing > 7) {
+				avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
+				darkSampleL = 0.0; darkSampleR = 0.0;
+				for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
+				darkSampleL /= 8.0; darkSampleR /= 8.0;
+			} if (spacing > 3) {
+				avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
+				darkSampleL = 0.0; darkSampleR = 0.0;
+				for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
+				darkSampleL /= 4.0; darkSampleR /= 4.0;
+			} if (spacing > 1) {
+				avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
+				darkSampleL = 0.0; darkSampleR = 0.0;
+				for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
+				darkSampleL /= 2.0; darkSampleR /= 2.0; 
+			} avgPos++;
+			lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
+			double avgSlewL = fmin(lastSlewL*lastSlewL*(0.0635-(overallscale*0.0018436)),1.0);
+			lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
+			lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
+			double avgSlewR = fmin(lastSlewR*lastSlewR*(0.0635-(overallscale*0.0018436)),1.0);
+			lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
+			inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+			inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);
+			//begin Discontinuity section
+			inputSampleL *= moreDiscontinuity;
+			dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
+			dBaPosL = fmin(dBaPosL,1.0);
+			int dBdly = floor(dBaPosL*dscBuf);
+			double dBi = (dBaPosL*dscBuf)-dBdly;
+			inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+			dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
+			dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
+			inputSampleL /= moreDiscontinuity;
+			//end Discontinuity section, begin TapeHack section
+			inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
+			double addtwo = inputSampleL * inputSampleL;
+			double empower = inputSampleL * addtwo; // inputSampleL to the third power
+			inputSampleL -= (empower / 6.0);
+			empower *= addtwo; // to the fifth power
+			inputSampleL += (empower / 69.0);
+			empower *= addtwo; //seventh
+			inputSampleL -= (empower / 2530.08);
+			empower *= addtwo; //ninth
+			inputSampleL += (empower / 224985.6);
+			empower *= addtwo; //eleventh
+			inputSampleL -= (empower / 9979200.0f);
+			//this is a degenerate form of a Taylor Series to approximate sin()
+			//end TapeHack section
+			//begin Discontinuity section
+			inputSampleR *= moreDiscontinuity;
+			dBaR[dBaXR] = inputSampleR; dBaPosR *= 0.5; dBaPosR += fabs((inputSampleR*((inputSampleR*0.25)-0.5))*0.5);
+			dBaPosR = fmin(dBaPosR,1.0);
+			dBdly = floor(dBaPosR*dscBuf);
+			dBi = (dBaPosR*dscBuf)-dBdly;
+			inputSampleR = dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+			dBdly++; inputSampleR += dBaR[dBaXR-dBdly +((dBaXR-dBdly < 0)?dscBuf:0)]*dBi;
+			dBaXR++; if (dBaXR < 0 || dBaXR >= dscBuf) dBaXR = 0;
+			inputSampleR /= moreDiscontinuity;
+			//end Discontinuity section, begin TapeHack section
+			inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
+			addtwo = inputSampleR * inputSampleR;
+			empower = inputSampleR * addtwo; // inputSampleR to the third power
+			inputSampleR -= (empower / 6.0);
+			empower *= addtwo; // to the fifth power
+			inputSampleR += (empower / 69.0);
+			empower *= addtwo; //seventh
+			inputSampleR -= (empower / 2530.08);
+			empower *= addtwo; //ninth
+			inputSampleR += (empower / 224985.6);
+			empower *= addtwo; //eleventh
+			inputSampleR -= (empower / 9979200.0f);
+			//this is a degenerate form of a Taylor Series to approximate sin()
+			//end TapeHack section
+			//Discontapeity
+		}
 		
-		double trebleL = inputSampleL;		
-		double outSample = (trebleL * highA[biq_a0]) + highA[biq_sL1];
-		highA[biq_sL1] = (trebleL * highA[biq_a1]) - (outSample * highA[biq_b1]) + highA[biq_sL2];
-		highA[biq_sL2] = (trebleL * highA[biq_a2]) - (outSample * highA[biq_b2]);
-		double highmidL = outSample; trebleL -= highmidL;
-		
-		outSample = (highmidL * midA[biq_a0]) + midA[biq_sL1];
-		midA[biq_sL1] = (highmidL * midA[biq_a1]) - (outSample * midA[biq_b1]) + midA[biq_sL2];
-		midA[biq_sL2] = (highmidL * midA[biq_a2]) - (outSample * midA[biq_b2]);
-		double lowmidL = outSample; highmidL -= lowmidL;
-		
-		outSample = (lowmidL * lowA[biq_a0]) + lowA[biq_sL1];
-		lowA[biq_sL1] = (lowmidL * lowA[biq_a1]) - (outSample * lowA[biq_b1]) + lowA[biq_sL2];
-		lowA[biq_sL2] = (lowmidL * lowA[biq_a2]) - (outSample * lowA[biq_b2]);
-		double bassL = outSample; lowmidL -= bassL;
-		
-		trebleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);
-		//first stage of three crossovers
-		
-		outSample = (trebleL * highB[biq_a0]) + highB[biq_sL1];
-		highB[biq_sL1] = (trebleL * highB[biq_a1]) - (outSample * highB[biq_b1]) + highB[biq_sL2];
-		highB[biq_sL2] = (trebleL * highB[biq_a2]) - (outSample * highB[biq_b2]);
-		highmidL = outSample; trebleL -= highmidL;
-		
-		outSample = (highmidL * midB[biq_a0]) + midB[biq_sL1];
-		midB[biq_sL1] = (highmidL * midB[biq_a1]) - (outSample * midB[biq_b1]) + midB[biq_sL2];
-		midB[biq_sL2] = (highmidL * midB[biq_a2]) - (outSample * midB[biq_b2]);
-		lowmidL = outSample; highmidL -= lowmidL;
-		
-		outSample = (lowmidL * lowB[biq_a0]) + lowB[biq_sL1];
-		lowB[biq_sL1] = (lowmidL * lowB[biq_a1]) - (outSample * lowB[biq_b1]) + lowB[biq_sL2];
-		lowB[biq_sL2] = (lowmidL * lowB[biq_a2]) - (outSample * lowB[biq_b2]);
-		bassL = outSample; lowmidL -= bassL;
-		
-		trebleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);
-		//second stage of three crossovers
-		
-		outSample = (trebleL * highC[biq_a0]) + highC[biq_sL1];
-		highC[biq_sL1] = (trebleL * highC[biq_a1]) - (outSample * highC[biq_b1]) + highC[biq_sL2];
-		highC[biq_sL2] = (trebleL * highC[biq_a2]) - (outSample * highC[biq_b2]);
-		highmidL = outSample; trebleL -= highmidL;
-		
-		outSample = (highmidL * midC[biq_a0]) + midC[biq_sL1];
-		midC[biq_sL1] = (highmidL * midC[biq_a1]) - (outSample * midC[biq_b1]) + midC[biq_sL2];
-		midC[biq_sL2] = (highmidL * midC[biq_a2]) - (outSample * midC[biq_b2]);
-		lowmidL = outSample; highmidL -= lowmidL;
-		
-		outSample = (lowmidL * lowC[biq_a0]) + lowC[biq_sL1];
-		lowC[biq_sL1] = (lowmidL * lowC[biq_a1]) - (outSample * lowC[biq_b1]) + lowC[biq_sL2];
-		lowC[biq_sL2] = (lowmidL * lowC[biq_a2]) - (outSample * lowC[biq_b2]);
-		bassL = outSample; lowmidL -= bassL;
-		
-		trebleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);
-		//third stage of three crossovers
-		
-		highLIIR = (highLIIR*highCoef) + (trebleL*(1.0-highCoef));
-		highmidL = highLIIR; trebleL -= highmidL;
-		
-		midLIIR = (midLIIR*midCoef) + (highmidL*(1.0-midCoef));
-		lowmidL = midLIIR; highmidL -= lowmidL;
-		
-		lowLIIR = (lowLIIR*lowCoef) + (lowmidL*(1.0-lowCoef));
-		bassL = lowLIIR; lowmidL -= bassL;
-		
-		inputSampleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);		
-		//fourth stage of three crossovers is the exponential filters
-		
-		
-		double trebleR = inputSampleR;		
-		outSample = (trebleR * highA[biq_a0]) + highA[biq_sR1];
-		highA[biq_sR1] = (trebleR * highA[biq_a1]) - (outSample * highA[biq_b1]) + highA[biq_sR2];
-		highA[biq_sR2] = (trebleR * highA[biq_a2]) - (outSample * highA[biq_b2]);
-		double highmidR = outSample; trebleR -= highmidR;
-		
-		outSample = (highmidR * midA[biq_a0]) + midA[biq_sR1];
-		midA[biq_sR1] = (highmidR * midA[biq_a1]) - (outSample * midA[biq_b1]) + midA[biq_sR2];
-		midA[biq_sR2] = (highmidR * midA[biq_a2]) - (outSample * midA[biq_b2]);
-		double lowmidR = outSample; highmidR -= lowmidR;
-		
-		outSample = (lowmidR * lowA[biq_a0]) + lowA[biq_sR1];
-		lowA[biq_sR1] = (lowmidR * lowA[biq_a1]) - (outSample * lowA[biq_b1]) + lowA[biq_sR2];
-		lowA[biq_sR2] = (lowmidR * lowA[biq_a2]) - (outSample * lowA[biq_b2]);
-		double bassR = outSample; lowmidR -= bassR;
-		
-		trebleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);
-		//first stage of three crossovers
-		
-		outSample = (trebleR * highB[biq_a0]) + highB[biq_sR1];
-		highB[biq_sR1] = (trebleR * highB[biq_a1]) - (outSample * highB[biq_b1]) + highB[biq_sR2];
-		highB[biq_sR2] = (trebleR * highB[biq_a2]) - (outSample * highB[biq_b2]);
-		highmidR = outSample; trebleR -= highmidR;
-		
-		outSample = (highmidR * midB[biq_a0]) + midB[biq_sR1];
-		midB[biq_sR1] = (highmidR * midB[biq_a1]) - (outSample * midB[biq_b1]) + midB[biq_sR2];
-		midB[biq_sR2] = (highmidR * midB[biq_a2]) - (outSample * midB[biq_b2]);
-		lowmidR = outSample; highmidR -= lowmidR;
-		
-		outSample = (lowmidR * lowB[biq_a0]) + lowB[biq_sR1];
-		lowB[biq_sR1] = (lowmidR * lowB[biq_a1]) - (outSample * lowB[biq_b1]) + lowB[biq_sR2];
-		lowB[biq_sR2] = (lowmidR * lowB[biq_a2]) - (outSample * lowB[biq_b2]);
-		bassR = outSample; lowmidR -= bassR;
-		
-		trebleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);
-		//second stage of three crossovers
-		
-		outSample = (trebleR * highC[biq_a0]) + highC[biq_sR1];
-		highC[biq_sR1] = (trebleR * highC[biq_a1]) - (outSample * highC[biq_b1]) + highC[biq_sR2];
-		highC[biq_sR2] = (trebleR * highC[biq_a2]) - (outSample * highC[biq_b2]);
-		highmidR = outSample; trebleR -= highmidR;
-		
-		outSample = (highmidR * midC[biq_a0]) + midC[biq_sR1];
-		midC[biq_sR1] = (highmidR * midC[biq_a1]) - (outSample * midC[biq_b1]) + midC[biq_sR2];
-		midC[biq_sR2] = (highmidR * midC[biq_a2]) - (outSample * midC[biq_b2]);
-		lowmidR = outSample; highmidR -= lowmidR;
-		
-		outSample = (lowmidR * lowC[biq_a0]) + lowC[biq_sR1];
-		lowC[biq_sR1] = (lowmidR * lowC[biq_a1]) - (outSample * lowC[biq_b1]) + lowC[biq_sR2];
-		lowC[biq_sR2] = (lowmidR * lowC[biq_a2]) - (outSample * lowC[biq_b2]);
-		bassR = outSample; lowmidR -= bassR;
-		
-		trebleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);
-		//third stage of three crossovers
-		
-		highRIIR = (highRIIR*highCoef) + (trebleR*(1.0-highCoef));
-		highmidR = highRIIR; trebleR -= highmidR;
-		
-		midRIIR = (midRIIR*midCoef) + (highmidR*(1.0-midCoef));
-		lowmidR = midRIIR; highmidR -= lowmidR;
-		
-		lowRIIR = (lowRIIR*lowCoef) + (lowmidR*(1.0-lowCoef));
-		bassR = lowRIIR; lowmidR -= bassR;
-		
-		inputSampleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);		
-		//fourth stage of three crossovers is the exponential filters
+		if (!eqOff) {
+			double trebleL = inputSampleL;		
+			double outSample = (trebleL * highA[biq_a0]) + highA[biq_sL1];
+			highA[biq_sL1] = (trebleL * highA[biq_a1]) - (outSample * highA[biq_b1]) + highA[biq_sL2];
+			highA[biq_sL2] = (trebleL * highA[biq_a2]) - (outSample * highA[biq_b2]);
+			double highmidL = outSample; trebleL -= highmidL;
+			
+			outSample = (highmidL * midA[biq_a0]) + midA[biq_sL1];
+			midA[biq_sL1] = (highmidL * midA[biq_a1]) - (outSample * midA[biq_b1]) + midA[biq_sL2];
+			midA[biq_sL2] = (highmidL * midA[biq_a2]) - (outSample * midA[biq_b2]);
+			double lowmidL = outSample; highmidL -= lowmidL;
+			
+			outSample = (lowmidL * lowA[biq_a0]) + lowA[biq_sL1];
+			lowA[biq_sL1] = (lowmidL * lowA[biq_a1]) - (outSample * lowA[biq_b1]) + lowA[biq_sL2];
+			lowA[biq_sL2] = (lowmidL * lowA[biq_a2]) - (outSample * lowA[biq_b2]);
+			double bassL = outSample; lowmidL -= bassL;
+			
+			trebleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);
+			//first stage of three crossovers
+			
+			outSample = (trebleL * highB[biq_a0]) + highB[biq_sL1];
+			highB[biq_sL1] = (trebleL * highB[biq_a1]) - (outSample * highB[biq_b1]) + highB[biq_sL2];
+			highB[biq_sL2] = (trebleL * highB[biq_a2]) - (outSample * highB[biq_b2]);
+			highmidL = outSample; trebleL -= highmidL;
+			
+			outSample = (highmidL * midB[biq_a0]) + midB[biq_sL1];
+			midB[biq_sL1] = (highmidL * midB[biq_a1]) - (outSample * midB[biq_b1]) + midB[biq_sL2];
+			midB[biq_sL2] = (highmidL * midB[biq_a2]) - (outSample * midB[biq_b2]);
+			lowmidL = outSample; highmidL -= lowmidL;
+			
+			outSample = (lowmidL * lowB[biq_a0]) + lowB[biq_sL1];
+			lowB[biq_sL1] = (lowmidL * lowB[biq_a1]) - (outSample * lowB[biq_b1]) + lowB[biq_sL2];
+			lowB[biq_sL2] = (lowmidL * lowB[biq_a2]) - (outSample * lowB[biq_b2]);
+			bassL = outSample; lowmidL -= bassL;
+			
+			trebleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);
+			//second stage of three crossovers
+			
+			outSample = (trebleL * highC[biq_a0]) + highC[biq_sL1];
+			highC[biq_sL1] = (trebleL * highC[biq_a1]) - (outSample * highC[biq_b1]) + highC[biq_sL2];
+			highC[biq_sL2] = (trebleL * highC[biq_a2]) - (outSample * highC[biq_b2]);
+			highmidL = outSample; trebleL -= highmidL;
+			
+			outSample = (highmidL * midC[biq_a0]) + midC[biq_sL1];
+			midC[biq_sL1] = (highmidL * midC[biq_a1]) - (outSample * midC[biq_b1]) + midC[biq_sL2];
+			midC[biq_sL2] = (highmidL * midC[biq_a2]) - (outSample * midC[biq_b2]);
+			lowmidL = outSample; highmidL -= lowmidL;
+			
+			outSample = (lowmidL * lowC[biq_a0]) + lowC[biq_sL1];
+			lowC[biq_sL1] = (lowmidL * lowC[biq_a1]) - (outSample * lowC[biq_b1]) + lowC[biq_sL2];
+			lowC[biq_sL2] = (lowmidL * lowC[biq_a2]) - (outSample * lowC[biq_b2]);
+			bassL = outSample; lowmidL -= bassL;
+			
+			trebleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);
+			//third stage of three crossovers
+			
+			highLIIR = (highLIIR*highCoef) + (trebleL*(1.0-highCoef));
+			highmidL = highLIIR; trebleL -= highmidL;
+			
+			midLIIR = (midLIIR*midCoef) + (highmidL*(1.0-midCoef));
+			lowmidL = midLIIR; highmidL -= lowmidL;
+			
+			lowLIIR = (lowLIIR*lowCoef) + (lowmidL*(1.0-lowCoef));
+			bassL = lowLIIR; lowmidL -= bassL;
+			
+			inputSampleL = (bassL*bassGain) + (lowmidL*lowmidGain) + (highmidL*highmidGain) + (trebleL*trebleGain);		
+			//fourth stage of three crossovers is the exponential filters
+			
+			
+			double trebleR = inputSampleR;		
+			outSample = (trebleR * highA[biq_a0]) + highA[biq_sR1];
+			highA[biq_sR1] = (trebleR * highA[biq_a1]) - (outSample * highA[biq_b1]) + highA[biq_sR2];
+			highA[biq_sR2] = (trebleR * highA[biq_a2]) - (outSample * highA[biq_b2]);
+			double highmidR = outSample; trebleR -= highmidR;
+			
+			outSample = (highmidR * midA[biq_a0]) + midA[biq_sR1];
+			midA[biq_sR1] = (highmidR * midA[biq_a1]) - (outSample * midA[biq_b1]) + midA[biq_sR2];
+			midA[biq_sR2] = (highmidR * midA[biq_a2]) - (outSample * midA[biq_b2]);
+			double lowmidR = outSample; highmidR -= lowmidR;
+			
+			outSample = (lowmidR * lowA[biq_a0]) + lowA[biq_sR1];
+			lowA[biq_sR1] = (lowmidR * lowA[biq_a1]) - (outSample * lowA[biq_b1]) + lowA[biq_sR2];
+			lowA[biq_sR2] = (lowmidR * lowA[biq_a2]) - (outSample * lowA[biq_b2]);
+			double bassR = outSample; lowmidR -= bassR;
+			
+			trebleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);
+			//first stage of three crossovers
+			
+			outSample = (trebleR * highB[biq_a0]) + highB[biq_sR1];
+			highB[biq_sR1] = (trebleR * highB[biq_a1]) - (outSample * highB[biq_b1]) + highB[biq_sR2];
+			highB[biq_sR2] = (trebleR * highB[biq_a2]) - (outSample * highB[biq_b2]);
+			highmidR = outSample; trebleR -= highmidR;
+			
+			outSample = (highmidR * midB[biq_a0]) + midB[biq_sR1];
+			midB[biq_sR1] = (highmidR * midB[biq_a1]) - (outSample * midB[biq_b1]) + midB[biq_sR2];
+			midB[biq_sR2] = (highmidR * midB[biq_a2]) - (outSample * midB[biq_b2]);
+			lowmidR = outSample; highmidR -= lowmidR;
+			
+			outSample = (lowmidR * lowB[biq_a0]) + lowB[biq_sR1];
+			lowB[biq_sR1] = (lowmidR * lowB[biq_a1]) - (outSample * lowB[biq_b1]) + lowB[biq_sR2];
+			lowB[biq_sR2] = (lowmidR * lowB[biq_a2]) - (outSample * lowB[biq_b2]);
+			bassR = outSample; lowmidR -= bassR;
+			
+			trebleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);
+			//second stage of three crossovers
+			
+			outSample = (trebleR * highC[biq_a0]) + highC[biq_sR1];
+			highC[biq_sR1] = (trebleR * highC[biq_a1]) - (outSample * highC[biq_b1]) + highC[biq_sR2];
+			highC[biq_sR2] = (trebleR * highC[biq_a2]) - (outSample * highC[biq_b2]);
+			highmidR = outSample; trebleR -= highmidR;
+			
+			outSample = (highmidR * midC[biq_a0]) + midC[biq_sR1];
+			midC[biq_sR1] = (highmidR * midC[biq_a1]) - (outSample * midC[biq_b1]) + midC[biq_sR2];
+			midC[biq_sR2] = (highmidR * midC[biq_a2]) - (outSample * midC[biq_b2]);
+			lowmidR = outSample; highmidR -= lowmidR;
+			
+			outSample = (lowmidR * lowC[biq_a0]) + lowC[biq_sR1];
+			lowC[biq_sR1] = (lowmidR * lowC[biq_a1]) - (outSample * lowC[biq_b1]) + lowC[biq_sR2];
+			lowC[biq_sR2] = (lowmidR * lowC[biq_a2]) - (outSample * lowC[biq_b2]);
+			bassR = outSample; lowmidR -= bassR;
+			
+			trebleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);
+			//third stage of three crossovers
+			
+			highRIIR = (highRIIR*highCoef) + (trebleR*(1.0-highCoef));
+			highmidR = highRIIR; trebleR -= highmidR;
+			
+			midRIIR = (midRIIR*midCoef) + (highmidR*(1.0-midCoef));
+			lowmidR = midRIIR; highmidR -= lowmidR;
+			
+			lowRIIR = (lowRIIR*lowCoef) + (lowmidR*(1.0-lowCoef));
+			bassR = lowRIIR; lowmidR -= bassR;
+			
+			inputSampleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);		
+			//fourth stage of three crossovers is the exponential filters
+		}
 		//SmoothEQ2
 		
-		if (fmax(fabs(inputSampleL),fabs(inputSampleR)) > gate+(sloRez*bezGate)) bezGate = ((bezGate*overallscale*3.0)+3.0)*(0.25/overallscale);
-		else bezGate = fmax(0.0, bezGate-(sloRez*sloRez));
-		
-		if (bezCThresh > 0.0) {
-			inputSampleL *= ((bezCThresh*0.5)+1.0);
-			inputSampleR *= ((bezCThresh*0.5)+1.0);
-		}
-		
-		bezCompF[bez_cycle] += bezRez;
-		bezCompF[bez_SampL] += (fabs(inputSampleL) * bezRez);
-		bezCompF[bez_SampR] += (fabs(inputSampleR) * bezRez);
-		bezMaxF = fmax(bezMaxF,fmax(fabs(inputSampleL),fabs(inputSampleR)));
-		
-		if (bezCompF[bez_cycle] > 1.0) {
-			bezCompF[bez_cycle] -= 1.0;
-			
-			if (bezMaxF < gate) bezCompF[bez_SampL] = bezMaxF/gate; //note: SampL is a control voltage,
-			if (bezCompF[bez_SampL]<gate) bezCompF[bez_SampL] = 0.0; //not a bipolar audio signal
-			bezCompF[bez_CL] = bezCompF[bez_BL];
-			bezCompF[bez_BL] = bezCompF[bez_AL];
-			bezCompF[bez_AL] = bezCompF[bez_SampL];
-			bezCompF[bez_SampL] = 0.0;
-			
-			if (bezMaxF < gate) bezCompF[bez_SampR] = bezMaxF/gate; //note: SampR is a control voltage,
-			if (bezCompF[bez_SampR]<gate) bezCompF[bez_SampR] = 0.0; //not a bipolar audio signal
-			bezCompF[bez_CR] = bezCompF[bez_BR];
-			bezCompF[bez_BR] = bezCompF[bez_AR];
-			bezCompF[bez_AR] = bezCompF[bez_SampR];
-			bezCompF[bez_SampR] = 0.0;
-			
-			bezMaxF = 0.0;
-		}
-		bezCompS[bez_cycle] += sloRez;
-		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage
-		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
-		if (bezCompS[bez_cycle] > 1.0) {
-			bezCompS[bez_cycle] -= 1.0;
-			
-			if (bezCompS[bez_SampL]<gate) bezCompS[bez_SampL] = 0.0;
-			bezCompS[bez_CL] = bezCompS[bez_BL];
-			bezCompS[bez_BL] = bezCompS[bez_AL];
-			bezCompS[bez_AL] = bezCompS[bez_SampL];
-			bezCompS[bez_SampL] = 0.0;
-			
-			if (bezCompS[bez_SampR]<gate) bezCompS[bez_SampR] = 0.0;
-			bezCompS[bez_CR] = bezCompS[bez_BR];
-			bezCompS[bez_BR] = bezCompS[bez_AR];
-			bezCompS[bez_AR] = bezCompS[bez_SampR];
-			bezCompS[bez_SampR] = 0.0;
-		}
-		double CBFL = (bezCompF[bez_CL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BL]*bezCompF[bez_cycle]);
-		double BAFL = (bezCompF[bez_BL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AL]*bezCompF[bez_cycle]);
-		double CBAFL = (bezCompF[bez_BL]+(CBFL*(1.0-bezCompF[bez_cycle]))+(BAFL*bezCompF[bez_cycle]))*0.5;
-		double CBSL = (bezCompS[bez_CL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BL]*bezCompS[bez_cycle]);
-		double BASL = (bezCompS[bez_BL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AL]*bezCompS[bez_cycle]);
-		double CBASL = (bezCompS[bez_BL]+(CBSL*(1.0-bezCompS[bez_cycle]))+(BASL*bezCompS[bez_cycle]))*0.5;
-		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
-		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
-		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		
-		double CBFR = (bezCompF[bez_CR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BR]*bezCompF[bez_cycle]);
-		double BAFR = (bezCompF[bez_BR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AR]*bezCompF[bez_cycle]);
-		double CBAFR = (bezCompF[bez_BR]+(CBFR*(1.0-bezCompF[bez_cycle]))+(BAFR*bezCompF[bez_cycle]))*0.5;
-		double CBSR = (bezCompS[bez_CR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BR]*bezCompS[bez_cycle]);
-		double BASR = (bezCompS[bez_BR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AR]*bezCompS[bez_cycle]);
-		double CBASR = (bezCompS[bez_BR]+(CBSR*(1.0-bezCompS[bez_cycle]))+(BASR*bezCompS[bez_cycle]))*0.5;
-		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
-		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
-		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));
-		
-		if (bezGate < 1.0 && gate > 0.0) {inputSampleL *= bezGate; inputSampleR *= bezGate;}
-		//Dynamics2
+		if (bezThresh > 0.0) {
+			if (fmax(fabs(inputSampleL),fabs(inputSampleR)) > gate) bezGate = overallscale/fmin(bezRez,sloRez);
+			else bezGate = bezGate = fmax(0.000001, bezGate-fmin(bezRez,sloRez));
+			inputSampleL *= (bezThresh+1.0);
+			inputSampleR *= (bezThresh+1.0);
+			double ctrl = fmax(fabs(inputSampleL),fabs(inputSampleR));
+			bezMax = fmax(bezMax,ctrl);
+			bezMin = fmax(bezMin-sloRez,ctrl);
+			bezComp[bez_cycle] += bezRez;
+			bezComp[bez_Ctrl] += (bezMin * bezRez);
+			if (bezComp[bez_cycle] > 1.0) {
+				if (bezGate < 1.0) bezComp[bez_Ctrl] /= bezGate;
+				bezComp[bez_cycle] -= 1.0;
+				bezComp[bez_C] = bezComp[bez_B];
+				bezComp[bez_B] = bezComp[bez_A];
+				bezComp[bez_A] = bezComp[bez_Ctrl];
+				bezComp[bez_Ctrl] = 0.0;
+				bezMax = 0.0;
+			}
+			double CB = (bezComp[bez_C]*(1.0-bezComp[bez_cycle]))+(bezComp[bez_B]*bezComp[bez_cycle]);
+			double BA = (bezComp[bez_B]*(1.0-bezComp[bez_cycle]))+(bezComp[bez_A]*bezComp[bez_cycle]);
+			double CBA = (bezComp[bez_B]+(CB*(1.0-bezComp[bez_cycle]))+(BA*bezComp[bez_cycle]))*0.5;
+			inputSampleL *= 1.0-(fmin(CBA*bezThresh,1.0));
+			inputSampleR *= 1.0-(fmin(CBA*bezThresh,1.0));
+		} else bezComp[bez_Ctrl] = 0.0;
+		//Dynamics3
 		
 		const double temp = (double)nSampleFrames/inFramesToProcess;
 		const double hFreq = (hFreqA*temp)+(hFreqB*(1.0-temp));

@@ -34,7 +34,7 @@ AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 	//SmoothEQ3
 		
 	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
-	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
+	bezCompF[bez_cycle] = 1.0;
 	bezCompS[bez_cycle] = 1.0;
 	//Dynamics2
 	

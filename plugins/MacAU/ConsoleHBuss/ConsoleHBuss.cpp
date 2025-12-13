@@ -250,7 +250,7 @@ ComponentResult		ConsoleHBuss::Reset(AudioUnitScope inScope, AudioUnitElement in
 	//SmoothEQ3
 	
 	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
-	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
+	bezCompF[bez_cycle] = 1.0;
 	bezCompS[bez_cycle] = 1.0;
 	//Dynamics2
 	
@@ -303,35 +303,45 @@ OSStatus		ConsoleHBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	double bassGain = (GetParameter( kParam_LOW )-0.5)*2.0;
 	bassGain = 1.0+(bassGain*fabs(bassGain)*fabs(bassGain));
 	//separate from filtering stage, this is amplitude, centered on 1.0 unity gain
+	double highCoef = 0.0;
+	double lowCoef = 0.0;
+	double omega = 0.0;
+	double biqK = 0.0;
+	double norm = 0.0;
 	
-	//SmoothEQ3 is how to get 3rd order steepness at very low CPU.
-	//because sample rate varies, you could also vary the crossovers
-	//you can't vary Q because math is simplified to take advantage of
-	//how the accurate Q value for this filter is always exactly 1.0.
-	highFast[biq_freq] = (4000.0/GetSampleRate());
-	double omega = 2.0*M_PI*(4000.0/GetSampleRate()); //mid-high crossover freq
-	double biqK = 2.0 - cos(omega);
-	double highCoef = -sqrt(biqK*biqK - 1.0) + biqK;
-	lowFast[biq_freq] = (200.0/GetSampleRate());
-	omega = 2.0*M_PI*(200.0/GetSampleRate()); //low-mid crossover freq
-	biqK = 2.0 - cos(omega);
-	double lowCoef = -sqrt(biqK*biqK - 1.0) + biqK;
-	//exponential IIR filter as part of an accurate 3rd order Butterworth filter 
-	biqK = tan(M_PI * highFast[biq_freq]);
-	double norm = 1.0 / (1.0 + biqK + biqK*biqK);
-	highFast[biq_a0] = biqK * biqK * norm;
-	highFast[biq_a1] = 2.0 * highFast[biq_a0];
-	highFast[biq_a2] = highFast[biq_a0];
-	highFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
-	highFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
-	biqK = tan(M_PI * lowFast[biq_freq]);
-	norm = 1.0 / (1.0 + biqK + biqK*biqK);
-	lowFast[biq_a0] = biqK * biqK * norm;
-	lowFast[biq_a1] = 2.0 * lowFast[biq_a0];
-	lowFast[biq_a2] = lowFast[biq_a0];
-	lowFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
-	lowFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
-	//custom biquad setup with Q = 1.0 gets to omit some divides
+	bool eqOff = (trebleGain == 1.0 && midGain == 1.0 && bassGain == 1.0);
+	//we get to completely bypass EQ if we're truly not using it. The mechanics of it mean that
+	//it cancels out to bit-identical anyhow, but we get to skip the calculation
+	if (!eqOff) {
+		//SmoothEQ3 is how to get 3rd order steepness at very low CPU.
+		//because sample rate varies, you could also vary the crossovers
+		//you can't vary Q because math is simplified to take advantage of
+		//how the accurate Q value for this filter is always exactly 1.0.
+		highFast[biq_freq] = (4000.0/GetSampleRate());
+		omega = 2.0*M_PI*(4000.0/GetSampleRate()); //mid-high crossover freq
+		biqK = 2.0 - cos(omega);
+		highCoef = -sqrt(biqK*biqK - 1.0) + biqK;
+		lowFast[biq_freq] = (200.0/GetSampleRate());
+		omega = 2.0*M_PI*(200.0/GetSampleRate()); //low-mid crossover freq
+		biqK = 2.0 - cos(omega);
+		lowCoef = -sqrt(biqK*biqK - 1.0) + biqK;
+		//exponential IIR filter as part of an accurate 3rd order Butterworth filter 
+		biqK = tan(M_PI * highFast[biq_freq]);
+		norm = 1.0 / (1.0 + biqK + biqK*biqK);
+		highFast[biq_a0] = biqK * biqK * norm;
+		highFast[biq_a1] = 2.0 * highFast[biq_a0];
+		highFast[biq_a2] = highFast[biq_a0];
+		highFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
+		highFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
+		biqK = tan(M_PI * lowFast[biq_freq]);
+		norm = 1.0 / (1.0 + biqK + biqK*biqK);
+		lowFast[biq_a0] = biqK * biqK * norm;
+		lowFast[biq_a1] = 2.0 * lowFast[biq_a0];
+		lowFast[biq_a2] = lowFast[biq_a0];
+		lowFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
+		lowFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
+		//custom biquad setup with Q = 1.0 gets to omit some divides
+	}
 	//SmoothEQ3
 	
 	double bezCThresh = pow(1.0-GetParameter( kParam_THR ), 6.0) * 8.0;
@@ -522,101 +532,79 @@ OSStatus		ConsoleHBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 		} else lowpass[hilp_cR1] = lowpass[hilp_cR2] = lowpass[hilp_cL1] = lowpass[hilp_cL2] = 0.0;
 		//another stage of Highpass/Lowpass before bringing in the parametric bands		
 		
-		double trebleFastL = inputSampleL;		
-		double outSample = (trebleFastL * highFast[biq_a0]) + highFast[biq_sL1];
-		highFast[biq_sL1] = (trebleFastL * highFast[biq_a1]) - (outSample * highFast[biq_b1]) + highFast[biq_sL2];
-		highFast[biq_sL2] = (trebleFastL * highFast[biq_a2]) - (outSample * highFast[biq_b2]);
-		double midFastL = outSample; trebleFastL -= midFastL;
-		outSample = (midFastL * lowFast[biq_a0]) + lowFast[biq_sL1];
-		lowFast[biq_sL1] = (midFastL * lowFast[biq_a1]) - (outSample * lowFast[biq_b1]) + lowFast[biq_sL2];
-		lowFast[biq_sL2] = (midFastL * lowFast[biq_a2]) - (outSample * lowFast[biq_b2]);
-		double bassFastL = outSample; midFastL -= bassFastL;
-		trebleFastL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);
-		//first stage of two crossovers is biquad of exactly 1.0 Q
-		highFastLIIR = (highFastLIIR*highCoef) + (trebleFastL*(1.0-highCoef));
-		midFastL = highFastLIIR; trebleFastL -= midFastL;
-		lowFastLIIR = (lowFastLIIR*lowCoef) + (midFastL*(1.0-lowCoef));
-		bassFastL = lowFastLIIR; midFastL -= bassFastL;
-		inputSampleL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);		
-		//second stage of two crossovers is the exponential filters
-		//this produces a slightly steeper Butterworth filter very cheaply
-		
-		double trebleFastR = inputSampleR;		
-		outSample = (trebleFastR * highFast[biq_a0]) + highFast[biq_sR1];
-		highFast[biq_sR1] = (trebleFastR * highFast[biq_a1]) - (outSample * highFast[biq_b1]) + highFast[biq_sR2];
-		highFast[biq_sR2] = (trebleFastR * highFast[biq_a2]) - (outSample * highFast[biq_b2]);
-		double midFastR = outSample; trebleFastR -= midFastR;
-		outSample = (midFastR * lowFast[biq_a0]) + lowFast[biq_sR1];
-		lowFast[biq_sR1] = (midFastR * lowFast[biq_a1]) - (outSample * lowFast[biq_b1]) + lowFast[biq_sR2];
-		lowFast[biq_sR2] = (midFastR * lowFast[biq_a2]) - (outSample * lowFast[biq_b2]);
-		double bassFastR = outSample; midFastR -= bassFastR;
-		trebleFastR = (bassFastR*bassGain) + (midFastR*midGain) + (trebleFastR*trebleGain);
-		//first stage of two crossovers is biquad of exactly 1.0 Q
-		highFastRIIR = (highFastRIIR*highCoef) + (trebleFastR*(1.0-highCoef));
-		midFastR = highFastRIIR; trebleFastR -= midFastR;
-		lowFastRIIR = (lowFastRIIR*lowCoef) + (midFastR*(1.0-lowCoef));
-		bassFastR = lowFastRIIR; midFastR -= bassFastR;
-		inputSampleR = (bassFastR*bassGain) + (midFastR*midGain) + (trebleFastR*trebleGain);		
-		//second stage of two crossovers is the exponential filters
-		//this produces a slightly steeper Butterworth filter very cheaply
+		if (!eqOff) {
+			double trebleFastL = inputSampleL;		
+			double outSample = (trebleFastL * highFast[biq_a0]) + highFast[biq_sL1];
+			highFast[biq_sL1] = (trebleFastL * highFast[biq_a1]) - (outSample * highFast[biq_b1]) + highFast[biq_sL2];
+			highFast[biq_sL2] = (trebleFastL * highFast[biq_a2]) - (outSample * highFast[biq_b2]);
+			double midFastL = outSample; trebleFastL -= midFastL;
+			outSample = (midFastL * lowFast[biq_a0]) + lowFast[biq_sL1];
+			lowFast[biq_sL1] = (midFastL * lowFast[biq_a1]) - (outSample * lowFast[biq_b1]) + lowFast[biq_sL2];
+			lowFast[biq_sL2] = (midFastL * lowFast[biq_a2]) - (outSample * lowFast[biq_b2]);
+			double bassFastL = outSample; midFastL -= bassFastL;
+			trebleFastL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);
+			//first stage of two crossovers is biquad of exactly 1.0 Q
+			highFastLIIR = (highFastLIIR*highCoef) + (trebleFastL*(1.0-highCoef));
+			midFastL = highFastLIIR; trebleFastL -= midFastL;
+			lowFastLIIR = (lowFastLIIR*lowCoef) + (midFastL*(1.0-lowCoef));
+			bassFastL = lowFastLIIR; midFastL -= bassFastL;
+			inputSampleL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);		
+			//second stage of two crossovers is the exponential filters
+			//this produces a slightly steeper Butterworth filter very cheaply
+			double trebleFastR = inputSampleR;		
+			outSample = (trebleFastR * highFast[biq_a0]) + highFast[biq_sR1];
+			highFast[biq_sR1] = (trebleFastR * highFast[biq_a1]) - (outSample * highFast[biq_b1]) + highFast[biq_sR2];
+			highFast[biq_sR2] = (trebleFastR * highFast[biq_a2]) - (outSample * highFast[biq_b2]);
+			double midFastR = outSample; trebleFastR -= midFastR;
+			outSample = (midFastR * lowFast[biq_a0]) + lowFast[biq_sR1];
+			lowFast[biq_sR1] = (midFastR * lowFast[biq_a1]) - (outSample * lowFast[biq_b1]) + lowFast[biq_sR2];
+			lowFast[biq_sR2] = (midFastR * lowFast[biq_a2]) - (outSample * lowFast[biq_b2]);
+			double bassFastR = outSample; midFastR -= bassFastR;
+			trebleFastR = (bassFastR*bassGain) + (midFastR*midGain) + (trebleFastR*trebleGain);
+			//first stage of two crossovers is biquad of exactly 1.0 Q
+			highFastRIIR = (highFastRIIR*highCoef) + (trebleFastR*(1.0-highCoef));
+			midFastR = highFastRIIR; trebleFastR -= midFastR;
+			lowFastRIIR = (lowFastRIIR*lowCoef) + (midFastR*(1.0-lowCoef));
+			bassFastR = lowFastRIIR; midFastR -= bassFastR;
+			inputSampleR = (bassFastR*bassGain) + (midFastR*midGain) + (trebleFastR*trebleGain);		
+			//second stage of two crossovers is the exponential filters
+			//this produces a slightly steeper Butterworth filter very cheaply
+		}
 		//SmoothEQ3
 		
 		if (bezCThresh > 0.0) {
 			inputSampleL *= ((bezCThresh*0.5)+1.0);
 			inputSampleR *= ((bezCThresh*0.5)+1.0);
-		}
-		
-		bezCompF[bez_cycle] += bezRez;
-		bezCompF[bez_SampL] += (fabs(inputSampleL) * bezRez);
-		bezCompF[bez_SampR] += (fabs(inputSampleR) * bezRez);
-		bezMaxF = fmax(bezMaxF,fmax(fabs(inputSampleL),fabs(inputSampleR)));
-		
-		if (bezCompF[bez_cycle] > 1.0) {
-			bezCompF[bez_cycle] -= 1.0;
-			bezCompF[bez_CL] = bezCompF[bez_BL];
-			bezCompF[bez_BL] = bezCompF[bez_AL];
-			bezCompF[bez_AL] = bezCompF[bez_SampL];
-			bezCompF[bez_SampL] = 0.0;
-			bezCompF[bez_CR] = bezCompF[bez_BR];
-			bezCompF[bez_BR] = bezCompF[bez_AR];
-			bezCompF[bez_AR] = bezCompF[bez_SampR];
-			bezCompF[bez_SampR] = 0.0;
-			bezMaxF = 0.0;
-		}
-		bezCompS[bez_cycle] += sloRez;
-		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage
-		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
-		if (bezCompS[bez_cycle] > 1.0) {
-			bezCompS[bez_cycle] -= 1.0;
-			bezCompS[bez_CL] = bezCompS[bez_BL];
-			bezCompS[bez_BL] = bezCompS[bez_AL];
-			bezCompS[bez_AL] = bezCompS[bez_SampL];
-			bezCompS[bez_SampL] = 0.0;
-			bezCompS[bez_CR] = bezCompS[bez_BR];
-			bezCompS[bez_BR] = bezCompS[bez_AR];
-			bezCompS[bez_AR] = bezCompS[bez_SampR];
-			bezCompS[bez_SampR] = 0.0;
-		}
-		double CBFL = (bezCompF[bez_CL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BL]*bezCompF[bez_cycle]);
-		double BAFL = (bezCompF[bez_BL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AL]*bezCompF[bez_cycle]);
-		double CBAFL = (bezCompF[bez_BL]+(CBFL*(1.0-bezCompF[bez_cycle]))+(BAFL*bezCompF[bez_cycle]))*0.5;
-		double CBSL = (bezCompS[bez_CL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BL]*bezCompS[bez_cycle]);
-		double BASL = (bezCompS[bez_BL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AL]*bezCompS[bez_cycle]);
-		double CBASL = (bezCompS[bez_BL]+(CBSL*(1.0-bezCompS[bez_cycle]))+(BASL*bezCompS[bez_cycle]))*0.5;
-		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
-		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
-		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		
-		double CBFR = (bezCompF[bez_CR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BR]*bezCompF[bez_cycle]);
-		double BAFR = (bezCompF[bez_BR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AR]*bezCompF[bez_cycle]);
-		double CBAFR = (bezCompF[bez_BR]+(CBFR*(1.0-bezCompF[bez_cycle]))+(BAFR*bezCompF[bez_cycle]))*0.5;
-		double CBSR = (bezCompS[bez_CR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BR]*bezCompS[bez_cycle]);
-		double BASR = (bezCompS[bez_BR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AR]*bezCompS[bez_cycle]);
-		double CBASR = (bezCompS[bez_BR]+(CBSR*(1.0-bezCompS[bez_cycle]))+(BASR*bezCompS[bez_cycle]))*0.5;
-		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
-		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
-		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));
-		//Dynamics2
+			bezCompF[bez_cycle] += bezRez;
+			bezCompF[bez_Ctrl] += (fmax(fabs(inputSampleL),fabs(inputSampleR)) * bezRez);
+			if (bezCompF[bez_cycle] > 1.0) {
+				bezCompF[bez_cycle] -= 1.0;
+				bezCompF[bez_C] = bezCompF[bez_B];
+				bezCompF[bez_B] = bezCompF[bez_A];
+				bezCompF[bez_A] = bezCompF[bez_Ctrl];
+				bezCompF[bez_Ctrl] = 0.0;
+			}
+			bezCompS[bez_cycle] += sloRez;
+			bezCompS[bez_Ctrl] += (fmax(fabs(inputSampleL),fabs(inputSampleR)) * sloRez);
+			if (bezCompS[bez_cycle] > 1.0) {
+				bezCompS[bez_cycle] -= 1.0;
+				bezCompS[bez_C] = bezCompS[bez_B];
+				bezCompS[bez_B] = bezCompS[bez_A];
+				bezCompS[bez_A] = bezCompS[bez_Ctrl];
+				bezCompS[bez_Ctrl] = 0.0;
+			}
+			double CBF = (bezCompF[bez_C]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_B]*bezCompF[bez_cycle]);
+			double BAF = (bezCompF[bez_B]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_A]*bezCompF[bez_cycle]);
+			double CBAF = (bezCompF[bez_B]+(CBF*(1.0-bezCompF[bez_cycle]))+(BAF*bezCompF[bez_cycle]))*0.5;
+			double CBS = (bezCompS[bez_C]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_B]*bezCompS[bez_cycle]);
+			double BAS = (bezCompS[bez_B]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_A]*bezCompS[bez_cycle]);
+			double CBAS = (bezCompS[bez_B]+(CBS*(1.0-bezCompS[bez_cycle]))+(BAS*bezCompS[bez_cycle]))*0.5;
+			double CBAMax = fmax(CBAS,CBAF); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
+			double CBAFade = ((CBAS*-CBAMax)+(CBAF*CBAMax)+1.0)*0.5;
+			inputSampleL *= 1.0-(fmin(((CBAS*(1.0-CBAFade))+(CBAF*CBAFade))*bezCThresh,1.0));
+			inputSampleR *= 1.0-(fmin(((CBAS*(1.0-CBAFade))+(CBAF*CBAFade))*bezCThresh,1.0));
+		} else {bezCompF[bez_Ctrl] = 0.0; bezCompS[bez_Ctrl] = 0.0;}
+		//Dynamics2 custom version for buss
 		
 		if (highpassEngage) { //distributed Highpass
 			highpass[hilp_temp] = (inputSampleL*highpass[hilp_e0])+highpass[hilp_eL1];
@@ -679,47 +667,39 @@ OSStatus		ConsoleHBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 			darkSampleL /= 2.0; darkSampleR /= 2.0; 
 		} avgPos++;
 		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
-		double avgSlewL = fmin(lastSlewL,1.0);
+		double avgSlewL = fmin(lastSlewL*lastSlewL*(0.0635-(overallscale*0.0018436)),1.0);
 		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
 		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
-		double avgSlewR = fmin(lastSlewR,1.0);
+		double avgSlewR = fmin(lastSlewR*lastSlewR*(0.0635-(overallscale*0.0018436)),1.0);
 		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
 		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
 		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);
 		
-		//begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleL *= 0.92;
-		//end TapeHack section
+		inputSampleL = fmin(fmax(inputSampleL,-2.032610446872596),2.032610446872596);
+		long double X = inputSampleL * inputSampleL;
+		long double sat = inputSampleL * X;
+		inputSampleL -= (sat*0.125); sat *= X;
+		inputSampleL += (sat*0.0078125); sat *= X;
+		inputSampleL -= (sat*0.000244140625); sat *= X;
+		inputSampleL += (sat*0.000003814697265625); sat *= X;
+		inputSampleL -= (sat*0.0000000298023223876953125); sat *= X;
+		//purestsaturation: sine, except all the corrections
+		//retain mantissa of a long double increasing power function
 		
-		//begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
-		addtwo = inputSampleR * inputSampleR;
-		empower = inputSampleR * addtwo; // inputSampleR to the third power
-		inputSampleR -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleR += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleR -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleR += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleR -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleR *= 0.92;
-		//end TapeHack section
+		inputSampleR = fmin(fmax(inputSampleR,-2.032610446872596),2.032610446872596);
+		X = inputSampleR * inputSampleR;
+		sat = inputSampleR * X;
+		inputSampleR -= (sat*0.125); sat *= X;
+		inputSampleR += (sat*0.0078125); sat *= X;
+		inputSampleR -= (sat*0.000244140625); sat *= X;
+		inputSampleR += (sat*0.000003814697265625); sat *= X;
+		inputSampleR -= (sat*0.0000000298023223876953125); sat *= X;
+		//purestsaturation: sine, except all the corrections
+		//retain mantissa of a long double increasing power function
+		
+		//we are leaving it as a clip that will go over 0dB.
+		//it is a softclip so it will give you a more forgiving experience,
+		//but you are meant to not drive the softclip for just level.
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);

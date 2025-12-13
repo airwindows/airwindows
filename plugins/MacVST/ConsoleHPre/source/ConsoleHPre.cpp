@@ -60,10 +60,11 @@ AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 	}
 	//HipCrush with four bands
 	
-	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
-	bezCompF[bez_cycle] = 1.0; bezMaxFL = 0.0; bezMaxFR = 0.0;
-	bezCompS[bez_cycle] = 1.0; bezGateL = 2.0; bezGateR = 2.0;
-	//Dynamics2
+	for (int x = 0; x < bez_total; x++) bezComp[x] = 0.0;
+	bezComp[bez_cycle] = 1.0; 
+	bezMaxL = 0.0; bezMinL = 0.0; bezGateL = 2.0;
+	bezMaxR = 0.0; bezMinR = 0.0; bezGateR = 2.0; //Dual mono version
+	//Dynamics3
 	
 	for(int count = 0; count < 22; count++) {
 		iirHPositionL[count] = 0.0;

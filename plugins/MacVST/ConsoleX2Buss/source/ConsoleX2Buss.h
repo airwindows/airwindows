@@ -16,17 +16,17 @@
 #include <math.h>
 
 enum {
-	kParamA =0,
-	kParamB =1,
-	kParamC =2,
-	kParamD =3,
-	kParamE =4,
-	kParamF =5,
-	kParamG =6,
-	kParamH =7,
-	kParamI =8,
-	kParamJ =9,
-	kParamK =10,
+	kParamHIG =0,
+	kParamHMG =1,
+	kParamLMG =2,
+	kParamBSG =3,
+	kParamHIF =4,
+	kParamHMF =5,
+	kParamLMF =6,
+	kParamBSF =7,
+	kParamTHR =8,
+	kParamPAN =9,
+	kParamFAD =10,
   kNumParameters = 11
 }; //
 
@@ -62,17 +62,17 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-    float A;
-    float B;
-    float C;
-    float D;
-    float E;
-    float F;
-    float G;
-    float H;
-    float I;
-    float J;
-    float K;
+    float HIG;
+    float HMG;
+    float LMG;
+    float BSG;
+    float HIF;
+    float HMF;
+    float LMF;
+    float BSF;
+    float THR;
+    float PAN;
+    float FAD;
 
 	enum {
 		biq_freq,
@@ -108,26 +108,17 @@ private:
 	//SmoothEQ2
 	
 	enum {
-		bez_AL,
-		bez_BL,
-		bez_CL,
-		bez_InL,
-		bez_UnInL,
-		bez_SampL,
-		bez_AR,
-		bez_BR,
-		bez_CR,
-		bez_InR,
-		bez_UnInR,
-		bez_SampR,
+		bez_A,
+		bez_B,
+		bez_C,
+		bez_Ctrl,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction
 	double bezCompF[bez_total];
-	double bezMaxF;
 	double bezCompS[bez_total];
-	//Dynamics2
-
+	//Dynamics2 custom for buss
+	
 	double avg32L[33];
 	double avg32R[33];
 	double avg16L[17];

@@ -16,23 +16,23 @@
 #include <math.h>
 
 enum {
-	kParamA =0,
-	kParamB =1,
-	kParamC =2,
-	kParamD =3,
-	kParamE =4,
-	kParamF =5,
-	kParamG =6,
-	kParamH =7,
-	kParamI =8,
-	kParamJ =9,
-	kParamK =10,
-	kParamL =11,
-	kParamM =12,
-	kParamN =13,
-	kParamO =14,
-	kParamP =15,
-	kParamQ =16,
+	kParamTRM =0,
+	kParamMOR =1,
+	kParamHIG =2,
+	kParamHMG =3,
+	kParamLMG =4,
+	kParamBSG =5,
+	kParamHIF =6,
+	kParamHMF =7,
+	kParamLMF =8,
+	kParamBSF =9,
+	kParamTHR =10,
+	kParamATK =11,
+	kParamRLS =12,
+	kParamGAT =13,
+	kParamLOP =14,
+	kParamHIP =15,
+	kParamFAD =16,
   kNumParameters = 17
 }; //
 const int dscBuf = 256;
@@ -69,23 +69,23 @@ private:
     char _programName[kVstMaxProgNameLen + 1];
     std::set< std::string > _canDo;
     
-    float A;
-    float B;
-    float C;
-    float D;
-    float E;
-    float F;
-    float G;
-    float H;
-    float I;
-    float J;
-    float K;
-    float L;
-    float M;
-    float N;
-    float O;
-    float P;
-    float Q;
+    float TRM;
+    float MOR;
+    float HIG;
+    float HMG;
+    float LMG;
+    float BSG;
+    float HIF;
+    float HMF;
+    float LMF;
+    float BSF;
+    float THR;
+    float ATK;
+    float RLS;
+    float GAT;
+    float LOP;
+    float HIP;
+    float FAD;
 	
 	enum {
 		biq_freq,
@@ -124,23 +124,22 @@ private:
 		bez_AL,
 		bez_BL,
 		bez_CL,
-		bez_InL,
-		bez_UnInL,
-		bez_SampL,
+		bez_CtrlL,
 		bez_AR,
 		bez_BR,
 		bez_CR,
-		bez_InR,
-		bez_UnInR,
-		bez_SampR,
+		bez_CtrlR,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction
-	double bezCompF[bez_total];
-	double bezMaxF;
-	double bezCompS[bez_total];
-	double bezGate;
-	//Dynamics2
+	double bezComp[bez_total];
+	double bezMaxL;
+	double bezMinL;
+	double bezGateL;
+	double bezMaxR;
+	double bezMinR;
+	double bezGateR;
+	//Dynamics3
 	
 	double iirHPositionL[23];
 	double iirHAngleL[23];

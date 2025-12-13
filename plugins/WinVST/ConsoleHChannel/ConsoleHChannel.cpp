@@ -61,10 +61,10 @@ ConsoleHChannel::ConsoleHChannel(audioMasterCallback audioMaster) :
 	}
 	//HipCrush with four bands
 	
-	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
-	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
-	bezCompS[bez_cycle] = 1.0; bezGate = 2.0;
-	//Dynamics2
+	for (int x = 0; x < bez_total; x++) bezComp[x] = 0.0;
+	bezComp[bez_cycle] = 1.0; bezMax = 0.0; bezMin = 0.0;
+	bezGate = 2.0;
+	//Dynamics3
 	
 	for(int count = 0; count < 22; count++) {
 		iirHPositionL[count] = 0.0;

@@ -236,26 +236,18 @@ public:
 	//HipCrush with four bands
 	
 	enum {
-		bez_AL,
-		bez_BL,
-		bez_CL,
-		bez_InL,
-		bez_UnInL,
-		bez_SampL,
-		bez_AR,
-		bez_BR,
-		bez_CR,
-		bez_InR,
-		bez_UnInR,
-		bez_SampR,
+		bez_A,
+		bez_B,
+		bez_C,
+		bez_Ctrl,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction
-	double bezCompF[bez_total];
-	double bezMaxF;
-	double bezCompS[bez_total];
+	double bezComp[bez_total];
+	double bezMax;
+	double bezMin;
 	double bezGate;
-	//Dynamics2
+	//Dynamics3
 	
 	double iirHPositionL[23];
 	double iirHAngleL[23];

@@ -54,67 +54,75 @@
 #pragma mark ____ConsoleX2Channel Parameters
 
 // parameters
-static const int kDefaultValue_ParamA = 1;
-static const float kDefaultValue_ParamB = 0.0;
-static const float kDefaultValue_ParamC = 0.5;
-static const float kDefaultValue_ParamD = 0.5;
-static const float kDefaultValue_ParamE = 0.5;
-static const float kDefaultValue_ParamF = 0.5;
-static const float kDefaultValue_ParamG = 0.5;
-static const float kDefaultValue_ParamH = 0.5;
-static const float kDefaultValue_ParamI = 0.5;
-static const float kDefaultValue_ParamJ = 0.5;
-static const float kDefaultValue_ParamK = 1.0;
-static const float kDefaultValue_ParamL = 0.5;
-static const float kDefaultValue_ParamM = 0.5;
-static const float kDefaultValue_ParamN = 0.0;
-static const float kDefaultValue_ParamO = 1.0;
-static const float kDefaultValue_ParamP = 0.0;
-static const float kDefaultValue_ParamQ = 0.5;
-static const float kDefaultValue_ParamR = 0.5;
+static const int kDefaultValue_ParamTRM = 1;
+static const float kDefaultValue_ParamMOR = 0.0;
 
-static CFStringRef kParameterAName = CFSTR("Trim");
-static CFStringRef kParameterBName = CFSTR("More");
-static CFStringRef kParameterCUnit = CFSTR("eq");
-static CFStringRef kParameterCName = CFSTR("High");
-static CFStringRef kParameterDName = CFSTR("HMid");
-static CFStringRef kParameterEName = CFSTR("LMid");
-static CFStringRef kParameterFName = CFSTR("Bass");
-static CFStringRef kParameterGUnit = CFSTR("freq");
-static CFStringRef kParameterGName = CFSTR("HighF");
-static CFStringRef kParameterHName = CFSTR("HMidF");
-static CFStringRef kParameterIName = CFSTR("LMidF");
-static CFStringRef kParameterJName = CFSTR("BassF");
-static CFStringRef kParameterKUnit = CFSTR("dyn");
-static CFStringRef kParameterKName = CFSTR("Thresh");
-static CFStringRef kParameterLName = CFSTR("Attack");
-static CFStringRef kParameterMName = CFSTR("Release");
-static CFStringRef kParameterNName = CFSTR("Gate");
-static CFStringRef kParameterOUnit = CFSTR("fltr");
-static CFStringRef kParameterOName = CFSTR("Lowpass");
-static CFStringRef kParameterPName = CFSTR("Hipass");
-static CFStringRef kParameterQName = CFSTR("Pan");
-static CFStringRef kParameterRName = CFSTR("Fader");
+static const float kDefaultValue_ParamHIG = 0.5;
+static const float kDefaultValue_ParamHMG = 0.5;
+static const float kDefaultValue_ParamLMG = 0.5;
+static const float kDefaultValue_ParamBSG = 0.5;
+
+static const float kDefaultValue_ParamHIF = 0.5;
+static const float kDefaultValue_ParamHMF = 0.5;
+static const float kDefaultValue_ParamLMF = 0.5;
+static const float kDefaultValue_ParamBSF = 0.5;
+
+static const float kDefaultValue_ParamTHR = 1.0;
+static const float kDefaultValue_ParamATK = 0.5;
+static const float kDefaultValue_ParamRLS = 0.5;
+static const float kDefaultValue_ParamGAT = 0.0;
+
+static const float kDefaultValue_ParamLOP = 1.0;
+static const float kDefaultValue_ParamHIP = 0.0;
+static const float kDefaultValue_ParamPAN = 0.5;
+static const float kDefaultValue_ParamFAD = 0.5;
+
+static CFStringRef kParameterTRMName = CFSTR("Trim");
+static CFStringRef kParameterMORName = CFSTR("More");
+
+static CFStringRef kParameterHIGUnit = CFSTR("eq");
+static CFStringRef kParameterHIGName = CFSTR("High");
+static CFStringRef kParameterHMGName = CFSTR("HMid");
+static CFStringRef kParameterLMGName = CFSTR("LMid");
+static CFStringRef kParameterBSGName = CFSTR("Bass");
+
+static CFStringRef kParameterHIFUnit = CFSTR("freq");
+static CFStringRef kParameterHIFName = CFSTR("HighF");
+static CFStringRef kParameterHMFName = CFSTR("HMidF");
+static CFStringRef kParameterLMFName = CFSTR("LMidF");
+static CFStringRef kParameterBSFName = CFSTR("BassF");
+
+static CFStringRef kParameterTHRUnit = CFSTR("dyn");
+static CFStringRef kParameterTHRName = CFSTR("Thresh");
+static CFStringRef kParameterATKName = CFSTR("Attack");
+static CFStringRef kParameterRLSName = CFSTR("Release");
+static CFStringRef kParameterGATName = CFSTR("Gate");
+
+static CFStringRef kParameterLOPUnit = CFSTR("fltr");
+static CFStringRef kParameterLOPName = CFSTR("Lowpass");
+static CFStringRef kParameterHIPName = CFSTR("Hipass");
+static CFStringRef kParameterPANName = CFSTR("Pan");
+static CFStringRef kParameterFADName = CFSTR("Fader");
 
 enum {
-	kParam_A =0,
-	kParam_B =1,
-	kParam_C =2,
-	kParam_D =3,
-	kParam_E =4,
-	kParam_F =5,
-	kParam_G =6,
-	kParam_H =7,
-	kParam_I =8,
-	kParam_J =9,
-	kParam_K =10,
-	kParam_L =11,
-	kParam_M =12,
-	kParam_N =13,
-	kParam_O =14,
-	kParam_P =15,
-	kParam_Q =16,
-	kParam_R =17,
+	kParam_TRM =0,
+	kParam_MOR =1,
+	kParam_HIG =2,
+	kParam_HMG =3,
+	kParam_LMG =4,
+	kParam_BSG =5,
+	kParam_HIF =6,
+	kParam_HMF =7,
+	kParam_LMF =8,
+	kParam_BSF =9,
+	kParam_THR =10,
+	kParam_ATK =11,
+	kParam_RLS =12,
+	kParam_GAT =13,
+	kParam_LOP =14,
+	kParam_HIP =15,
+	kParam_PAN =16,
+	kParam_FAD =17,
 	//Add your parameters here...
 	kNumberOfParameters=18
 };
@@ -200,26 +208,18 @@ public:
 	//SmoothEQ2
 	
 	enum {
-		bez_AL,
-		bez_BL,
-		bez_CL,
-		bez_InL,
-		bez_UnInL,
-		bez_SampL,
-		bez_AR,
-		bez_BR,
-		bez_CR,
-		bez_InR,
-		bez_UnInR,
-		bez_SampR,
+		bez_A,
+		bez_B,
+		bez_C,
+		bez_Ctrl,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction
-	double bezCompF[bez_total];
-	double bezMaxF;
-	double bezCompS[bez_total];
+	double bezComp[bez_total];
+	double bezMax;
+	double bezMin;
 	double bezGate;
-	//Dynamics2
+	//Dynamics3
 	
 	double iirHPositionL[23];
 	double iirHAngleL[23];

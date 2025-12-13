@@ -333,7 +333,16 @@ void		PunchyGuitar::PunchyGuitarKernel::Process(	const Float32 	*inSourceP,
 			}
 			inputSample += (band*angG[9]);
 			inputSample *= drive;
-			inputSample = sin(fmin(fmax(inputSample,-M_PI),M_PI));
+			inputSample = fmin(fmax(inputSample,-2.032610446872596),2.032610446872596);
+			long double X = inputSample * inputSample;
+			long double temp = inputSample * X;
+			inputSample -= (temp*0.125); temp *= X;
+			inputSample += (temp*0.0078125); temp *= X;
+			inputSample -= (temp*0.000244140625); temp *= X;
+			inputSample += (temp*0.000003814697265625); temp *= X;
+			inputSample -= (temp*0.0000000298023223876953125); temp *= X;
+			//purestsaturation: sine, except all the corrections
+			//retain mantissa of a long double increasing power function
 		}
 		
 		if (gateroller < 1.0)

@@ -77,7 +77,16 @@ void PunchyDeluxe::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			}
 			inputSampleL += band;
 			inputSampleL *= drive;
-			inputSampleL = sin(fmin(fmax(inputSampleL,-M_PI),M_PI));
+			inputSampleL = fmin(fmax(inputSampleL,-2.032610446872596),2.032610446872596);
+			long double X = inputSampleL * inputSampleL;
+			long double temp = inputSampleL * X;
+			inputSampleL -= (temp*0.125); temp *= X;
+			inputSampleL += (temp*0.0078125); temp *= X;
+			inputSampleL -= (temp*0.000244140625); temp *= X;
+			inputSampleL += (temp*0.000003814697265625); temp *= X;
+			inputSampleL -= (temp*0.0000000298023223876953125); temp *= X;
+			//purestsaturation: sine, except all the corrections
+			//retain mantissa of a long double increasing power function
 			
 			fr = (0.92/overallscale)+(overallscale*0.01);
 			band = inputSampleR; inputSampleR = 0.0;
@@ -90,7 +99,16 @@ void PunchyDeluxe::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			}
 			inputSampleR += band;
 			inputSampleR *= drive;
-			inputSampleR = sin(fmin(fmax(inputSampleR,-M_PI),M_PI));
+			inputSampleR = fmin(fmax(inputSampleR,-2.032610446872596),2.032610446872596);
+			X = inputSampleR * inputSampleR;
+			temp = inputSampleR * X;
+			inputSampleR -= (temp*0.125); temp *= X;
+			inputSampleR += (temp*0.0078125); temp *= X;
+			inputSampleR -= (temp*0.000244140625); temp *= X;
+			inputSampleR += (temp*0.000003814697265625); temp *= X;
+			inputSampleR -= (temp*0.0000000298023223876953125); temp *= X;
+			//purestsaturation: sine, except all the corrections
+			//retain mantissa of a long double increasing power function
 		}
 		
 		if (pad < 1.0) {
@@ -190,7 +208,16 @@ void PunchyDeluxe::processDoubleReplacing(double **inputs, double **outputs, Vst
 			}
 			inputSampleL += band;
 			inputSampleL *= drive;
-			inputSampleL = sin(fmin(fmax(inputSampleL,-M_PI),M_PI));
+			inputSampleL = fmin(fmax(inputSampleL,-2.032610446872596),2.032610446872596);
+			long double X = inputSampleL * inputSampleL;
+			long double temp = inputSampleL * X;
+			inputSampleL -= (temp*0.125); temp *= X;
+			inputSampleL += (temp*0.0078125); temp *= X;
+			inputSampleL -= (temp*0.000244140625); temp *= X;
+			inputSampleL += (temp*0.000003814697265625); temp *= X;
+			inputSampleL -= (temp*0.0000000298023223876953125); temp *= X;
+			//purestsaturation: sine, except all the corrections
+			//retain mantissa of a long double increasing power function
 			
 			fr = (0.92/overallscale)+(overallscale*0.01);
 			band = inputSampleR; inputSampleR = 0.0;
@@ -203,7 +230,16 @@ void PunchyDeluxe::processDoubleReplacing(double **inputs, double **outputs, Vst
 			}
 			inputSampleR += band;
 			inputSampleR *= drive;
-			inputSampleR = sin(fmin(fmax(inputSampleR,-M_PI),M_PI));
+			inputSampleR = fmin(fmax(inputSampleR,-2.032610446872596),2.032610446872596);
+			X = inputSampleR * inputSampleR;
+			temp = inputSampleR * X;
+			inputSampleR -= (temp*0.125); temp *= X;
+			inputSampleR += (temp*0.0078125); temp *= X;
+			inputSampleR -= (temp*0.000244140625); temp *= X;
+			inputSampleR += (temp*0.000003814697265625); temp *= X;
+			inputSampleR -= (temp*0.0000000298023223876953125); temp *= X;
+			//purestsaturation: sine, except all the corrections
+			//retain mantissa of a long double increasing power function
 		}
 		
 		if (pad < 1.0) {

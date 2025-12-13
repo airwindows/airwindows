@@ -146,25 +146,22 @@ private:
 		bez_AL,
 		bez_BL,
 		bez_CL,
-		bez_InL,
-		bez_UnInL,
-		bez_SampL,
+		bez_CtrlL,
 		bez_AR,
 		bez_BR,
 		bez_CR,
-		bez_InR,
-		bez_UnInR,
-		bez_SampR,
+		bez_CtrlR,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction
-	double bezCompF[bez_total];
-	double bezMaxFL;
-	double bezMaxFR;
-	double bezCompS[bez_total];
+	double bezComp[bez_total];
+	double bezMaxL;
+	double bezMinL;
 	double bezGateL;
+	double bezMaxR;
+	double bezMinR;
 	double bezGateR;
-	//Dynamics2
+	//Dynamics3
 	
 	double iirHPositionL[23];
 	double iirHAngleL[23];

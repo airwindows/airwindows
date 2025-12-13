@@ -95,25 +95,16 @@ private:
 	//SmoothEQ3
 		
 	enum {
-		bez_AL,
-		bez_BL,
-		bez_CL,
-		bez_InL,
-		bez_UnInL,
-		bez_SampL,
-		bez_AR,
-		bez_BR,
-		bez_CR,
-		bez_InR,
-		bez_UnInR,
-		bez_SampR,
+		bez_A,
+		bez_B,
+		bez_C,
+		bez_Ctrl,
 		bez_cycle,
 		bez_total
 	}; //the new undersampling. bez signifies the bezier curve reconstruction
 	double bezCompF[bez_total];
-	double bezMaxF;
 	double bezCompS[bez_total];
-	//Dynamics2
+	//Dynamics2 custom for buss
 	
 	enum {
 		hilp_freq, hilp_temp,

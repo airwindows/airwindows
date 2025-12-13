@@ -47,7 +47,7 @@ Tape: TapeHack, ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, Ir
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: SoftClock2, SoftClock, DubPlate2, DubPlate, CansAW, Cans, Monitoring3, Monitoring2, Monitoring, BitShiftPan, BitShiftGain, PurestGain, PurestFade, EveryTrim, HermeTrim, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
+Utility: SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
 
 XYZ Filters: ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -4374,6 +4374,14 @@ Anyway, it’s yours if you want it. There are many odd ways to do EQ code. This
 
 Me, I’m more interested in dark reverbs and deeper spaces and bass, so this was never my pet plugin: maybe it can be yours :)
 
+############ PurestDualPan is an updated PurestGain but as a dual pan.
+
+This one's by patron request: as in, one specific patron REALLY wanted a PurestDualPan, so now everybody has one :)
+
+It is using dezippering, but instead of the much slower one from PurestGain, it's the quicker and more direct one from out of the Z filter plugins. It's using the pan law I used in Console9 and later, that uses sine functions to come up with a pan law. And it's using a quirky little audio taper in its left and right gain controls, so that 0.5 is unity gain, but full crank is actually 3.069492192001773 because it's 2 to the power of the golden ratio, same for the taper of attenuating anything. This produces a funny sort of taper that I like, and also makes it impossible to reference the actual control's number in any useful way. So, behave as if you can't see numbers, they certainly won't be what you think they are and there's no predicting what they will be in dB terms.
+
+I have a Bit Shift one also, but it doesn't strictly count as that because it requires an add as part of the algorithm. This one counts as a PurestGain, though! If you're a PurestGain fan, this is the same only as a dual pan.
+
 ############ PurestConsoleBuss is the most free from coloration Console system.
 ############ PurestConsoleChannel is the most free from coloration Console system.
 
@@ -4496,7 +4504,7 @@ That’s a surprising amount to say about a gain plugin, but that’s Airwindows
 
 ############ PurestSaturation is an experiment in softclipping.
 
-Not so long ago, I pushed and pulled the parameters of a sin() function (thing called a Taylor series expansion) to produce TapeHack, which is a softclip that uses the wrong valus for a sin() softclip, to produce another softclip that feels more retro and vintage.
+Not so long ago, I pushed and pulled the parameters of a sin() function (thing called a Taylor series expansion) to produce TapeHack, which is a softclip that uses the wrong values for a sin() softclip, to produce another softclip that feels more retro and vintage.
 
 But what if we did something weirder? Specifically, doing this requires that you divide by increasingly huge numbers. For a real sin() these are factorials (very huge indeed). For TapeHack, I doctored these until the shape of the softclip did exactly what I wanted.
 

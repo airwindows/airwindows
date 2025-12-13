@@ -379,10 +379,10 @@ void		ConsoleHPre::ConsoleHPreKernel::Reset()
 	}
 	//HipCrush with four bands
 	
-	for (int x = 0; x < bez_total; x++) {bezCompF[x] = 0.0;bezCompS[x] = 0.0;}
-	bezCompF[bez_cycle] = 1.0; bezMaxF = 0.0;
-	bezCompS[bez_cycle] = 1.0; bezGate = 2.0;
-	//Dynamics2
+	for (int x = 0; x < bez_total; x++) bezComp[x] = 0.0;
+	bezComp[bez_cycle] = 1.0; bezMax = 0.0; bezMin = 0.0;
+	bezGate = 2.0;
+	//Dynamics3
 	
 	for(int count = 0; count < 22; count++) {
 		iirHPosition[count] = 0.0;
@@ -440,6 +440,7 @@ void		ConsoleHPre::ConsoleHPreKernel::Process(	const Float32 	*inSourceP,
 	if (spacing < 2) spacing = 2; if (spacing > 32) spacing = 32;
 	
 	double moreTapeHack = (GetParameter( kParam_MOR )*2.0)+1.0;
+	bool tapehackOff = (GetParameter( kParam_MOR ) == 0.0);
 	switch ((int)GetParameter( kParam_TRM )){
 		case 0: moreTapeHack *= 0.5; break;
 		case 1: break;
@@ -457,109 +458,123 @@ void		ConsoleHPre::ConsoleHPreKernel::Process(	const Float32 	*inSourceP,
 	double bassGain = (GetParameter( kParam_LOW )-0.5)*2.0;
 	bassGain = 1.0+(bassGain*fabs(bassGain)*fabs(bassGain));
 	//separate from filtering stage, this is amplitude, centered on 1.0 unity gain
+	double highCoef = 0.0;
+	double lowCoef = 0.0;
+	double omega = 0.0;
+	double biqK = 0.0;
+	double norm = 0.0;
 	
-	//SmoothEQ3 is how to get 3rd order steepness at very low CPU.
-	//because sample rate varies, you could also vary the crossovers
-	//you can't vary Q because math is simplified to take advantage of
-	//how the accurate Q value for this filter is always exactly 1.0.
-	highFast[biq_freq] = (4000.0/GetSampleRate());
-	double omega = 2.0*M_PI*(4000.0/GetSampleRate()); //mid-high crossover freq
-	double biqK = 2.0 - cos(omega);
-	double highCoef = -sqrt(biqK*biqK - 1.0) + biqK;
-	lowFast[biq_freq] = (200.0/GetSampleRate());
-	omega = 2.0*M_PI*(200.0/GetSampleRate()); //low-mid crossover freq
-	biqK = 2.0 - cos(omega);
-	double lowCoef = -sqrt(biqK*biqK - 1.0) + biqK;
-	//exponential IIR filter as part of an accurate 3rd order Butterworth filter 
-	biqK = tan(M_PI * highFast[biq_freq]);
-	double norm = 1.0 / (1.0 + biqK + biqK*biqK);
-	highFast[biq_a0] = biqK * biqK * norm;
-	highFast[biq_a1] = 2.0 * highFast[biq_a0];
-	highFast[biq_a2] = highFast[biq_a0];
-	highFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
-	highFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
-	biqK = tan(M_PI * lowFast[biq_freq]);
-	norm = 1.0 / (1.0 + biqK + biqK*biqK);
-	lowFast[biq_a0] = biqK * biqK * norm;
-	lowFast[biq_a1] = 2.0 * lowFast[biq_a0];
-	lowFast[biq_a2] = lowFast[biq_a0];
-	lowFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
-	lowFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
-	//custom biquad setup with Q = 1.0 gets to omit some divides	
+	bool eqOff = (trebleGain == 1.0 && midGain == 1.0 && bassGain == 1.0);
+	//we get to completely bypass EQ if we're truly not using it. The mechanics of it mean that
+	//it cancels out to bit-identical anyhow, but we get to skip the calculation
+	if (!eqOff) {
+		//SmoothEQ3 is how to get 3rd order steepness at very low CPU.
+		//because sample rate varies, you could also vary the crossovers
+		//you can't vary Q because math is simplified to take advantage of
+		//how the accurate Q value for this filter is always exactly 1.0.
+		highFast[biq_freq] = (4000.0/GetSampleRate());
+		omega = 2.0*M_PI*(4000.0/GetSampleRate()); //mid-high crossover freq
+		biqK = 2.0 - cos(omega);
+		highCoef = -sqrt(biqK*biqK - 1.0) + biqK;
+		lowFast[biq_freq] = (200.0/GetSampleRate());
+		omega = 2.0*M_PI*(200.0/GetSampleRate()); //low-mid crossover freq
+		biqK = 2.0 - cos(omega);
+		lowCoef = -sqrt(biqK*biqK - 1.0) + biqK;
+		//exponential IIR filter as part of an accurate 3rd order Butterworth filter 
+		biqK = tan(M_PI * highFast[biq_freq]);
+		norm = 1.0 / (1.0 + biqK + biqK*biqK);
+		highFast[biq_a0] = biqK * biqK * norm;
+		highFast[biq_a1] = 2.0 * highFast[biq_a0];
+		highFast[biq_a2] = highFast[biq_a0];
+		highFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
+		highFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
+		biqK = tan(M_PI * lowFast[biq_freq]);
+		norm = 1.0 / (1.0 + biqK + biqK*biqK);
+		lowFast[biq_a0] = biqK * biqK * norm;
+		lowFast[biq_a1] = 2.0 * lowFast[biq_a0];
+		lowFast[biq_a2] = lowFast[biq_a0];
+		lowFast[biq_b1] = 2.0 * (biqK*biqK - 1.0) * norm;
+		lowFast[biq_b2] = (1.0 - biqK + biqK*biqK) * norm;
+		//custom biquad setup with Q = 1.0 gets to omit some divides	
+	}
+	//SmoothEQ3
 	
-	high[biqs_freq] = (((pow(GetParameter( kParam_TRF ),2.0)*16000.0)+1000.0)/GetSampleRate());
-	if (high[biqs_freq] < 0.0001) high[biqs_freq] = 0.0001;
-	high[biqs_bit] = (GetParameter( kParam_TRB )*2.0)-1.0;
-	high[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_TRG ),2.0))*1.618033988749894848204586;
-	high[biqs_reso] = pow(GetParameter( kParam_TRG )+0.618033988749894848204586,2.0);
-	biqK = tan(M_PI * high[biqs_freq]);
-	norm = 1.0 / (1.0 + biqK / (high[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
-	high[biqs_a0] = biqK / (high[biqs_reso]*0.618033988749894848204586) * norm;
-	high[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	high[biqs_b2] = (1.0 - biqK / (high[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
-	norm = 1.0 / (1.0 + biqK / (high[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
-	high[biqs_c0] = biqK / (high[biqs_reso]*1.618033988749894848204586) * norm;
-	high[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	high[biqs_d2] = (1.0 - biqK / (high[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
-	//high
-	
-	hmid[biqs_freq] = (((pow(GetParameter( kParam_HMF ),3.0)*7000.0)+300.0)/GetSampleRate());
-	if (hmid[biqs_freq] < 0.0001) hmid[biqs_freq] = 0.0001;
-	hmid[biqs_bit] = (GetParameter( kParam_HMB )*2.0)-1.0;
-	hmid[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_HMG ),2.0))*1.618033988749894848204586;
-	hmid[biqs_reso] = pow(GetParameter( kParam_HMG )+0.618033988749894848204586,2.0);
-	biqK = tan(M_PI * hmid[biqs_freq]);
-	norm = 1.0 / (1.0 + biqK / (hmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
-	hmid[biqs_a0] = biqK / (hmid[biqs_reso]*0.618033988749894848204586) * norm;
-	hmid[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	hmid[biqs_b2] = (1.0 - biqK / (hmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
-	norm = 1.0 / (1.0 + biqK / (hmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
-	hmid[biqs_c0] = biqK / (hmid[biqs_reso]*1.618033988749894848204586) * norm;
-	hmid[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	hmid[biqs_d2] = (1.0 - biqK / (hmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
-	//hmid
-	
-	lmid[biqs_freq] = (((pow(GetParameter( kParam_LMF ),3.0)*3000.0)+40.0)/GetSampleRate());
-	if (lmid[biqs_freq] < 0.00001) lmid[biqs_freq] = 0.00001;
-	lmid[biqs_bit] = (GetParameter( kParam_LMB )*2.0)-1.0;
-	lmid[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_LMG ),2.0))*1.618033988749894848204586;
-	lmid[biqs_reso] = pow(GetParameter( kParam_LMG )+0.618033988749894848204586,2.0);
-	biqK = tan(M_PI * lmid[biqs_freq]);
-	norm = 1.0 / (1.0 + biqK / (lmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
-	lmid[biqs_a0] = biqK / (lmid[biqs_reso]*0.618033988749894848204586) * norm;
-	lmid[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	lmid[biqs_b2] = (1.0 - biqK / (lmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
-	norm = 1.0 / (1.0 + biqK / (lmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
-	lmid[biqs_c0] = biqK / (lmid[biqs_reso]*1.618033988749894848204586) * norm;
-	lmid[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	lmid[biqs_d2] = (1.0 - biqK / (lmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
-	//lmid
-	
-	bass[biqs_freq] = (((pow(GetParameter( kParam_BSF ),4.0)*1000.0)+20.0)/GetSampleRate());
-	if (bass[biqs_freq] < 0.00001) bass[biqs_freq] = 0.00001;
-	bass[biqs_bit] = (GetParameter( kParam_BSB )*2.0)-1.0;
-	bass[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_BSG ),2.0))*1.618033988749894848204586;
-	bass[biqs_reso] = pow(GetParameter( kParam_BSG )+0.618033988749894848204586,2.0);
-	biqK = tan(M_PI * bass[biqs_freq]);
-	norm = 1.0 / (1.0 + biqK / (bass[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
-	bass[biqs_a0] = biqK / (bass[biqs_reso]*0.618033988749894848204586) * norm;
-	bass[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	bass[biqs_b2] = (1.0 - biqK / (bass[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
-	norm = 1.0 / (1.0 + biqK / (bass[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
-	bass[biqs_c0] = biqK / (bass[biqs_reso]*1.618033988749894848204586) * norm;
-	bass[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
-	bass[biqs_d2] = (1.0 - biqK / (bass[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
-	//bass
 	double crossFade = GetParameter( kParam_CRS );
+	bool hipcrushOff = (crossFade == 0.0);
+	if (!hipcrushOff) {
+		high[biqs_freq] = (((pow(GetParameter( kParam_TRF ),2.0)*16000.0)+1000.0)/GetSampleRate());
+		if (high[biqs_freq] < 0.0001) high[biqs_freq] = 0.0001;
+		high[biqs_bit] = (GetParameter( kParam_TRB )*2.0)-1.0;
+		high[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_TRG ),2.0))*1.618033988749894848204586;
+		high[biqs_reso] = pow(GetParameter( kParam_TRG )+0.618033988749894848204586,2.0);
+		biqK = tan(M_PI * high[biqs_freq]);
+		norm = 1.0 / (1.0 + biqK / (high[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
+		high[biqs_a0] = biqK / (high[biqs_reso]*0.618033988749894848204586) * norm;
+		high[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		high[biqs_b2] = (1.0 - biqK / (high[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
+		norm = 1.0 / (1.0 + biqK / (high[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
+		high[biqs_c0] = biqK / (high[biqs_reso]*1.618033988749894848204586) * norm;
+		high[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		high[biqs_d2] = (1.0 - biqK / (high[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
+		//high
+		
+		hmid[biqs_freq] = (((pow(GetParameter( kParam_HMF ),3.0)*7000.0)+300.0)/GetSampleRate());
+		if (hmid[biqs_freq] < 0.0001) hmid[biqs_freq] = 0.0001;
+		hmid[biqs_bit] = (GetParameter( kParam_HMB )*2.0)-1.0;
+		hmid[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_HMG ),2.0))*1.618033988749894848204586;
+		hmid[biqs_reso] = pow(GetParameter( kParam_HMG )+0.618033988749894848204586,2.0);
+		biqK = tan(M_PI * hmid[biqs_freq]);
+		norm = 1.0 / (1.0 + biqK / (hmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
+		hmid[biqs_a0] = biqK / (hmid[biqs_reso]*0.618033988749894848204586) * norm;
+		hmid[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		hmid[biqs_b2] = (1.0 - biqK / (hmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
+		norm = 1.0 / (1.0 + biqK / (hmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
+		hmid[biqs_c0] = biqK / (hmid[biqs_reso]*1.618033988749894848204586) * norm;
+		hmid[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		hmid[biqs_d2] = (1.0 - biqK / (hmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
+		//hmid
+		
+		lmid[biqs_freq] = (((pow(GetParameter( kParam_LMF ),3.0)*3000.0)+40.0)/GetSampleRate());
+		if (lmid[biqs_freq] < 0.00001) lmid[biqs_freq] = 0.00001;
+		lmid[biqs_bit] = (GetParameter( kParam_LMB )*2.0)-1.0;
+		lmid[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_LMG ),2.0))*1.618033988749894848204586;
+		lmid[biqs_reso] = pow(GetParameter( kParam_LMG )+0.618033988749894848204586,2.0);
+		biqK = tan(M_PI * lmid[biqs_freq]);
+		norm = 1.0 / (1.0 + biqK / (lmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
+		lmid[biqs_a0] = biqK / (lmid[biqs_reso]*0.618033988749894848204586) * norm;
+		lmid[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		lmid[biqs_b2] = (1.0 - biqK / (lmid[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
+		norm = 1.0 / (1.0 + biqK / (lmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
+		lmid[biqs_c0] = biqK / (lmid[biqs_reso]*1.618033988749894848204586) * norm;
+		lmid[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		lmid[biqs_d2] = (1.0 - biqK / (lmid[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
+		//lmid
+		
+		bass[biqs_freq] = (((pow(GetParameter( kParam_BSF ),4.0)*1000.0)+20.0)/GetSampleRate());
+		if (bass[biqs_freq] < 0.00001) bass[biqs_freq] = 0.00001;
+		bass[biqs_bit] = (GetParameter( kParam_BSB )*2.0)-1.0;
+		bass[biqs_level] = (1.0-pow(1.0-GetParameter( kParam_BSG ),2.0))*1.618033988749894848204586;
+		bass[biqs_reso] = pow(GetParameter( kParam_BSG )+0.618033988749894848204586,2.0);
+		biqK = tan(M_PI * bass[biqs_freq]);
+		norm = 1.0 / (1.0 + biqK / (bass[biqs_reso]*0.618033988749894848204586) + biqK * biqK);
+		bass[biqs_a0] = biqK / (bass[biqs_reso]*0.618033988749894848204586) * norm;
+		bass[biqs_b1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		bass[biqs_b2] = (1.0 - biqK / (bass[biqs_reso]*0.618033988749894848204586) + biqK * biqK) * norm;
+		norm = 1.0 / (1.0 + biqK / (bass[biqs_reso]*1.618033988749894848204586) + biqK * biqK);
+		bass[biqs_c0] = biqK / (bass[biqs_reso]*1.618033988749894848204586) * norm;
+		bass[biqs_d1] = 2.0 * (biqK * biqK - 1.0) * norm;
+		bass[biqs_d2] = (1.0 - biqK / (bass[biqs_reso]*1.618033988749894848204586) + biqK * biqK) * norm;
+		//bass
+	}
 	//HipCrush with four bands
 	
-	double bezCThresh = pow(1.0-GetParameter( kParam_THR ), 6.0) * 8.0;
-	double bezRez = pow(1.0-GetParameter( kParam_ATK ), 8.0) / overallscale; 
-	double sloRez = pow(1.0-GetParameter( kParam_RLS ),12.0) / overallscale;
-	sloRez = fmin(fmax(sloRez-(bezRez*0.5),0.00001),1.0);
+	double bezThresh = pow(1.0-GetParameter( kParam_THR ), 4.0) * 8.0;
+	double bezRez = pow(1.0-GetParameter( kParam_ATK ), 4.0) / overallscale; 
+	double sloRez = pow(1.0-GetParameter( kParam_RLS ), 4.0) / overallscale;
+	double gate = pow(GetParameter( kParam_GAT ),4.0);
 	bezRez = fmin(fmax(bezRez,0.0001),1.0);
-	double gate = pow(pow(GetParameter( kParam_GAT ),4.0),sqrt(bezCThresh+1.0));
-	//Dynamics2
+	sloRez = fmin(fmax(sloRez,0.0001),1.0);
+	//Dynamics3
 	
 	lFreqA = lFreqB; lFreqB = pow(fmax(GetParameter( kParam_LOP ),0.002),overallscale); //the lowpass
 	hFreqA = hFreqB; hFreqB = pow(GetParameter( kParam_HIP ),overallscale+2.0); //the highpass
@@ -572,220 +587,219 @@ void		ConsoleHPre::ConsoleHPreKernel::Process(	const Float32 	*inSourceP,
 		double inputSampleL = *sourceP;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpd * 1.18e-17;
 		
-		double darkSampleL = inputSampleL;
-		if (avgPos > 31) avgPos = 0;
-		if (spacing > 31) {
-			avg32L[avgPos] = darkSampleL;
-			darkSampleL = 0.0;
-			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x];}
-			darkSampleL /= 32.0;
-		} if (spacing > 15) {
-			avg16L[avgPos%16] = darkSampleL;
-			darkSampleL = 0.0;
-			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x];}
-			darkSampleL /= 16.0;
-		} if (spacing > 7) {
-			avg8L[avgPos%8] = darkSampleL;
-			darkSampleL = 0.0;
-			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x];}
-			darkSampleL /= 8.0;
-		} if (spacing > 3) {
-			avg4L[avgPos%4] = darkSampleL;
-			darkSampleL = 0.0;
-			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x];}
-			darkSampleL /= 4.0;
-		} if (spacing > 1) {
-			avg2L[avgPos%2] = darkSampleL;
-			darkSampleL = 0.0;
-			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x];}
-			darkSampleL /= 2.0; 
-		} avgPos++;
-		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
-		double avgSlewL = fmin(lastSlewL,1.0);
-		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
-		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
-		
-		//begin Discontinuity section
 		inputSampleL *= moreTapeHack;
-		inputSampleL *= moreDiscontinuity;
-		dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
-		dBaPosL = fmin(dBaPosL,1.0);
-		int dBdly = floor(dBaPosL*dscBuf);
-		double dBi = (dBaPosL*dscBuf)-dBdly;
-		inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
-		dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
-		dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
-		inputSampleL /= moreDiscontinuity;
-		//end Discontinuity section, begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		//end TapeHack section
-		//Discontapeity
+		//trim control gets to work even when MORE is off
 		
-		double trebleFastL = inputSampleL;		
-		double outSample = (trebleFastL * highFast[biq_a0]) + highFast[biq_sL1];
-		highFast[biq_sL1] = (trebleFastL * highFast[biq_a1]) - (outSample * highFast[biq_b1]) + highFast[biq_sL2];
-		highFast[biq_sL2] = (trebleFastL * highFast[biq_a2]) - (outSample * highFast[biq_b2]);
-		double midFastL = outSample; trebleFastL -= midFastL;
-		outSample = (midFastL * lowFast[biq_a0]) + lowFast[biq_sL1];
-		lowFast[biq_sL1] = (midFastL * lowFast[biq_a1]) - (outSample * lowFast[biq_b1]) + lowFast[biq_sL2];
-		lowFast[biq_sL2] = (midFastL * lowFast[biq_a2]) - (outSample * lowFast[biq_b2]);
-		double bassFastL = outSample; midFastL -= bassFastL;
-		trebleFastL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);
-		//first stage of two crossovers is biquad of exactly 1.0 Q
-		highFastLIIR = (highFastLIIR*highCoef) + (trebleFastL*(1.0-highCoef));
-		midFastL = highFastLIIR; trebleFastL -= midFastL;
-		lowFastLIIR = (lowFastLIIR*lowCoef) + (midFastL*(1.0-lowCoef));
-		bassFastL = lowFastLIIR; midFastL -= bassFastL;
-		double smoothEQL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);		
-		//second stage of two crossovers is the exponential filters
-		//this produces a slightly steeper Butterworth filter very cheaply
+		if (!tapehackOff) {
+			double darkSampleL = inputSampleL;
+			if (avgPos > 31) avgPos = 0;
+			if (spacing > 31) {
+				avg32L[avgPos] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x];}
+				darkSampleL /= 32.0;
+			} if (spacing > 15) {
+				avg16L[avgPos%16] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x];}
+				darkSampleL /= 16.0;
+			} if (spacing > 7) {
+				avg8L[avgPos%8] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x];}
+				darkSampleL /= 8.0;
+			} if (spacing > 3) {
+				avg4L[avgPos%4] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x];}
+				darkSampleL /= 4.0;
+			} if (spacing > 1) {
+				avg2L[avgPos%2] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x];}
+				darkSampleL /= 2.0; 
+			} avgPos++;
+			lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
+			double avgSlewL = fmin(lastSlewL,1.0);
+			lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
+			inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+			//begin Discontinuity section
+			inputSampleL *= moreTapeHack;
+			inputSampleL *= moreDiscontinuity;
+			dBaL[dBaXL] = inputSampleL; dBaPosL *= 0.5; dBaPosL += fabs((inputSampleL*((inputSampleL*0.25)-0.5))*0.5);
+			dBaPosL = fmin(dBaPosL,1.0);
+			int dBdly = floor(dBaPosL*dscBuf);
+			double dBi = (dBaPosL*dscBuf)-dBdly;
+			inputSampleL = dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*(1.0-dBi);
+			dBdly++; inputSampleL += dBaL[dBaXL-dBdly +((dBaXL-dBdly < 0)?dscBuf:0)]*dBi;
+			dBaXL++; if (dBaXL < 0 || dBaXL >= dscBuf) dBaXL = 0;
+			inputSampleL /= moreDiscontinuity;
+			//end Discontinuity section, begin TapeHack section
+			inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
+			double addtwo = inputSampleL * inputSampleL;
+			double empower = inputSampleL * addtwo; // inputSampleL to the third power
+			inputSampleL -= (empower / 6.0);
+			empower *= addtwo; // to the fifth power
+			inputSampleL += (empower / 69.0);
+			empower *= addtwo; //seventh
+			inputSampleL -= (empower / 2530.08);
+			empower *= addtwo; //ninth
+			inputSampleL += (empower / 224985.6);
+			empower *= addtwo; //eleventh
+			inputSampleL -= (empower / 9979200.0f);
+			//this is a degenerate form of a Taylor Series to approximate sin()
+			//end TapeHack section
+			//Discontapeity
+		}
+		
+		double smoothEQL = inputSampleL;
+		
+		if (!eqOff) {
+			double trebleFastL = inputSampleL;		
+			double outSample = (trebleFastL * highFast[biq_a0]) + highFast[biq_sL1];
+			highFast[biq_sL1] = (trebleFastL * highFast[biq_a1]) - (outSample * highFast[biq_b1]) + highFast[biq_sL2];
+			highFast[biq_sL2] = (trebleFastL * highFast[biq_a2]) - (outSample * highFast[biq_b2]);
+			double midFastL = outSample; trebleFastL -= midFastL;
+			outSample = (midFastL * lowFast[biq_a0]) + lowFast[biq_sL1];
+			lowFast[biq_sL1] = (midFastL * lowFast[biq_a1]) - (outSample * lowFast[biq_b1]) + lowFast[biq_sL2];
+			lowFast[biq_sL2] = (midFastL * lowFast[biq_a2]) - (outSample * lowFast[biq_b2]);
+			double bassFastL = outSample; midFastL -= bassFastL;
+			trebleFastL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);
+			//first stage of two crossovers is biquad of exactly 1.0 Q
+			highFastLIIR = (highFastLIIR*highCoef) + (trebleFastL*(1.0-highCoef));
+			midFastL = highFastLIIR; trebleFastL -= midFastL;
+			lowFastLIIR = (lowFastLIIR*lowCoef) + (midFastL*(1.0-lowCoef));
+			bassFastL = lowFastLIIR; midFastL -= bassFastL;
+			smoothEQL = (bassFastL*bassGain) + (midFastL*midGain) + (trebleFastL*trebleGain);		
+			//second stage of two crossovers is the exponential filters
+			//this produces a slightly steeper Butterworth filter very cheaply
+		}
 		//SmoothEQ3
 		
-		//begin Stacked Biquad With Reversed Neutron Flow L
-		high[biqs_outL] = inputSampleL * fabs(high[biqs_level]);
-		high[biqs_temp] = (high[biqs_outL] * high[biqs_a0]) + high[biqs_aL1];
-		high[biqs_aL1] = high[biqs_aL2] - (high[biqs_temp]*high[biqs_b1]);
-		high[biqs_aL2] = (high[biqs_outL] * -high[biqs_a0]) - (high[biqs_temp]*high[biqs_b2]);
-		high[biqs_outL] = high[biqs_temp];
-		if (high[biqs_bit] != 0.0) {
-			double bitFactor = high[biqs_bit];
-			bool crushGate = (bitFactor < 0.0);
-			bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
-			high[biqs_outL] *= bitFactor;		
-			high[biqs_outL] = floor(high[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
-			high[biqs_outL] /= bitFactor;
-		}
-		high[biqs_temp] = (high[biqs_outL] * high[biqs_c0]) + high[biqs_cL1];
-		high[biqs_cL1] = high[biqs_cL2] - (high[biqs_temp]*high[biqs_d1]);
-		high[biqs_cL2] = (high[biqs_outL] * -high[biqs_c0]) - (high[biqs_temp]*high[biqs_d2]);
-		high[biqs_outL] = high[biqs_temp];
-		high[biqs_outL] *= high[biqs_level];
-		//end Stacked Biquad With Reversed Neutron Flow L
+		double parametricL = 0.0;
 		
-		//begin Stacked Biquad With Reversed Neutron Flow L
-		hmid[biqs_outL] = inputSampleL * fabs(hmid[biqs_level]);
-		hmid[biqs_temp] = (hmid[biqs_outL] * hmid[biqs_a0]) + hmid[biqs_aL1];
-		hmid[biqs_aL1] = hmid[biqs_aL2] - (hmid[biqs_temp]*hmid[biqs_b1]);
-		hmid[biqs_aL2] = (hmid[biqs_outL] * -hmid[biqs_a0]) - (hmid[biqs_temp]*hmid[biqs_b2]);
-		hmid[biqs_outL] = hmid[biqs_temp];
-		if (hmid[biqs_bit] != 0.0) {
-			double bitFactor = hmid[biqs_bit];
-			bool crushGate = (bitFactor < 0.0);
-			bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
-			hmid[biqs_outL] *= bitFactor;		
-			hmid[biqs_outL] = floor(hmid[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
-			hmid[biqs_outL] /= bitFactor;
+		if (!hipcrushOff) {
+			//begin Stacked Biquad With Reversed Neutron Flow L
+			high[biqs_outL] = inputSampleL * fabs(high[biqs_level]);
+			high[biqs_temp] = (high[biqs_outL] * high[biqs_a0]) + high[biqs_aL1];
+			high[biqs_aL1] = high[biqs_aL2] - (high[biqs_temp]*high[biqs_b1]);
+			high[biqs_aL2] = (high[biqs_outL] * -high[biqs_a0]) - (high[biqs_temp]*high[biqs_b2]);
+			high[biqs_outL] = high[biqs_temp];
+			if (high[biqs_bit] != 0.0) {
+				double bitFactor = high[biqs_bit];
+				bool crushGate = (bitFactor < 0.0);
+				bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
+				high[biqs_outL] *= bitFactor;		
+				high[biqs_outL] = floor(high[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
+				high[biqs_outL] /= bitFactor;
+			}
+			high[biqs_temp] = (high[biqs_outL] * high[biqs_c0]) + high[biqs_cL1];
+			high[biqs_cL1] = high[biqs_cL2] - (high[biqs_temp]*high[biqs_d1]);
+			high[biqs_cL2] = (high[biqs_outL] * -high[biqs_c0]) - (high[biqs_temp]*high[biqs_d2]);
+			high[biqs_outL] = high[biqs_temp];
+			high[biqs_outL] *= high[biqs_level];
+			//end Stacked Biquad With Reversed Neutron Flow L
+			
+			//begin Stacked Biquad With Reversed Neutron Flow L
+			hmid[biqs_outL] = inputSampleL * fabs(hmid[biqs_level]);
+			hmid[biqs_temp] = (hmid[biqs_outL] * hmid[biqs_a0]) + hmid[biqs_aL1];
+			hmid[biqs_aL1] = hmid[biqs_aL2] - (hmid[biqs_temp]*hmid[biqs_b1]);
+			hmid[biqs_aL2] = (hmid[biqs_outL] * -hmid[biqs_a0]) - (hmid[biqs_temp]*hmid[biqs_b2]);
+			hmid[biqs_outL] = hmid[biqs_temp];
+			if (hmid[biqs_bit] != 0.0) {
+				double bitFactor = hmid[biqs_bit];
+				bool crushGate = (bitFactor < 0.0);
+				bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
+				hmid[biqs_outL] *= bitFactor;		
+				hmid[biqs_outL] = floor(hmid[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
+				hmid[biqs_outL] /= bitFactor;
+			}
+			hmid[biqs_temp] = (hmid[biqs_outL] * hmid[biqs_c0]) + hmid[biqs_cL1];
+			hmid[biqs_cL1] = hmid[biqs_cL2] - (hmid[biqs_temp]*hmid[biqs_d1]);
+			hmid[biqs_cL2] = (hmid[biqs_outL] * -hmid[biqs_c0]) - (hmid[biqs_temp]*hmid[biqs_d2]);
+			hmid[biqs_outL] = hmid[biqs_temp];
+			hmid[biqs_outL] *= hmid[biqs_level];
+			//end Stacked Biquad With Reversed Neutron Flow L
+			
+			//begin Stacked Biquad With Reversed Neutron Flow L
+			lmid[biqs_outL] = inputSampleL * fabs(lmid[biqs_level]);
+			lmid[biqs_temp] = (lmid[biqs_outL] * lmid[biqs_a0]) + lmid[biqs_aL1];
+			lmid[biqs_aL1] = lmid[biqs_aL2] - (lmid[biqs_temp]*lmid[biqs_b1]);
+			lmid[biqs_aL2] = (lmid[biqs_outL] * -lmid[biqs_a0]) - (lmid[biqs_temp]*lmid[biqs_b2]);
+			lmid[biqs_outL] = lmid[biqs_temp];
+			if (lmid[biqs_bit] != 0.0) {
+				double bitFactor = lmid[biqs_bit];
+				bool crushGate = (bitFactor < 0.0);
+				bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
+				lmid[biqs_outL] *= bitFactor;		
+				lmid[biqs_outL] = floor(lmid[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
+				lmid[biqs_outL] /= bitFactor;
+			}
+			lmid[biqs_temp] = (lmid[biqs_outL] * lmid[biqs_c0]) + lmid[biqs_cL1];
+			lmid[biqs_cL1] = lmid[biqs_cL2] - (lmid[biqs_temp]*lmid[biqs_d1]);
+			lmid[biqs_cL2] = (lmid[biqs_outL] * -lmid[biqs_c0]) - (lmid[biqs_temp]*lmid[biqs_d2]);
+			lmid[biqs_outL] = lmid[biqs_temp];
+			lmid[biqs_outL] *= lmid[biqs_level];
+			//end Stacked Biquad With Reversed Neutron Flow L
+			
+			//begin Stacked Biquad With Reversed Neutron Flow L
+			bass[biqs_outL] = inputSampleL * fabs(bass[biqs_level]);
+			bass[biqs_temp] = (bass[biqs_outL] * bass[biqs_a0]) + bass[biqs_aL1];
+			bass[biqs_aL1] = bass[biqs_aL2] - (bass[biqs_temp]*bass[biqs_b1]);
+			bass[biqs_aL2] = (bass[biqs_outL] * -bass[biqs_a0]) - (bass[biqs_temp]*bass[biqs_b2]);
+			bass[biqs_outL] = bass[biqs_temp];
+			if (bass[biqs_bit] != 0.0) {
+				double bitFactor = bass[biqs_bit];
+				bool crushGate = (bitFactor < 0.0);
+				bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
+				bass[biqs_outL] *= bitFactor;		
+				bass[biqs_outL] = floor(bass[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
+				bass[biqs_outL] /= bitFactor;
+			}
+			bass[biqs_temp] = (bass[biqs_outL] * bass[biqs_c0]) + bass[biqs_cL1];
+			bass[biqs_cL1] = bass[biqs_cL2] - (bass[biqs_temp]*bass[biqs_d1]);
+			bass[biqs_cL2] = (bass[biqs_outL] * -bass[biqs_c0]) - (bass[biqs_temp]*bass[biqs_d2]);
+			bass[biqs_outL] = bass[biqs_temp];
+			bass[biqs_outL] *= bass[biqs_level];
+			parametricL = high[biqs_outL] + hmid[biqs_outL] + lmid[biqs_outL] + bass[biqs_outL];
+			//end Stacked Biquad With Reversed Neutron Flow L
 		}
-		hmid[biqs_temp] = (hmid[biqs_outL] * hmid[biqs_c0]) + hmid[biqs_cL1];
-		hmid[biqs_cL1] = hmid[biqs_cL2] - (hmid[biqs_temp]*hmid[biqs_d1]);
-		hmid[biqs_cL2] = (hmid[biqs_outL] * -hmid[biqs_c0]) - (hmid[biqs_temp]*hmid[biqs_d2]);
-		hmid[biqs_outL] = hmid[biqs_temp];
-		hmid[biqs_outL] *= hmid[biqs_level];
-		//end Stacked Biquad With Reversed Neutron Flow L
-		
-		//begin Stacked Biquad With Reversed Neutron Flow L
-		lmid[biqs_outL] = inputSampleL * fabs(lmid[biqs_level]);
-		lmid[biqs_temp] = (lmid[biqs_outL] * lmid[biqs_a0]) + lmid[biqs_aL1];
-		lmid[biqs_aL1] = lmid[biqs_aL2] - (lmid[biqs_temp]*lmid[biqs_b1]);
-		lmid[biqs_aL2] = (lmid[biqs_outL] * -lmid[biqs_a0]) - (lmid[biqs_temp]*lmid[biqs_b2]);
-		lmid[biqs_outL] = lmid[biqs_temp];
-		if (lmid[biqs_bit] != 0.0) {
-			double bitFactor = lmid[biqs_bit];
-			bool crushGate = (bitFactor < 0.0);
-			bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
-			lmid[biqs_outL] *= bitFactor;		
-			lmid[biqs_outL] = floor(lmid[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
-			lmid[biqs_outL] /= bitFactor;
-		}
-		lmid[biqs_temp] = (lmid[biqs_outL] * lmid[biqs_c0]) + lmid[biqs_cL1];
-		lmid[biqs_cL1] = lmid[biqs_cL2] - (lmid[biqs_temp]*lmid[biqs_d1]);
-		lmid[biqs_cL2] = (lmid[biqs_outL] * -lmid[biqs_c0]) - (lmid[biqs_temp]*lmid[biqs_d2]);
-		lmid[biqs_outL] = lmid[biqs_temp];
-		lmid[biqs_outL] *= lmid[biqs_level];
-		//end Stacked Biquad With Reversed Neutron Flow L
-		
-		//begin Stacked Biquad With Reversed Neutron Flow L
-		bass[biqs_outL] = inputSampleL * fabs(bass[biqs_level]);
-		bass[biqs_temp] = (bass[biqs_outL] * bass[biqs_a0]) + bass[biqs_aL1];
-		bass[biqs_aL1] = bass[biqs_aL2] - (bass[biqs_temp]*bass[biqs_b1]);
-		bass[biqs_aL2] = (bass[biqs_outL] * -bass[biqs_a0]) - (bass[biqs_temp]*bass[biqs_b2]);
-		bass[biqs_outL] = bass[biqs_temp];
-		if (bass[biqs_bit] != 0.0) {
-			double bitFactor = bass[biqs_bit];
-			bool crushGate = (bitFactor < 0.0);
-			bitFactor = pow(2.0,fmin(fmax((1.0-fabs(bitFactor))*16.0,0.5),16.0));
-			bass[biqs_outL] *= bitFactor;		
-			bass[biqs_outL] = floor(bass[biqs_outL]+(crushGate?0.5/bitFactor:0.0));
-			bass[biqs_outL] /= bitFactor;
-		}
-		bass[biqs_temp] = (bass[biqs_outL] * bass[biqs_c0]) + bass[biqs_cL1];
-		bass[biqs_cL1] = bass[biqs_cL2] - (bass[biqs_temp]*bass[biqs_d1]);
-		bass[biqs_cL2] = (bass[biqs_outL] * -bass[biqs_c0]) - (bass[biqs_temp]*bass[biqs_d2]);
-		bass[biqs_outL] = bass[biqs_temp];
-		bass[biqs_outL] *= bass[biqs_level];
-		double parametricL = high[biqs_outL] + hmid[biqs_outL] + lmid[biqs_outL] + bass[biqs_outL];
-		//end Stacked Biquad With Reversed Neutron Flow L
 		//end HipCrush as four band
 		
-		if (bezCThresh > 0.0) {
-			inputSampleL *= ((bezCThresh*0.5)+1.0);
-			smoothEQL *= ((bezCThresh*0.5)+1.0);
-			parametricL *= ((bezCThresh*0.5)+1.0);
-		} //makeup gain
+		if (fabs(inputSampleL) > gate) bezGate = overallscale/fmin(bezRez,sloRez);
+		else bezGate = bezGate = fmax(0.000001, bezGate-fmin(bezRez,sloRez));
 		
-		if (fabs(inputSampleL) > gate+(sloRez*bezGate)) bezGate = ((bezGate*overallscale*3.0)+3.0)*(0.25/overallscale);
-		else bezGate = fmax(0.0, bezGate-(sloRez*sloRez));
-		bezCompF[bez_cycle] += bezRez;
-		bezCompF[bez_SampL] += (fabs(inputSampleL) * bezRez);
-		bezMaxF = fmax(bezMaxF,fabs(inputSampleL));
-		if (bezCompF[bez_cycle] > 1.0) {
-			if (bezMaxF < gate) bezCompF[bez_SampL] = bezMaxF/gate; //note: SampL is a control voltage,
-			if (bezCompF[bez_SampL]<gate) bezCompF[bez_SampL] = 0.0; //not a bipolar audio signal
-			bezCompF[bez_cycle] -= 1.0;
-			bezCompF[bez_CL] = bezCompF[bez_BL];
-			bezCompF[bez_BL] = bezCompF[bez_AL];
-			bezCompF[bez_AL] = bezCompF[bez_SampL];
-			bezCompF[bez_SampL] = 0.0;
-			bezMaxF = 0.0;
+		if (bezThresh > 0.0) {
+			inputSampleL *= (bezThresh+1.0);
+			smoothEQL *= (bezThresh+1.0);
+			parametricL *= (bezThresh+1.0);
+		} //makeup gain		
+		
+		double ctrl = fabs(inputSampleL);
+		bezMax = fmax(bezMax,ctrl);
+		bezMin = fmax(bezMin-sloRez,ctrl);
+		bezComp[bez_cycle] += bezRez;
+		bezComp[bez_Ctrl] += (bezMin * bezRez);
+		
+		if (bezComp[bez_cycle] > 1.0) {
+			if (bezGate < 1.0) bezComp[bez_Ctrl] /= bezGate;
+			bezComp[bez_cycle] -= 1.0;
+			bezComp[bez_C] = bezComp[bez_B];
+			bezComp[bez_B] = bezComp[bez_A];
+			bezComp[bez_A] = bezComp[bez_Ctrl];
+			bezComp[bez_Ctrl] = 0.0;
+			bezMax = 0.0;
 		}
-		bezCompS[bez_cycle] += sloRez;
-		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage.
-		if (bezCompS[bez_cycle] > 1.0) {
-			if (bezCompS[bez_SampL]<gate) bezCompS[bez_SampL] = 0.0;
-			bezCompS[bez_cycle] -= 1.0;
-			bezCompS[bez_CL] = bezCompS[bez_BL];
-			bezCompS[bez_BL] = bezCompS[bez_AL];
-			bezCompS[bez_AL] = bezCompS[bez_SampL];
-			bezCompS[bez_SampL] = 0.0;
-		}
-		double CBFL = (bezCompF[bez_CL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BL]*bezCompF[bez_cycle]);
-		double BAFL = (bezCompF[bez_BL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AL]*bezCompF[bez_cycle]);
-		double CBAFL = (bezCompF[bez_BL]+(CBFL*(1.0-bezCompF[bez_cycle]))+(BAFL*bezCompF[bez_cycle]))*0.5;
-		double CBSL = (bezCompS[bez_CL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BL]*bezCompS[bez_cycle]);
-		double BASL = (bezCompS[bez_BL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AL]*bezCompS[bez_cycle]);
-		double CBASL = (bezCompS[bez_BL]+(CBSL*(1.0-bezCompS[bez_cycle]))+(BASL*bezCompS[bez_cycle]))*0.5;
-		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
-		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
+		double CB = (bezComp[bez_C]*(1.0-bezComp[bez_cycle]))+(bezComp[bez_B]*bezComp[bez_cycle]);
+		double BA = (bezComp[bez_B]*(1.0-bezComp[bez_cycle]))+(bezComp[bez_A]*bezComp[bez_cycle]);
+		double CBA = (bezComp[bez_B]+(CB*(1.0-bezComp[bez_cycle]))+(BA*bezComp[bez_cycle]))*0.5;
 		//switch over to the EQed or HipCrushed sound and compress
 		inputSampleL = (smoothEQL * (1.0-crossFade)) + (parametricL * crossFade);
-		//apply filtration to what was just the unfiltered sound
-		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		//apply compression worked out using unfiltered sound
 		
-		if (bezGate < 1.0 && gate > 0.0) inputSampleL *= bezGate;
-		//Dynamics2
+		if (bezThresh > 0.0) {
+			inputSampleL *= 1.0-(fmin(CBA*bezThresh,1.0));
+		}
+		//Dynamics3, but with crossfade over EQ or HipCrush
 		
 		const double temp = (double)nSampleFrames/inFramesToProcess;
 		const double hFreq = (hFreqA*temp)+(hFreqB*(1.0-temp));
