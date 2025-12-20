@@ -82,7 +82,7 @@ void ConsoleHBuss::processReplacing(float **inputs, float **outputs, VstInt32 sa
 	
 	lowpass[hilp_freq] = ((pow(LOP,3)*24000.0)+10.0)/getSampleRate();
 	if (lowpass[hilp_freq] > 0.495) lowpass[hilp_freq] = 0.495;
-	bool lowpassEngage = true; if (LOP == 0.0) lowpassEngage = false;
+	bool lowpassEngage = true; if (LOP == 1.0) lowpassEngage = false;
 	
 	highpass[hilp_aA0] = highpass[hilp_aB0];
 	highpass[hilp_aA1] = highpass[hilp_aB1];
@@ -521,7 +521,7 @@ void ConsoleHBuss::processDoubleReplacing(double **inputs, double **outputs, Vst
 	
 	lowpass[hilp_freq] = ((pow(LOP,3)*24000.0)+10.0)/getSampleRate();
 	if (lowpass[hilp_freq] > 0.495) lowpass[hilp_freq] = 0.495;
-	bool lowpassEngage = true; if (LOP == 0.0) lowpassEngage = false;
+	bool lowpassEngage = true; if (LOP == 1.0) lowpassEngage = false;
 	
 	highpass[hilp_aA0] = highpass[hilp_aB0];
 	highpass[hilp_aA1] = highpass[hilp_aB1];

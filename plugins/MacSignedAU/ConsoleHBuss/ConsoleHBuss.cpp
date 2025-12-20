@@ -357,7 +357,7 @@ OSStatus		ConsoleHBuss::ProcessBufferLists(AudioUnitRenderActionFlags & ioAction
 	
 	lowpass[hilp_freq] = ((pow(GetParameter( kParam_LOP ),3)*24000.0)+10.0)/GetSampleRate();
 	if (lowpass[hilp_freq] > 0.495) lowpass[hilp_freq] = 0.495;
-	bool lowpassEngage = true; if (GetParameter( kParam_LOP ) == 0.0) lowpassEngage = false;
+	bool lowpassEngage = true; if (GetParameter( kParam_LOP ) == 1.0) lowpassEngage = false;
 	
 	highpass[hilp_aA0] = highpass[hilp_aB0];
 	highpass[hilp_aA1] = highpass[hilp_aB1];
