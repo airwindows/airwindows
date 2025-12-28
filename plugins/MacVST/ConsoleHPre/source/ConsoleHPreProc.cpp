@@ -565,7 +565,7 @@ void ConsoleHPre::processReplacing(float **inputs, float **outputs, VstInt32 sam
 					iirHPositionR[count] = 0.0;
 					iirHAngleR[count] = 0.0;
 				}
-			} //blank out highpass if jut switched off
+			} //blank out highpass if just switched off
 		}
 		const double lFreq = (lFreqA*temp)+(lFreqB*(1.0-temp));
 		if (lFreq < 1.0) {

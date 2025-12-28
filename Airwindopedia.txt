@@ -29,7 +29,7 @@ Dynamics: Dynamics2, Pressure6, BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, 
 
 Effects: TakeCare, RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: PearEQ, SmoothEQ2, SmoothEQ, Parametric, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: SmoothEQ3, PearEQ, SmoothEQ2, SmoothEQ, Parametric, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall2, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Baxandall, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: DeBez, HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -1338,6 +1338,27 @@ There's still loads of work to get ConsoleX done, plus I'm having another crack 
 
 For now, I will continue to get over my recent bout of COVID (I'm testing negative, have just lost a lot of energy so be patient), will continue working through the backlog of plugins that can come out, and I'll talk to ya later :)
 
+
+############ ConsoleHBuss is the Airwindows console for hip-hop and music reinvention.
+############ ConsoleHChannel is the Airwindows console for hip-hop and music reinvention.
+############ ConsoleHPre is just the tone shaping from ConsoleH, and also dual mono.
+
+An Xmas miracle! ConsoleH is here, before 2026 (as promised), and it's pretty much ready to go!
+
+It works like other Console versions: channel plugins on the channels, unity gain between channel and buss, buss plugin on the buss. It can make even small track counts sound enormous, but the big thing for ConsoleH is really adaptability. You've got multiple plugins that aren't out yet (Dynamics3, SmoothEQ3, X2Buss if you count the separate buss compression as a standalone plugin, DarkMeter) all developed for THIS system. You've got highpasses and lowpasses out of Cabs2, a turbo version of TapeHack, the recent PurestSaturation on the buss (set up so the softclip threshold ends up at around +2 dB, so it makes it more forgiving to get near 0dB!). There's a wild array of displays: pan lights that show at a glance if the channel you see is panned hard left or hard right, blinkies for every single slider in the Dynamics section, a near-clip light for the buss (on the Pan trim control) that can show you both whether you're near maximum peak, and whether you have enough dynamic swing for an aggressive punchy sound.
+
+This is also the first place you can use DarkMeter: developed to do Airwindows Meter over a black backdrop for dark-mode lovers, adapted so the slew-versus-peak ratio it measures (in Meter, drawing blue dots as the height of sonority) instead draws a wide variety of colors, from blues and reds for bassy dark tones, through green for that sonority zone, then cyan for post-80s ultra-hype that's still classic, to white dots for the brightest of the bright. And it'll draw this rainbow of dots across the peak meter so you can measure and dial in exactly the aura of hit-record you need, on peaks that are supposedly impossible to directly hear… but we feel these, and know when they are wrong. And underneath this display, the zero cross meter that tells you where your bass is at, whether it balances and shows up in the mix, ehether it's just right or too low for the biggest bassbins.
+
+No guesswork. It just shows you. Turns out that is very helpful.
+
+And the great thing about ConsoleH is, just about everything in it can be bypassed when set flat or turned to zero. The compression, the speaker-cabinet-like highpasses and lowpasses, the isolator-DJ-filter versions of those on the buss, the vaguely-tapelike overdrive on the front of the channels: these all drop out of circuit when not in use, and so to an extent way past last year's ConsoleX, ConsoleH forms itself to YOUR sounds. If you pull out the whole bag of tricks, it'll really sound like everything all at once. If you clean stuff up, or take a particular direction, it'll emphasise that direction and reward it. So, ConsoleH sounds like you, or like whatever new version of music you're interested in making.
+
+Whether you're sculpting compression and gating boldly (or delicately!), or virtually re-amping everything, or bringing in sampler voices or strange glitch effects, ConsoleH can let you make those sounds. It's hilariously good at reinventing any old thing you've got for tracks, whether you have awesome tracking abilities or whether everything's coming out of free softsynths and you haven't even got a mic.
+
+If you want the broadest possible range of studio sound, ConsoleH is the free, open-source, retro generic antique plugin OR latest flashy-GUI plugin for you. I'm still producing generic builds for retro PCs and Raspberry Pis! But thanks to Sudara's 'Pamplejuce' project (and his valiant last-minute help!) we have a modern JUCE version that should be good to go even as screen displays travel towards 5k or 10K monitors. And it reads the same 'AirwindowsGlobals.txt' file that worked for ConsoleX, so now there's a whole new mixing system where if you customized the color, texture, font of your ConsoleX plugins, exactly the same applies for ConsoleH. In fact, if you made global changes they will automatically be applied.
+
+ConsoleH is my gift to folks who like this sort of thing. I hope you have as much fun with it as I will :)
+
 ############ ConsoleLABuss is the Airwindows take on the Quad Eight console.
 ############ ConsoleLAChannel is the Airwindows take on the Quad Eight console.
 
@@ -1636,7 +1657,7 @@ If you’re using high sample rate and struggling to get DeBess action and you�
 
 Here's a way-point along the path of me figuring out how to do things! DeBez is a little bit like previous DeRez plugins I've made, and a little bit like my reverbs, and a little bit like HipCrush. I got there from here, and you can add these sounds to your palette!
 
-It combines three things. First, bitcrush like in HipCrush where moving the control to the right gives you 'compressey' bitcrushes that will bring up noise floors and make them roat, and moving the control to the left gives you 'gated' textures where the bitcrush is offset so it'll cut out. This is more obvious on extreme bitcrushes, but it'll be the case even on subtler, 'texture changing' bitcrushes.
+It combines three things. First, bitcrush like in HipCrush where moving the control to the right gives you 'compressey' bitcrushes that will bring up noise floors and make them roar, and moving the control to the left gives you 'gated' textures where the bitcrush is offset so it'll cut out. This is more obvious on extreme bitcrushes, but it'll be the case even on subtler, 'texture changing' bitcrushes.
 
 The DeBez control is simply Bezier undersampling, just like in my reverbs. It's smoothing the edges of the bitcrushing, happening after the crush. To the right, you're getting a 'continuous' version which generates a weird digital-hell overtone. To the left, you get a 'stepped' version of the same thing, one that snaps to integer numbers to suppress (mostly) the overtone. That one might be what you want if you're going for an 'old sampler' effect, as it'll be less edgy, more solid.
 
@@ -4966,6 +4987,25 @@ Nope, because if you make the resonances track how close each center frequency i
 What does this mean? Try it. Boost or cut stuff, sweep the bands around, see how they act like sweepable resonances but are actually tilting shelves. If you can (I know it's unusual) and you have the four joystick design I had Yaeltex make for me, put fingers on all four joysticks and morph a sound into whatever you like on all bands simultaneously. The way this tracks your intentions with EQ, I think that would actually work. Or, any other way you can dedicate eight knobs to a bank of EQs, give that a try too. Or it'll work perfectly fine just in the DAW as sliders, it's just that this one lends itself incredibly well to hands-on control. There's controllers for cheap that have tiny vertical faders with panpots over them: have the vertical faders be band volumes, and the panpot above it be the corresponding frequency.
 
 This one I'm building into a Console version just for me :) but here it is, way earlier than that, so you can see what's going into a Console version that comes after the promised ConsoleH. I told you I was going to let you swap out many different Consoles on a track-by-track basis, and I've got ideas for just that. Hope you like the preview that is SmoothEQ2.
+
+
+############ SmoothEQ3 is the most approachable EQ.
+
+By request from a patron, here's the EQ section out of ConsoleH, to use standalone in whatever way you like.
+
+What makes this special? It's a combination of tech things and design things. The idea for ConsoleH is to combine very tricky and complicated things like a four-band version of HipCrush, with a very basic approachable EQ of unbeatable quality so you can fall back on something that'll always sound good and work in an obvious way.
+
+SmoothEQ uses the technique from AngleEQ of constantly reconstructing the original sound from crossover filtering, which I originally came up with to deal with the weird phase behavior of AngleFilter. When you use that on more well-behaved filters like biquad filters, you're sort of protecting from issues that aren't there… but people noticed pretty quickly that the sound was there. SmoothEQ2, which is the backbone of the upcoming ConsoleX2, ran with this technology to allow for much steeper filtering, and created shelving filters that act like sweepable parametrics but still converge on ultimately clear, accurate EQ.
+
+SmoothEQ3 steps right back again to simplicity, approachability, with another twist: it goes for the combination of low CPU and steep crossovers. Working on other filters, I did a livestream where mathematically inclined viewers pitched in to set me up with the most accurate way to calculate the perfect IIR filter to match a Butterworth biquad filter. This takes the simplest form of configurable filter without extra resonance, and adds one layer of an even simpler filter at the exact frequency you need to make it steeper without it being obvious. Combining the two filter types kind of blends their sounds, between 'Butterworth' and a softer cutoff that's better for transients, to optimize both.
+
+Since it's not crazy steep it's a little bit like my Baxandall filters (a slow transition where transients are great but it's hard to tell where it transitions), so I was able to pick fixed frequencies to cross over at. Since the cutoff frequency is a little ambiguous thanks to the IIR section, it doesn't stand out, but since it's also steeper than a regular Butterworth filter you get to latch onto bass or treble and really boost or cut it without interfering with midrange. You end up with your basic three bands, immediately accessible, and they just do what you want without fuss.
+
+And since the IIR filter is very simple, SmoothEQ3 ends up being the most efficient way you can get a steeper-than-Butterworth EQ of this quality. Nearly anything else you could do, would cost more CPU to do the job. And that's also part of using it for ConsoleH: I've done everything I can to let people get big ConsoleH mixes on a potato if they have to, and SmoothEQ3 is the way to get ultimate EQ tone quality under those conditions. Something like SmoothEQ2, for ConsoleX2, is still not that expensive, but it's still doing 192 operations per sample per channel to do its four sophisticated bands of EQ.
+
+SmoothEQ3 does 59, including assignments (equals). That's more than three times as efficient than SmoothEQ2. It's partly because if you make a second-order filter this way one of the multiplies ends up being by 1.0 and you don't have to do it… the point is, not only does this EQ sound great but it's also incredibly efficient. And now that it's out in generic-plugin form, it's in Consolidated and in the VCV Rack version and you get to run it on whatever is even weaker than a potato: a lump of coal, maybe?
+
+Have fun with the EQ and I'll see ya in 2026 :)
 
 ############ SoftClock is a groove-oriented time reference.
 
