@@ -150,7 +150,7 @@ void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			exp1 = 254;
 			mant1 = 8'388'607;
 			clippingFor1 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor1 = 0;
 
 		if (exp2 == 255 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
@@ -162,7 +162,7 @@ void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			exp2 = 254;
 			mant2 = 8'388'607;
 			clippingFor2 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor2 = 0;
 		}
 	} else {
@@ -175,7 +175,7 @@ void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			exp1 = 254;
 			mant1 = 8'388'607;
 			clippingFor1 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor1 = 0;
 
 		if (exp2 == 255 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
@@ -187,7 +187,7 @@ void BitShiftGain::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			exp2 = 254;
 			mant2 = 8'388'607;
 			clippingFor2 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor2 = 0;
 		}
 	}
@@ -323,66 +323,66 @@ void BitShiftGain::processDoubleReplacing(double **inputs, double **outputs, Vst
 		for (; bitShiftGain2 && !(exp2 & 0x80); mant2 <<= 1, bitShiftGain2--) { }
 		
 		if (bitShiftGain1) {
-			mant1 = (mant1 << 1) - 4'194'304;
+			mant1 = (mant1 << 1) - 2'251'799'813'685'248;
 			exp1++;
 			bitShiftGain1--;
 		}
 		if (bitShiftGain2) {
-			mant2 = (mant2 << 1) - 4'194'304;
+			mant2 = (mant2 << 1) - 2'251'799'813'685'248;
 			exp2++;
 			bitShiftGain2--;
 		}
 		
-		for (; !bitShiftGain1 && exp1 < 255; exp1++, bitShiftGain--) { }
-		for (; !bitShiftGain2 && exp2 < 255; exp2++, bitShiftGain--) { }
+		for (; !bitShiftGain1 && exp1 < 2047; exp1++, bitShiftGain--) { }
+		for (; !bitShiftGain2 && exp2 < 2047; exp2++, bitShiftGain--) { }
 
-		if (exp1 == 255 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
+		if (exp1 == 2047 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
 			clippingFor1++;
-			exp1 = 254; // If we somehow receive +/-Infinity or NaN, we will be courteous.
-			storedMant1 = 8'388'607 - (8'388'607 - (storedMant1 >> 1));
+			exp1 = 2046; // If we somehow receive +/-Infinity or NaN, we will be courteous.
+			storedMant1 = 2'251'799'813'685'248 - (8'388'607 - (storedMant1 >> 1));
 			mant1 = storedMant1;
-		} else if (exp1 == 255) {
-			exp1 = 254;
-			mant1 = 8'388'607;
+		} else if (exp1 == 2047) {
+			exp1 = 2046;
+			mant1 = 2'251'799'813'685'248;
 			clippingFor1 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor1 = 0;
 
-		if (exp2 == 255 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
+		if (exp2 == 2047 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
 			clippingFor2++;
-			exp2 = 254; // If we somehow receive +/-Infinity or NaN, we will be courteous.
-			storedMant2 = 8'388'607 - (8'388'607 - (storedMant1 >> 1));
+			exp2 = 2046; // If we somehow receive +/-Infinity or NaN, we will be courteous.
+			storedMant2 = 2'251'799'813'685'248 - (2'251'799'813'685'248 - (storedMant1 >> 1));
 			mant2 = storedMant1;
-		} else if (exp2 == 255) {
-			exp2 = 254;
-			mant2 = 8'388'607;
+		} else if (exp2 == 2047) {
+			exp2 = 2046;
+			mant2 = 2'251'799'813'685'248;
 			clippingFor2 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor2 = 0;
 		}
 	} else {
-		if (exp1 == 255 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
+		if (exp1 == 2047 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
 			clippingFor1++;
-			exp1 = 254; // If we somehow receive +/-Infinity or NaN, we will be courteous.
-			storedMant1 = 8'388'607 - (8'388'607 - (storedMant1 >> 1));
+			exp1 = 2046; // If we somehow receive +/-Infinity or NaN, we will be courteous.
+			storedMant1 = 2'251'799'813'685'248 - (2'251'799'813'685'248 - (storedMant1 >> 1));
 			mant1 = storedMant1;
-		} else if (exp1 == 255) {
-			exp1 = 254;
-			mant1 = 8'388'607;
+		} else if (exp1 == 2047) {
+			exp1 = 2046;
+			mant1 = 2'251'799'813'685'248;
 			clippingFor1 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor1 = 0;
 
-		if (exp2 == 255 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
+		if (exp2 == 2047 && clippingFor1 < 3) { // 3 seemed to fit at 96k... simply changing the length of the buffer would not make it scale with sample rate, anyways. And nobody should have audio at +200dB.
 			clippingFor2++;
-			exp2 = 254; // If we somehow receive +/-Infinity or NaN, we will be courteous.
-			storedMant2 = 8'388'607 - (8'388'607 - (storedMant1 >> 1));
+			exp2 = 2046; // If we somehow receive +/-Infinity or NaN, we will be courteous.
+			storedMant2 = 2'251'799'813'685'248 - (2'251'799'813'685'248 - (storedMant1 >> 1));
 			mant2 = storedMant1;
-		} else if (exp2 == 255) {
-			exp2 = 254;
-			mant2 = 8'388'607;
+		} else if (exp2 == 2047) {
+			exp2 = 2046;
+			mant2 = 2'251'799'813'685'248;
 			clippingFor2 = 3;
-		} else if (exp < 255) {
+		} else {
 			clippingFor2 = 0;
 		}
 	}
