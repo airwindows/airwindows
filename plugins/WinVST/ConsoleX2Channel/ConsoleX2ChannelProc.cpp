@@ -23,7 +23,7 @@ void ConsoleX2Channel::processReplacing(float **inputs, float **outputs, VstInt3
 	
 	double moreTapeHack = (MOR*2.0)+1.0;
 	bool tapehackOff = (MOR == 0.0);
-	switch ((int)TRM){
+	switch ((int)(TRM*4.0)){
 		case 0: moreTapeHack *= 0.5; break;
 		case 1: break;
 		case 2: moreTapeHack *= 2.0; break;
@@ -550,7 +550,7 @@ void ConsoleX2Channel::processDoubleReplacing(double **inputs, double **outputs,
 	
 	double moreTapeHack = (MOR*2.0)+1.0;
 	bool tapehackOff = (MOR == 0.0);
-	switch ((int)TRM){
+	switch ((int)(TRM*4.0)){
 		case 0: moreTapeHack *= 0.5; break;
 		case 1: break;
 		case 2: moreTapeHack *= 2.0; break;
