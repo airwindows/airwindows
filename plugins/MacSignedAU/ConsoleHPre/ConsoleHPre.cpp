@@ -404,14 +404,13 @@ void		ConsoleHPre::ConsoleHPreKernel::Reset()
 	dBaXL = 1;
 	//Discontapeity
 	
-	for (int x = 0; x < 33; x++) {avg32L[x] = 0.0;}
-	for (int x = 0; x < 17; x++) {avg16L[x] = 0.0;}
-	for (int x = 0; x < 9; x++) {avg8L[x] = 0.0;}
-	for (int x = 0; x < 5; x++) {avg4L[x] = 0.0;}
-	for (int x = 0; x < 3; x++) {avg2L[x] = 0.0;}
+	for (int x = 0; x < 33; x++) {avg32L[x] = 0.0; post32L[x] = 0.0;}
+	for (int x = 0; x < 17; x++) {avg16L[x] = 0.0; post16L[x] = 0.0;}
+	for (int x = 0; x < 9; x++) {avg8L[x] = 0.0; post8L[x] = 0.0;}
+	for (int x = 0; x < 5; x++) {avg4L[x] = 0.0; post4L[x] = 0.0;}
+	for (int x = 0; x < 3; x++) {avg2L[x] = 0.0; post2L[x] = 0.0;}
 	avgPos = 0;
-	lastSlewL = 0.0;
-	lastSlewpleL = 0.0;
+	lastDarkL = 0.0;
 	//preTapeHack
 	
 	lFreqA = 1.0; lFreqB = 1.0;
@@ -618,11 +617,13 @@ void		ConsoleHPre::ConsoleHPreKernel::Process(	const Float32 	*inSourceP,
 				darkSampleL = 0.0;
 				for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x];}
 				darkSampleL /= 2.0; 
-			} avgPos++;
-			lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
-			double avgSlewL = fmin(lastSlewL,1.0);
-			lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
+			} //only update after the post-distortion filter stage
+			
+			double avgSlewL = fmin(fabs(lastDarkL-inputSampleL)*0.12*overallscale,1.0);
+			avgSlewL = 1.0-(1.0-avgSlewL*1.0-avgSlewL);
 			inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+			lastDarkL = darkSampleL;
+			
 			//begin Discontinuity section
 			inputSampleL *= moreTapeHack;
 			inputSampleL *= moreDiscontinuity;
@@ -650,6 +651,37 @@ void		ConsoleHPre::ConsoleHPreKernel::Process(	const Float32 	*inSourceP,
 			//this is a degenerate form of a Taylor Series to approximate sin()
 			//end TapeHack section
 			//Discontapeity
+			
+			darkSampleL = inputSampleL;
+			if (avgPos > 31) avgPos = 0;
+			if (spacing > 31) {
+				post32L[avgPos] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 32; x++) {darkSampleL += post32L[x];}
+				darkSampleL /= 32.0;
+			} if (spacing > 15) {
+				post16L[avgPos%16] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 16; x++) {darkSampleL += post16L[x];}
+				darkSampleL /= 16.0;
+			} if (spacing > 7) {
+				post8L[avgPos%8] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 8; x++) {darkSampleL += post8L[x];}
+				darkSampleL /= 8.0;
+			} if (spacing > 3) {
+				post4L[avgPos%4] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 4; x++) {darkSampleL += post4L[x];}
+				darkSampleL /= 4.0;
+			} if (spacing > 1) {
+				post2L[avgPos%2] = darkSampleL;
+				darkSampleL = 0.0;
+				for (int x = 0; x < 2; x++) {darkSampleL += post2L[x];}
+				darkSampleL /= 2.0; 
+			} avgPos++;
+			inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
+			//use the previously calculated depth of the filter			
 		}
 		
 		double smoothEQL = inputSampleL;

@@ -251,10 +251,14 @@ public:
 		double avg8L[9];
 		double avg4L[5];
 		double avg2L[3];
+		double post32L[33];
+		double post16L[17];
+		double post8L[9];
+		double post4L[5];
+		double post2L[3];
 		int avgPos;
-		double lastSlewL;
-		double lastSlewpleL;
-		//preTapeHack
+		double lastDarkL;
+		//preTapeHack	
 		
 		double inTrimA;
 		double inTrimB;

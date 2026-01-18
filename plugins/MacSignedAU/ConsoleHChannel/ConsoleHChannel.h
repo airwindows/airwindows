@@ -283,12 +283,20 @@ public:
 	double avg4R[5];
 	double avg2L[3];
 	double avg2R[3];
+	double post32L[33];
+	double post32R[33];
+	double post16L[17];
+	double post16R[17];
+	double post8L[9];
+	double post8R[9];
+	double post4L[5];
+	double post4R[5];
+	double post2L[3];
+	double post2R[3];
+	double lastDarkL;
+	double lastDarkR;
 	int avgPos;
-	double lastSlewL;
-	double lastSlewR;
-	double lastSlewpleL;
-	double lastSlewpleR;
-	//preTapeHack	
+	//preTapeHack
 	
 	double panA;
 	double panB;

@@ -43,7 +43,7 @@ Stereo: Srsly3, Srsly2, Srsly, SweetWide, Wider, StereoFX, ToVinyl4, AutoPan, LR
 
 Subtlety: Mastering2, Discontapeity, Mastering, Discontinuity, Hype, Shape, Inflamer, Sweeten, PurestWarm2, PurestWarm, Coils2, Interstage, PhaseNudge, Remap, SingleEndedTriode, Coils, Desk, TransDesk, TubeDesk
 
-Tape: TapeHack, ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
+Tape: TapeHack2, TapeHack, ToTape8, ToTape7, ToTape6, FromTape, Tape, IronOxideClassic2, IronOxide5, ToTape5, IronOxideClassic
 
 Tone Color: BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
@@ -5408,7 +5408,7 @@ You may well find this horrible, lame and useless. That is OK, it's not going to
 
 But if you like the sort of weird grunge this produces, we're talking signature sound, secret weapon town, bigtime… and NOBODY else will be bringing it, and no AI will arrive at this unless literally told to copy it (in which case they should credit and say it's SweetWide they're using).
 
-This plugin comes not from the world of Srsly or EdIsDim or Wider (plenty of other things I've made to do stereo widening nicely). It comes from my experiments with ring modulation. It's really a very simple algorithm though it does use square root functions: that's next to nothing, as far as CPU is concerned. It's doing terrible things to the stereo signal coming in, for the purpose of exaggerating side-channel informaqtion, but in a way where it's tending to produce asymmetric modulations. That's more along the lines of 'second harmonic, fourth harmonic etc' rather than 'third harmonic and normal distortion', and that's why Sweet is part of the name: we tend to hear even harmonics as more 'sweet' than odd harmonics.
+This plugin comes not from the world of Srsly or EdIsDim or Wider (plenty of other things I've made to do stereo widening nicely). It comes from my experiments with ring modulation. It's really a very simple algorithm though it does use square root functions: that's next to nothing, as far as CPU is concerned. It's doing terrible things to the stereo signal coming in, for the purpose of exaggerating side-channel information, but in a way where it's tending to produce asymmetric modulations. That's more along the lines of 'second harmonic, fourth harmonic etc' rather than 'third harmonic and normal distortion', and that's why Sweet is part of the name: we tend to hear even harmonics as more 'sweet' than odd harmonics.
 
 Even then it's not acting normal because it's using that Soar control to govern how the square-root reacts to subtle sounds. It serves the purpose of bringing up a gnarly compressey grunginess, except for stereo widening. If you crank it out all the way it's very obvious, but you can dial the Soar setting in that way, and then pull it back if you'd like it to still be unique but not so obnoxious.
 
@@ -5568,7 +5568,6 @@ The reason this is interesting is, that tone control is completely bizarre. It�
 
 You can hear it on the video, which has a number of things updated, not least this: the new audio is directly captured analog sorta-house music out of my livestreams. This way you ought to be able to really hear the way my plugins retain analog qualities, because now the demo music is essentially AAD: not products of other DAW mixes or digital synthesis, but source material.
 
-
 ############ TapeHack is a new dimension in tape realism, abstracted to software.
 
 It started with a paper by Spencer Walters, on this subject: what's the role of hysteresis in magnetic tape recording? We tend to assume that's fine, we're making it linear, apart from all the soft saturation of course. Even then, that's not quite where it starts: it's research on Dolby HX-Pro that got Spencer thinking. I'm not sure the Dolby people quite understood the implications of what they had, as that was an era of 'remove all distortions'.
@@ -5592,6 +5591,38 @@ A side note: I've posted classic vinyl records and measured them, tracking peak 
 There will be more about this: and yeah, Spencer's aware of what I'm doing and cool with it. In fact he'd like to know if my testimonial (in his thread on the matter) can go on his website. My work on TapeHack suggested to me that he's really on to something with this, I'm happy to say so, and my more abstracted version is something we can all enjoy. (oh: it's also perfectly suited to oversampling for folks with something like Reaper where you can just do that. I won't be, because I think it gains more from the immediacy of direct processing than you lose from what little aliasing it'll produce)
 
 I'll be saving up for the hardware Spencer makes, and I'll be using what I learned in TapeHack for many things. Hope you like it!
+
+############ TapeHack2 brings Airwindows tape to a new level.
+
+Two wrongs may not make a right… but sometimes, two goofy hacks might make a better 'tape compression' than having a real tape machine.
+
+So hear me out, because this one went some strange places, and, well, listen to it ;)
+
+The original TapeHack was a pretty big deal, went over real well, in spite of the fact that there was nothing to it but a software 'transfer function'. It's literally nothing but a 'vaguely sinelike softclip' with special characteristics. Everything about it was made to shift the 'saturation' upwards in dB and lean out the middle part a bit, in accordance to how real tape turns out to work. I'm of course not alone in figuring this stuff out, I'm just the one trying to doctor softclip algorithms to do it. That part worked great, and because it's a softclip, it even sounds a lot like 'tape compression', certainly more than anything I'd had before.
+
+There's tests you can do to determine whether your tape biasing and the amount of your ultrasonic energy is high enough to saturate things to produce real-deal, genuine 'tape compression' of highs. And it really is true that you don't have to use literal tape machines to do that anymore. I would go so far to say that is the new bar to reach: nobody's going to duplicate that short of simulating the whole apparatus at a megahertz or something, and this I am not going to do: I already didn't like oversampling, and it seems wasteful.
+
+But what if, on top of faking the 'bias tone bridging the gap between magnetic coercivity' through just doctoring a softclip to do it (wrong, but it worked), I instead just came up with a new sort of filter that was very free of typical sharp-filter irregularities… and modulated that at audio rates, in an attempt to not let the signal do high frequencies beyond too much of a slew rate?
+
+Meet TapeHack2. If you've downloaded ConsoleH or ConsoleX2 in the last day or two, you have already met it, because it worked so well I had to include it in the 'More' fat-boost section of those plugins. My video for TapeHack2 demonstrates why, showing the original mix, the subtly but intensely better mix where nothing has been changed but swapping in the TapeHack2 algorithm for the original, and lastly the delta function showing HOW much aliasing and untapelike brightness was fluidly removed from just the parts of the mix hitting More hard. It was so strong it affected the buss compression enough to bring in totally unrelated elements like bass, just by altering how More handled supersonic highs in the 96k mix.
+
+Functionally, this is the 'tape compression of highs' effect. Is it a clone, or emulation? AW HELL no, not even slightly. It's totally different, measurably, observably different, not like a tape at all, but now it does two tape behaviors as hard as it can. Run sine sweeps into it if you want to see how different it is, how crazy it'll act. It's a HACK, doesn't have anything to do with analog anything really.
+
+So what is happening?
+
+It's running a stack of filters. They're very efficient: they're stacked-up averaging filters. These are very good in the time domain, don't do pre-rings or weird filter ripples, but the cost is if you just use a simple averaging of a bunch of samples in a row, you get massive notches and odd peaks in the response. They are awful at being accurate good filters.
+
+But, turns out if you stack them up right you can have the notch of one overlap the peak of another, and get a really steep roll-off with good time behavior where the rolloff is so steep you hardly mind the funny added peaks and response issues. It basically goes 'ok, very smooth natural super rolloff NOW' and then rather than needing to work over an enormous window, and have a huge filter ripple (for linear phase) it just does the thing and gets out of the way. You trade off the accuracy of the 'curve' for just 'make the highs be gone, completely!'. I've got a filter plugin coming, Slew4, that's an expanded version of this.
+
+That's not 'tape compression', though. Tape compression is when you let the raw signal through, but track how sharp a departure the new sound is from whatever the filtering was doing last sample. Instead of just tracking the slew of the input signal and working with that, you barely touch the sound unless the new sample is gonna be really far from where the last output was, even if that's the result of filtering… and that is why it acts like compressing, there's a point beyond which highs can't get louder and you can't force them. It's not even on a time constant, it's just 'nope'.
+
+And is this the point at which the filtering prevents aliasing from happening? NOPE. It absolutely still aliases, and I'll tell you why. In setting it up, I got this part working and then tried to find the point at which I prevented all aliasing. It didn't want to. It's not an oversampling: it's still raw, still running fully at whatever sample rate you're using, still producing 'semi-valid' information including above where the apparent tape compression kicks in.
+
+It's just that the way this thing works, when set up to sound its best, it's not reducing superhigh sine waves to silence above a certain frequency. It's changing them into quieter triangle waves instead. Along the way, if you're doing intense saturation and making the wave flat-top, it turns it into sort of trapezoids in the manner that big square waves on analog gear turn into slanted-topped, altered waves. So basically what I'm saying is it does the weirdest waveshaping I've ever seen, with all the very highest frequency stuff, in such a way that it's arguably sharpening the frequencies while also attenuating and suppressing them. And it's all off a filter (set of filters) that is very free of ripple and resonant qualities.
+
+This, applied to real music, sounds pretty amazing, and it's going to find its way into a new ToTape, as well as my trusty TapeDelay plugin, and it is already in ConsoleH and ConsoleX2. And honest, it's the farthest thing from emulating anything, much less real tape. But my interest is never in trying to duplicate a thing: digital is not good at that, something dies when you overprocess. Instead, TapeHack2 is about bringing very minimalist, very unusual sorts of processing to achieve a result, which in this case is 'softclip like a tape, but ALSO stop highs from getting louder, also like a tape, except you're not remotely a tape'.
+
+Have fun with this one, I know I'm going to be enjoying the results of it a whole lot :)
 
 ############ Texturize is a hidden-noise plugin for adding sonic texture to things.
 
