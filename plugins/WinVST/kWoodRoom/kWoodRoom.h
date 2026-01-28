@@ -36,7 +36,7 @@ const int early[] = {0, 3, 8, 11, 12, 15, 27, 30, 30, 33, 68, 96, 100, 109, 154,
 const int kNumPrograms = 0;
 const int kNumInputs = 2;
 const int kNumOutputs = 2;
-const unsigned long kUniqueId = 'ksta';    //Change this to what the AU identity is!
+const unsigned long kUniqueId = 'kwdr';    //Change this to what the AU identity is!
 
 class kWoodRoom : 
     public AudioEffectX 
