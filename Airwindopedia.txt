@@ -33,7 +33,7 @@ Filter: SmoothEQ3, PearEQ, SmoothEQ2, SmoothEQ, Parametric, Silken, Stonefire, A
 
 Lo-Fi: DeBez, HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
-Noise: Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
+Noise: DeNoise, Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
 Reverb: kWoodRoom, kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb
 
@@ -1704,6 +1704,22 @@ Then you use the ducking control and the treble rolloff to tailor the kind of es
 ############ DeHiss tries to suppress background hiss, like a hiss gate.
 
 This acts like a filtery gate. It tries to apply a lowpass filter to suppress quiet background noise whenever loud bright treble isn’t happening. You can use it in creative ways, but it really was designed to suppress hiss from a cheap USB condenser mic. Sort of an experiment. It’s got a dry/wet now in case that comes in handy. I’m not sure how much else is out there specifically like this, but then I’m not sure how much call there is for it in the first place :)
+
+############ DeNoise can work as a multiband gate and as a wild effect.
+
+So it starts as a multiband gate. That's pretty direct. You've got frequency ranges, and when they're set to zero there's no gating and full wet is the same as dry. Turn up a band, and you're increasing the threshold: when the sound at that band drops below the threshold it gates and there's silence. You can use the dry/wet control to moderate the effect a little, and you can dial in settings that neatly denoise a sound without interfering with the main audio too much.
+
+The speed control governs how rapidly it transitions, and increasing that slows the reaction time, so you can keep the gate from chattering, set it as quick as possible without an obvious click and you're good. On top of that there's a trick from DeCrackle that's part of the dry/wet: the same as DeCrackle, if you set it full dry rather than just bypassing it, what you get is the delta function with dry subtracted from the result. This isn't the same as an inv/wet control so I didn't label it that: it's a special case for 'monitor only what's being taken away' which is sometimes handy for stuff like this.
+
+And now, we get freaky with it :)
+
+When you raise the gating a lot farther than mere noise gating, you get into some aggressive sound sculpting very quickly. Since it's a gate, you're shortening everything, but since it's multiband it can wrench the tone around. Instead of cutting low mids on the sound, you can gate them out super aggressively and it'll shorten and tighten up a kick, but keep the low mids as part of the attack: you're basically handling the decay of every part differently. You can have the bands blend across different settings, or have adjacent bands very different from each other, and all these things twist and mutate the tone.
+
+And then once you're doing that, the speed control comes into play. It governs both how fast the gate can slam shut, and how quick it can open, and that's also relative to the frequency of the band, so exaggerate this and you get filter-sweepy effects. Adjusting this can lock in exact gatey tones really well, it should be obvious where Speed wants to be set. And of course if that's not enough for you, you can make a tone entirely out of the Delta, where it loses all the attacks and keeps only the decays being gated off…
+
+And, it's one of the more CPU-efficient Airwindows plugins so it does all that while barely touching your CPU.
+
+It should be fun, as well as useful in the normal way. Hope you like it :)
 
 ############ Density is a Swiss Army Knife of saturation/antisaturation.
 
