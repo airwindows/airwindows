@@ -9,7 +9,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 Ambience: ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
-Amp Sims: ChimeyDeluxe, Cabs2, PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
+Amp Sims: ChimeyDeluxe, ChimeyGuitar2, Cabs2, PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
 Bass: DubSub2, OrbitKick, Elliptical, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
@@ -978,6 +978,24 @@ First, it can react very quickly, but refuses to alias since it will not apply a
 Instead, you'll hear an odd warble when you push ChimeyGuitar too far. It's similar to when you're using DeRez3: while Bezier curves can sound like a brickwall filter, there's an strange resonance associated with it. In a compressor, when pushed hard, we hear this as tremblings of the loudness, as if trying to squish the signal makes it more jittery. It can come off like an old Arp Pro Soloist trying to imitate a trombone, but the thing to bear in mind is that you can always back off the Compres control until it cleans up again. The transparency of BeziComp means it'll clean up a whole bunch while still being compressed.
 
 This is my go-to for articulate guitars and basses that don't seem to have saturation or distortion. It's got the flexibility of PointyGuitar, but super clean, or with strange new forms of saturation that are like derezzing. Hope you like it!
+
+############ ChimeyGuitar2 is a wilder ChimeyGuitar.
+
+This is the Latest chimeyguitar plugin, but it is not going to be in the Basic or Recommended categories, though in my heart it is definitely Recommended. Why? Because it's borderline dangerous. The amp can pop and explode when set incorrectly.
+
+Still here? OK, let's talk what's different this time. The original ChimeyGuitar used many instances of BeziComp to compress, which was mostly good at clamping down and compressing the signal. If you overcompress, you get an unpleasant warbling, and it didn't really react like traditional compressors. It's pretty safe and 'normal' even while not being normal. It didn't work great as ChimeyDeluxe, so I put a lot of work into developing a more intense version to use in ChimeyDeluxe, and that's what came out.
+
+An important difference is that ChimeyDeluxe is ten EQ-like controls with the compression built in. No extra boost, no dedicated compression control, no cab filters (I use the ones in ConsoleX2), so it's inherently restricted. ChimeyDeluxe can go wild, but that's when you're cranking the sliders around and making wild variations between adjacent sliders. It doesn't have… surprises.
+
+ChimeyGuitar2 is the raw material of that with the cab filter and an unrestricted compression-speed control and an even more unrestricted boost control… so if you wanted to turn specifically ChimeyDeluxe into a monster, here you go.
+
+Watch out for the boost: it will go up to total compressed squish, but if you push beyond that it can snap into a 'blown output stage' mode that kinda barks extra loud on the loudest notes. The filter section is much the same as ChimeyGuitar, as is the cab filtering. But, remember the gain staging of this plugin includes any gain boosts inside the filtering, It should behave any time the combined gains don't add up to infinite, but they multiply by each other so this is NOT a plugin for cranking things out carelessly. Think of it like a Dumble tube amp: go carefully and you won't hurt yourself, but it can scare you if you're careless.
+
+The compression speed is the key to a lot of interestingly messy tones. It's a different compression than the version in ChimeyGuitar, which just turns down and has that funny warbling effect when pushed. This one doesn't warble like that, but it includes makeup gain so infinite sustain is very possible, and if you do that with a fast (to the left) compression speed, you get a distinct distortion type, an edge on the tone that's very distortionlike. Pulling gain back or slowing (to the right) the compression speed moderates this effect, and slowing the speed a LOT is what you need to do to really avoid distorty qualities. That, and back off on the boost slider up top.
+
+But what fun is that? So, if you're going to embrace the wildness, dial in the gain with the speed set faster. Remember the EQ bands multiply with this. Once you're in the zone, tweak the compression speed to shape the voicing of the distorty stuff, and if gain is high enough and you're pushing the system hard enough, you can make the 'bark' touch responsive with very tiny adjustments right around the infinite compression point, right where it starts to bark and spark.
+
+Or you can always use a normal amp sim if this seems like too much trouble. A normal person wouldn't deal with this nonsense. I need to spend more time playing with it, because when I got reacquainted with ChimeyGuitar2 I immediately wanted to dial in all the twitchiest settings and play leads through it :)
 
 ############ Chorus is a mono chorus, also works as a vibrato.
 
