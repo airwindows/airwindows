@@ -292,7 +292,7 @@ void		ADClip9::ADClip9Kernel::Process(	const Float32 	*inSourceP,
 		//begin 32 bit floating point dither
 		//int expon; frexpf((float)inputSample, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		//inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		//inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 32 bit floating point dither
 		
 		*destP = inputSampleL;
