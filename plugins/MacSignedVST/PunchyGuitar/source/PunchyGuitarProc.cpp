@@ -90,16 +90,19 @@ void PunchyGuitar::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			}
 			inputSampleL += (band*angG[9]);
 			inputSampleL *= drive;
-			inputSampleL = fmin(fmax(inputSampleL,-2.032610446872596),2.032610446872596);
-			long double X = inputSampleL * inputSampleL;
-			long double temp = inputSampleL * X;
-			inputSampleL -= (temp*0.125); temp *= X;
-			inputSampleL += (temp*0.0078125); temp *= X;
-			inputSampleL -= (temp*0.000244140625); temp *= X;
-			inputSampleL += (temp*0.000003814697265625); temp *= X;
-			inputSampleL -= (temp*0.0000000298023223876953125); temp *= X;
-			//purestsaturation: sine, except all the corrections
-			//retain mantissa of a long double increasing power function
+			inputSampleL = fmin(fmax(inputSampleL,-M_PI_2),M_PI_2);
+			long double X = inputSampleL; X *= X; //long double for even
+			long double temp = inputSampleL * X; //the initial multiplies
+			inputSampleL -= temp*0.16666666666666666666666666666666666; temp *= X;
+			inputSampleL += temp*0.00833333333333333333333333333333333; temp *= X;
+			inputSampleL -= temp*0.00019841269841269841269841269841269; temp *= X;
+			inputSampleL += temp*0.00000275573192239858906525573192239; temp *= X;
+			inputSampleL -= temp*0.00000002505210838544171877521083854; temp *= X;
+			inputSampleL += temp*0.00000000016059043836821614599392377; temp *= X;
+			inputSampleL -= temp*0.00000000000076471637318198164759011; temp *= X;
+			inputSampleL += temp*0.00000000000000281145725434552076319; temp *= X;
+			inputSampleL -= temp*0.00000000000000000822063524662432971; temp *= X;
+			inputSampleL += temp*0.00000000000000000001957294106339126;
 		}
 		
 		if (gaterollerL < 1.0)
@@ -170,16 +173,21 @@ void PunchyGuitar::processReplacing(float **inputs, float **outputs, VstInt32 sa
 			}
 			inputSampleR += (band*angG[9]);
 			inputSampleR *= drive;
-			inputSampleR = fmin(fmax(inputSampleR,-2.032610446872596),2.032610446872596);
-			long double X = inputSampleR * inputSampleR;
-			long double temp = inputSampleR * X;
-			inputSampleR -= (temp*0.125); temp *= X;
-			inputSampleR += (temp*0.0078125); temp *= X;
-			inputSampleR -= (temp*0.000244140625); temp *= X;
-			inputSampleR += (temp*0.000003814697265625); temp *= X;
-			inputSampleR -= (temp*0.0000000298023223876953125); temp *= X;
-			//purestsaturation: sine, except all the corrections
+			inputSampleR = fmin(fmax(inputSampleR,-M_PI_2),M_PI_2);
+			long double X = inputSampleR; X *= X; //long double for even
+			long double temp = inputSampleR * X; //the initial multiplies
+			inputSampleR -= temp*0.16666666666666666666666666666666666; temp *= X;
+			inputSampleR += temp*0.00833333333333333333333333333333333; temp *= X;
+			inputSampleR -= temp*0.00019841269841269841269841269841269; temp *= X;
+			inputSampleR += temp*0.00000275573192239858906525573192239; temp *= X;
+			inputSampleR -= temp*0.00000002505210838544171877521083854; temp *= X;
+			inputSampleR += temp*0.00000000016059043836821614599392377; temp *= X;
+			inputSampleR -= temp*0.00000000000076471637318198164759011; temp *= X;
+			inputSampleR += temp*0.00000000000000281145725434552076319; temp *= X;
+			inputSampleR -= temp*0.00000000000000000822063524662432971; temp *= X;
+			inputSampleR += temp*0.00000000000000000001957294106339126;
 			//retain mantissa of a long double increasing power function
+			//long double probably doesn't handle more than 36 digits or so
 		}
 		
 		if (gaterollerR < 1.0)
@@ -210,10 +218,12 @@ void PunchyGuitar::processReplacing(float **inputs, float **outputs, VstInt32 sa
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		if (fpdL-fpdR < 1073741824 || fpdR-fpdL < 1073741824) {
+			fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;}
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
@@ -309,16 +319,19 @@ void PunchyGuitar::processDoubleReplacing(double **inputs, double **outputs, Vst
 			}
 			inputSampleL += (band*angG[9]);
 			inputSampleL *= drive;
-			inputSampleL = fmin(fmax(inputSampleL,-2.032610446872596),2.032610446872596);
-			long double X = inputSampleL * inputSampleL;
-			long double temp = inputSampleL * X;
-			inputSampleL -= (temp*0.125); temp *= X;
-			inputSampleL += (temp*0.0078125); temp *= X;
-			inputSampleL -= (temp*0.000244140625); temp *= X;
-			inputSampleL += (temp*0.000003814697265625); temp *= X;
-			inputSampleL -= (temp*0.0000000298023223876953125); temp *= X;
-			//purestsaturation: sine, except all the corrections
-			//retain mantissa of a long double increasing power function
+			inputSampleL = fmin(fmax(inputSampleL,-M_PI_2),M_PI_2);
+			long double X = inputSampleL; X *= X; //long double for even
+			long double temp = inputSampleL * X; //the initial multiplies
+			inputSampleL -= temp*0.16666666666666666666666666666666666; temp *= X;
+			inputSampleL += temp*0.00833333333333333333333333333333333; temp *= X;
+			inputSampleL -= temp*0.00019841269841269841269841269841269; temp *= X;
+			inputSampleL += temp*0.00000275573192239858906525573192239; temp *= X;
+			inputSampleL -= temp*0.00000002505210838544171877521083854; temp *= X;
+			inputSampleL += temp*0.00000000016059043836821614599392377; temp *= X;
+			inputSampleL -= temp*0.00000000000076471637318198164759011; temp *= X;
+			inputSampleL += temp*0.00000000000000281145725434552076319; temp *= X;
+			inputSampleL -= temp*0.00000000000000000822063524662432971; temp *= X;
+			inputSampleL += temp*0.00000000000000000001957294106339126;
 		}
 		
 		if (gaterollerL < 1.0)
@@ -389,16 +402,21 @@ void PunchyGuitar::processDoubleReplacing(double **inputs, double **outputs, Vst
 			}
 			inputSampleR += (band*angG[9]);
 			inputSampleR *= drive;
-			inputSampleR = fmin(fmax(inputSampleR,-2.032610446872596),2.032610446872596);
-			long double X = inputSampleR * inputSampleR;
-			long double temp = inputSampleR * X;
-			inputSampleR -= (temp*0.125); temp *= X;
-			inputSampleR += (temp*0.0078125); temp *= X;
-			inputSampleR -= (temp*0.000244140625); temp *= X;
-			inputSampleR += (temp*0.000003814697265625); temp *= X;
-			inputSampleR -= (temp*0.0000000298023223876953125); temp *= X;
-			//purestsaturation: sine, except all the corrections
+			inputSampleR = fmin(fmax(inputSampleR,-M_PI_2),M_PI_2);
+			long double X = inputSampleR; X *= X; //long double for even
+			long double temp = inputSampleR * X; //the initial multiplies
+			inputSampleR -= temp*0.16666666666666666666666666666666666; temp *= X;
+			inputSampleR += temp*0.00833333333333333333333333333333333; temp *= X;
+			inputSampleR -= temp*0.00019841269841269841269841269841269; temp *= X;
+			inputSampleR += temp*0.00000275573192239858906525573192239; temp *= X;
+			inputSampleR -= temp*0.00000002505210838544171877521083854; temp *= X;
+			inputSampleR += temp*0.00000000016059043836821614599392377; temp *= X;
+			inputSampleR -= temp*0.00000000000076471637318198164759011; temp *= X;
+			inputSampleR += temp*0.00000000000000281145725434552076319; temp *= X;
+			inputSampleR -= temp*0.00000000000000000822063524662432971; temp *= X;
+			inputSampleR += temp*0.00000000000000000001957294106339126;
 			//retain mantissa of a long double increasing power function
+			//long double probably doesn't handle more than 36 digits or so
 		}
 		
 		if (gaterollerR < 1.0)
@@ -429,10 +447,12 @@ void PunchyGuitar::processDoubleReplacing(double **inputs, double **outputs, Vst
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		if (fpdL-fpdR < 1073741824 || fpdR-fpdL < 1073741824) {
+			fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;}
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;

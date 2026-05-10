@@ -12,10 +12,10 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster) {return new D
 Dynamics3::Dynamics3(audioMasterCallback audioMaster) :
     AudioEffectX(audioMaster, kNumPrograms, kNumParameters)
 {
-	A = 0.999;
+	A = 1.0;
 	B = 0.382;
 	C = 0.618;
-	D = 0.618;
+	D = 1.0;
 
 	for (int x = 0; x < bez_total; x++) bezComp[x] = 0.0;
 	//Dynamics3
@@ -104,7 +104,7 @@ void Dynamics3::getParameterName(VstInt32 index, char *text) {
         case kParamA: vst_strncpy (text, "Thresh", kVstMaxParamStrLen); break;
 		case kParamB: vst_strncpy (text, "Attack", kVstMaxParamStrLen); break;
 		case kParamC: vst_strncpy (text, "Release", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Ratio", kVstMaxParamStrLen); break;
+		case kParamD: vst_strncpy (text, "Dry/Wet", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }

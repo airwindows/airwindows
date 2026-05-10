@@ -29,7 +29,7 @@ Dynamics: Dynamics2, Pressure6, BeziComp, Pop3, Pop2, Pressure5, StoneFireComp, 
 
 Effects: TakeCare, RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
-Filter: Suzan, SmoothEQ3, PearEQ, FatEQ, SmoothEQ2, BezEQ2, SmoothEQ, Parametric, Dattorro, Donut, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall3, Baxandall2, Baxandall, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
+Filter: BezEQ3, Suzan, SmoothEQ3, PearEQ, FatEQ, SmoothEQ2, BezEQ2, SmoothEQ, Parametric, Dattorro, Donut, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall3, Baxandall2, Baxandall, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
 Lo-Fi: DeBez, HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
@@ -409,6 +409,27 @@ And then, perhaps a factor of how the bands are summed together, if you go to cu
 
 I have a feeling this is gonna be a real 'sleeper' plugin. It seems to do anything I ask while sounding like nothing was done. Those who are trying to mix by adding color upon color to their sounds, probably won't get this at all. But those of a simpler, rawer approach might really be pleasantly surprised. Even startled, in the best possible way.
 
+############ BezEQ3 refines the concept into four vivid, unified bands.
+
+Persistence has its rewards…
+
+The idea was to see if BezEQ could be expanded into something I can use in a Console, for which I like having four bands and frequency sweep controls for each. But the delay lines built into BezEQ2 had to go, because I'd also want zero latency… and that would produce a phasier response, perhaps interactions between bands that would make it behave less normally. But normal's easy to come by, SmoothEQ2 exists, so what if we could get something worth having that's less normal?
+
+Enter BezEQ3. There's more improvements on getting it to filter smoothly, there's that needed 4th band, and the sweepable middle positions to the bands, but it's still very much BezEQ. It's refined that unusual tonality down, and is still using a filter topology where, set flat, it's literally perfectly transparent.
+
+And then it's perfectly transparent for any other setting, no matter how extreme… but how you GET to those settings is something else.
+
+Because removing the internal delay lines and making it be zero latency, derailed the filter bands in some peculiar way. If you boost a frequency, you're cutting something else. Everything's kind of interactive. It's not going to behave nicely if you think you can treat it like shelving filters with neat markings. No point EVEN marking it. This is not SmoothEQ2, which runs on DF1 biquad filters like a normal plugin.
+
+Instead, you voice it by using the bands and sweeps as suggestions, and you listen to what it's doing. Nothing will get a frequency band to separate out and act like a 'frequency band', and curiously nothing will get frequency bands to come forward or fall back (like FatEQ) either. It acts, more than any other EQ I've ever heard or made, like no EQ had been done, and like the sound was that way on recording.
+
+It's just that you can revoice things to a ridiculous degree and still have it sound like one coherent piece.
+
+This plugin will be very polarizing. You will likely love it or absolutely hate it. I suspect some of the other old-schoolers will like what they hear. I'm almost sure anybody with extensive modern-production expertise will be frustrated and confused. So very many people think in terms of taking all the sounds and decomposing them into distinct pieces and fitting them together like some mixing jigsaw puzzle. What are you going to do with an EQ that refuses to separate out anything, where you can never turn a sound into this band and that band and holes where the bad audio used to be?
+
+Meanwhile, the old school practitioners of mixing black arts are licking their chops and can't wait to turn a much smaller number of tracks into something huge and compelling… sneakily heightening rawness and energy, without ever seeming like they are EQing. It's more like voicing. Nothing needs to be aggressive, just voice everything until it hits right and sits in the right places, and the top-to-bottom, left-to-right, mixing jigsaw puzzle can stay in the box. With suitable use of compression and saturation you could use this to mix a whole thing in mono, sounding unequalized, and it'd still hit like a ton of bricks.
+
+BezEQ3 is currently on track to be the primary EQ in ConsoleX3. Many people will just get mad at it, most likely. I'm just gonna have to show people what this is about… but if something happens when you try this plugin, and it gets exactly the sound you crave and you want to use it on everything… well, you know who you are, and you're welcome :)
 
 ############ BeziComp is a radical compressor that eliminates aliasing!
 
@@ -4590,6 +4611,8 @@ PurestConsole is like the dynamics encode/decode out of Console5, without the sl
 Channels: inputSample = sin(inputSample);
 Buss: inputSample = asin(inputSample);
 
+Note that the Channel version of this wavefolds. It doesn't stop at +1.0 -1.0, it will wrap around further. The Buss version does clip at that because otherwise the whole thing would crash.
+
 Without all the mojo and tone changing, that is IT. Anyone building a DAW can include this (channels post fader! And do not allow the asin() to see values that’ll break it, you can get NaN out of math functions if you break them!).
 
 PurestConsole has special properties, besides ‘being in the Console5 family so you can swap them out freely with any Console5 variation and get correct results’. Since the amplitude encode/decode is most important to the effect, stripping it down to THIS simple has an interesting property I demonstrate in the video.
@@ -4611,6 +4634,8 @@ PurestConsole was always the ‘colorless, transparent’ take on any Console sy
 
 The end result is the same kind of analog warmth… except it’s a cool, airy clarity that resolves absolutely EVERYTHING. If you’re shooting for super-clear this is the one you want. And since Console mixes can drive submixes which then use another Console system to sum the stems to the 2-buss… you can sneak it in on your harmony vocal beds, or orchestral stems, or you could use Console7 for everything and then sum only the stems to the 2-buss using PurestConsole2. Instead of mixing and matching within the summing busses, design your mix structure by figuring out where you want analog fatness and slam, and where you want clarity and resolution.
 
+The specific way I go about doing this grandiose thing has to do with filters, which is an odd thing to include in PurestConsole but it's got its place. This is one of those 'distributed filters' but it's only two stages of filtering: it's running a 0.618 resonance filter on the channels, and then a 1.618 resonance filter on the buss. These combine to become a flat filter… but the buss aspect is running inside Console, so the resonant peak it has is being applied to the summing before decoding. Hence, the 'airy clarity' stuff: we're literally applying expansion to just the highs of the track in summing without altering the tonal balance of the whole chain.
+
 ############ PurestConsole3Buss is an alternate algorithm for minimalist Console.
 ############ PurestConsole3Channel is an alternate algorithm for minimalist Console.
 
@@ -4627,6 +4652,10 @@ And that means if you're running something like current Reaper, as I am… with 
 And it went from 5% CPU, with presumably 16x oversampling on all Console tracks and the buss, at base 96k sampling rate, to 30% CPU. I could've doubled the project and it would still have run. (probably the original PurestConsole would not be able to do this)
 
 And it sounds… different! You'll hear it. You surely can do it. It's got its own sound. Not an Airwindows sound, I think. Sort of smoothed off and glossy. In the video I demonstrate this output, versus non-oversampled PurestConsole3, versus ConsoleZero. And, having heard all the original sounds off my instruments and modular, I think ConsoleZero is rawer and more accurate (that's sort of the idea). But now, if you have a great love for oversampled nonlinear plugins, PurestConsole3 is my little gift, an Airwindows Console version that's designed to work with, not against, what you like.
+
+I must add, however, that while this is interesting (a precursor to PurestSaturation and a lot of further work I did: this concept underlies my TapeHack algorithm), my little 'gift' is NOT safe under all circumstances. To make it oversample as high as possible, I stripped it of virtually any other code. That includes safety clipping. So if you wanted to use PurestConsole3 in total safety, you'd need to run a safety clipper like ClipOnly3 or ClipOnly2 (any version, really) because none of PurestConsole's algorithms clip. And where a normal 'sine' function will continue to do wavefolding and keep the output between -1 and 1 forever, this… very much won't.
+
+So be aware, PurestConsole3 is one of those experimental ones. So long as you keep the levels down, it's a very CPU-efficient way to fool with Console summing even at high oversamplings (or just use minimalist processing). But it can't handle excess gain.
 
 Have fun, and I'll keep new stuff coming as well as I can!
 

@@ -54,15 +54,15 @@
 #pragma mark ____Dynamics3Mono Parameters
 
 // parameters
-static const float kDefaultValue_ParamA = 0.999;
+static const float kDefaultValue_ParamA = 1.0;
 static const float kDefaultValue_ParamB = 0.382;
 static const float kDefaultValue_ParamC = 0.618;
-static const float kDefaultValue_ParamD = 0.618;
+static const float kDefaultValue_ParamD = 1.0;
 
 static CFStringRef kParameterAName = CFSTR("Thresh");
 static CFStringRef kParameterBName = CFSTR("Attack");
 static CFStringRef kParameterCName = CFSTR("Release");
-static CFStringRef kParameterDName = CFSTR("Ratio");
+static CFStringRef kParameterDName = CFSTR("Dry/Wet");
 
 enum {
 	kParam_A =0,

@@ -304,7 +304,7 @@ void		BezEQ3::BezEQ3Kernel::Process(	const Float32 	*inSourceP,
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleL += ((double(fpd)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 32 bit floating point dither
 		
 		*destP = inputSampleL;

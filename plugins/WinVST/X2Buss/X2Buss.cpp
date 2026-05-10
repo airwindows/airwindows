@@ -47,15 +47,14 @@ X2Buss::X2Buss(audioMasterCallback audioMaster) :
 	bezCompS[bez_cycle] = 1.0;
 	//Dynamics2
 	
-	for (int x = 0; x < 33; x++) {avg32L[x] = 0.0; avg32R[x] = 0.0;}
-	for (int x = 0; x < 17; x++) {avg16L[x] = 0.0; avg16R[x] = 0.0;}
-	for (int x = 0; x < 9; x++) {avg8L[x] = 0.0; avg8R[x] = 0.0;}
-	for (int x = 0; x < 5; x++) {avg4L[x] = 0.0; avg4R[x] = 0.0;}
-	for (int x = 0; x < 3; x++) {avg2L[x] = 0.0; avg2R[x] = 0.0;}
-	avgPos = 0;
-	lastSlewL = 0.0; lastSlewR = 0.0;
-	lastSlewpleL = 0.0; lastSlewpleR = 0.0;
-	//preTapeHack
+	lastSampleL = 0.0;
+	wasPosClipL = false;
+	wasNegClipL = false;
+	lastSampleR = 0.0;
+	wasPosClipR = false;
+	wasNegClipR = false;
+	for (int x = 0; x < 17; x++) {intermediateL[x] = 0.0; intermediateR[x] = 0.0;}
+	for (int x = 0; x < 33; x++) {slewL[x] = 0.0; slewR[x] = 0.0;}
 	
 	inTrimA = 0.5; inTrimB = 0.5;
 	

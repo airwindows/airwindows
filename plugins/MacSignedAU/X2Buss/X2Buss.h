@@ -193,22 +193,16 @@ public:
 	double bezCompS[bez_total];
 	//Dynamics2
 	
-	double avg32L[33];
-	double avg32R[33];
-	double avg16L[17];
-	double avg16R[17];
-	double avg8L[9];
-	double avg8R[9];
-	double avg4L[5];
-	double avg4R[5];
-	double avg2L[3];
-	double avg2R[3];
-	int avgPos;
-	double lastSlewL;
-	double lastSlewR;
-	double lastSlewpleL;
-	double lastSlewpleR;
-	//preTapeHack
+	double lastSampleL;
+	double intermediateL[18];
+	double slewL[34];
+	bool wasPosClipL;
+	bool wasNegClipL;
+	double lastSampleR;
+	double intermediateR[18];
+	double slewR[34];
+	bool wasPosClipR;
+	bool wasNegClipR; //Stereo ClipOnly3	
 	
 	double inTrimA;
 	double inTrimB;

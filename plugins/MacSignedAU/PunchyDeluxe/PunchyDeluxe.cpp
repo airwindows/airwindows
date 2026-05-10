@@ -312,37 +312,47 @@ void		PunchyDeluxe::PunchyDeluxeKernel::Process(	const Float32 	*inSourceP,
 			}
 			inputSample += band;
 			inputSample *= drive;
-			inputSample = fmin(fmax(inputSample,-2.032610446872596),2.032610446872596);
-			long double X = inputSample * inputSample;
-			long double temp = inputSample * X;
-			inputSample -= (temp*0.125); temp *= X;
-			inputSample += (temp*0.0078125); temp *= X;
-			inputSample -= (temp*0.000244140625); temp *= X;
-			inputSample += (temp*0.000003814697265625); temp *= X;
-			inputSample -= (temp*0.0000000298023223876953125); temp *= X;
-			//purestsaturation: sine, except all the corrections
+			inputSample = fmin(fmax(inputSample,-M_PI_2),M_PI_2);
+			long double X = inputSample; X *= X; //long double for even
+			long double temp = inputSample * X; //the initial multiplies
+			inputSample -= temp*0.16666666666666666666666666666666666; temp *= X;
+			inputSample += temp*0.00833333333333333333333333333333333; temp *= X;
+			inputSample -= temp*0.00019841269841269841269841269841269; temp *= X;
+			inputSample += temp*0.00000275573192239858906525573192239; temp *= X;
+			inputSample -= temp*0.00000002505210838544171877521083854; temp *= X;
+			inputSample += temp*0.00000000016059043836821614599392377; temp *= X;
+			inputSample -= temp*0.00000000000076471637318198164759011; temp *= X;
+			inputSample += temp*0.00000000000000281145725434552076319; temp *= X;
+			inputSample -= temp*0.00000000000000000822063524662432971; temp *= X;
+			inputSample += temp*0.00000000000000000001957294106339126;
 			//retain mantissa of a long double increasing power function
+			//long double probably doesn't handle more than 36 digits or so
 		}
 		
 		if (pad < 1.0) {
 			inputSample *= pad;
 		}
 		
-		inputSample = fmin(fmax(inputSample,-2.032610446872596),2.032610446872596);
-		long double X = inputSample * inputSample;
-		long double temp = inputSample * X;
-		inputSample -= (temp*0.125); temp *= X;
-		inputSample += (temp*0.0078125); temp *= X;
-		inputSample -= (temp*0.000244140625); temp *= X;
-		inputSample += (temp*0.000003814697265625); temp *= X;
-		inputSample -= (temp*0.0000000298023223876953125); temp *= X;
-		//purestsaturation: sine, except all the corrections
+		inputSample = fmin(fmax(inputSample,-M_PI_2),M_PI_2);
+		long double X = inputSample; X *= X; //long double for even
+		long double temp = inputSample * X; //the initial multiplies
+		inputSample -= temp*0.16666666666666666666666666666666666; temp *= X;
+		inputSample += temp*0.00833333333333333333333333333333333; temp *= X;
+		inputSample -= temp*0.00019841269841269841269841269841269; temp *= X;
+		inputSample += temp*0.00000275573192239858906525573192239; temp *= X;
+		inputSample -= temp*0.00000002505210838544171877521083854; temp *= X;
+		inputSample += temp*0.00000000016059043836821614599392377; temp *= X;
+		inputSample -= temp*0.00000000000076471637318198164759011; temp *= X;
+		inputSample += temp*0.00000000000000281145725434552076319; temp *= X;
+		inputSample -= temp*0.00000000000000000822063524662432971; temp *= X;
+		inputSample += temp*0.00000000000000000001957294106339126;
 		//retain mantissa of a long double increasing power function
+		//long double probably doesn't handle more than 36 digits or so
 		
 		//begin 32 bit floating point dither
 		int expon; frexpf((float)inputSample, &expon);
 		fpd ^= fpd << 13; fpd ^= fpd >> 17; fpd ^= fpd << 5;
-		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSample += ((double(fpd)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 32 bit floating point dither
 		
 		*destP = inputSample;

@@ -141,9 +141,15 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	
 	double bezCThresh = pow(1.0-I, 6.0) * 8.0;
 	double bezRez = pow(1.0-I, 12.360679774997898) / overallscale;
+	bezRez = fmin(fmax(bezRez,0.00001),1.0);
+	int stepped = 999999; if (bezRez > 0.000001) stepped = (int)(1.0/bezRez);
+	bezRez = 1.0 / stepped;
+	double bezTrim = 1.0-(bezRez*((double)stepped/(stepped+1.0)));
 	double sloRez = pow(1.0-I,10.0) / overallscale;
 	sloRez = fmin(fmax(sloRez,0.00001),1.0);
-	bezRez = fmin(fmax(bezRez,0.00001),1.0);
+	stepped = 999999; if (sloRez > 0.000001) stepped = (int)(1.0/sloRez);
+	sloRez = 1.0 / stepped;
+	double sloTrim = 1.0-(sloRez*((double)stepped/(stepped+1.0)));
 	//Dynamics2
 	
 	inTrimA = inTrimB; inTrimB = J*2.0;
@@ -155,17 +161,7 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		double inputSampleR = *in2;
 		if (fabs(inputSampleL)<1.18e-23) inputSampleL = fpdL * 1.18e-17;
 		if (fabs(inputSampleR)<1.18e-23) inputSampleR = fpdR * 1.18e-17;
-		
-		if (inputSampleL > 1.0) inputSampleL = 1.0;
-		else if (inputSampleL > 0.0) inputSampleL = -expm1((log1p(-inputSampleL) * 0.6180339887498949));
-		if (inputSampleL < -1.0) inputSampleL = -1.0;
-		else if (inputSampleL < 0.0) inputSampleL = expm1((log1p(inputSampleL) * 0.6180339887498949));
-		
-		if (inputSampleR > 1.0) inputSampleR = 1.0;
-		else if (inputSampleR > 0.0) inputSampleR = -expm1((log1p(-inputSampleR) * 0.6180339887498949));
-		if (inputSampleR < -1.0) inputSampleR = -1.0;
-		else if (inputSampleR < 0.0) inputSampleR = expm1((log1p(inputSampleR) * 0.6180339887498949));
-		
+				
 		double trebleL = inputSampleL;		
 		double outSample = (trebleL * highA[biq_a0]) + highA[biq_sL1];
 		highA[biq_sL1] = (trebleL * highA[biq_a1]) - (outSample * highA[biq_b1]) + highA[biq_sL2];
@@ -300,8 +296,8 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		
 		inputSampleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);		
 		//fourth stage of three crossovers is the exponential filters
-		//SmoothEQ2
 		
+		//SmoothEQ2
 		if (bezCThresh > 0.0) {
 			inputSampleL *= ((bezCThresh*0.5)+1.0);
 			inputSampleR *= ((bezCThresh*0.5)+1.0);
@@ -327,6 +323,7 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		bezCompS[bez_cycle] += sloRez;
 		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage
 		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
+		
 		if (bezCompS[bez_cycle] > 1.0) {
 			bezCompS[bez_cycle] -= 1.0;
 			bezCompS[bez_CL] = bezCompS[bez_BL];
@@ -338,22 +335,21 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			bezCompS[bez_AR] = bezCompS[bez_SampR];
 			bezCompS[bez_SampR] = 0.0;
 		}
-		double CBFL = (bezCompF[bez_CL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BL]*bezCompF[bez_cycle]);
-		double BAFL = (bezCompF[bez_BL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AL]*bezCompF[bez_cycle]);
-		double CBAFL = (bezCompF[bez_BL]+(CBFL*(1.0-bezCompF[bez_cycle]))+(BAFL*bezCompF[bez_cycle]))*0.5;
-		double CBSL = (bezCompS[bez_CL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BL]*bezCompS[bez_cycle]);
-		double BASL = (bezCompS[bez_BL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AL]*bezCompS[bez_cycle]);
-		double CBASL = (bezCompS[bez_BL]+(CBSL*(1.0-bezCompS[bez_cycle]))+(BASL*bezCompS[bez_cycle]))*0.5;
+		double X = bezCompF[bez_cycle]*bezTrim;
+		double CBAFL = bezCompF[bez_BL]+(bezCompF[bez_CL]*(1.0-X)*(1.0-X))+(bezCompF[bez_BL]*2.0*(1.0-X)*X)+(bezCompF[bez_AL]*X*X);
+		CBAFL *= 0.5;
+		X = bezCompS[bez_cycle]*sloTrim;
+		double CBASL = bezCompS[bez_BL]+(bezCompS[bez_CL]*(1.0-X)*(1.0-X))+(bezCompS[bez_BL]*2.0*(1.0-X)*X)+(bezCompS[bez_AL]*X*X);
+		CBASL *= 0.5;
 		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		
-		double CBFR = (bezCompF[bez_CR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BR]*bezCompF[bez_cycle]);
-		double BAFR = (bezCompF[bez_BR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AR]*bezCompF[bez_cycle]);
-		double CBAFR = (bezCompF[bez_BR]+(CBFR*(1.0-bezCompF[bez_cycle]))+(BAFR*bezCompF[bez_cycle]))*0.5;
-		double CBSR = (bezCompS[bez_CR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BR]*bezCompS[bez_cycle]);
-		double BASR = (bezCompS[bez_BR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AR]*bezCompS[bez_cycle]);
-		double CBASR = (bezCompS[bez_BR]+(CBSR*(1.0-bezCompS[bez_cycle]))+(BASR*bezCompS[bez_cycle]))*0.5;
+		X = bezCompF[bez_cycle]*bezTrim;
+		double CBAFR = bezCompF[bez_BR]+(bezCompF[bez_CR]*(1.0-X)*(1.0-X))+(bezCompF[bez_BR]*2.0*(1.0-X)*X)+(bezCompF[bez_AR]*X*X);
+		CBAFR *= 0.5;
+		X = bezCompS[bez_cycle]*sloTrim;
+		double CBASR = bezCompS[bez_BR]+(bezCompS[bez_CR]*(1.0-X)*(1.0-X))+(bezCompS[bez_BR]*2.0*(1.0-X)*X)+(bezCompS[bez_AR]*X*X);
+		CBASR *= 0.5;
 		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));
@@ -361,93 +357,69 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		
 		const double temp = (double)sampleFrames/inFramesToProcess;
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		if (gain > 1.0) gain *= gain;
-		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 2.0;
-		
 		inputSampleL = inputSampleL * gain;
 		inputSampleR = inputSampleR * gain;
 		//applies pan section, and smoothed fader gain
 		
-		double darkSampleL = inputSampleL;
-		double darkSampleR = inputSampleR;
-		if (avgPos > 31) avgPos = 0;
-		if (spacing > 31) {
-			avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
-			darkSampleL /= 32.0; darkSampleR /= 32.0;
-		} if (spacing > 15) {
-			avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
-			darkSampleL /= 16.0; darkSampleR /= 16.0;
-		} if (spacing > 7) {
-			avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
-			darkSampleL /= 8.0; darkSampleR /= 8.0;
-		} if (spacing > 3) {
-			avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
-			darkSampleL /= 4.0; darkSampleR /= 4.0;
-		} if (spacing > 1) {
-			avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
-			darkSampleL /= 2.0; darkSampleR /= 2.0; 
-		} avgPos++;
-		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
-		double avgSlewL = fmin(lastSlewL,1.0);
-		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
-		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
-		double avgSlewR = fmin(lastSlewR,1.0);
-		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
-		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
-		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);
+		//begin ClipOnly3 as a little, compressed chunk that can be dropped into code
+		double noise = 1.0-((double(fpdL)/UINT32_MAX)*0.076);
+		if (wasPosClipL == true) { //current will be over
+			if (inputSampleL<lastSampleL) lastSampleL=(0.9085097*noise)+(inputSampleL*(1.0-noise));
+			else lastSampleL = 0.94; //~-0.2dB to nearly match ClipOnly and ClipOnly2
+		} wasPosClipL = false;
+		if (inputSampleL>0.9085097) {wasPosClipL=true;inputSampleL=(0.9085097*noise)+(lastSampleL*(1.0-noise));}
+		if (wasNegClipL == true) { //current will be -over
+			if (inputSampleL > lastSampleL) lastSampleL=(-0.9085097*noise)+(inputSampleL*(1.0-noise));
+			else lastSampleL = -0.94;
+		} wasNegClipL = false;
+		if (inputSampleL<-0.9085097) {wasNegClipL=true;inputSampleL=(-0.9085097*noise)+(lastSampleL*(1.0-noise));}
+		slewL[spacing*2] = fabs(lastSampleL-inputSampleL);
+		for (int x = spacing*2; x > 0; x--) slewL[x-1] = slewL[x];
+		intermediateL[spacing] = inputSampleL; inputSampleL = lastSampleL;
+		//latency is however many samples equals one 44.1k sample
+		for (int x = spacing; x > 0; x--) {intermediateL[x-1] = intermediateL[x];} lastSampleL = intermediateL[0];
+		if (wasPosClipL || wasNegClipL) {
+			for (int x = spacing; x > 0; x--) lastSampleL += intermediateL[x];
+			lastSampleL /= spacing;
+		} double finalSlew = 0.0;
+		for (int x = spacing*2; x >= 0; x--) if (finalSlew < slewL[x]) finalSlew = slewL[x];
+		double postclip = 0.94 / (1.0+(finalSlew*1.3986013));
+		if (inputSampleL > postclip) inputSampleL = postclip; if (inputSampleL < -postclip) inputSampleL = -postclip;
 		
-		//begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleL *= 0.92;
-		//end TapeHack section
-		
-		//begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
-		addtwo = inputSampleR * inputSampleR;
-		empower = inputSampleR * addtwo; // inputSampleR to the third power
-		inputSampleR -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleR += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleR -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleR += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleR -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleR *= 0.92;
-		//end TapeHack section
+		noise = 1.0-((double(fpdR)/UINT32_MAX)*0.076);
+		if (wasPosClipR == true) { //current will be over
+			if (inputSampleR<lastSampleR) lastSampleR=(0.9085097*noise)+(inputSampleR*(1.0-noise));
+			else lastSampleR = 0.94; //~-0.2dB to nearly match ClipOnly and ClipOnly2
+		} wasPosClipR = false;
+		if (inputSampleR>0.9085097) {wasPosClipR=true;inputSampleR=(0.9085097*noise)+(lastSampleR*(1.0-noise));}
+		if (wasNegClipR == true) { //current will be -over
+			if (inputSampleR > lastSampleR) lastSampleR=(-0.9085097*noise)+(inputSampleR*(1.0-noise));
+			else lastSampleR = -0.94;
+		} wasNegClipR = false;
+		if (inputSampleR<-0.9085097) {wasNegClipR=true;inputSampleR=(-0.9085097*noise)+(lastSampleR*(1.0-noise));}
+		slewR[spacing*2] = fabs(lastSampleR-inputSampleR);
+		for (int x = spacing*2; x > 0; x--) slewR[x-1] = slewR[x];
+		intermediateR[spacing] = inputSampleR; inputSampleR = lastSampleR;
+		//latency is however many samples equals one 44.1k sample
+		for (int x = spacing; x > 0; x--) {intermediateR[x-1] = intermediateR[x];} lastSampleR = intermediateR[0];
+		if (wasPosClipR || wasNegClipR) {
+			for (int x = spacing; x > 0; x--) lastSampleR += intermediateR[x];
+			lastSampleR /= spacing;
+		} finalSlew = 0.0;
+		for (int x = spacing*2; x >= 0; x--) if (finalSlew < slewR[x]) finalSlew = slewR[x];
+		postclip = 0.94 / (1.0+(finalSlew*1.3986013));
+		if (inputSampleR > postclip) inputSampleR = postclip; if (inputSampleR < -postclip) inputSampleR = -postclip;
+		//end ClipOnly3 as a little, compressed chunk that can be dropped into code
 		
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		if (fpdL-fpdR < 1073741824 || fpdR-fpdL < 1073741824) {
+			fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;}
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 32 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
@@ -594,9 +566,15 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	
 	double bezCThresh = pow(1.0-I, 6.0) * 8.0;
 	double bezRez = pow(1.0-I, 12.360679774997898) / overallscale;
+	bezRez = fmin(fmax(bezRez,0.00001),1.0);
+	int stepped = 999999; if (bezRez > 0.000001) stepped = (int)(1.0/bezRez);
+	bezRez = 1.0 / stepped;
+	double bezTrim = 1.0-(bezRez*((double)stepped/(stepped+1.0)));
 	double sloRez = pow(1.0-I,10.0) / overallscale;
 	sloRez = fmin(fmax(sloRez,0.00001),1.0);
-	bezRez = fmin(fmax(bezRez,0.00001),1.0);
+	stepped = 999999; if (sloRez > 0.000001) stepped = (int)(1.0/sloRez);
+	sloRez = 1.0 / stepped;
+	double sloTrim = 1.0-(sloRez*((double)stepped/(stepped+1.0)));
 	//Dynamics2
 	
 	inTrimA = inTrimB; inTrimB = J*2.0;
@@ -753,8 +731,8 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		
 		inputSampleR = (bassR*bassGain) + (lowmidR*lowmidGain) + (highmidR*highmidGain) + (trebleR*trebleGain);		
 		//fourth stage of three crossovers is the exponential filters
-		//SmoothEQ2
 		
+		//SmoothEQ2
 		if (bezCThresh > 0.0) {
 			inputSampleL *= ((bezCThresh*0.5)+1.0);
 			inputSampleR *= ((bezCThresh*0.5)+1.0);
@@ -780,6 +758,7 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		bezCompS[bez_cycle] += sloRez;
 		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage
 		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
+		
 		if (bezCompS[bez_cycle] > 1.0) {
 			bezCompS[bez_cycle] -= 1.0;
 			bezCompS[bez_CL] = bezCompS[bez_BL];
@@ -791,22 +770,21 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			bezCompS[bez_AR] = bezCompS[bez_SampR];
 			bezCompS[bez_SampR] = 0.0;
 		}
-		double CBFL = (bezCompF[bez_CL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BL]*bezCompF[bez_cycle]);
-		double BAFL = (bezCompF[bez_BL]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AL]*bezCompF[bez_cycle]);
-		double CBAFL = (bezCompF[bez_BL]+(CBFL*(1.0-bezCompF[bez_cycle]))+(BAFL*bezCompF[bez_cycle]))*0.5;
-		double CBSL = (bezCompS[bez_CL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BL]*bezCompS[bez_cycle]);
-		double BASL = (bezCompS[bez_BL]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AL]*bezCompS[bez_cycle]);
-		double CBASL = (bezCompS[bez_BL]+(CBSL*(1.0-bezCompS[bez_cycle]))+(BASL*bezCompS[bez_cycle]))*0.5;
+		double X = bezCompF[bez_cycle]*bezTrim;
+		double CBAFL = bezCompF[bez_BL]+(bezCompF[bez_CL]*(1.0-X)*(1.0-X))+(bezCompF[bez_BL]*2.0*(1.0-X)*X)+(bezCompF[bez_AL]*X*X);
+		CBAFL *= 0.5;
+		X = bezCompS[bez_cycle]*sloTrim;
+		double CBASL = bezCompS[bez_BL]+(bezCompS[bez_CL]*(1.0-X)*(1.0-X))+(bezCompS[bez_BL]*2.0*(1.0-X)*X)+(bezCompS[bez_AL]*X*X);
+		CBASL *= 0.5;
 		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		
-		double CBFR = (bezCompF[bez_CR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_BR]*bezCompF[bez_cycle]);
-		double BAFR = (bezCompF[bez_BR]*(1.0-bezCompF[bez_cycle]))+(bezCompF[bez_AR]*bezCompF[bez_cycle]);
-		double CBAFR = (bezCompF[bez_BR]+(CBFR*(1.0-bezCompF[bez_cycle]))+(BAFR*bezCompF[bez_cycle]))*0.5;
-		double CBSR = (bezCompS[bez_CR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_BR]*bezCompS[bez_cycle]);
-		double BASR = (bezCompS[bez_BR]*(1.0-bezCompS[bez_cycle]))+(bezCompS[bez_AR]*bezCompS[bez_cycle]);
-		double CBASR = (bezCompS[bez_BR]+(CBSR*(1.0-bezCompS[bez_cycle]))+(BASR*bezCompS[bez_cycle]))*0.5;
+		X = bezCompF[bez_cycle]*bezTrim;
+		double CBAFR = bezCompF[bez_BR]+(bezCompF[bez_CR]*(1.0-X)*(1.0-X))+(bezCompF[bez_BR]*2.0*(1.0-X)*X)+(bezCompF[bez_AR]*X*X);
+		CBAFR *= 0.5;
+		X = bezCompS[bez_cycle]*sloTrim;
+		double CBASR = bezCompS[bez_BR]+(bezCompS[bez_CR]*(1.0-X)*(1.0-X))+(bezCompS[bez_BR]*2.0*(1.0-X)*X)+(bezCompS[bez_AR]*X*X);
+		CBASR *= 0.5;
 		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));
@@ -814,94 +792,69 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		
 		const double temp = (double)sampleFrames/inFramesToProcess;
 		double gain = (inTrimA*temp)+(inTrimB*(1.0-temp));
-		if (gain > 1.0) gain *= gain;
-		if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-		gain *= 2.0;
-		
 		inputSampleL = inputSampleL * gain;
 		inputSampleR = inputSampleR * gain;
 		//applies pan section, and smoothed fader gain
 		
-		double darkSampleL = inputSampleL;
-		double darkSampleR = inputSampleR;
-		if (avgPos > 31) avgPos = 0;
-		if (spacing > 31) {
-			avg32L[avgPos] = darkSampleL; avg32R[avgPos] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 32; x++) {darkSampleL += avg32L[x]; darkSampleR += avg32R[x];}
-			darkSampleL /= 32.0; darkSampleR /= 32.0;
-		} if (spacing > 15) {
-			avg16L[avgPos%16] = darkSampleL; avg16R[avgPos%16] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 16; x++) {darkSampleL += avg16L[x]; darkSampleR += avg16R[x];}
-			darkSampleL /= 16.0; darkSampleR /= 16.0;
-		} if (spacing > 7) {
-			avg8L[avgPos%8] = darkSampleL; avg8R[avgPos%8] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 8; x++) {darkSampleL += avg8L[x]; darkSampleR += avg8R[x];}
-			darkSampleL /= 8.0; darkSampleR /= 8.0;
-		} if (spacing > 3) {
-			avg4L[avgPos%4] = darkSampleL; avg4R[avgPos%4] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 4; x++) {darkSampleL += avg4L[x]; darkSampleR += avg4R[x];}
-			darkSampleL /= 4.0; darkSampleR /= 4.0;
-		} if (spacing > 1) {
-			avg2L[avgPos%2] = darkSampleL; avg2R[avgPos%2] = darkSampleR;
-			darkSampleL = 0.0; darkSampleR = 0.0;
-			for (int x = 0; x < 2; x++) {darkSampleL += avg2L[x]; darkSampleR += avg2R[x];}
-			darkSampleL /= 2.0; darkSampleR /= 2.0; 
-		} avgPos++;
-		lastSlewL += fabs(lastSlewpleL-inputSampleL); lastSlewpleL = inputSampleL;
-		double avgSlewL = fmin(lastSlewL,1.0);
-		lastSlewL = fmax(lastSlewL*0.78,2.39996322972865332223);
-		lastSlewR += fabs(lastSlewpleR-inputSampleR); lastSlewpleR = inputSampleR;
-		double avgSlewR = fmin(lastSlewR,1.0);
-		lastSlewR = fmax(lastSlewR*0.78,2.39996322972865332223); //look up Golden Angle, it's cool
-		inputSampleL = (inputSampleL*(1.0-avgSlewL)) + (darkSampleL*avgSlewL);
-		inputSampleR = (inputSampleR*(1.0-avgSlewR)) + (darkSampleR*avgSlewR);
+		//begin ClipOnly3 as a little, compressed chunk that can be dropped into code
+		double noise = 1.0-((double(fpdL)/UINT32_MAX)*0.076);
+		if (wasPosClipL == true) { //current will be over
+			if (inputSampleL<lastSampleL) lastSampleL=(0.9085097*noise)+(inputSampleL*(1.0-noise));
+			else lastSampleL = 0.94; //~-0.2dB to nearly match ClipOnly and ClipOnly2
+		} wasPosClipL = false;
+		if (inputSampleL>0.9085097) {wasPosClipL=true;inputSampleL=(0.9085097*noise)+(lastSampleL*(1.0-noise));}
+		if (wasNegClipL == true) { //current will be -over
+			if (inputSampleL > lastSampleL) lastSampleL=(-0.9085097*noise)+(inputSampleL*(1.0-noise));
+			else lastSampleL = -0.94;
+		} wasNegClipL = false;
+		if (inputSampleL<-0.9085097) {wasNegClipL=true;inputSampleL=(-0.9085097*noise)+(lastSampleL*(1.0-noise));}
+		slewL[spacing*2] = fabs(lastSampleL-inputSampleL);
+		for (int x = spacing*2; x > 0; x--) slewL[x-1] = slewL[x];
+		intermediateL[spacing] = inputSampleL; inputSampleL = lastSampleL;
+		//latency is however many samples equals one 44.1k sample
+		for (int x = spacing; x > 0; x--) {intermediateL[x-1] = intermediateL[x];} lastSampleL = intermediateL[0];
+		if (wasPosClipL || wasNegClipL) {
+			for (int x = spacing; x > 0; x--) lastSampleL += intermediateL[x];
+			lastSampleL /= spacing;
+		} double finalSlew = 0.0;
+		for (int x = spacing*2; x >= 0; x--) if (finalSlew < slewL[x]) finalSlew = slewL[x];
+		double postclip = 0.94 / (1.0+(finalSlew*1.3986013));
+		if (inputSampleL > postclip) inputSampleL = postclip; if (inputSampleL < -postclip) inputSampleL = -postclip;
 		
-		//begin TapeHack section
-		inputSampleL = fmax(fmin(inputSampleL,2.305929007734908),-2.305929007734908);
-		double addtwo = inputSampleL * inputSampleL;
-		double empower = inputSampleL * addtwo; // inputSampleL to the third power
-		inputSampleL -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleL += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleL -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleL += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleL -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleL *= 0.92;
-		//end TapeHack section
-		
-		//begin TapeHack section
-		inputSampleR = fmax(fmin(inputSampleR,2.305929007734908),-2.305929007734908);
-		addtwo = inputSampleR * inputSampleR;
-		empower = inputSampleR * addtwo; // inputSampleR to the third power
-		inputSampleR -= (empower / 6.0);
-		empower *= addtwo; // to the fifth power
-		inputSampleR += (empower / 69.0);
-		empower *= addtwo; //seventh
-		inputSampleR -= (empower / 2530.08);
-		empower *= addtwo; //ninth
-		inputSampleR += (empower / 224985.6);
-		empower *= addtwo; //eleventh
-		inputSampleR -= (empower / 9979200.0f);
-		//this is a degenerate form of a Taylor Series to approximate sin()
-		inputSampleR *= 0.92;
-		//end TapeHack section
-		//Discontapeity
+		noise = 1.0-((double(fpdR)/UINT32_MAX)*0.076);
+		if (wasPosClipR == true) { //current will be over
+			if (inputSampleR<lastSampleR) lastSampleR=(0.9085097*noise)+(inputSampleR*(1.0-noise));
+			else lastSampleR = 0.94; //~-0.2dB to nearly match ClipOnly and ClipOnly2
+		} wasPosClipR = false;
+		if (inputSampleR>0.9085097) {wasPosClipR=true;inputSampleR=(0.9085097*noise)+(lastSampleR*(1.0-noise));}
+		if (wasNegClipR == true) { //current will be -over
+			if (inputSampleR > lastSampleR) lastSampleR=(-0.9085097*noise)+(inputSampleR*(1.0-noise));
+			else lastSampleR = -0.94;
+		} wasNegClipR = false;
+		if (inputSampleR<-0.9085097) {wasNegClipR=true;inputSampleR=(-0.9085097*noise)+(lastSampleR*(1.0-noise));}
+		slewR[spacing*2] = fabs(lastSampleR-inputSampleR);
+		for (int x = spacing*2; x > 0; x--) slewR[x-1] = slewR[x];
+		intermediateR[spacing] = inputSampleR; inputSampleR = lastSampleR;
+		//latency is however many samples equals one 44.1k sample
+		for (int x = spacing; x > 0; x--) {intermediateR[x-1] = intermediateR[x];} lastSampleR = intermediateR[0];
+		if (wasPosClipR || wasNegClipR) {
+			for (int x = spacing; x > 0; x--) lastSampleR += intermediateR[x];
+			lastSampleR /= spacing;
+		} finalSlew = 0.0;
+		for (int x = spacing*2; x >= 0; x--) if (finalSlew < slewR[x]) finalSlew = slewR[x];
+		postclip = 0.94 / (1.0+(finalSlew*1.3986013));
+		if (inputSampleR > postclip) inputSampleR = postclip; if (inputSampleR < -postclip) inputSampleR = -postclip;
+		//end ClipOnly3 as a little, compressed chunk that can be dropped into code
 		
 		//begin 64 bit stereo floating point dither
 		//int expon; frexp((double)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		//inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//frexp((double)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
-		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 1.1e-44l * pow(2,expon+62));
+		if (fpdL-fpdR < 1073741824 || fpdR-fpdL < 1073741824) {
+			fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;}
+		//inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 64 bit stereo floating point dither
 		
 		*out1 = inputSampleL;
