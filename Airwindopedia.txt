@@ -47,7 +47,7 @@ Tape: ToTape9, TapeHack2, ToTape8, ToTape7, ToTape6, FromTape, TapeHack, Tape, I
 
 Tone Color: WoodenBox, BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
+Utility: SoftClock3, SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
 
 XYZ Filters: ZAcidLowpass, ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -3541,7 +3541,7 @@ If you count the number of Airwindows reverbs, even just the ones with 'k' in fr
 
 And still, the best discoveries are the accidents.
 
-kCyberCity sounded, from the first, like rainy neon dsytopian futurism. Which is to say, it screamed 'Blade Runner', but it doesn't actually have a Lexicon algorithm in it… it's way more complex than that. It sounded like what I imagine Blade Runner sounded like. Specifically, I got a sense not of a big room, but of rainy city streets, washes of echo return, a particular sheen that felt like neon reflections on pavement sounds.
+kCyberCity sounded, from the first, like rainy neon dystopian futurism. Which is to say, it screamed 'Blade Runner', but it doesn't actually have a Lexicon algorithm in it… it's way more complex than that. It sounded like what I imagine Blade Runner sounded like. Specifically, I got a sense not of a big room, but of rainy city streets, washes of echo return, a particular sheen that felt like neon reflections on pavement sounds.
 
 But what really helped (in more practical terms) was developing a 'room tone' method that involved not only feeding 'VoiceOfTheStarship' noise into only the regeneration part of the reverb, but also coming up with a way to modulate that, where before I'd tried things like 'Discontinuity' in that position. What I got was special: where I got a hot intense sound in a reverb like kGuitarHall2, this time I got the ability to disrupt the deep reverb field as if listening into a live environment, with wind and atmosphere. And two separate ways to manipulate that, for defining the apparent size of the reverb space and for defining how still (or un-still) the air was in there. Oh, and also a feedback nonlinearity that tweaks the whole character of the space.
 
@@ -5277,6 +5277,26 @@ And then if you want to be really annoying you can lay down SoftClock with whate
 Cheat. Start with Tuple in 4 to lay down the main riff, and then elsewhere in the arrange window, do a separate pass with Tuple set to 7. It'll be quite a bit faster. Groove whatever you want to that, get a good snippet, and then fly that over to the middle of your 4 groove… and it will line up perfectly with the notes you did in 4, because Tuple is just as accurate in 7 as it is in 4. It'll do the math for you, so you can construct all sorts of peculiar things but make them groove like anything.
 
 Play with it, have fun. There's no wrong way to use this, and you don't have to make it over-fancy. It's just able to scale up to the most unreasonable things and make them seem like you have amazing powers of odd-time-having. The best part is, you do it all playing live to the wobbling tone in SoftClock, so it won't seem artificial. Just kind of alien :)
+
+############ SoftClock3 is a groove-oriented time reference.
+
+You might or might not have heard of the first SoftClock. It came out shortly after I'd developed it because people desperately wanted to play with it, and before I was able to use it much. (still can't, too busy with plugins.) It's the metronome made of waving, wobbling tones where the beat is always a swoop of a (mostly) sine wave that goes up to a high point. Inspired by a joke metronome of dog woofs that proved strangely inspiring to play along to, SoftClock is the machine tempo with perfect regularity but no actual beat, where you have to place the 'click' of your notes wherever it SEEMS to be.
+
+Version 3 is largely about taking SoftClock in a strange direction where it builds in Airwindows theories about tempo from 2020, and designs its wobbly guide sound around them, producing distinct wobbles based on what sort of tempo node you're using.
+
+But what on earth is a tempo node? Well, in practical terms it's the thing that took away the whole 'big beat' and 'snare pocket' and 'speed' controls, replacing them all with ONE control that is simply 'Flavor'. Set 'flavor' to zero, and you get a simple repeating pitch-waver to guide your tempo. It is not a 'click' but you'll find it easy to sync up to it because the pitch-waver sounds like moving your body feels, and you can set a tempo by its regularity. The beat is where you feel the beat is. The waver is perfectly regular, so it doesn't drift.
+
+Set 'flavor' to 0.5, or even more, and things start getting a lot more interesting.
+
+That's because this 'node' concept of tempo covers a lot of bases. You can have 'relaxed' nodes where the groove mustn't be too rigid or strenuous. You can have 'tense' nodes where it's positively brittle, loaded with energy. There's nodes that amp up the relaxed energy until it's an infectuous groove… or nodes that take the relaxed energy and hang back, sneaking in attitude until the groove swaggers. It's a continuum of groove, cycling between serene ease and jittery edginess, and it wraps around and around rising tempo like a barber-pole from the slowest to the fastest tempos. One of the Airwindows fans, Bo Danerius, worked out the algorithm and shared it, after I made a post outlining the theory: math webpages can do things like that given scatter-plots of data, and I'd sorted a whole bunch of hit records into these categories.
+
+And now, SoftClock3 does it automatically: just set the tempo and it AUTOMATICALLY applies the speed, swing and wobble settings to deliver the correct pitch-wobble for whatever that tempo is. No guesswork. It even helps you tune in exact tempos for a song or riff: if you're near the ideal setting, it's likely that one direction will be ramping up speed and tension, and the other direction will slow the wavering and calm the energy. Either of these directions could be either faster tempo or slower: depends what node you're already at. It ought to be a very natural way to find the correct tempo for whatever you like, by roughing in the general region and then exploring until SoftClock moves the way you need the song to move. Use the Flavor control to govern the amount of character that should be applied to the tempo: full relaxed or full tense don't have swing, but groove and swagger do, and they're adjusted by the amount of Flavor.
+
+If all this sounds like complete madness, that is perfectly fine. It's experimentation. We can't all go 'tell me what plugin you want and I'll have AI make you one'. Some of us gotta deal with getting these big ideas, and pursuing where they lead, sometimes for years. It's been six years since I posted the first thoughts on this stuff. SoftClock already existed. Why not run with the combination of all these things, and see what it does?
+
+SoftClock3 is a groove-oriented time reference. It's pursuing various theories nobody else has, in hopes of making a kind of 'click' that so perfectly represents entrainment (the way musicians feel time) that it can not only lock people in effortlessly, but also lead them towards the perfect tempo, through exaggerating the flavor of that tempo until it's impossible to miss.
+
+If it works, we can all discover a new thing together… and lay down some momentous grooves of all flavors and varieties. :)
 
 ############ SoftGate is a gate that can mute hiss and smooth sample tails.
 
