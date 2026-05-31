@@ -47,7 +47,7 @@ Tape: ToTape9, TapeHack2, ToTape8, ToTape7, ToTape6, FromTape, TapeHack, Tape, I
 
 Tone Color: WoodenBox, BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: SoftClock3, SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
+Utility: SoftClock3, SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, BitDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
 
 XYZ Filters: ZAcidLowpass, ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -586,6 +586,24 @@ Here’s another utility plugin! This is the same as BiquadDouble, except it’s
 It’s for if you wanted to get steeper filter slopes without the cutoff going resonant. This, like BiquadDouble, is very much ‘tools to make tools’, for if you’re mocking up some kind of effect and know you’re going to be using filters. You can test out what you’ll use in your effect, this way. Note: seems like the inv/dry/wet is really just wet/dry/wet, and I have too many new and more worthwhile plugins to put out to fuss over it so I’d advise just taking BiquadTriple as it is. I’d be using it as full-wet anyway though you can bleed in dry for more of a shelf effect if you’re doing a steep rolloff of some kind.
 
 I expect to be doing some more variations on this as there are known ways to stack filters where the Q factors are very specific and staggered: however, those will be more aimed at the mixer/end user, and probably will be called isolators (that being a common term for this type of steep crossover-like filter). And again, I’ve got other things to put out that are more interesting, so more will be revealed as I do those experiments. I think an Airwindows isolator-style effect would be good. Bear in mind the biquads can be fussy about extreme settings and moving the sliders abruptly.
+
+############ BitDualPan is dual pan that's almost BitShiftGain.
+
+This is by request, and also a sort of experiment.
+
+There's a PurestDualPan already. It's out, it's free, it's yours. There is also a BitShiftPan, which is a lot like BitShiftGain except you can control the sides independently. The first, PurestDualPan, is simply a dual pan in long double precision and dithered to the audio buss. This is unreasonable overkill but I've always been fine with that. I'm trying to get a sound and only have bits to work with. So in the 'bit' versions, they manage to get the sound of 'utterly pristine and undiminished' through gain changes by applying simple gain changes but only in 6dB increments.
+
+In floating point, whether it's 32 bit or 64 bit double precision, if you do that something special happens. A floating point number has two parts: a mantissa and an exponent. The mantissa is literally a tiny chunk of fixed point audio data (well, unless it's just math data, but the same thing applies). The exponent? That's how loud to play the first chunk. All the 'bit' plugins do is alter only the exponent, and pass through the mantissa untouched. Perfect audio… in 6.08dB increments.
+
+For BitDualPan, that's what you get… almost.
+
+If you leave the sides hard-panned, the mantissas are untouched. If you swap the sides, same deal! If you set one side, or the other, to zero (silence) and then do anything at all with the other side, same deal. And then, if you pan in the sides (in 6dB increments, still) and leave both audible, that means both sides will be altered. They're added together, so they're a floating point add from two sources both of which were bit-shift gain staged, meaning the mantissa will be altered, and that means… what?
+
+I honestly don't know. I'm sure I don't have the nicest playback system of anybody who uses my plugins, or the best ear: I'm just willing to try stuff and this becomes a new form of minimal processing. Instead of dithered multiplies, it's summing a couple of floating-point inputs in such a way that there is only an add, nothing else. It's certainly not gonna be any worse than any ordinary DAW summing, but does it gain anything from setting up the source audio so both sources are the exact mantissa of the input channels? It reduces the whole thing to a single add (per channel) and no multiplies, which are normally what you see in this sort of thing.
+
+If you feel this one, use it in good spirits. It manages to cut the digital math to an absolute minimum but then apply it in a way I don't often see, and it sits in the 'dual pan' role that I've long overlooked. And it uses the mechanic the Bit plugins enjoy: when you're not touching the mantissa, you also don't dither because the output's already perfect. So, BitDualPan also doesn't floating-point dither, to see if there's a sound that comes out of the only mechanic being a floating-point add.
+
+I'll get right back to plugins that have more going on. There's only so much you can do with 'what is the sound of one floating point add per channel?' But here you are, to compare with PurestDualPan. Now you can pick whichever you like best :)
 
 ############ Bite is an unusual edge-maker.
 
