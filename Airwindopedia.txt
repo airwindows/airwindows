@@ -21,7 +21,7 @@ Clipping: ADClip9, ClipOnly3, ADClip8, ClipOnly2, ClipSoftly, OneCornerClip, ADC
 
 Consoles: Console9Buss, Console9Channel, ConsoleLABuss, ConsoleLAChannel, ConsoleMCBuss, ConsoleMCChannel, ConsoleMDBuss, ConsoleMDChannel, Console8LiteChannel, Console8LiteBuss, Console8BussHype, Console8BussIn, Console8BussOut, Console8ChannelHype, Console8ChannelIn, Console8ChannelOut, Console8SubHype, Console8SubIn, Console8SubOut, Console0Channel, Console0Buss, PurestConsole3Buss, PurestConsole3Channel, PurestConsole2Buss, PurestConsole2Channel, Console7Buss, Console7Channel, Console7Cascade, Console7Crunch, PurestConsoleBuss, PurestConsoleChannel,Console6Buss, Console6Channel, PDBuss, PDChannel, Console5Buss, Console5Channel, Console5DarkCh, C5RawBuss, C5RawChannel, AtmosphereBuss, AtmosphereChannel, Console4Buss, Console4Channel, EveryConsole
 
-Distortion: Distortion, Edge, Dirt, Mackity, ZOutputStage, Density2, Zoom, Density, Drive, Loud, Hard Vacuum, HighImpact, MultiBandDistortion
+Distortion: Distortion, Edge, Dirt, Mackity, Density3, ZOutputStage, Density2, Zoom, Density, Drive, Loud, Hard Vacuum, HighImpact, MultiBandDistortion
 
 Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither, NotJustAnotherCD, Beam, TapeDither, SpatializeDither, VinylDither, DoublePaul, Ditherbox, BuildATPDF, NodeDither, StudioTan, DitherMeTimbers, DitherMeDiskers, RawTimbers, RawGlitters, NaturalizeDither, HighGlossDither, DitherFloat
 
@@ -1870,6 +1870,20 @@ Density’s one of the better utility plugins. It’s there to reshape tones in 
 So in the absence of somebody coming forth and saying ‘this is on my quadrillion selling hit record’… weirder things have happened, occasionally to me… you should consider this as an alternate tone for Density. It’s been around for a while, but people wanted to see it again: specifically, to see it run on modern machines and in VST and so on. How could I say no? I’ve altered it as little as possible: there were always some weird things about it, but I refactored it to retain EVERYTHING unintentional or unusual. I gave it modern Airwindows handling of denormalized numbers, and it dithers to floating point instead of using the noise shaping to floating point that I used back then. Everything else is just as it was: no ‘fixing’ or making it do what I ‘meant to do’.
 
 …this is on somebody's quadrillion selling hit record. I'm still not going to tell you who, or how they used it. <3
+
+############ Density3 refines Density to keep up with recent developments.
+
+This secret weapon's seen a little fine-tuning.
+
+Density's one of my first plugins. Its power is in using sin() based overdrive combined with a very gentle highpass, one that can dial back the amount of saturation on heavy basses… while allowing it through anyhow using the dry/wet control. It's an incredible dirt-shaper for refined work.
+
+But what if it used the technique from PurestSaturation? That's Density3: finally an upgrade.
+
+But there's more! Turns out the negative Density range enjoys a change too: it blended better with a phase-flip. I could have known it needed one, except nobody constructs inverse saturations like this, as it doesn't seem like a useful sound. Until you take advantage of its gatey qualities to dial in tone, between -1 and 0, that keeps the nature of the tone the same but dries up its quieter regions, as subtly as you'd like.
+
+This is out because another dev I know was looking into Density2, and wanting to shoot it out against his own algorithms. I said, just so you know, there's a Density3 and it's on the github repository, it's just not out yet.
+
+Now it is :)
 
 ############ DeRez is an analog-style bit and sample rate crusher with continuous adjustments. This entry includes the Patreon blurb from mid-2018, because the things it says about the build systems, what they target and why I'm doing it, are still relevant today. That makes that stuff its own sort of Airwindowspedia entry as part of the DeRez entry.
 
