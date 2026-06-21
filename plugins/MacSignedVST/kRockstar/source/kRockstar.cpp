@@ -14,7 +14,8 @@ kRockstar::kRockstar(audioMasterCallback audioMaster) :
 {
 	A = 0.5;
 	B = 1.0;
-	C = 0.5;
+	C = 1.0;
+	D = 0.5;
 
 	for(int x = 0; x < d3A+2; x++) {a3AL[x] = 0.0; a3AR[x] = 0.0;}
 	for(int x = 0; x < d3B+2; x++) {a3BL[x] = 0.0; a3BR[x] = 0.0;}
@@ -143,6 +144,7 @@ VstInt32 kRockstar::getChunk (void** data, bool isPreset)
 	chunkData[0] = A;
 	chunkData[1] = B;
 	chunkData[2] = C;
+	chunkData[3] = D;
 	/* Note: The way this is set up, it will break if you manage to save settings on an Intel
 	 machine and load them on a PPC Mac. However, it's fine if you stick to the machine you 
 	 started with. */
@@ -157,6 +159,7 @@ VstInt32 kRockstar::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	A = pinParameter(chunkData[0]);
 	B = pinParameter(chunkData[1]);
 	C = pinParameter(chunkData[2]);
+	D = pinParameter(chunkData[3]);
 	/* We're ignoring byteSize as we found it to be a filthy liar */
 	
 	/* calculate any other fields you need here - you could copy in 
@@ -169,6 +172,7 @@ void kRockstar::setParameter(VstInt32 index, float value) {
         case kParamA: A = value; break;
         case kParamB: B = value; break;
         case kParamC: C = value; break;
+        case kParamD: D = value; break;
         default: throw; // unknown parameter, shouldn't happen!
     }
 }
@@ -178,6 +182,7 @@ float kRockstar::getParameter(VstInt32 index) {
         case kParamA: return A; break;
         case kParamB: return B; break;
         case kParamC: return C; break;
+        case kParamD: return D; break;
         default: break; // unknown parameter, shouldn't happen!
     } return 0.0; //we only need to update the relevant name, this is simple to manage
 }
@@ -186,7 +191,8 @@ void kRockstar::getParameterName(VstInt32 index, char *text) {
     switch (index) {
         case kParamA: vst_strncpy (text, "Regen", kVstMaxParamStrLen); break;
 		case kParamB: vst_strncpy (text, "Positin", kVstMaxParamStrLen); break;
-		case kParamC: vst_strncpy (text, "Dry/Wet", kVstMaxParamStrLen); break;
+		case kParamC: vst_strncpy (text, "DownRez", kVstMaxParamStrLen); break;
+		case kParamD: vst_strncpy (text, "Dry/Wet", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }
@@ -196,6 +202,7 @@ void kRockstar::getParameterDisplay(VstInt32 index, char *text) {
         case kParamA: float2string (A, text, kVstMaxParamStrLen); break;
         case kParamB: float2string (B, text, kVstMaxParamStrLen); break;
         case kParamC: float2string (C, text, kVstMaxParamStrLen); break;
+        case kParamD: float2string (D, text, kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
 	} //this displays the values and handles 'popups' where it's discrete choices
 }
@@ -205,6 +212,7 @@ void kRockstar::getParameterLabel(VstInt32 index, char *text) {
         case kParamA: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamB: vst_strncpy (text, "", kVstMaxParamStrLen); break;
         case kParamC: vst_strncpy (text, "", kVstMaxParamStrLen); break;
+        case kParamD: vst_strncpy (text, "", kVstMaxParamStrLen); break;
 		default: break; // unknown parameter, shouldn't happen!
     }
 }

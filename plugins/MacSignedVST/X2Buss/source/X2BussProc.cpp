@@ -143,12 +143,12 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 	double bezRez = pow(1.0-I, 12.360679774997898) / overallscale;
 	bezRez = fmin(fmax(bezRez,0.00001),1.0);
 	int stepped = 999999; if (bezRez > 0.000001) stepped = (int)(1.0/bezRez);
-	bezRez = 1.0 / stepped;
+	bezRez = 0.99999999 / stepped;
 	double bezTrim = 1.0-(bezRez*((double)stepped/(stepped+1.0)));
 	double sloRez = pow(1.0-I,10.0) / overallscale;
 	sloRez = fmin(fmax(sloRez,0.00001),1.0);
 	stepped = 999999; if (sloRez > 0.000001) stepped = (int)(1.0/sloRez);
-	sloRez = 1.0 / stepped;
+	sloRez = 0.99999999 / stepped;
 	double sloTrim = 1.0-(sloRez*((double)stepped/(stepped+1.0)));
 	//Dynamics2
 	
@@ -302,14 +302,12 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			inputSampleL *= ((bezCThresh*0.5)+1.0);
 			inputSampleR *= ((bezCThresh*0.5)+1.0);
 		}
-		
 		bezCompF[bez_cycle] += bezRez;
 		bezCompF[bez_SampL] += (fabs(inputSampleL) * bezRez);
 		bezCompF[bez_SampR] += (fabs(inputSampleR) * bezRez);
 		bezMaxF = fmax(bezMaxF,fmax(fabs(inputSampleL),fabs(inputSampleR)));
-		
-		if (bezCompF[bez_cycle] > 1.0) {
-			bezCompF[bez_cycle] -= 1.0;
+		if (bezCompF[bez_cycle] > bezTrim) {
+			bezCompF[bez_cycle] = 0.0;
 			bezCompF[bez_CL] = bezCompF[bez_BL];
 			bezCompF[bez_BL] = bezCompF[bez_AL];
 			bezCompF[bez_AL] = bezCompF[bez_SampL];
@@ -323,9 +321,8 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 		bezCompS[bez_cycle] += sloRez;
 		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage
 		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
-		
-		if (bezCompS[bez_cycle] > 1.0) {
-			bezCompS[bez_cycle] -= 1.0;
+		if (bezCompS[bez_cycle] > sloTrim) {
+			bezCompS[bez_cycle] = 0.0;
 			bezCompS[bez_CL] = bezCompS[bez_BL];
 			bezCompS[bez_BL] = bezCompS[bez_AL];
 			bezCompS[bez_AL] = bezCompS[bez_SampL];
@@ -335,21 +332,15 @@ void X2Buss::processReplacing(float **inputs, float **outputs, VstInt32 sampleFr
 			bezCompS[bez_AR] = bezCompS[bez_SampR];
 			bezCompS[bez_SampR] = 0.0;
 		}
-		double X = bezCompF[bez_cycle]*bezTrim;
-		double CBAFL = bezCompF[bez_BL]+(bezCompF[bez_CL]*(1.0-X)*(1.0-X))+(bezCompF[bez_BL]*2.0*(1.0-X)*X)+(bezCompF[bez_AL]*X*X);
-		CBAFL *= 0.5;
-		X = bezCompS[bez_cycle]*sloTrim;
-		double CBASL = bezCompS[bez_BL]+(bezCompS[bez_CL]*(1.0-X)*(1.0-X))+(bezCompS[bez_BL]*2.0*(1.0-X)*X)+(bezCompS[bez_AL]*X*X);
-		CBASL *= 0.5;
+		double X = bezCompF[bez_cycle];
+		double CBAFL = (bezCompF[bez_BL]+(bezCompF[bez_CL]*(1.0-X)*(1.0-X))+(bezCompF[bez_BL]*2.0*(1.0-X)*X)+(bezCompF[bez_AL]*X*X))*0.5;
+		double CBAFR = (bezCompF[bez_BR]+(bezCompF[bez_CR]*(1.0-X)*(1.0-X))+(bezCompF[bez_BR]*2.0*(1.0-X)*X)+(bezCompF[bez_AR]*X*X))*0.5;
+		X = bezCompS[bez_cycle];
+		double CBASL = (bezCompS[bez_BL]+(bezCompS[bez_CL]*(1.0-X)*(1.0-X))+(bezCompS[bez_BL]*2.0*(1.0-X)*X)+(bezCompS[bez_AL]*X*X))*0.5;
+		double CBASR = (bezCompS[bez_BR]+(bezCompS[bez_CR]*(1.0-X)*(1.0-X))+(bezCompS[bez_BR]*2.0*(1.0-X)*X)+(bezCompS[bez_AR]*X*X))*0.5;
 		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		X = bezCompF[bez_cycle]*bezTrim;
-		double CBAFR = bezCompF[bez_BR]+(bezCompF[bez_CR]*(1.0-X)*(1.0-X))+(bezCompF[bez_BR]*2.0*(1.0-X)*X)+(bezCompF[bez_AR]*X*X);
-		CBAFR *= 0.5;
-		X = bezCompS[bez_cycle]*sloTrim;
-		double CBASR = bezCompS[bez_BR]+(bezCompS[bez_CR]*(1.0-X)*(1.0-X))+(bezCompS[bez_BR]*2.0*(1.0-X)*X)+(bezCompS[bez_AR]*X*X);
-		CBASR *= 0.5;
 		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));
@@ -568,12 +559,12 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 	double bezRez = pow(1.0-I, 12.360679774997898) / overallscale;
 	bezRez = fmin(fmax(bezRez,0.00001),1.0);
 	int stepped = 999999; if (bezRez > 0.000001) stepped = (int)(1.0/bezRez);
-	bezRez = 1.0 / stepped;
+	bezRez = 0.99999999 / stepped;
 	double bezTrim = 1.0-(bezRez*((double)stepped/(stepped+1.0)));
 	double sloRez = pow(1.0-I,10.0) / overallscale;
 	sloRez = fmin(fmax(sloRez,0.00001),1.0);
 	stepped = 999999; if (sloRez > 0.000001) stepped = (int)(1.0/sloRez);
-	sloRez = 1.0 / stepped;
+	sloRez = 0.99999999 / stepped;
 	double sloTrim = 1.0-(sloRez*((double)stepped/(stepped+1.0)));
 	//Dynamics2
 	
@@ -737,14 +728,12 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			inputSampleL *= ((bezCThresh*0.5)+1.0);
 			inputSampleR *= ((bezCThresh*0.5)+1.0);
 		}
-		
 		bezCompF[bez_cycle] += bezRez;
 		bezCompF[bez_SampL] += (fabs(inputSampleL) * bezRez);
 		bezCompF[bez_SampR] += (fabs(inputSampleR) * bezRez);
 		bezMaxF = fmax(bezMaxF,fmax(fabs(inputSampleL),fabs(inputSampleR)));
-		
-		if (bezCompF[bez_cycle] > 1.0) {
-			bezCompF[bez_cycle] -= 1.0;
+		if (bezCompF[bez_cycle] > bezTrim) {
+			bezCompF[bez_cycle] = 0.0;
 			bezCompF[bez_CL] = bezCompF[bez_BL];
 			bezCompF[bez_BL] = bezCompF[bez_AL];
 			bezCompF[bez_AL] = bezCompF[bez_SampL];
@@ -758,9 +747,8 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 		bezCompS[bez_cycle] += sloRez;
 		bezCompS[bez_SampL] += (fabs(inputSampleL) * sloRez); //note: SampL is a control voltage
 		bezCompS[bez_SampR] += (fabs(inputSampleR) * sloRez); //note: SampR is a control voltage
-		
-		if (bezCompS[bez_cycle] > 1.0) {
-			bezCompS[bez_cycle] -= 1.0;
+		if (bezCompS[bez_cycle] > sloTrim) {
+			bezCompS[bez_cycle] = 0.0;
 			bezCompS[bez_CL] = bezCompS[bez_BL];
 			bezCompS[bez_BL] = bezCompS[bez_AL];
 			bezCompS[bez_AL] = bezCompS[bez_SampL];
@@ -770,21 +758,15 @@ void X2Buss::processDoubleReplacing(double **inputs, double **outputs, VstInt32 
 			bezCompS[bez_AR] = bezCompS[bez_SampR];
 			bezCompS[bez_SampR] = 0.0;
 		}
-		double X = bezCompF[bez_cycle]*bezTrim;
-		double CBAFL = bezCompF[bez_BL]+(bezCompF[bez_CL]*(1.0-X)*(1.0-X))+(bezCompF[bez_BL]*2.0*(1.0-X)*X)+(bezCompF[bez_AL]*X*X);
-		CBAFL *= 0.5;
-		X = bezCompS[bez_cycle]*sloTrim;
-		double CBASL = bezCompS[bez_BL]+(bezCompS[bez_CL]*(1.0-X)*(1.0-X))+(bezCompS[bez_BL]*2.0*(1.0-X)*X)+(bezCompS[bez_AL]*X*X);
-		CBASL *= 0.5;
+		double X = bezCompF[bez_cycle];
+		double CBAFL = (bezCompF[bez_BL]+(bezCompF[bez_CL]*(1.0-X)*(1.0-X))+(bezCompF[bez_BL]*2.0*(1.0-X)*X)+(bezCompF[bez_AL]*X*X))*0.5;
+		double CBAFR = (bezCompF[bez_BR]+(bezCompF[bez_CR]*(1.0-X)*(1.0-X))+(bezCompF[bez_BR]*2.0*(1.0-X)*X)+(bezCompF[bez_AR]*X*X))*0.5;
+		X = bezCompS[bez_cycle];
+		double CBASL = (bezCompS[bez_BL]+(bezCompS[bez_CL]*(1.0-X)*(1.0-X))+(bezCompS[bez_BL]*2.0*(1.0-X)*X)+(bezCompS[bez_AL]*X*X))*0.5;
+		double CBASR = (bezCompS[bez_BR]+(bezCompS[bez_CR]*(1.0-X)*(1.0-X))+(bezCompS[bez_BR]*2.0*(1.0-X)*X)+(bezCompS[bez_AR]*X*X))*0.5;
 		double CBAMax = fmax(CBASL,CBAFL); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		double CBAFade = ((CBASL*-CBAMax)+(CBAFL*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleL *= 1.0-(fmin(((CBASL*(1.0-CBAFade))+(CBAFL*CBAFade))*bezCThresh,1.0));
-		X = bezCompF[bez_cycle]*bezTrim;
-		double CBAFR = bezCompF[bez_BR]+(bezCompF[bez_CR]*(1.0-X)*(1.0-X))+(bezCompF[bez_BR]*2.0*(1.0-X)*X)+(bezCompF[bez_AR]*X*X);
-		CBAFR *= 0.5;
-		X = bezCompS[bez_cycle]*sloTrim;
-		double CBASR = bezCompS[bez_BR]+(bezCompS[bez_CR]*(1.0-X)*(1.0-X))+(bezCompS[bez_BR]*2.0*(1.0-X)*X)+(bezCompS[bez_AR]*X*X);
-		CBASR *= 0.5;
 		CBAMax = fmax(CBASR,CBAFR); if (CBAMax > 0.0) CBAMax = 1.0/CBAMax;
 		CBAFade = ((CBASR*-CBAMax)+(CBAFR*CBAMax)+1.0)*0.5;
 		if (bezCThresh > 0.0) inputSampleR *= 1.0-(fmin(((CBASR*(1.0-CBAFade))+(CBAFR*CBAFade))*bezCThresh,1.0));

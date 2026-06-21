@@ -62,6 +62,7 @@ kRockstar::kRockstar(AudioUnit component)
 	SetParameter(kParam_A, kDefaultValue_ParamA );
 	SetParameter(kParam_B, kDefaultValue_ParamB );
 	SetParameter(kParam_C, kDefaultValue_ParamC );
+	SetParameter(kParam_D, kDefaultValue_ParamD );
          
 #if AU_DEBUG_DISPATCHER
 	mDebugDispatcher = new AUDebugDispatcher (this);
@@ -119,7 +120,14 @@ ComponentResult			kRockstar::GetParameterInfo(AudioUnitScope		inScope,
                 outParameterInfo.maxValue = 1.0;
                 outParameterInfo.defaultValue = kDefaultValue_ParamC;
                 break;
-           default:
+            case kParam_D:
+                AUBase::FillInParameterName (outParameterInfo, kParameterDName, false);
+                outParameterInfo.unit = kAudioUnitParameterUnit_Generic;
+                outParameterInfo.minValue = 0.0;
+                outParameterInfo.maxValue = 1.0;
+                outParameterInfo.defaultValue = kDefaultValue_ParamD;
+                break;
+			default:
                 result = kAudioUnitErr_InvalidParameter;
                 break;
             }
@@ -299,21 +307,23 @@ OSStatus		kRockstar::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 	Float32 * outputR = (Float32*)(outBuffer.mBuffers[1].mData);
 	UInt32 nSampleFrames = inFramesToProcess;
 	double overallscale = 1.0;
-	overallscale /= 44100.0;
+	overallscale /= 48000.0; //special case for the reverbs: optimizes for downRez
 	overallscale *= GetSampleRate();
 	int slewsing = floor(overallscale*2.0);
 	if (slewsing < 2) slewsing = 2; if (slewsing > 32) slewsing = 32;	
 	double reg6n = (1.0-pow(1.0-GetParameter( kParam_A ),2.0))*0.0013425;
 	double regenMax = 0.0013425;
-	double derez = 1.0;
-	derez = fmin(fmax(derez/overallscale,0.0005),1.0);
-	int bezFraction = (int)(1.0/derez);
-	double bezTrim = (double)bezFraction/(bezFraction+1.0);
-	derez = 1.0 / bezFraction;
-	bezTrim = 1.0-(derez*bezTrim);
-	
 	int start = (int)(GetParameter( kParam_B ) * 27.0);
-	double wet = GetParameter( kParam_C );
+	
+	double downRez = ((GetParameter( kParam_C )*(overallscale/(overallscale+0.99999)))/overallscale);
+	downRez = fmin(fmax(downRez,0.0005),1.0/overallscale);
+	
+	int bezFraction = (int)(1.0/downRez);
+	double bezTrim = (double)bezFraction/(bezFraction+1.0);
+	downRez = 0.99999999 / bezFraction;
+	bezTrim = 1.0-(downRez*bezTrim);
+	
+	double wet = GetParameter( kParam_D );
 	
 	while (nSampleFrames-- > 0) {
 		double inputSampleL = *inputL;
@@ -323,10 +333,10 @@ OSStatus		kRockstar::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
-		bez[bez_cycle] += derez;
-		bez[bez_SampL] += (inputSampleL * derez);
-		bez[bez_SampR] += (inputSampleR * derez);
-		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
+		bez[bez_cycle] += downRez;
+		bez[bez_SampL] += (inputSampleL * downRez);
+		bez[bez_SampR] += (inputSampleR * downRez);
+		if (bez[bez_cycle] > bezTrim) { //hit the end point and we do a reverb sample
 			bez[bez_cycle] = 0.0;
 			
 			double earlyFloor = fabs(inputSampleL) + fabs(inputSampleR);
@@ -784,7 +794,7 @@ OSStatus		kRockstar::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 			bez[bez_AR] = inputSampleR;
 			bez[bez_SampR] = 0.0;
 		}
-		double X = bez[bez_cycle]*bezTrim;
+		double X = bez[bez_cycle];
 		inputSampleL = (bez[bez_BL]+(bez[bez_CL]*(1.0-X)*(1.0-X))+(bez[bez_BL]*2.0*(1.0-X)*X)+(bez[bez_AL]*X*X))*-0.0625;
 		inputSampleR = (bez[bez_BR]+(bez[bez_CR]*(1.0-X)*(1.0-X))+(bez[bez_BR]*2.0*(1.0-X)*X)+(bez[bez_AR]*X*X))*-0.0625;
 		
@@ -833,12 +843,12 @@ OSStatus		kRockstar::ProcessBufferLists(AudioUnitRenderActionFlags & ioActionFla
 		//begin 32 bit stereo floating point dither
 		int expon; frexpf((float)inputSampleL, &expon);
 		fpdL ^= fpdL << 13; fpdL ^= fpdL >> 17; fpdL ^= fpdL << 5;
-		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleL += ((double(fpdL)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		frexpf((float)inputSampleR, &expon);
 		fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;
 		if (fpdL-fpdR < 1073741824 || fpdR-fpdL < 1073741824) {
 			fpdR ^= fpdR << 13; fpdR ^= fpdR >> 17; fpdR ^= fpdR << 5;}
-		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 5.5e-36l * pow(2,expon+62));
+		inputSampleR += ((double(fpdR)-uint32_t(0x7fffffff)) * 3.553e-44l * pow(2,expon+62));
 		//end 32 bit stereo floating point dither
 		
 		*outputL = inputSampleL;

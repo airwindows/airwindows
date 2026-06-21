@@ -14,23 +14,24 @@ void kRockstar::processReplacing(float **inputs, float **outputs, VstInt32 sampl
     float* out1 = outputs[0];
     float* out2 = outputs[1];
 
-	VstInt32 inFramesToProcess = sampleFrames; //vst doesn't give us this as a separate variable so we'll make it
 	double overallscale = 1.0;
-	overallscale /= 44100.0;
+	overallscale /= 48000.0;
 	overallscale *= getSampleRate();
 	int slewsing = floor(overallscale*2.0);
 	if (slewsing < 2) slewsing = 2; if (slewsing > 32) slewsing = 32;	
 	double reg6n = (1.0-pow(1.0-A,3.0))*0.0013425;
 	double regenMax = 0.0013425;
-	double derez = 1.0;
-	derez = fmin(fmax(derez/overallscale,0.0005),1.0);
-	int bezFraction = (int)(1.0/derez);
-	double bezTrim = (double)bezFraction/(bezFraction+1.0);
-	derez = 1.0 / bezFraction;
-	bezTrim = 1.0-(derez*bezTrim);
-	
 	int start = (int)(B * 27.0);
-	double wet = C;
+	
+	double downRez = ((C*(overallscale/(overallscale+0.99999)))/overallscale);
+	downRez = fmin(fmax(downRez,0.0005),1.0/overallscale);
+	
+	int bezFraction = (int)(1.0/downRez);
+	double bezTrim = (double)bezFraction/(bezFraction+1.0);
+	downRez = 0.99999999 / bezFraction;
+	bezTrim = 1.0-(downRez*bezTrim);
+	
+	double wet = D;
 	
     while (--sampleFrames >= 0)
     {
@@ -41,10 +42,10 @@ void kRockstar::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
-		bez[bez_cycle] += derez;
-		bez[bez_SampL] += (inputSampleL * derez);
-		bez[bez_SampR] += (inputSampleR * derez);
-		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
+		bez[bez_cycle] += downRez;
+		bez[bez_SampL] += (inputSampleL * downRez);
+		bez[bez_SampR] += (inputSampleR * downRez);
+		if (bez[bez_cycle] > bezTrim) { //hit the end point and we do a reverb sample
 			bez[bez_cycle] = 0.0;
 			
 			double earlyFloor = fabs(inputSampleL) + fabs(inputSampleR);
@@ -502,7 +503,7 @@ void kRockstar::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 			bez[bez_AR] = inputSampleR;
 			bez[bez_SampR] = 0.0;
 		}
-		double X = bez[bez_cycle]*bezTrim;
+		double X = bez[bez_cycle];
 		inputSampleL = (bez[bez_BL]+(bez[bez_CL]*(1.0-X)*(1.0-X))+(bez[bez_BL]*2.0*(1.0-X)*X)+(bez[bez_AL]*X*X))*-0.0625;
 		inputSampleR = (bez[bez_BR]+(bez[bez_CR]*(1.0-X)*(1.0-X))+(bez[bez_BR]*2.0*(1.0-X)*X)+(bez[bez_AR]*X*X))*-0.0625;
 		
@@ -575,24 +576,25 @@ void kRockstar::processDoubleReplacing(double **inputs, double **outputs, VstInt
     double* in2  =  inputs[1];
     double* out1 = outputs[0];
     double* out2 = outputs[1];
-
-	VstInt32 inFramesToProcess = sampleFrames; //vst doesn't give us this as a separate variable so we'll make it
+	
 	double overallscale = 1.0;
-	overallscale /= 44100.0;
+	overallscale /= 48000.0;
 	overallscale *= getSampleRate();
 	int slewsing = floor(overallscale*2.0);
 	if (slewsing < 2) slewsing = 2; if (slewsing > 32) slewsing = 32;	
 	double reg6n = (1.0-pow(1.0-A,3.0))*0.0013425;
 	double regenMax = 0.0013425;
-	double derez = 1.0;
-	derez = fmin(fmax(derez/overallscale,0.0005),1.0);
-	int bezFraction = (int)(1.0/derez);
-	double bezTrim = (double)bezFraction/(bezFraction+1.0);
-	derez = 1.0 / bezFraction;
-	bezTrim = 1.0-(derez*bezTrim);
-	
 	int start = (int)(B * 27.0);
-	double wet = C;
+	
+	double downRez = ((C*(overallscale/(overallscale+0.99999)))/overallscale);
+	downRez = fmin(fmax(downRez,0.0005),1.0/overallscale);
+	
+	int bezFraction = (int)(1.0/downRez);
+	double bezTrim = (double)bezFraction/(bezFraction+1.0);
+	downRez = 0.99999999 / bezFraction;
+	bezTrim = 1.0-(downRez*bezTrim);
+	
+	double wet = D;
 	
     while (--sampleFrames >= 0)
     {
@@ -603,10 +605,10 @@ void kRockstar::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		double drySampleL = inputSampleL;
 		double drySampleR = inputSampleR;
 		
-		bez[bez_cycle] += derez;
-		bez[bez_SampL] += (inputSampleL * derez);
-		bez[bez_SampR] += (inputSampleR * derez);
-		if (bez[bez_cycle] > 1.0) { //hit the end point and we do a reverb sample
+		bez[bez_cycle] += downRez;
+		bez[bez_SampL] += (inputSampleL * downRez);
+		bez[bez_SampR] += (inputSampleR * downRez);
+		if (bez[bez_cycle] > bezTrim) { //hit the end point and we do a reverb sample
 			bez[bez_cycle] = 0.0;
 			
 			double earlyFloor = fabs(inputSampleL) + fabs(inputSampleR);
@@ -1064,7 +1066,7 @@ void kRockstar::processDoubleReplacing(double **inputs, double **outputs, VstInt
 			bez[bez_AR] = inputSampleR;
 			bez[bez_SampR] = 0.0;
 		}
-		double X = bez[bez_cycle]*bezTrim;
+		double X = bez[bez_cycle];
 		inputSampleL = (bez[bez_BL]+(bez[bez_CL]*(1.0-X)*(1.0-X))+(bez[bez_BL]*2.0*(1.0-X)*X)+(bez[bez_AL]*X*X))*-0.0625;
 		inputSampleR = (bez[bez_BR]+(bez[bez_CR]*(1.0-X)*(1.0-X))+(bez[bez_BR]*2.0*(1.0-X)*X)+(bez[bez_AR]*X*X))*-0.0625;
 		

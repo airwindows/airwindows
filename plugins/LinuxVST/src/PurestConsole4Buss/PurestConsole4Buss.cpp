@@ -14,7 +14,7 @@ PurestConsole4Buss::PurestConsole4Buss(audioMasterCallback audioMaster) :
 {
 	SMO = 0.5;
 	PAN = 0.5;
-	FAD = 0.5;
+	FAD = 1.0;
 
 	for (int x = 0; x < bezier_total; x++) bezier[x] = 0.0;
 

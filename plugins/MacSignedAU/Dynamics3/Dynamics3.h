@@ -62,7 +62,7 @@ static const float kDefaultValue_ParamD = 1.0;
 static CFStringRef kParameterAName = CFSTR("Thresh");
 static CFStringRef kParameterBName = CFSTR("Attack");
 static CFStringRef kParameterCName = CFSTR("Release");
-static CFStringRef kParameterDName = CFSTR("Dry/Wet");
+static CFStringRef kParameterDName = CFSTR("Inv/Wet");
 
 enum {
 	kParam_A =0,

@@ -56,18 +56,21 @@
 // parameters
 static const float kDefaultValue_ParamA = 0.5;
 static const float kDefaultValue_ParamB = 1.0;
-static const float kDefaultValue_ParamC = 0.5;
+static const float kDefaultValue_ParamC = 1.0;
+static const float kDefaultValue_ParamD = 0.5;
 
 static CFStringRef kParameterAName = CFSTR("Regen");
 static CFStringRef kParameterBName = CFSTR("Positin");
-static CFStringRef kParameterCName = CFSTR("Dry/Wet");
+static CFStringRef kParameterCName = CFSTR("DownRez");
+static CFStringRef kParameterDName = CFSTR("Dry/Wet");
 
 enum {
 	kParam_A =0,
 	kParam_B =1,
 	kParam_C =2,
+	kParam_D =3,
 	//Add your parameters here...
-	kNumberOfParameters=3
+	kNumberOfParameters=4
 };
 
 const int d3A = 1090; const int d3B = 1682; const int d3C = 1695;

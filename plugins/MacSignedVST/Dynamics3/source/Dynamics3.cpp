@@ -104,7 +104,7 @@ void Dynamics3::getParameterName(VstInt32 index, char *text) {
         case kParamA: vst_strncpy (text, "Thresh", kVstMaxParamStrLen); break;
 		case kParamB: vst_strncpy (text, "Attack", kVstMaxParamStrLen); break;
 		case kParamC: vst_strncpy (text, "Release", kVstMaxParamStrLen); break;
-		case kParamD: vst_strncpy (text, "Dry/Wet", kVstMaxParamStrLen); break;
+		case kParamD: vst_strncpy (text, "Inv/Wet", kVstMaxParamStrLen); break;
         default: break; // unknown parameter, shouldn't happen!
     } //this is our labels for displaying in the VST host
 }

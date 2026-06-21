@@ -19,7 +19,7 @@ void PurestConsole4Buss::processReplacing(float **inputs, float **outputs, VstIn
 	overallscale *= getSampleRate();
 	
 	double bezierRez = fmax(pow((1.0-SMO)*0.25,3.0)/overallscale,0.00001); 
-	int stepped = 999999; if (bezierRez > 0.000001) stepped = (int)(1.0/bezierRez); bezierRez = 1.0/stepped;
+	int stepped = 999999; if (bezierRez > 0.000001) stepped = (int)(1.0/bezierRez); bezierRez = 0.99999999/stepped;
 	double bezierTrim = 1.0-(bezierRez*((double)stepped/(stepped+1.0)));
 	//manages the overall Bezier control smoothing system plugin-wide and feed all controls
 	//into bezier[] as just 0-1 values, unprocessed. do it IN the control smoothing engine
@@ -60,22 +60,18 @@ void PurestConsole4Buss::processReplacing(float **inputs, float **outputs, VstIn
 		//retain mantissa of a long double increasing power function
 		//long double probably doesn't handle more than 36 digits or so
 		
-		
 		//begin Bezier control smoothing engine
 		bezier[bezier_cycle] += bezierRez;
-		if (bezier[bezier_cycle] > 1.0) {bezier[bezier_cycle] = 0.0;
+		if (bezier[bezier_cycle] > bezierTrim) {bezier[bezier_cycle] = 0.0;
 			bezier[bezierGainL_C] = bezier[bezierGainL_B]; bezier[bezierGainL_B] = bezier[bezierGainL_A];
 			bezier[bezierGainR_C] = bezier[bezierGainR_B]; bezier[bezierGainR_B] = bezier[bezierGainR_A];
 			//one of these bucket brigade lines for every smoothed control
 			//begin expensive control calculations
-			double gain = FAD*2.0;
-			if (gain > 1.0) gain *= gain;
-			if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-			gain *= 0.763932022500211;
+			double gain = pow(FAD,2.0)*1.414213562373094; //Pan will pad this
 			bezier[bezierGainL_A] = gain*sin(M_PI_2-(PAN*M_PI_2));
 			bezier[bezierGainR_A] = gain*sin(PAN*M_PI_2);
 			//end expensive control calculations
-		} double lerp = bezier[bezier_cycle]*bezierTrim;
+		} double lerp = bezier[bezier_cycle];
 		bezier[bezierGainL_Out] = bezier[bezierGainL_B]+(bezier[bezierGainL_C]*(1.0-lerp)*(1.0-lerp))+(bezier[bezierGainL_B]*2.0*(1.0-lerp)*lerp)+(bezier[bezierGainL_A]*lerp*lerp);
 		bezier[bezierGainR_Out] = bezier[bezierGainR_B]+(bezier[bezierGainR_C]*(1.0-lerp)*(1.0-lerp))+(bezier[bezierGainR_B]*2.0*(1.0-lerp)*lerp)+(bezier[bezierGainR_A]*lerp*lerp);
 		//end Bezier control smoothing engine
@@ -115,7 +111,7 @@ void PurestConsole4Buss::processDoubleReplacing(double **inputs, double **output
 	overallscale *= getSampleRate();
 	
 	double bezierRez = fmax(pow((1.0-SMO)*0.25,3.0)/overallscale,0.00001); 
-	int stepped = 999999; if (bezierRez > 0.000001) stepped = (int)(1.0/bezierRez); bezierRez = 1.0/stepped;
+	int stepped = 999999; if (bezierRez > 0.000001) stepped = (int)(1.0/bezierRez); bezierRez = 0.99999999/stepped;
 	double bezierTrim = 1.0-(bezierRez*((double)stepped/(stepped+1.0)));
 	//manages the overall Bezier control smoothing system plugin-wide and feed all controls
 	//into bezier[] as just 0-1 values, unprocessed. do it IN the control smoothing engine
@@ -159,19 +155,16 @@ void PurestConsole4Buss::processDoubleReplacing(double **inputs, double **output
 		
 		//begin Bezier control smoothing engine
 		bezier[bezier_cycle] += bezierRez;
-		if (bezier[bezier_cycle] > 1.0) {bezier[bezier_cycle] = 0.0;
+		if (bezier[bezier_cycle] > bezierTrim) {bezier[bezier_cycle] = 0.0;
 			bezier[bezierGainL_C] = bezier[bezierGainL_B]; bezier[bezierGainL_B] = bezier[bezierGainL_A];
 			bezier[bezierGainR_C] = bezier[bezierGainR_B]; bezier[bezierGainR_B] = bezier[bezierGainR_A];
 			//one of these bucket brigade lines for every smoothed control
 			//begin expensive control calculations
-			double gain = FAD*2.0;
-			if (gain > 1.0) gain *= gain;
-			if (gain < 1.0) gain = 1.0-pow(1.0-gain,2);
-			gain *= 0.763932022500211;
+			double gain = pow(FAD,2.0)*1.414213562373094; //Pan will pad this
 			bezier[bezierGainL_A] = gain*sin(M_PI_2-(PAN*M_PI_2));
 			bezier[bezierGainR_A] = gain*sin(PAN*M_PI_2);
 			//end expensive control calculations
-		} double lerp = bezier[bezier_cycle]*bezierTrim;
+		} double lerp = bezier[bezier_cycle];
 		bezier[bezierGainL_Out] = bezier[bezierGainL_B]+(bezier[bezierGainL_C]*(1.0-lerp)*(1.0-lerp))+(bezier[bezierGainL_B]*2.0*(1.0-lerp)*lerp)+(bezier[bezierGainL_A]*lerp*lerp);
 		bezier[bezierGainR_Out] = bezier[bezierGainR_B]+(bezier[bezierGainR_C]*(1.0-lerp)*(1.0-lerp))+(bezier[bezierGainR_B]*2.0*(1.0-lerp)*lerp)+(bezier[bezierGainR_A]*lerp*lerp);
 		//end Bezier control smoothing engine

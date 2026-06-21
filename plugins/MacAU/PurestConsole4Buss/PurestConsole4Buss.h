@@ -56,7 +56,7 @@
 // parameters
 static const float kDefaultValue_ParamSMO = 0.5;
 static const float kDefaultValue_ParamPAN = 0.5;
-static const float kDefaultValue_ParamFAD = 0.5;
+static const float kDefaultValue_ParamFAD = 1.0;
 
 static CFStringRef kParameterSMOName = CFSTR("Smooth");
 static CFStringRef kParameterPANName = CFSTR("Pan");
