@@ -47,7 +47,7 @@ Tape: ToTape9, TapeHack2, ToTape8, ToTape7, ToTape6, FromTape, TapeHack, Tape, I
 
 Tone Color: WoodenBox, BussColors4, Channel9, Apicolypse, Neverland, Elation, Calibre, Cider, Crystal, Precious, Luxor, Channel8, Channel7, Channel6, Channel5, Channel4
 
-Utility: SoftClock3, SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, BitDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
+Utility: SoftClock3, SoftClock2, SoftClock, BitShiftPan, BitShiftGain, PurestGain, PurestDualPan, BitDualPan, PurestFade, Monitoring3, Monitoring2, Monitoring, EveryTrim, HermeTrim, DubPlate2, DubPlate, CansAW, Cans, SlewOnly, SubsOnly, PeaksOnly, Golem, DCVoltage, LRConvolve3, LRConvolve2, LRConvolve, EdIsDim, MidSide, uLawEncode, uLawDecode, RightoMono, LeftoMono, Balanced, Flipity, MoNoam, VoiceTrick, DeCrackle, ContentHideD
 
 XYZ Filters: ZAcidLowpass, ZBandpass2, ZHighpass2, ZLowpass2, ZNotch2, ZRegion2, ZBandpass, ZHighpass, ZLowpass, ZNotch, ZRegion, YBandpass, YNotBandpass, YHighpass, YNotHighpass, YLowpass, YNotLowpass, YNotch, YNotNotch, XBandpass. XHighpass, XLowpass, XNotch, XRegion
 
@@ -3885,6 +3885,18 @@ I don't remove plugins that work, so this doesn't replace LRConvolve (I'm not su
 But when you run more typical sounds against each other (rather than using something predictable like a full-amplitude sine), suddenly a whole new behavior emerges. Turns out, if you reduce Soar on this algorithm and have two sounds convolving each other, there's a full range of behavior between 'mostly choked out' and 'hypercompressed and exaggerated'! This will also apply to some extent to SquareRoot, except that LRConvolve2 highlights the behavior because more sounds will be forced into the 'quiet' zone where Soar operates.
 
 For that reason, it might come in handy just sussing out how the algorithm works as it's used in SquareRoot: or, using it like the original LRConvolve but with additional tonal control that's unique to what that plugin is. I'm working on other plugins such as the Bezier-curve compressor for ConsoleH, plus a wild project (sort of an art project) around making literal buotique stompboxes, so if this isn't the plugin for you, wait a week and I'll make another :)
+
+############ LRConvolve3 gates one channel by the other, roughly or cleanly.
+
+So the LRConvolve plugins are all audio manglers, capable of doing awful things to a sound, or turning an innocent voice into the Swedish Chef just by inverting that voice at audio rates. It's inherent to the convolution that you can flip the phase of a sound with another sound, and this is where things get most gnarly, even if you're convolving stuff with simple sine tones.
+
+But what if you wanted to do that, but cleanly?
+
+Well, there's degrees of 'cleanly', but LRConvolve3 exists to sit alongside the other two, looking cute, for when the full convolution is just too intense. And it does just that: the same, but 'cleanly'. How? You pick one of the sides, and full-wave rectify it. There's another control simply named 'smooth' (not the same as the Bezier control-smoothers I've been coming up with, this is from the same time I was doing the original LRConvolve) and all it does is add a time constant, turning your sound from full-wave rectified into basically an envelope that decays.
+
+And that's all you need to get the effect of 'one side turns into the gate for the other', either responding very crisply with Smooth turned all the way down, or using Smooth to make it a trigger input for the gating of the other. I demo it on a guitar taking the shape of drums, and then on a racecar fly-by also taking the shape of drums. You'll probably look to more percussive sounds to supply the gating, but you can do whatever you like: for instance, do something extra through passing a sustained chord on the 'sound' side, and then routing a bass part or whatever into the gate, and you've got some extra overtones that are attached to the bass part and follow its attacks and dynamics. Or a drum spot mic, or a literal timing click: if you have to stretch a too-brief sound, that's what Smooth is for.
+
+While I work on more glamorous and dramatic plugins, it's nice to drop a little widget that just does what it's supposed to. Hope if it ever finds a need, it comes in handy. Like many utilities, LRConvolve3 could find many surprising uses, and it's nice how it ties its effects so completely to other sounds you have around. That helps make each use unique :)
 
 ############ LRFlipTimer is a utility that swaps Left with Right every few (1-10) minutes.
 
