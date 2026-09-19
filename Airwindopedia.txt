@@ -35,7 +35,7 @@ Lo-Fi: DeRez4, DeBez, HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, Gr
 
 Noise: DeNoise, Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kRockstar, kCyberCity, kWoodRoom, kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb, Ultralight
+Reverb: kRockstar, kCyberCity, kWoodRoom, kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Ultralight2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb, Ultralight
 
 Saturation: PurestSaturation, SquareRoot, Hypersoft, Longhand, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -6439,6 +6439,34 @@ Predlay is the predelay, in samples, and goes from 0 (1 for the AU) to 4096, whi
 Dry/Wet is the reverb (there are no early reflections) and works as usual, except that in Ultralight…
 
 Distnce is the distance high frequency attentuation, just like in FastDistance, and runs AFTER dry/wet so you can hear what a sound, its predelay, and its reverb, sound like in a game engine with all of them far away from you. That's because, like my earlier plugin VerbSixes, this plugin is the tool I use to audition possible 4x4 reverbs to add to the game engine. I paste in the new values in the header file, build it, and do a sound example to hear what it did. Especially when dialing in settings, that's helpful. Again, this is NOT really meant for musician or mix use, though if you must run a reverb on impossibly potato hardware, this might save you :)
+
+############ Ultralight2 is more of the most low-CPU matrix reverb I can make.
+
+This plugin continues work I'm doing, trying to make working demos of ideas for the Godot game engine.
+
+Much like FastDistance is a filter that (when not pushed to really heavy attenuation of brightness) is way more efficient than using a DF1 biquad filter, Ultralight2 is a reverb that's way more efficient than using any of my other reverbs. Why? Because it's extremely limited. There's nearly nothing to it, just a 4x4 Householder matrix and some tone shaping and a teeny allpass chain that runs in parallel to the predelay.
+
+Why? Because I want to put dozens, maybe hundreds of them, into a game… and have the game still run and have room for graphics and gameplay.
+
+This would involve placing them as ultrasimple mono instances, each with its own delay times and settings, in a scene. They'd all get fed all of the sounds in the scene, and then your environment would be composed of all the distinct spaces sounding off at once.
+
+The controls have changed a bit! I had to do a bugfix on Ultralight anyway (redownload it if you want the tone shaping to work fully as intended). Now, rather than making part of the first delays turn into allpasses, I did further experimenting. No wonder I never liked allpasses, they sound awful unless the delay time is so quick it's inside the 'Haas effect' region where really rapid echoes blur and merge… without that, they're useless. Now all the matrix delays are normal reverb delays (which also means they can run even faster in SIMD) and then there's another thing that goes in front…
+
+Turns out you can use exactly the same sequence of operations to do an allpass, and a simple delay line. THAT means it can be SIMD (single instruction, multiple data). And it turns out if you set these things up right (never mind loops, just do things in fours) compilers really do optimize for them if they can. I learned that when some AMD users on retro machines got wildly worse performance than they should: your processor has to at least be able to do vector processing on 32-bit floats to run Ultralight or Ultralight2. Anything half recent ought to do it, though I'm interested in exceptions (I don't think stuff compiled on the Pi will be using SIMD).
+
+So now there's Damping (same as RT60, but more damping means less sustain), but if you turn Damping to zero, rather than getting infinite sustain, now you get zero reverb… just only the predelay, dry/wet, and the allpasses. So Ultralight2 can also be used as a blurry slapback.
+
+Then there's unSolid and unRflec, which are the highpass and lowpass like they are in Ultralight. But there are changes here too… unSolid is the highpass, where if you turn it up the decay gets brighter and you lose bass through the walls. However, the frequencies are a bit different than they are in Ultralight. unRflec is the lowpass, like in Ultralight, where I've fixed a simple bug and re-uploaded it (it's just the next week, be aware that's happened and consider it an Ultralight Redux). However, with Ultralight, these things go from 0 to 4, incrementally adding stages of the feedback path into the filtering, and using the same paths: for Ultralight they count down from 4 which is the least filtered, and they pick the same paths so choosing 3 on both means that path is both highpassed and lowpassed.
+
+For Ultralight2, you set it to 0 for no filtering, and 1 to filter only one path… but they come from opposite directions. So, if you set the filters to 2 and 2, you've just put a filter on every path, but only one. If you pick 1 and 3, or 3 and 1, same deal: you've affected all the feedback, but in different ways. 4 and 4 gives you full highpassing and lowpassing on every path, and so on. I just found that it sounded better that way.
+
+You can also set the predelay to 0 and then there's no allpassing. Each part of the reverb can be individually bypassed, just in case.
+
+Dry/Wet is the reverb (there are no early reflections) and works as usual, except that in Ultralight2…
+
+Distnce is the distance high frequency attentuation, just like in FastDistance, and runs AFTER dry/wet so you can hear what a sound, its predelay, and its reverb, sound like in a game engine with all of them far away from you. That's because, like my earlier plugin VerbSixes, this plugin is the tool I use to audition possible 4x4 reverbs to add to the game engine. I paste in the new values in the header file, build it, and do a sound example to hear what it did. Especially when dialing in settings, that's helpful. Again, this is NOT really meant for musician or mix use, though if you must run a reverb on impossibly potato hardware (that can do SIMD), this might save you.
+
+I think this will hold me with low-CPU verbs for now. I've got big things in store for the flagship reverbs: turns out there's a kind of matrix for 6x6es that's way better than Householder, which is optimal for stuff like these 4x4s. So this work has led to some nice advances in Airwindows-land :)
 
 ############ Ultrasonic is a very clean, plain, high quality supersonic filter, for using inside digital mixes.
 

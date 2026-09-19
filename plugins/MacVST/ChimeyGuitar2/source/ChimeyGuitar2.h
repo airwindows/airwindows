@@ -72,8 +72,8 @@ private:
     float I;
     float J;
 	
-	double angSL[18][12];
-	double angAL[18][12];
+	double angSL[22][12];
+	double angAL[22][12];
 	double iirHPositionL[37];
 	double iirHAngleL[37];
 	double iirBPositionL[37];
@@ -81,8 +81,8 @@ private:
 	double muCompL;
 	double muSpdL;
 	
-	double angSR[18][12];
-	double angAR[18][12];
+	double angSR[22][12];
+	double angAR[22][12];
 	double iirHPositionR[37];
 	double iirHAngleR[37];
 	double iirBPositionR[37];

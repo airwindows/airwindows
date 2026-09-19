@@ -394,7 +394,7 @@ void		Ultralight::UltralightKernel::Process(	const Float32 	*inSourceP,
 				case 2:
 					fC = (fC+flC)*0.5f; flC = fC;
 				case 3:
-					fD = (fD+flC)*0.5f; flD = fD;
+					fD = (fD+flD)*0.5f; flD = fD;
 				case 4:
 					break; //This applies ALL processing
 					//after the starting point, meaning the

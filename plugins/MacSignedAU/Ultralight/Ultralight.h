@@ -82,9 +82,9 @@ enum {
 	kNumberOfParameters=7
 };
 
+
 const int d4A = 17; const int d4B = 1832; const int d4C = 1189; const int d4D = 1207; const int d4E = 172; const int d4F = 1740; const int d4G = 165; const int d4H = 43; const int d4I = 47; const int d4J = 53; const int d4K = 644; const int d4L = 61; const int d4M = 67; const int d4N = 71; const int d4O = 73; const int d4P = 79; //3 to 97 ms, 305 seat club Ultralight
 // 305seat3DFE on 2026-8-27
-
 //const int d4Q = 5; const int d4R = 4; const int d4S = 4; const int d4T = 4; const int d4U = 2800;
 const int predelay = 4097;
 

@@ -213,8 +213,8 @@ void Ultralight::processReplacing(float **inputs, float **outputs, VstInt32 samp
 					fCL = (fCL+flCL)*0.5f; flCL = fCL;
 					fCR = (fCR+flCR)*0.5f; flCR = fCR;
 				case 3:
-					fDL = (fDL+flCL)*0.5f; flDL = fDL;
-					fDR = (fDR+flCR)*0.5f; flDR = fDR;
+					fDL = (fDL+flDL)*0.5f; flDL = fDL;
+					fDR = (fDR+flDR)*0.5f; flDR = fDR;
 				case 4:
 					break; //This applies ALL processing
 					//after the starting point, meaning the
@@ -732,8 +732,8 @@ void Ultralight::processDoubleReplacing(double **inputs, double **outputs, VstIn
 					fCL = (fCL+flCL)*0.5f; flCL = fCL;
 					fCR = (fCR+flCR)*0.5f; flCR = fCR;
 				case 3:
-					fDL = (fDL+flCL)*0.5f; flDL = fDL;
-					fDR = (fDR+flCR)*0.5f; flDR = fDR;
+					fDL = (fDL+flDL)*0.5f; flDL = fDL;
+					fDR = (fDR+flDR)*0.5f; flDR = fDR;
 				case 4:
 					break; //This applies ALL processing
 					//after the starting point, meaning the
