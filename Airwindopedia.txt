@@ -31,11 +31,11 @@ Effects: TakeCare, RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disin
 
 Filter: FastDistance, BezEQ3, Suzan, SmoothEQ3, PearEQ, PearLiteEQ, RetroBass, FatEQ, SmoothEQ2, BezEQ2, SmoothEQ, Parametric, Dattorro, Donut, Silken, Stonefire, AngleEQ, AngleFilter, Isolator3, BezEQ, Baxandall3, Baxandall2, Baxandall, Pear2, Capacitor2, Distance3, Pear, ResEQ2, SubTight, CStrip2, Weight, Isolator2, Kalman, PrimeFIR, Holt2, Holt, ToneSlant, AverMatrix, Average, MackEQ, Hull2, Hull, EQ, Capacitor, Isolator, TapeFat, ResEQ, Lowpass2, Highpass2, Distance, Distance2, Lowpass, Highpass
 
-Lo-Fi: Derez5, DeRez4, DeBez, HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
+Lo-Fi: DeRez5, DeRez4, DeBez, HipCrush, Flutter2, DeRez3, Pockey2, CrunchyGrooveWear, GrooveWear, Pockey, Flutter, DeRez2, BitGlitter, DeRez, TapeBias, ChromeOxide, Cojones, Vibrato, Bite, Deckwrecka, DustBunny
 
 Noise: DeNoise, Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, ElectroHat, Silhouette, TapeDust
 
-Reverb: kRockstar2, kCyberCity, kWoodRoom, kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kRockstar, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Ultralight2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb, Ultralight
+Reverb: VerbSevens, kRockstar2, kCyberCity, kWoodRoom, kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kRockstar, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Ultralight2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb, Ultralight
 
 Saturation: PurestSaturation, SquareRoot, Hypersoft, Longhand, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
@@ -6622,6 +6622,26 @@ But if you extend the reverb tail in Verbity2, it's a hybrid. For each channel, 
 There are also adjustments to tone control: the Darkness control is replaced with a control for Mulch. This is meant to be a kind of naturalness factor: Verbity, like Galactic, tends to hang on to thunderous bass, as if it expands into huge caverns. Mulch means the sound can darken, but it can also absorb some of the extreme lows, mimicking a physical room made out of wood and plaster, not stone or concrete. I should be able to expand on this a lot.
 
 So Verbity2 is a new level of reverb realism from me. Looking forward to further developments of this!
+
+############ VerbSevens is a calibrated reference reverb plugin for reverb matrices.
+
+Here's a tool I use often, updated to keep pace with where my development's been heading.
+
+For years now, I've been developing reverbs along specific lines. I've never been a fan of allpass filters, unless they're MV (my take on a classic bloom effect that's made only out of allpass filters). I think they're smeary and don't actually sound deep, just blurred. I want to be able to make reverbs out of only comb filters, out of only delays, because that's what real reverbs are made of: you just can't have that many echoes, so people do their allpasses and other things to approximate the sound.
+
+But what if you could have that many echoes?
+
+A classic way to build up echo density is with a Householder matrix. It's 4x4 so you need sixteen delays, but you get 256 echoes from just those sixteen delays, and better still, you can run them all either directly or inverted with no other gain changes. You get a matrix where if you feed the output back into the input, it gives you infinite sustain without any frequency running away. And feedback multiplies the echoes more, so it can get super dense for you.
+
+But what about other matrixes? Turns out there's math for Householder matrices of all sizes. If you use 25 delays, you can make a 5x5 matrix, where some of the mixing paths are times 3 and some are times negative 2. That gives you 3125 echoes before feedback, which is a lot more. On the other hand, some of your reverb paths are louder than the others, but only somewhat. Then there's a 6x6 Householder matrix. There's math for it, but now the diagonal path is twice as loud as the other paths, undermining the effectiveness… but now you have 46,656 distinct echoes. Before feedback. What could be better than that? (and this can be heard in VerbSixes, by the way)
+
+Enter the Conference Matrix. It's a 6x6 matrix, and unlike the previous ones, it leaves out one summing path for each section. It's as if the diagonal path is zero: only five of the delay chains connect to the next stage. But it's always a different section being left out, so all the information does find its way through… and the big difference is, now all the paths are unity gain again, just with some of them phase-flipped in the manner of a 4x4 Householder matrix.
+
+When you combine one of those 6x6es with a Householder 4x4 to feed it, you're looking at close to 12 MILLION echoes before feedback… and the regeneration can be infinite without it running away. But VerbSevens is primarily designed to be a test-bed: feed any combination of delays into it and it'll show you what that does. It just happens to do double duty, as a sort of ginormous reverb pad. How does it sound when it's doing 12 million echoes over an enormous space?
+
+It sounds very nice. Because of the combination of the 4x4 and 6x6 I selected for it when you're not compiling it to test things, it works like VerbSixes did, VerbSixes had a few little tweaks intended to produce realistic deep-reverb sounds, though, and they could interact with certain tones in a way that made a noise. VerbSevens no longer tries to do anything of the sort… so it's a huge reverb, but also an unrealistic one, in that the highs don't die away or alter. It's just giant creamy space, turning any noise no matter how percussive into a total wash, and it now does that a lot better than VerbSixes ever could.
+
+Hope you like the new genre 'reverb and more reverb', because this is your plugin for making it :)
 
 ############ VerbSixes is a calibrated reference reverb plugin for Householder matrices.
 
