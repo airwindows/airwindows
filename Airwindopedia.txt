@@ -7,7 +7,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 # Categories
 
-Ambience: ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
+Ambience: Echojam, ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
 Amp Sims: ChimeyDeluxe, ChimeyGuitar2, Cabs2, PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
@@ -2562,6 +2562,24 @@ Dynamics3 has been getting revision after revision, to get it to this place: com
 Dyno is similar in some ways to Mojo, but Dyno has a completely different character. Instead of loudenating, it ‘intensenates’. It’s a little bit like Remap in that way, but it’s not the same as Remap. You won’t get a volume boost out of it really, nor will it let you slam it for fatter peaks.
 
 Instead, it brings fire and intensity to the audio and reshapes the waveform in a Mojo-like ‘evolution of Spiral’ way. Because it doesn’t take to slamming in the same way, it’s going to be a more subtle effect, but for those who got excited by Remap, this one deserves your attention.
+
+############ Echojam is an echo effect that is secretly a reverb.
+
+This doesn't have to be the guitar effect, but it totally can be!
+
+The idea is, do an echo effect like in many Pink Floyd, U2 etc etc. records, but instead of using a delay, use a strange failed reverb that gathers all the early delays into a single clump, like a slapback echo. This is because I started getting strange failed reverbs that were trying to be single echoes but blurring them. Rather than immediately fix it, I thought 'what if this could be echojam?'
+
+And it totally can.
+
+If you use a lot of regeneration, it will absolutely turn into a reverb watch. If you pick certain Select options (there are 17) you'll get a wild stereo effect, but it's no simple ping-pong. What you get is a scattering of 256 individual echoes not really lining up, not doing anything specific in stereo, but often doing very striking things in stereo.
+
+There is basically no proper speed control so that can't be adjusted. There is a speed control, but it's sample-locked Bezier undersampling, so it's got an okay tone (still a little odd when very undersampled) but there are only so many positions you can use. Not only that, there is no adjustment for sample rate this time, so you'll be setting it based on your sample rate meaning if you're at 96k (or 192k!) you'll have more speed options because they are subdivisions of the native sample rate. If you're at 44.1k you probably still have working echojam times on tap.
+
+Not only that, all the options have faintly different delay times because it works off the strange failed reverbs, not by design. So you have to echojam based on what you hear, because there's no specified tempo or even specific tempo: it's always some form of blur! A little like SoftClock, but in the form of an echojam.
+
+But if you can get it to gel, you've got a very lush spacey echojam that really fills up the space with detail, stereo event, and spatiality totally beyond a simple delay no matter how nice its texture is. And of course you can use it as a slapback (especially if you're at high sample rate and it can run real fast) or as a slow dark messy echo on something less rhythmic. You can even get it to do the trick where it makes a big roaring swoop up to a rhythmic sound at the (approximate) delay rate, and you'll be hard pressed to find a better choice for that… assuming you can get it to the right delay speed, or alternately tune your rhythmic thing until it matches Echojam.
+
+Echojam ought to be a lot of fun for those who know. And now you know :)
 
 ############ Edge is a seven-stage distortion with Hypersonic filtering and tone shaping controls.
 
