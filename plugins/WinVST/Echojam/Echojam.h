@@ -28,7 +28,7 @@ const int kNumInputs = 2;
 const int kNumOutputs = 2;
 const unsigned long kUniqueId = 'echo';    //Change this to what the AU identity is!
 
-const int d4A = 6654; const int d4B = 7450; const int d4C = 6906; const int d4D = 6650; 
+const int d4A = 6654; const int d4B = 7450; const int d4C = 6998; const int d4D = 6650; 
 const int d4E = 7136; const int d4F = 7198; const int d4G = 7253; const int d4H = 7221; 
 const int d4I = 7355; const int d4J = 4838; const int d4K = 7069; const int d4L = 7175; 
 const int d4M = 7307; const int d4N = 6819; const int d4O = 7104; const int d4P = 7443;
