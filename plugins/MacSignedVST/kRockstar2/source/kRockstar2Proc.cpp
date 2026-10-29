@@ -228,20 +228,20 @@ void kRockstar2::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			//and the scaling of roomNoiseR (as added to reg6n) is sqrt(wind MPH)*0.00002
 			//but check against pure tones, don't let it dirty them up too much!
 			f6BL += roomNoiseL;
-			a6AL[c6AL] = fma(f6BL,roomNoiseR,inputSampleL);
-			a6BL[c6BL] = fma(f6CL,roomNoiseR,inputSampleL);
-			a6CL[c6CL] = fma(f6DL,roomNoiseR,inputSampleL);
-			a6DL[c6DL] = fma(f6EL,roomNoiseR,inputSampleL);
-			a6EL[c6EL] = fma(f6FL,roomNoiseR,inputSampleL);
-			a6FL[c6FL] = fma(f6AL,roomNoiseR,inputSampleL);
+			a6AL[c6AL] = f6BL*roomNoiseR + inputSampleL;
+			a6BL[c6BL] = f6CL*roomNoiseR + inputSampleL;
+			a6CL[c6CL] = f6DL*roomNoiseR + inputSampleL;
+			a6DL[c6DL] = f6EL*roomNoiseR + inputSampleL;
+			a6EL[c6EL] = f6FL*roomNoiseR + inputSampleL;
+			a6FL[c6FL] = f6AL*roomNoiseR + inputSampleL;
 			
 			f6LR += roomNoiseL;
-			a6FR[c6FR] = fma(f6LR,roomNoiseR,inputSampleR);
-			a6LR[c6LR] = fma(f6RR,roomNoiseR,inputSampleR);
-			a6RR[c6RR] = fma(f6XR,roomNoiseR,inputSampleR);
-			a6XR[c6XR] = fma(f6ZER,roomNoiseR,inputSampleR);
-			a6ZER[c6ZER] = fma(f6ZKR,roomNoiseR,inputSampleR);
-			a6ZKR[c6ZKR] = fma(f6FR,roomNoiseR,inputSampleR);
+			a6FR[c6FR] = f6LR*roomNoiseR + inputSampleR;
+			a6LR[c6LR] = f6RR*roomNoiseR + inputSampleR;
+			a6RR[c6RR] = f6XR*roomNoiseR + inputSampleR;
+			a6XR[c6XR] = f6ZER*roomNoiseR + inputSampleR;
+			a6ZER[c6ZER] = f6ZKR*roomNoiseR + inputSampleR;
+			a6ZKR[c6ZKR] = f6FR*roomNoiseR + inputSampleR;
 			
 			//left verb
 			
@@ -916,20 +916,20 @@ void kRockstar2::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			//and the scaling of roomNoiseR (as added to reg6n) is sqrt(wind MPH)*0.00002
 			//but check against pure tones, don't let it dirty them up too much!
 			f6BL += roomNoiseL;
-			a6AL[c6AL] = fma(f6BL,roomNoiseR,inputSampleL);
-			a6BL[c6BL] = fma(f6CL,roomNoiseR,inputSampleL);
-			a6CL[c6CL] = fma(f6DL,roomNoiseR,inputSampleL);
-			a6DL[c6DL] = fma(f6EL,roomNoiseR,inputSampleL);
-			a6EL[c6EL] = fma(f6FL,roomNoiseR,inputSampleL);
-			a6FL[c6FL] = fma(f6AL,roomNoiseR,inputSampleL);
+			a6AL[c6AL] = f6BL*roomNoiseR + inputSampleL;
+			a6BL[c6BL] = f6CL*roomNoiseR + inputSampleL;
+			a6CL[c6CL] = f6DL*roomNoiseR + inputSampleL;
+			a6DL[c6DL] = f6EL*roomNoiseR + inputSampleL;
+			a6EL[c6EL] = f6FL*roomNoiseR + inputSampleL;
+			a6FL[c6FL] = f6AL*roomNoiseR + inputSampleL;
 			
 			f6LR += roomNoiseL;
-			a6FR[c6FR] = fma(f6LR,roomNoiseR,inputSampleR);
-			a6LR[c6LR] = fma(f6RR,roomNoiseR,inputSampleR);
-			a6RR[c6RR] = fma(f6XR,roomNoiseR,inputSampleR);
-			a6XR[c6XR] = fma(f6ZER,roomNoiseR,inputSampleR);
-			a6ZER[c6ZER] = fma(f6ZKR,roomNoiseR,inputSampleR);
-			a6ZKR[c6ZKR] = fma(f6FR,roomNoiseR,inputSampleR);
+			a6FR[c6FR] = f6LR*roomNoiseR + inputSampleR;
+			a6LR[c6LR] = f6RR*roomNoiseR + inputSampleR;
+			a6RR[c6RR] = f6XR*roomNoiseR + inputSampleR;
+			a6XR[c6XR] = f6ZER*roomNoiseR + inputSampleR;
+			a6ZER[c6ZER] = f6ZKR*roomNoiseR + inputSampleR;
+			a6ZKR[c6ZKR] = f6FR*roomNoiseR + inputSampleR;
 			
 			//left verb
 			

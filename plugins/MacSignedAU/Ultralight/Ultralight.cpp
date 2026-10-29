@@ -348,10 +348,10 @@ void		Ultralight::UltralightKernel::Process(	const Float32 	*inSourceP,
 				hD = aD[cD];
 			}
 			hE = -(hA + hB + hC + hD);
-			aE[cE] = fma(hA,2.0f,hE);
-			aF[cF] = fma(hB,2.0f,hE);
-			aG[cG] = fma(hC,2.0f,hE);
-			aH[cH] = fma(hD,2.0f,hE);
+			aE[cE] = hA*2.0f + hE;
+			aF[cF] = hB*2.0f + hE;
+			aG[cG] = hC*2.0f + hE;
+			aH[cH] = hD*2.0f + hE;
 			cE++; cF++; cG++; cH++;
 			if (cE > d4E) cE = 0;
 			if (cF > d4F) cF = 0;
@@ -359,10 +359,10 @@ void		Ultralight::UltralightKernel::Process(	const Float32 	*inSourceP,
 			if (cH > d4H) cH = 0;
 			hA = aE[cE]; hB = aF[cF]; hC = aG[cG]; hD = aH[cH];
 			hE = -(hA + hB + hC + hD);
-			aI[cI] = fma(hA,2.0f,hE);
-			aJ[cJ] = fma(hB,2.0f,hE);
-			aK[cK] = fma(hC,2.0f,hE);
-			aL[cL] = fma(hD,2.0f,hE);
+			aI[cI] = hA*2.0f + hE;
+			aJ[cJ] = hB*2.0f + hE;
+			aK[cK] = hC*2.0f + hE;
+			aL[cL] = hD*2.0f + hE;
 			cI++; cJ++; cK++; cL++;
 			if (cI > d4I) cI = 0;
 			if (cJ > d4J) cJ = 0;
@@ -370,10 +370,10 @@ void		Ultralight::UltralightKernel::Process(	const Float32 	*inSourceP,
 			if (cL > d4L) cL = 0;
 			hA = aI[cI]; hB = aJ[cJ]; hC = aK[cK]; hD = aL[cL];
 			hE = -(hA + hB + hC + hD);
-			aM[cM] = fma(hA,2.0f,hE);
-			aN[cN] = fma(hB,2.0f,hE);
-			aO[cO] = fma(hC,2.0f,hE);
-			aP[cP] = fma(hD,2.0f,hE);
+			aM[cM] = hA*2.0f + hE;
+			aN[cN] = hB*2.0f + hE;
+			aO[cO] = hC*2.0f + hE;
+			aP[cP] = hD*2.0f + hE;
 			cM++; cN++; cO++; cP++;
 			if (cM > d4M) cM = 0;
 			if (cN > d4N) cN = 0;
@@ -381,10 +381,10 @@ void		Ultralight::UltralightKernel::Process(	const Float32 	*inSourceP,
 			if (cP > d4P) cP = 0;
 			hA = aM[cM]; hB = aN[cN]; hC = aO[cO]; hD = aP[cP];
 			hE = -(hA + hB + hC + hD);
-			fA = fma(hA,2.0f,hE);				
-			fB = fma(hB,2.0f,hE);
-			fC = fma(hC,2.0f,hE);
-			fD = fma(hD,2.0f,hE);
+			fA = hA*2.0f + hE;				
+			fB = hB*2.0f + hE;
+			fC = hC*2.0f + hE;
+			fD = hD*2.0f + hE;
 			switch (reflect)
 			{
 				case 0:

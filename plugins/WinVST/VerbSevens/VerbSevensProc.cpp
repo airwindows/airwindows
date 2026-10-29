@@ -151,14 +151,14 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			
 #endif
 #ifdef FOURBYFOUR
-			a4AL[c4AL] = fma(f4AL,reg4n,inputSampleL);
-			a4BL[c4BL] = fma(f4BL,reg4n,inputSampleL);
-			a4CL[c4CL] = fma(f4CL,reg4n,inputSampleL);
-			a4DL[c4DL] = fma(f4DL,reg4n,inputSampleL);
-			a4DR[c4DR] = fma(f4DR,reg4n,inputSampleR);
-			a4HR[c4HR] = fma(f4HR,reg4n,inputSampleR);
-			a4LR[c4LR] = fma(f4LR,reg4n,inputSampleR);
-			a4PR[c4PR] = fma(f4PR,reg4n,inputSampleR);
+			a4AL[c4AL] = f4AL*reg4n + inputSampleL;
+			a4BL[c4BL] = f4BL*reg4n + inputSampleL;
+			a4CL[c4CL] = f4CL*reg4n + inputSampleL;
+			a4DL[c4DL] = f4DL*reg4n + inputSampleL;
+			a4DR[c4DR] = f4DR*reg4n + inputSampleR;
+			a4HR[c4HR] = f4HR*reg4n + inputSampleR;
+			a4LR[c4LR] = f4LR*reg4n + inputSampleR;
+			a4PR[c4PR] = f4PR*reg4n + inputSampleR;
 			c4AL++; c4BL++; c4CL++; c4DL++;
 			c4DR++; c4HR++; c4LR++; c4PR++;
 			if (c4AL > d4A) c4AL = 0;
@@ -173,14 +173,14 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			hAR = a4DR[c4DR]; hBR = a4HR[c4HR]; hCR = a4LR[c4LR]; hDR = a4PR[c4PR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			a4EL[c4EL] = fma(hAL,2.0f,hEL);
-			a4FL[c4FL] = fma(hBL,2.0f,hEL);
-			a4GL[c4GL] = fma(hCL,2.0f,hEL);
-			a4HL[c4HL] = fma(hDL,2.0f,hEL);
-			a4CR[c4CR] = fma(hAR,2.0f,hER);
-			a4GR[c4GR] = fma(hBR,2.0f,hER);
-			a4KR[c4KR] = fma(hCR,2.0f,hER);
-			a4OR[c4OR] = fma(hDR,2.0f,hER);
+			a4EL[c4EL] = hAL*2.0f + hEL;
+			a4FL[c4FL] = hBL*2.0f + hEL;
+			a4GL[c4GL] = hCL*2.0f + hEL;
+			a4HL[c4HL] = hDL*2.0f + hEL;
+			a4CR[c4CR] = hAR*2.0f + hER;
+			a4GR[c4GR] = hBR*2.0f + hER;
+			a4KR[c4KR] = hCR*2.0f + hER;
+			a4OR[c4OR] = hDR*2.0f + hER;
 			c4EL++; c4FL++; c4GL++; c4HL++;
 			c4CR++; c4GR++; c4KR++; c4OR++;
 			if (c4EL > d4E) c4EL = 0;
@@ -195,14 +195,14 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			hAR = a4CR[c4CR]; hBR = a4GR[c4GR]; hCR = a4KR[c4KR]; hDR = a4OR[c4OR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			a4IL[c4IL] = fma(hAL,2.0f,hEL);
-			a4JL[c4JL] = fma(hBL,2.0f,hEL);
-			a4KL[c4KL] = fma(hCL,2.0f,hEL);
-			a4LL[c4LL] = fma(hDL,2.0f,hEL);
-			a4BR[c4BR] = fma(hAR,2.0f,hER);
-			a4FR[c4FR] = fma(hBR,2.0f,hER);
-			a4JR[c4JR] = fma(hCR,2.0f,hER);
-			a4NR[c4NR] = fma(hDR,2.0f,hER);
+			a4IL[c4IL] = hAL*2.0f + hEL;
+			a4JL[c4JL] = hBL*2.0f + hEL;
+			a4KL[c4KL] = hCL*2.0f + hEL;
+			a4LL[c4LL] = hDL*2.0f + hEL;
+			a4BR[c4BR] = hAR*2.0f + hER;
+			a4FR[c4FR] = hBR*2.0f + hER;
+			a4JR[c4JR] = hCR*2.0f + hER;
+			a4NR[c4NR] = hDR*2.0f + hER;
 			c4IL++; c4JL++; c4KL++; c4LL++;
 			c4BR++; c4FR++; c4JR++; c4NR++;
 			if (c4IL > d4I) c4IL = 0;
@@ -217,14 +217,14 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			hAR = a4BR[c4BR]; hBR = a4FR[c4FR]; hCR = a4JR[c4JR]; hDR = a4NR[c4NR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			a4ML[c4ML] = fma(hAL,2.0f,hEL);
-			a4NL[c4NL] = fma(hBL,2.0f,hEL);
-			a4OL[c4OL] = fma(hCL,2.0f,hEL);
-			a4PL[c4PL] = fma(hDL,2.0f,hEL);
-			a4AR[c4AR] = fma(hAR,2.0f,hER);
-			a4ER[c4ER] = fma(hBR,2.0f,hER);
-			a4IR[c4IR] = fma(hCR,2.0f,hER);
-			a4MR[c4MR] = fma(hDR,2.0f,hER);
+			a4ML[c4ML] = hAL*2.0f + hEL;
+			a4NL[c4NL] = hBL*2.0f + hEL;
+			a4OL[c4OL] = hCL*2.0f + hEL;
+			a4PL[c4PL] = hDL*2.0f + hEL;
+			a4AR[c4AR] = hAR*2.0f + hER;
+			a4ER[c4ER] = hBR*2.0f + hER;
+			a4IR[c4IR] = hCR*2.0f + hER;
+			a4MR[c4MR] = hDR*2.0f + hER;
 			c4ML++; c4NL++; c4OL++; c4PL++;
 			c4AR++; c4ER++; c4IR++; c4MR++;
 			if (c4ML > d4M) c4ML = 0;
@@ -239,14 +239,14 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			hAR = a4AR[c4AR]; hBR = a4ER[c4ER]; hCR = a4IR[c4IR]; hDR = a4MR[c4MR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			f4AL = fma(hAR,2.0f,hER);				
-			f4BL = fma(hBR,2.0f,hER);
-			f4CL = fma(hCR,2.0f,hER);
-			f4DL = fma(hDR,2.0f,hER);
-			f4DR = fma(hAL,2.0f,hEL);				
-			f4HR = fma(hBL,2.0f,hEL);
-			f4LR = fma(hCL,2.0f,hEL);
-			f4PR = fma(hDL,2.0f,hEL);
+			f4AL = hAR*2.0f + hER;				
+			f4BL = hBR*2.0f + hER;
+			f4CL = hCR*2.0f + hER;
+			f4DL = hDR*2.0f + hER;
+			f4DR = hAL*2.0f + hEL;				
+			f4HR = hBL*2.0f + hEL;
+			f4LR = hCL*2.0f + hEL;
+			f4PR = hDL*2.0f + hEL;
 			inputSampleL = (hAL + hBL + hCL + hDL)*ga4n;
 			inputSampleR = (hAR + hBR + hCR + hDR)*ga4n;
 #endif
@@ -462,19 +462,19 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 #endif			
 #ifdef SIXBYSIX //instead of roomNoiseR, use reg6n
 			
-			a6AL[c6AL] = fma(f6BL,reg6n,inputSampleL);
-			a6BL[c6BL] = fma(f6CL,reg6n,inputSampleL);
-			a6CL[c6CL] = fma(f6DL,reg6n,inputSampleL);
-			a6DL[c6DL] = fma(f6EL,reg6n,inputSampleL);
-			a6EL[c6EL] = fma(f6FL,reg6n,inputSampleL);
-			a6FL[c6FL] = fma(f6AL,reg6n,inputSampleL);
+			a6AL[c6AL] = f6BL*reg6n + inputSampleL;
+			a6BL[c6BL] = f6CL*reg6n + inputSampleL;
+			a6CL[c6CL] = f6DL*reg6n + inputSampleL;
+			a6DL[c6DL] = f6EL*reg6n + inputSampleL;
+			a6EL[c6EL] = f6FL*reg6n + inputSampleL;
+			a6FL[c6FL] = f6AL*reg6n + inputSampleL;
 			
-			a6FR[c6FR] = fma(f6LR,reg6n,inputSampleR);
-			a6LR[c6LR] = fma(f6RR,reg6n,inputSampleR);
-			a6RR[c6RR] = fma(f6XR,reg6n,inputSampleR);
-			a6XR[c6XR] = fma(f6ZER,reg6n,inputSampleR);
-			a6ZER[c6ZER] = fma(f6ZKR,reg6n,inputSampleR);
-			a6ZKR[c6ZKR] = fma(f6FR,reg6n,inputSampleR);
+			a6FR[c6FR] = f6LR*reg6n + inputSampleR;
+			a6LR[c6LR] = f6RR*reg6n + inputSampleR;
+			a6RR[c6RR] = f6XR*reg6n + inputSampleR;
+			a6XR[c6XR] = f6ZER*reg6n + inputSampleR;
+			a6ZER[c6ZER] = f6ZKR*reg6n + inputSampleR;
+			a6ZKR[c6ZKR] = f6FR*reg6n + inputSampleR;
 			
 			//left verb
 			
@@ -764,19 +764,19 @@ void VerbSevens::processReplacing(float **inputs, float **outputs, VstInt32 samp
 #endif
 #ifdef SIXBYSIXMONO //instead of roomNoiseR, use reg6n
 			
-			a6AL[c6AL] = fma(f6BL,reg6n,inputSampleL);
-			a6BL[c6BL] = fma(f6CL,reg6n,inputSampleL);
-			a6CL[c6CL] = fma(f6DL,reg6n,inputSampleL);
-			a6DL[c6DL] = fma(f6EL,reg6n,inputSampleL);
-			a6EL[c6EL] = fma(f6FL,reg6n,inputSampleL);
-			a6FL[c6FL] = fma(f6AL,reg6n,inputSampleL);
+			a6AL[c6AL] = f6BL*reg6n + inputSampleL;
+			a6BL[c6BL] = f6CL*reg6n + inputSampleL;
+			a6CL[c6CL] = f6DL*reg6n + inputSampleL;
+			a6DL[c6DL] = f6EL*reg6n + inputSampleL;
+			a6EL[c6EL] = f6FL*reg6n + inputSampleL;
+			a6FL[c6FL] = f6AL*reg6n + inputSampleL;
 			
-			a6AR[c6AL] = fma(f6BR,reg6n,inputSampleR);
-			a6BR[c6BL] = fma(f6CR,reg6n,inputSampleR);
-			a6CR[c6CL] = fma(f6DR,reg6n,inputSampleR);
-			a6DR[c6DL] = fma(f6ER,reg6n,inputSampleR);
-			a6ER[c6EL] = fma(f6FR,reg6n,inputSampleR);
-			a6FR[c6FL] = fma(f6AR,reg6n,inputSampleR);
+			a6AR[c6AL] = f6BR*reg6n + inputSampleR;
+			a6BR[c6BL] = f6CR*reg6n + inputSampleR;
+			a6CR[c6CL] = f6DR*reg6n + inputSampleR;
+			a6DR[c6DL] = f6ER*reg6n + inputSampleR;
+			a6ER[c6EL] = f6FR*reg6n + inputSampleR;
+			a6FR[c6FL] = f6AR*reg6n + inputSampleR;
 			//left verb
 			
 			c6AL++; c6BL++; c6CL++; c6DL++; c6EL++; c6FL++; 
@@ -1186,14 +1186,14 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			
 #endif
 #ifdef FOURBYFOUR
-			a4AL[c4AL] = fma(f4AL,reg4n,inputSampleL);
-			a4BL[c4BL] = fma(f4BL,reg4n,inputSampleL);
-			a4CL[c4CL] = fma(f4CL,reg4n,inputSampleL);
-			a4DL[c4DL] = fma(f4DL,reg4n,inputSampleL);
-			a4DR[c4DR] = fma(f4DR,reg4n,inputSampleR);
-			a4HR[c4HR] = fma(f4HR,reg4n,inputSampleR);
-			a4LR[c4LR] = fma(f4LR,reg4n,inputSampleR);
-			a4PR[c4PR] = fma(f4PR,reg4n,inputSampleR);
+			a4AL[c4AL] = f4AL*reg4n + inputSampleL;
+			a4BL[c4BL] = f4BL*reg4n + inputSampleL;
+			a4CL[c4CL] = f4CL*reg4n + inputSampleL;
+			a4DL[c4DL] = f4DL*reg4n + inputSampleL;
+			a4DR[c4DR] = f4DR*reg4n + inputSampleR;
+			a4HR[c4HR] = f4HR*reg4n + inputSampleR;
+			a4LR[c4LR] = f4LR*reg4n + inputSampleR;
+			a4PR[c4PR] = f4PR*reg4n + inputSampleR;
 			c4AL++; c4BL++; c4CL++; c4DL++;
 			c4DR++; c4HR++; c4LR++; c4PR++;
 			if (c4AL > d4A) c4AL = 0;
@@ -1208,14 +1208,14 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			hAR = a4DR[c4DR]; hBR = a4HR[c4HR]; hCR = a4LR[c4LR]; hDR = a4PR[c4PR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			a4EL[c4EL] = fma(hAL,2.0f,hEL);
-			a4FL[c4FL] = fma(hBL,2.0f,hEL);
-			a4GL[c4GL] = fma(hCL,2.0f,hEL);
-			a4HL[c4HL] = fma(hDL,2.0f,hEL);
-			a4CR[c4CR] = fma(hAR,2.0f,hER);
-			a4GR[c4GR] = fma(hBR,2.0f,hER);
-			a4KR[c4KR] = fma(hCR,2.0f,hER);
-			a4OR[c4OR] = fma(hDR,2.0f,hER);
+			a4EL[c4EL] = hAL*2.0f + hEL;
+			a4FL[c4FL] = hBL*2.0f + hEL;
+			a4GL[c4GL] = hCL*2.0f + hEL;
+			a4HL[c4HL] = hDL*2.0f + hEL;
+			a4CR[c4CR] = hAR*2.0f + hER;
+			a4GR[c4GR] = hBR*2.0f + hER;
+			a4KR[c4KR] = hCR*2.0f + hER;
+			a4OR[c4OR] = hDR*2.0f + hER;
 			c4EL++; c4FL++; c4GL++; c4HL++;
 			c4CR++; c4GR++; c4KR++; c4OR++;
 			if (c4EL > d4E) c4EL = 0;
@@ -1230,14 +1230,14 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			hAR = a4CR[c4CR]; hBR = a4GR[c4GR]; hCR = a4KR[c4KR]; hDR = a4OR[c4OR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			a4IL[c4IL] = fma(hAL,2.0f,hEL);
-			a4JL[c4JL] = fma(hBL,2.0f,hEL);
-			a4KL[c4KL] = fma(hCL,2.0f,hEL);
-			a4LL[c4LL] = fma(hDL,2.0f,hEL);
-			a4BR[c4BR] = fma(hAR,2.0f,hER);
-			a4FR[c4FR] = fma(hBR,2.0f,hER);
-			a4JR[c4JR] = fma(hCR,2.0f,hER);
-			a4NR[c4NR] = fma(hDR,2.0f,hER);
+			a4IL[c4IL] = hAL*2.0f + hEL;
+			a4JL[c4JL] = hBL*2.0f + hEL;
+			a4KL[c4KL] = hCL*2.0f + hEL;
+			a4LL[c4LL] = hDL*2.0f + hEL;
+			a4BR[c4BR] = hAR*2.0f + hER;
+			a4FR[c4FR] = hBR*2.0f + hER;
+			a4JR[c4JR] = hCR*2.0f + hER;
+			a4NR[c4NR] = hDR*2.0f + hER;
 			c4IL++; c4JL++; c4KL++; c4LL++;
 			c4BR++; c4FR++; c4JR++; c4NR++;
 			if (c4IL > d4I) c4IL = 0;
@@ -1252,14 +1252,14 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			hAR = a4BR[c4BR]; hBR = a4FR[c4FR]; hCR = a4JR[c4JR]; hDR = a4NR[c4NR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			a4ML[c4ML] = fma(hAL,2.0f,hEL);
-			a4NL[c4NL] = fma(hBL,2.0f,hEL);
-			a4OL[c4OL] = fma(hCL,2.0f,hEL);
-			a4PL[c4PL] = fma(hDL,2.0f,hEL);
-			a4AR[c4AR] = fma(hAR,2.0f,hER);
-			a4ER[c4ER] = fma(hBR,2.0f,hER);
-			a4IR[c4IR] = fma(hCR,2.0f,hER);
-			a4MR[c4MR] = fma(hDR,2.0f,hER);
+			a4ML[c4ML] = hAL*2.0f + hEL;
+			a4NL[c4NL] = hBL*2.0f + hEL;
+			a4OL[c4OL] = hCL*2.0f + hEL;
+			a4PL[c4PL] = hDL*2.0f + hEL;
+			a4AR[c4AR] = hAR*2.0f + hER;
+			a4ER[c4ER] = hBR*2.0f + hER;
+			a4IR[c4IR] = hCR*2.0f + hER;
+			a4MR[c4MR] = hDR*2.0f + hER;
 			c4ML++; c4NL++; c4OL++; c4PL++;
 			c4AR++; c4ER++; c4IR++; c4MR++;
 			if (c4ML > d4M) c4ML = 0;
@@ -1274,14 +1274,14 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			hAR = a4AR[c4AR]; hBR = a4ER[c4ER]; hCR = a4IR[c4IR]; hDR = a4MR[c4MR];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			f4AL = fma(hAR,2.0f,hER);				
-			f4BL = fma(hBR,2.0f,hER);
-			f4CL = fma(hCR,2.0f,hER);
-			f4DL = fma(hDR,2.0f,hER);
-			f4DR = fma(hAL,2.0f,hEL);				
-			f4HR = fma(hBL,2.0f,hEL);
-			f4LR = fma(hCL,2.0f,hEL);
-			f4PR = fma(hDL,2.0f,hEL);
+			f4AL = hAR*2.0f + hER;				
+			f4BL = hBR*2.0f + hER;
+			f4CL = hCR*2.0f + hER;
+			f4DL = hDR*2.0f + hER;
+			f4DR = hAL*2.0f + hEL;				
+			f4HR = hBL*2.0f + hEL;
+			f4LR = hCL*2.0f + hEL;
+			f4PR = hDL*2.0f + hEL;
 			inputSampleL = (hAL + hBL + hCL + hDL)*ga4n;
 			inputSampleR = (hAR + hBR + hCR + hDR)*ga4n;
 #endif
@@ -1497,19 +1497,19 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 #endif			
 #ifdef SIXBYSIX //instead of roomNoiseR, use reg6n
 			
-			a6AL[c6AL] = fma(f6BL,reg6n,inputSampleL);
-			a6BL[c6BL] = fma(f6CL,reg6n,inputSampleL);
-			a6CL[c6CL] = fma(f6DL,reg6n,inputSampleL);
-			a6DL[c6DL] = fma(f6EL,reg6n,inputSampleL);
-			a6EL[c6EL] = fma(f6FL,reg6n,inputSampleL);
-			a6FL[c6FL] = fma(f6AL,reg6n,inputSampleL);
+			a6AL[c6AL] = f6BL*reg6n + inputSampleL;
+			a6BL[c6BL] = f6CL*reg6n + inputSampleL;
+			a6CL[c6CL] = f6DL*reg6n + inputSampleL;
+			a6DL[c6DL] = f6EL*reg6n + inputSampleL;
+			a6EL[c6EL] = f6FL*reg6n + inputSampleL;
+			a6FL[c6FL] = f6AL*reg6n + inputSampleL;
 			
-			a6FR[c6FR] = fma(f6LR,reg6n,inputSampleR);
-			a6LR[c6LR] = fma(f6RR,reg6n,inputSampleR);
-			a6RR[c6RR] = fma(f6XR,reg6n,inputSampleR);
-			a6XR[c6XR] = fma(f6ZER,reg6n,inputSampleR);
-			a6ZER[c6ZER] = fma(f6ZKR,reg6n,inputSampleR);
-			a6ZKR[c6ZKR] = fma(f6FR,reg6n,inputSampleR);
+			a6FR[c6FR] = f6LR*reg6n + inputSampleR;
+			a6LR[c6LR] = f6RR*reg6n + inputSampleR;
+			a6RR[c6RR] = f6XR*reg6n + inputSampleR;
+			a6XR[c6XR] = f6ZER*reg6n + inputSampleR;
+			a6ZER[c6ZER] = f6ZKR*reg6n + inputSampleR;
+			a6ZKR[c6ZKR] = f6FR*reg6n + inputSampleR;
 			
 			//left verb
 			
@@ -1799,19 +1799,19 @@ void VerbSevens::processDoubleReplacing(double **inputs, double **outputs, VstIn
 #endif
 #ifdef SIXBYSIXMONO //instead of roomNoiseR, use reg6n
 			
-			a6AL[c6AL] = fma(f6BL,reg6n,inputSampleL);
-			a6BL[c6BL] = fma(f6CL,reg6n,inputSampleL);
-			a6CL[c6CL] = fma(f6DL,reg6n,inputSampleL);
-			a6DL[c6DL] = fma(f6EL,reg6n,inputSampleL);
-			a6EL[c6EL] = fma(f6FL,reg6n,inputSampleL);
-			a6FL[c6FL] = fma(f6AL,reg6n,inputSampleL);
+			a6AL[c6AL] = f6BL*reg6n + inputSampleL;
+			a6BL[c6BL] = f6CL*reg6n + inputSampleL;
+			a6CL[c6CL] = f6DL*reg6n + inputSampleL;
+			a6DL[c6DL] = f6EL*reg6n + inputSampleL;
+			a6EL[c6EL] = f6FL*reg6n + inputSampleL;
+			a6FL[c6FL] = f6AL*reg6n + inputSampleL;
 			
-			a6AR[c6AL] = fma(f6BR,reg6n,inputSampleR);
-			a6BR[c6BL] = fma(f6CR,reg6n,inputSampleR);
-			a6CR[c6CL] = fma(f6DR,reg6n,inputSampleR);
-			a6DR[c6DL] = fma(f6ER,reg6n,inputSampleR);
-			a6ER[c6EL] = fma(f6FR,reg6n,inputSampleR);
-			a6FR[c6FL] = fma(f6AR,reg6n,inputSampleR);
+			a6AR[c6AL] = f6BR*reg6n + inputSampleR;
+			a6BR[c6BL] = f6CR*reg6n + inputSampleR;
+			a6CR[c6CL] = f6DR*reg6n + inputSampleR;
+			a6DR[c6DL] = f6ER*reg6n + inputSampleR;
+			a6ER[c6EL] = f6FR*reg6n + inputSampleR;
+			a6FR[c6FL] = f6AR*reg6n + inputSampleR;
 			//left verb
 			
 			c6AL++; c6BL++; c6CL++; c6DL++; c6EL++; c6FL++; 

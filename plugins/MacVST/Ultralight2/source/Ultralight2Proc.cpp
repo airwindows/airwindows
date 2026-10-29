@@ -101,25 +101,25 @@ void Ultralight2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			if (cR > dpR) cR = 0;
 			if (cS > dpS) cS = 0;
 			if (cT > dpT) cT = 0;
-			oQL = fma(oQL,0.5f,lQ[cQ]);
-			oRL = fma(oRL,0.5f,lR[cR]);
-			oSL = fma(oSL,0.5f,lS[cS]);
-			oTL = fma(oTL,0.0f,lT[cT]); //not allpass but can use vector fma()
-			oQR = fma(oQR,0.5f,rQ[cQ]);
-			oRR = fma(oRR,0.5f,rR[cR]);
-			oSR = fma(oSR,0.5f,rS[cS]);
-			oTR = fma(oTR,0.0f,rT[cT]); //not allpass but can use vector fma()
+			oQL = oQL*0.5f + lQ[cQ];
+			oRL = oRL*0.5f + lR[cR];
+			oSL = oSL*0.5f + lS[cS];
+			oTL = oTL*0.0f + lT[cT]; //not allpass but can use vector fma
+			oQR = oQR*0.5f + rQ[cQ];
+			oRR = oRR*0.5f + rR[cR];
+			oSR = oSR*0.5f + rS[cS];
+			oTR = oTR*0.0f + rT[cT]; //not allpass but can use vector fma
 			
 			if (bypassPre) {oQL = inputSampleL; oQR = inputSampleR;} //plugin only
 			
-			lA[cA] = fma(fAL,damping,oQL);
-			lB[cB] = fma(fBL,damping,oQL);
-			lC[cC] = fma(fCL,damping,oQL);
-			lD[cD] = fma(fDL,damping,oQL);
-			rA[cA] = fma(fAR,damping,oQR);
-			rB[cB] = fma(fBR,damping,oQR);
-			rC[cC] = fma(fCR,damping,oQR);
-			rD[cD] = fma(fDR,damping,oQR);
+			lA[cA] = fAL*damping + oQL;
+			lB[cB] = fBL*damping + oQL;
+			lC[cC] = fCL*damping + oQL;
+			lD[cD] = fDL*damping + oQL;
+			rA[cA] = fAR*damping + oQR;
+			rB[cB] = fBR*damping + oQR;
+			rC[cC] = fCR*damping + oQR;
+			rD[cD] = fDR*damping + oQR;
 			cA++; cB++; cC++; cD++;
 			if (cA > d4A) cA = 0;
 			if (cB > d4B) cB = 0;
@@ -129,14 +129,14 @@ void Ultralight2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			hAR = rA[cA]; hBR = rB[cB]; hCR = rC[cC]; hDR = rD[cD];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			lE[cE] = fma(hAL,2.0f,hEL);
-			lF[cF] = fma(hBL,2.0f,hEL);
-			lG[cG] = fma(hCL,2.0f,hEL);
-			lH[cH] = fma(hDL,2.0f,hEL);
-			rE[cE] = fma(hAR,2.0f,hER);
-			rF[cF] = fma(hBR,2.0f,hER);
-			rG[cG] = fma(hCR,2.0f,hER);
-			rH[cH] = fma(hDR,2.0f,hER);
+			lE[cE] = hAL*2.0f + hEL;
+			lF[cF] = hBL*2.0f + hEL;
+			lG[cG] = hCL*2.0f + hEL;
+			lH[cH] = hDL*2.0f + hEL;
+			rE[cE] = hAR*2.0f + hER;
+			rF[cF] = hBR*2.0f + hER;
+			rG[cG] = hCR*2.0f + hER;
+			rH[cH] = hDR*2.0f + hER;
 			cE++; cF++; cG++; cH++;
 			if (cE > d4E) cE = 0;
 			if (cF > d4F) cF = 0;
@@ -146,14 +146,14 @@ void Ultralight2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			hAR = rE[cE]; hBR = rF[cF]; hCR = rG[cG]; hDR = rH[cH];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			lI[cI] = fma(hAL,2.0f,hEL);
-			lJ[cJ] = fma(hBL,2.0f,hEL);
-			lK[cK] = fma(hCL,2.0f,hEL);
-			lL[cL] = fma(hDL,2.0f,hEL);
-			rI[cI] = fma(hAR,2.0f,hER);
-			rJ[cJ] = fma(hBR,2.0f,hER);
-			rK[cK] = fma(hCR,2.0f,hER);
-			rL[cL] = fma(hDR,2.0f,hER);
+			lI[cI] = hAL*2.0f + hEL;
+			lJ[cJ] = hBL*2.0f + hEL;
+			lK[cK] = hCL*2.0f + hEL;
+			lL[cL] = hDL*2.0f + hEL;
+			rI[cI] = hAR*2.0f + hER;
+			rJ[cJ] = hBR*2.0f + hER;
+			rK[cK] = hCR*2.0f + hER;
+			rL[cL] = hDR*2.0f + hER;
 			cI++; cJ++; cK++; cL++;
 			if (cI > d4I) cI = 0;
 			if (cJ > d4J) cJ = 0;
@@ -163,14 +163,14 @@ void Ultralight2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			hAR = rI[cI]; hBR = rJ[cJ]; hCR = rK[cK]; hDR = rL[cL];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			lM[cM] = fma(hAL,2.0f,hEL);
-			lN[cN] = fma(hBL,2.0f,hEL);
-			lO[cO] = fma(hCL,2.0f,hEL);
-			lP[cP] = fma(hDL,2.0f,hEL);
-			rM[cM] = fma(hAR,2.0f,hER);
-			rN[cN] = fma(hBR,2.0f,hER);
-			rO[cO] = fma(hCR,2.0f,hER);
-			rP[cP] = fma(hDR,2.0f,hER);
+			lM[cM] = hAL*2.0f + hEL;
+			lN[cN] = hBL*2.0f + hEL;
+			lO[cO] = hCL*2.0f + hEL;
+			lP[cP] = hDL*2.0f + hEL;
+			rM[cM] = hAR*2.0f + hER;
+			rN[cN] = hBR*2.0f + hER;
+			rO[cO] = hCR*2.0f + hER;
+			rP[cP] = hDR*2.0f + hER;
 			cM++; cN++; cO++; cP++;
 			if (cM > d4M) cM = 0;
 			if (cN > d4N) cN = 0;
@@ -180,14 +180,14 @@ void Ultralight2::processReplacing(float **inputs, float **outputs, VstInt32 sam
 			hAR = rM[cM]; hBR = rN[cN]; hCR = rO[cO]; hDR = rP[cP];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			fAL = fma(hAL,2.0f,hEL);				
-			fBL = fma(hBL,2.0f,hEL);
-			fCL = fma(hCL,2.0f,hEL);
-			fDL = fma(hDL,2.0f,hEL);
-			fAR = fma(hAR,2.0f,hER);				
-			fBR = fma(hBR,2.0f,hER);
-			fCR = fma(hCR,2.0f,hER);
-			fDR = fma(hDR,2.0f,hER);
+			fAL = hAL*2.0f + hEL;				
+			fBL = hBL*2.0f + hEL;
+			fCL = hCL*2.0f + hEL;
+			fDL = hDL*2.0f + hEL;
+			fAR = hAR*2.0f + hER;				
+			fBR = hBR*2.0f + hER;
+			fCR = hCR*2.0f + hER;
+			fDR = hDR*2.0f + hER;
 			switch (unSolid)
 			{
 				case 0:
@@ -604,25 +604,25 @@ void Ultralight2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			if (cR > dpR) cR = 0;
 			if (cS > dpS) cS = 0;
 			if (cT > dpT) cT = 0;
-			oQL = fma(oQL,0.5f,lQ[cQ]);
-			oRL = fma(oRL,0.5f,lR[cR]);
-			oSL = fma(oSL,0.5f,lS[cS]);
-			oTL = fma(oTL,0.0f,lT[cT]); //not allpass but can use vector fma()
-			oQR = fma(oQR,0.5f,rQ[cQ]);
-			oRR = fma(oRR,0.5f,rR[cR]);
-			oSR = fma(oSR,0.5f,rS[cS]);
-			oTR = fma(oTR,0.0f,rT[cT]); //not allpass but can use vector fma()
+			oQL = oQL*0.5f + lQ[cQ];
+			oRL = oRL*0.5f + lR[cR];
+			oSL = oSL*0.5f + lS[cS];
+			oTL = oTL*0.0f + lT[cT]; //not allpass but can use vector fma
+			oQR = oQR*0.5f + rQ[cQ];
+			oRR = oRR*0.5f + rR[cR];
+			oSR = oSR*0.5f + rS[cS];
+			oTR = oTR*0.0f + rT[cT]; //not allpass but can use vector fma
 			
 			if (bypassPre) {oQL = inputSampleL; oQR = inputSampleR;} //plugin only
 			
-			lA[cA] = fma(fAL,damping,oQL);
-			lB[cB] = fma(fBL,damping,oQL);
-			lC[cC] = fma(fCL,damping,oQL);
-			lD[cD] = fma(fDL,damping,oQL);
-			rA[cA] = fma(fAR,damping,oQR);
-			rB[cB] = fma(fBR,damping,oQR);
-			rC[cC] = fma(fCR,damping,oQR);
-			rD[cD] = fma(fDR,damping,oQR);
+			lA[cA] = fAL*damping + oQL;
+			lB[cB] = fBL*damping + oQL;
+			lC[cC] = fCL*damping + oQL;
+			lD[cD] = fDL*damping + oQL;
+			rA[cA] = fAR*damping + oQR;
+			rB[cB] = fBR*damping + oQR;
+			rC[cC] = fCR*damping + oQR;
+			rD[cD] = fDR*damping + oQR;
 			cA++; cB++; cC++; cD++;
 			if (cA > d4A) cA = 0;
 			if (cB > d4B) cB = 0;
@@ -632,14 +632,14 @@ void Ultralight2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			hAR = rA[cA]; hBR = rB[cB]; hCR = rC[cC]; hDR = rD[cD];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			lE[cE] = fma(hAL,2.0f,hEL);
-			lF[cF] = fma(hBL,2.0f,hEL);
-			lG[cG] = fma(hCL,2.0f,hEL);
-			lH[cH] = fma(hDL,2.0f,hEL);
-			rE[cE] = fma(hAR,2.0f,hER);
-			rF[cF] = fma(hBR,2.0f,hER);
-			rG[cG] = fma(hCR,2.0f,hER);
-			rH[cH] = fma(hDR,2.0f,hER);
+			lE[cE] = hAL*2.0f + hEL;
+			lF[cF] = hBL*2.0f + hEL;
+			lG[cG] = hCL*2.0f + hEL;
+			lH[cH] = hDL*2.0f + hEL;
+			rE[cE] = hAR*2.0f + hER;
+			rF[cF] = hBR*2.0f + hER;
+			rG[cG] = hCR*2.0f + hER;
+			rH[cH] = hDR*2.0f + hER;
 			cE++; cF++; cG++; cH++;
 			if (cE > d4E) cE = 0;
 			if (cF > d4F) cF = 0;
@@ -649,14 +649,14 @@ void Ultralight2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			hAR = rE[cE]; hBR = rF[cF]; hCR = rG[cG]; hDR = rH[cH];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			lI[cI] = fma(hAL,2.0f,hEL);
-			lJ[cJ] = fma(hBL,2.0f,hEL);
-			lK[cK] = fma(hCL,2.0f,hEL);
-			lL[cL] = fma(hDL,2.0f,hEL);
-			rI[cI] = fma(hAR,2.0f,hER);
-			rJ[cJ] = fma(hBR,2.0f,hER);
-			rK[cK] = fma(hCR,2.0f,hER);
-			rL[cL] = fma(hDR,2.0f,hER);
+			lI[cI] = hAL*2.0f + hEL;
+			lJ[cJ] = hBL*2.0f + hEL;
+			lK[cK] = hCL*2.0f + hEL;
+			lL[cL] = hDL*2.0f + hEL;
+			rI[cI] = hAR*2.0f + hER;
+			rJ[cJ] = hBR*2.0f + hER;
+			rK[cK] = hCR*2.0f + hER;
+			rL[cL] = hDR*2.0f + hER;
 			cI++; cJ++; cK++; cL++;
 			if (cI > d4I) cI = 0;
 			if (cJ > d4J) cJ = 0;
@@ -666,14 +666,14 @@ void Ultralight2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			hAR = rI[cI]; hBR = rJ[cJ]; hCR = rK[cK]; hDR = rL[cL];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			lM[cM] = fma(hAL,2.0f,hEL);
-			lN[cN] = fma(hBL,2.0f,hEL);
-			lO[cO] = fma(hCL,2.0f,hEL);
-			lP[cP] = fma(hDL,2.0f,hEL);
-			rM[cM] = fma(hAR,2.0f,hER);
-			rN[cN] = fma(hBR,2.0f,hER);
-			rO[cO] = fma(hCR,2.0f,hER);
-			rP[cP] = fma(hDR,2.0f,hER);
+			lM[cM] = hAL*2.0f + hEL;
+			lN[cN] = hBL*2.0f + hEL;
+			lO[cO] = hCL*2.0f + hEL;
+			lP[cP] = hDL*2.0f + hEL;
+			rM[cM] = hAR*2.0f + hER;
+			rN[cN] = hBR*2.0f + hER;
+			rO[cO] = hCR*2.0f + hER;
+			rP[cP] = hDR*2.0f + hER;
 			cM++; cN++; cO++; cP++;
 			if (cM > d4M) cM = 0;
 			if (cN > d4N) cN = 0;
@@ -683,14 +683,14 @@ void Ultralight2::processDoubleReplacing(double **inputs, double **outputs, VstI
 			hAR = rM[cM]; hBR = rN[cN]; hCR = rO[cO]; hDR = rP[cP];
 			hEL = -(hAL + hBL + hCL + hDL);
 			hER = -(hAR + hBR + hCR + hDR);
-			fAL = fma(hAL,2.0f,hEL);				
-			fBL = fma(hBL,2.0f,hEL);
-			fCL = fma(hCL,2.0f,hEL);
-			fDL = fma(hDL,2.0f,hEL);
-			fAR = fma(hAR,2.0f,hER);				
-			fBR = fma(hBR,2.0f,hER);
-			fCR = fma(hCR,2.0f,hER);
-			fDR = fma(hDR,2.0f,hER);
+			fAL = hAL*2.0f + hEL;				
+			fBL = hBL*2.0f + hEL;
+			fCL = hCL*2.0f + hEL;
+			fDL = hDL*2.0f + hEL;
+			fAR = hAR*2.0f + hER;				
+			fBR = hBR*2.0f + hER;
+			fCR = hCR*2.0f + hER;
+			fDR = hDR*2.0f + hER;
 			switch (unSolid)
 			{
 				case 0:

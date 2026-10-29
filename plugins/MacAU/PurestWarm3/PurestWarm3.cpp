@@ -184,7 +184,7 @@ void		PurestWarm3::PurestWarm3Kernel::Process(	const Float32 	*inSourceP,
 			double bip_delta = inputSample; //delta can be just local and re-used
 			
 			inputSample *= asym;
-			inputSample = fma(((inputSample*inputSample) * -0.166666666666666),(inputSample*inputSample),inputSample);
+			inputSample = ((inputSample*inputSample) * -0.166666666666666)*(inputSample*inputSample) + inputSample;
 			inputSample /= asym;
 			
 			bip[bip_dvA] = bip_delta - inputSample; // these are derivatives: raw clip is position

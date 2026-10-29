@@ -30,7 +30,7 @@ void RetroBass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (fabs(rbSampleL)>1.18e-37) {
 			double bip_delta = inputSampleL; //delta can be just local and re-used
 			inputSampleL *= rbSampleL*0.96;
-			inputSampleL = fma(((inputSampleL*inputSampleL) * -0.166666666666666),(inputSampleL*inputSampleL),inputSampleL);
+			inputSampleL = ((inputSampleL*inputSampleL) * -0.166666666666666)*(inputSampleL*inputSampleL) + inputSampleL;
 			inputSampleL /= rbSampleL*0.96;
 			bip[bip_drbLA] = bip_delta - inputSampleL; // these are derivatives: raw clip is position
 			bip[bip_drbLB] = bip[bip_prbLA]-bip[bip_drbLA]; bip[bip_prbLA] = bip[bip_drbLA];//velocity
@@ -45,7 +45,7 @@ void RetroBass::processReplacing(float **inputs, float **outputs, VstInt32 sampl
 		if (fabs(rbSampleR)>1.18e-37) {
 			double bip_delta = inputSampleR; //delta can be just local and re-used
 			inputSampleR *= rbSampleR*0.96;
-			inputSampleR = fma(((inputSampleR*inputSampleR) * -0.166666666666666),(inputSampleR*inputSampleR),inputSampleR);
+			inputSampleR = ((inputSampleR*inputSampleR) * -0.166666666666666)*(inputSampleR*inputSampleR) + inputSampleR;
 			inputSampleR /= rbSampleR*0.96;
 			bip[bip_drbRA] = bip_delta - inputSampleR; // these are derivatives: raw clip is position
 			bip[bip_drbRB] = bip[bip_prbRA]-bip[bip_drbRA]; bip[bip_prbRA] = bip[bip_drbRA];//velocity
@@ -99,7 +99,7 @@ void RetroBass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (fabs(rbSampleL)>1.18e-37) {
 			double bip_delta = inputSampleL; //delta can be just local and re-used
 			inputSampleL *= rbSampleL*0.96;
-			inputSampleL = fma(((inputSampleL*inputSampleL) * -0.166666666666666),(inputSampleL*inputSampleL),inputSampleL);
+			inputSampleL = ((inputSampleL*inputSampleL) * -0.166666666666666)*(inputSampleL*inputSampleL) + inputSampleL;
 			inputSampleL /= rbSampleL*0.96;
 			bip[bip_drbLA] = bip_delta - inputSampleL; // these are derivatives: raw clip is position
 			bip[bip_drbLB] = bip[bip_prbLA]-bip[bip_drbLA]; bip[bip_prbLA] = bip[bip_drbLA];//velocity
@@ -114,7 +114,7 @@ void RetroBass::processDoubleReplacing(double **inputs, double **outputs, VstInt
 		if (fabs(rbSampleR)>1.18e-37) {
 			double bip_delta = inputSampleR; //delta can be just local and re-used
 			inputSampleR *= rbSampleR*0.96;
-			inputSampleR = fma(((inputSampleR*inputSampleR) * -0.166666666666666),(inputSampleR*inputSampleR),inputSampleR);
+			inputSampleR = ((inputSampleR*inputSampleR) * -0.166666666666666)*(inputSampleR*inputSampleR) + inputSampleR;
 			inputSampleR /= rbSampleR*0.96;
 			bip[bip_drbRA] = bip_delta - inputSampleR; // these are derivatives: raw clip is position
 			bip[bip_drbRB] = bip[bip_prbRA]-bip[bip_drbRA]; bip[bip_prbRA] = bip[bip_drbRA];//velocity

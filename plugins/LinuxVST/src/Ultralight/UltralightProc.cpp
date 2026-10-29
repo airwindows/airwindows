@@ -133,15 +133,15 @@ void Ultralight::processReplacing(float **inputs, float **outputs, VstInt32 samp
 				hDR = rD[cD];
 			}
 			hEL = -(hAL + hBL + hCL + hDL);
-			lE[cE] = fma(hAL,2.0f,hEL);
-			lF[cF] = fma(hBL,2.0f,hEL);
-			lG[cG] = fma(hCL,2.0f,hEL);
-			lH[cH] = fma(hDL,2.0f,hEL);
+			lE[cE] = hAL*2.0f + hEL;
+			lF[cF] = hBL*2.0f + hEL;
+			lG[cG] = hCL*2.0f + hEL;
+			lH[cH] = hDL*2.0f + hEL;
 			hER = -(hAR + hBR + hCR + hDR);
-			rE[cE] = fma(hAR,2.0f,hER);
-			rF[cF] = fma(hBR,2.0f,hER);
-			rG[cG] = fma(hCR,2.0f,hER);
-			rH[cH] = fma(hDR,2.0f,hER);
+			rE[cE] = hAR*2.0f + hER;
+			rF[cF] = hBR*2.0f + hER;
+			rG[cG] = hCR*2.0f + hER;
+			rH[cH] = hDR*2.0f + hER;
 			//allpass/comb section
 			
 			cE++; cF++; cG++; cH++;
@@ -152,16 +152,16 @@ void Ultralight::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			
 			hAL = lE[cE]; hBL = lF[cF]; hCL = lG[cG]; hDL = lH[cH];
 			hEL = -(hAL + hBL + hCL + hDL);
-			lI[cI] = fma(hAL,2.0f,hEL);
-			lJ[cJ] = fma(hBL,2.0f,hEL);
-			lK[cK] = fma(hCL,2.0f,hEL);
-			lL[cL] = fma(hDL,2.0f,hEL);
+			lI[cI] = hAL*2.0f + hEL;
+			lJ[cJ] = hBL*2.0f + hEL;
+			lK[cK] = hCL*2.0f + hEL;
+			lL[cL] = hDL*2.0f + hEL;
 			hAR = rE[cE]; hBR = rF[cF]; hCR = rG[cG]; hDR = rH[cH];
 			hER = -(hAR + hBR + hCR + hDR);
-			rI[cI] = fma(hAR,2.0f,hER);
-			rJ[cJ] = fma(hBR,2.0f,hER);
-			rK[cK] = fma(hCR,2.0f,hER);
-			rL[cL] = fma(hDR,2.0f,hER);
+			rI[cI] = hAR*2.0f + hER;
+			rJ[cJ] = hBR*2.0f + hER;
+			rK[cK] = hCR*2.0f + hER;
+			rL[cL] = hDR*2.0f + hER;
 			
 			cI++; cJ++; cK++; cL++;
 			if (cI > d4I) cI = 0;
@@ -171,16 +171,16 @@ void Ultralight::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			
 			hAL = lI[cI]; hBL = lJ[cJ]; hCL = lK[cK]; hDL = lL[cL];
 			hEL = -(hAL + hBL + hCL + hDL);
-			lM[cM] = fma(hAL,2.0f,hEL);
-			lN[cN] = fma(hBL,2.0f,hEL);
-			lO[cO] = fma(hCL,2.0f,hEL);
-			lP[cP] = fma(hDL,2.0f,hEL);
+			lM[cM] = hAL*2.0f + hEL;
+			lN[cN] = hBL*2.0f + hEL;
+			lO[cO] = hCL*2.0f + hEL;
+			lP[cP] = hDL*2.0f + hEL;
 			hAR = rI[cI]; hBR = rJ[cJ]; hCR = rK[cK]; hDR = rL[cL];
 			hER = -(hAR + hBR + hCR + hDR);
-			rM[cM] = fma(hAR,2.0f,hER);
-			rN[cN] = fma(hBR,2.0f,hER);
-			rO[cO] = fma(hCR,2.0f,hER);
-			rP[cP] = fma(hDR,2.0f,hER);
+			rM[cM] = hAR*2.0f + hER;
+			rN[cN] = hBR*2.0f + hER;
+			rO[cO] = hCR*2.0f + hER;
+			rP[cP] = hDR*2.0f + hER;
 
 			cM++; cN++; cO++; cP++;
 			if (cM > d4M) cM = 0;
@@ -190,16 +190,16 @@ void Ultralight::processReplacing(float **inputs, float **outputs, VstInt32 samp
 			
 			hAL = lM[cM]; hBL = lN[cN]; hCL = lO[cO]; hDL = lP[cP];
 			hEL = -(hAL + hBL + hCL + hDL);
-			fAL = fma(hAL,2.0f,hEL);				
-			fBL = fma(hBL,2.0f,hEL);
-			fCL = fma(hCL,2.0f,hEL);
-			fDL = fma(hDL,2.0f,hEL);
+			fAL = hAL*2.0f + hEL;				
+			fBL = hBL*2.0f + hEL;
+			fCL = hCL*2.0f + hEL;
+			fDL = hDL*2.0f + hEL;
 			hAR = rM[cM]; hBR = rN[cN]; hCR = rO[cO]; hDR = rP[cP];
 			hER = -(hAR + hBR + hCR + hDR);
-			fAR = fma(hAR,2.0f,hER);				
-			fBR = fma(hBR,2.0f,hER);
-			fCR = fma(hCR,2.0f,hER);
-			fDR = fma(hDR,2.0f,hER);
+			fAR = hAR*2.0f + hER;				
+			fBR = hBR*2.0f + hER;
+			fCR = hCR*2.0f + hER;
+			fDR = hDR*2.0f + hER;
 
 			switch (reflect)
 			{
@@ -652,15 +652,15 @@ void Ultralight::processDoubleReplacing(double **inputs, double **outputs, VstIn
 				hDR = rD[cD];
 			}
 			hEL = -(hAL + hBL + hCL + hDL);
-			lE[cE] = fma(hAL,2.0f,hEL);
-			lF[cF] = fma(hBL,2.0f,hEL);
-			lG[cG] = fma(hCL,2.0f,hEL);
-			lH[cH] = fma(hDL,2.0f,hEL);
+			lE[cE] = hAL*2.0f + hEL;
+			lF[cF] = hBL*2.0f + hEL;
+			lG[cG] = hCL*2.0f + hEL;
+			lH[cH] = hDL*2.0f + hEL;
 			hER = -(hAR + hBR + hCR + hDR);
-			rE[cE] = fma(hAR,2.0f,hER);
-			rF[cF] = fma(hBR,2.0f,hER);
-			rG[cG] = fma(hCR,2.0f,hER);
-			rH[cH] = fma(hDR,2.0f,hER);
+			rE[cE] = hAR*2.0f + hER;
+			rF[cF] = hBR*2.0f + hER;
+			rG[cG] = hCR*2.0f + hER;
+			rH[cH] = hDR*2.0f + hER;
 			//allpass/comb section
 			
 			cE++; cF++; cG++; cH++;
@@ -671,16 +671,16 @@ void Ultralight::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			
 			hAL = lE[cE]; hBL = lF[cF]; hCL = lG[cG]; hDL = lH[cH];
 			hEL = -(hAL + hBL + hCL + hDL);
-			lI[cI] = fma(hAL,2.0f,hEL);
-			lJ[cJ] = fma(hBL,2.0f,hEL);
-			lK[cK] = fma(hCL,2.0f,hEL);
-			lL[cL] = fma(hDL,2.0f,hEL);
+			lI[cI] = hAL*2.0f + hEL;
+			lJ[cJ] = hBL*2.0f + hEL;
+			lK[cK] = hCL*2.0f + hEL;
+			lL[cL] = hDL*2.0f + hEL;
 			hAR = rE[cE]; hBR = rF[cF]; hCR = rG[cG]; hDR = rH[cH];
 			hER = -(hAR + hBR + hCR + hDR);
-			rI[cI] = fma(hAR,2.0f,hER);
-			rJ[cJ] = fma(hBR,2.0f,hER);
-			rK[cK] = fma(hCR,2.0f,hER);
-			rL[cL] = fma(hDR,2.0f,hER);
+			rI[cI] = hAR*2.0f + hER;
+			rJ[cJ] = hBR*2.0f + hER;
+			rK[cK] = hCR*2.0f + hER;
+			rL[cL] = hDR*2.0f + hER;
 			
 			cI++; cJ++; cK++; cL++;
 			if (cI > d4I) cI = 0;
@@ -690,16 +690,16 @@ void Ultralight::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			
 			hAL = lI[cI]; hBL = lJ[cJ]; hCL = lK[cK]; hDL = lL[cL];
 			hEL = -(hAL + hBL + hCL + hDL);
-			lM[cM] = fma(hAL,2.0f,hEL);
-			lN[cN] = fma(hBL,2.0f,hEL);
-			lO[cO] = fma(hCL,2.0f,hEL);
-			lP[cP] = fma(hDL,2.0f,hEL);
+			lM[cM] = hAL*2.0f + hEL;
+			lN[cN] = hBL*2.0f + hEL;
+			lO[cO] = hCL*2.0f + hEL;
+			lP[cP] = hDL*2.0f + hEL;
 			hAR = rI[cI]; hBR = rJ[cJ]; hCR = rK[cK]; hDR = rL[cL];
 			hER = -(hAR + hBR + hCR + hDR);
-			rM[cM] = fma(hAR,2.0f,hER);
-			rN[cN] = fma(hBR,2.0f,hER);
-			rO[cO] = fma(hCR,2.0f,hER);
-			rP[cP] = fma(hDR,2.0f,hER);
+			rM[cM] = hAR*2.0f + hER;
+			rN[cN] = hBR*2.0f + hER;
+			rO[cO] = hCR*2.0f + hER;
+			rP[cP] = hDR*2.0f + hER;
 			
 			cM++; cN++; cO++; cP++;
 			if (cM > d4M) cM = 0;
@@ -709,16 +709,16 @@ void Ultralight::processDoubleReplacing(double **inputs, double **outputs, VstIn
 			
 			hAL = lM[cM]; hBL = lN[cN]; hCL = lO[cO]; hDL = lP[cP];
 			hEL = -(hAL + hBL + hCL + hDL);
-			fAL = fma(hAL,2.0f,hEL);				
-			fBL = fma(hBL,2.0f,hEL);
-			fCL = fma(hCL,2.0f,hEL);
-			fDL = fma(hDL,2.0f,hEL);
+			fAL = hAL*2.0f + hEL;				
+			fBL = hBL*2.0f + hEL;
+			fCL = hCL*2.0f + hEL;
+			fDL = hDL*2.0f + hEL;
 			hAR = rM[cM]; hBR = rN[cN]; hCR = rO[cO]; hDR = rP[cP];
 			hER = -(hAR + hBR + hCR + hDR);
-			fAR = fma(hAR,2.0f,hER);				
-			fBR = fma(hBR,2.0f,hER);
-			fCR = fma(hCR,2.0f,hER);
-			fDR = fma(hDR,2.0f,hER);
+			fAR = hAR*2.0f + hER;				
+			fBR = hBR*2.0f + hER;
+			fCR = hCR*2.0f + hER;
+			fDR = hDR*2.0f + hER;
 			
 			switch (reflect)
 			{
