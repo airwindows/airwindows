@@ -9,7 +9,7 @@ Actually it turns out that other devs can use this file to do amazing things lik
 
 Ambience: Echojam, ClearCoat, TapeDelay2, Doublelay, PitchDelay, SampleDelay, BrightAmbience3, TripleSpread, Melt, MV2, MV, ADT, kChamberAR, StereoChorus, PurestEcho, TapeDelay, StarChild2, StarChild, Hombre, BrightAmbience2, BrightAmbience, StereoEnsemble, StereoDoubler, Chorus, ChorusEnsemble, Ensemble
 
-Amp Sims: ChimeyDeluxe, ChimeyGuitar2, Cabs2, PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
+Amp Sims: PunchyDeluxe, ChimeyDeluxe, ChimeyGuitar2, Cabs2, PointyGuitar, PointyDeluxe, ChimeyGuitar, GrindAmp, FireAmp, LeadAmp, CrickBass, Wolfbot, LilAmp, MidAmp, BigAmp, Cabs, BassDrive, BassAmp
 
 Bass: DubSub2, OrbitKick, Elliptical, Hermepass, BassKit, DubCenter, DubSub, Floor, Infrasonic, FathomFive
 
@@ -2571,7 +2571,7 @@ The idea is, do an echo effect like in many Pink Floyd, U2 etc etc. records, but
 
 And it totally can.
 
-If you use a lot of regeneration, it will absolutely turn into a reverb watch. If you pick certain Select options (there are 17) you'll get a wild stereo effect, but it's no simple ping-pong. What you get is a scattering of 256 individual echoes not really lining up, not doing anything specific in stereo, but often doing very striking things in stereo.
+If you use a lot of regeneration, it will absolutely turn into a reverb wash. If you pick certain Select options (there are 17) you'll get a wild stereo effect, but it's no simple ping-pong. What you get is a scattering of 256 individual echoes not really lining up, not doing anything specific in stereo, but often doing very striking things in stereo.
 
 There is basically no proper speed control so that can't be adjusted. There is a speed control, but it's sample-locked Bezier undersampling, so it's got an okay tone (still a little odd when very undersampled) but there are only so many positions you can use. Not only that, there is no adjustment for sample rate this time, so you'll be setting it based on your sample rate meaning if you're at 96k (or 192k!) you'll have more speed options because they are subdivisions of the native sample rate. If you're at 44.1k you probably still have working echojam times on tap.
 
@@ -4813,6 +4813,16 @@ If I wanted to make it be a similarly inefficient highpass, merely including an 
 This (not the prime version) is also what I've been trying for the last two reverbs, and some folks love that but others cried foul. I'm going to broaden my filter palette a bit for the reverbs, though now I know what this one can do (a sort of slick flashy effect) and will most likely turn to the Pear filter with nonlinearity for the next few reverbs. I've got about four different methods not counting simple biquads that will do different things. Even one (BezEQ!) that will produce gnarly artifacts for texture, for certain kinds of special effects.
 
 For now, enjoy playing with the experimental PrimeFIR. It might just lead to an interesting sort of highpass for livening up things as significant as lead vocals… more on that later. Have fun :)
+
+############ PunchyDeluxe is a smoother form of PointyDeluxe.
+
+As demonstrated when demoing Echojam: when I couldn't use a real guitar DI or amp, I reached for an unreleased plugin. PunchyDeluxe is basically just like PointyDeluxe, except there's just a little bitty difference.
+
+Instead of the fairly simple, efficient clipping algorithm in PointyDeluxe… PunchyDeluxe uses Longhand. The FULL Longhand, calculated in long double… but then with my 'derivative BIP' aliasing manipulation code, the stuff that causes high frequency artifacts not to come forward. Used on what's basically a turbocharged sin() function already, which already doesn't generate high frequency artifacts much.
+
+If you're not familiar with PointyDeluxe, apologies. Even I find this one awkward to use. PointyGuitar is better behaved, but PointyDeluxe needs you to keep the sliders pretty close to each other: any striking jump in settings might produce a crazy resonant boost. It's very fussy. But it gives you a granularity you can't get with the more approachable plugin… and PunchyDeluxe gives you that with a totally different, wildly more expensive in CPU saturation algorithm.
+
+PunchyDeluxe also doesn't have the speaker simulation built into PointyGuitar, but that's available in Cabs2, or as the highpass and lowpass in ConsoleX2 and ConsoleX3. However, you might find use for it without cabinet simulation, in case you want wild pungent saturations on something that isn't even a guitar: as always, there's no such thing as misusing this stuff, it's only about whether it works for you. It's possible PunchyDeluxe is too CPU-expensive to work for you, but you can have it anyhow :)
 
 ############ PurestAir is a brightness experiment.
 
