@@ -37,7 +37,7 @@ Noise: DeNoise, Noise, Texturize, TexturizeMS, VoiceOfTheStarship, DarkNoise, El
 
 Reverb: VerbSevens, kRockstar2, kCyberCity, kWoodRoom, kStation, kGuitarHall2, kCathedral5, VerbTiny, VerbThic, kAlienSpaceship, kCathedral4, kBeyond, VerbSixes, kCosmos, Galactic3, kCathedral3, kPlate140, kPlate240, CreamCoat, kRockstar, kGuitarHall, kPlateD, kPlateB, kPlateA, kPlateC, CrunchCoat, kCathedral2, Verbity2, Galactic, Galactic2, Ultralight2, Verbity, Chamber2, Chamber, Infinity2, NonlinearSpace, kCathedral, Infinity, MatrixVerb, PocketVerbs, Reverb, Ultralight
 
-Saturation: PurestSaturation, SquareRoot, Hypersoft, Longhand, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
+Saturation: Weave, PurestSaturation, SquareRoot, Hypersoft, Longhand, Creature, Huge, NCSeventeen, Tube2, Tube, Spiral2, PurestDrive, Focus, Mojo, Dyno, Spiral, UnBox, Desk4, Righteous4
 
 Stereo: Srsly3, Srsly2, Srsly, SweetWide, Wider, StereoFX, ToVinyl4, AutoPan, LRFlipTimer, MSFlipTimer, Sidepass, SideDull
 
@@ -6798,6 +6798,22 @@ This is all the more important in the age of DAWs, because if you’re monitorin
 This One Weird (Voice)Trick is free. It’s real simple, it’s a convenience plugin. Please don’t master through it or everyone will be sad :) if you’d like to support my ability to do this and more, please jump on my Patreon as that is why you still have me here doing this a couple years later. I’ll scale this operation up as much as I can: that depends on you, and I suppose internet virality. In the complete absence of internet virality, I’m happy to say I’m still here and able to give you the proverbial One Weird Trick for vocal tracking. Hope it makes your life better. :)
 
 VoiceTrick is in current versions of Monitoring as one of the monitoring options.
+
+############ Weave is a fancy overdrive with a good texture.
+
+There's been a lineage of Airwindows custom overdrives. The most basic overdrive is based on the sin() function, and that'll get you the softest, fattest distortion where harmonics are added one at a time, not all at once as with hard clipping. There's more recent experiments like Longhand, designed to do exactly what sin() does but with no possible optimizations, instead plotting one continuing equation around the sine curve.
+
+Want more? Spiral was based on the sine, but with a twist, gain staging the saturation based on how loud the signal was. This isn't compression, because it's not using a time factor and just uses the input sample directly. Spiral gives you a leaner body to the sound, its saturation curve steepening as it gets closer to complete distortion. More of a bark to it, edgier, but still one continuous equation.
+
+Weave takes one further step, another layer of fancy. Where Spiral scales things by the input, attenuating way down for quiet sounds so there's next to no clipping and then putting the gain back post saturation, Weave steps back in the direction of thick and fat in a novel way: taking the square root of the control signal. What this does is put that 'pre-saturation gain' part back towards sin() again, softening the overdrive up, but the very center is still cleaned up and leaned out. It produces a full-sounding overdrive that isn't tubby and overfat like straignt sin() can be, and the saturation curve is still one unbroken algorithm, but the lean part is more towards the center and the quiet stuff, much like I did in TapeHack.
+
+Then, to top it off, Weave uses the derivative trick I came up with to suppress high frequencies near Nyquist, the one that isn't elliptic BLEP aliasing removal, but instead just sort of interacts with the frequencies and alters them. What I found designing this was, the technique stopped brittle highs from coming forward under high gain distortion. I've been using it for things and am happy with the sound.
+
+All this combines into Weave to produce a saturation with a lot of character and flavor. You can run great tones into it and not diminish their quality, even though the harmonics come right out and make it obvious saturation is present. It doesn't get bloated, but it holds onto whatever thickness your sound has. It doesn't get bright or gritty, but it hangs onto detail very very well.
+
+Weave became the default saturation in my video-making vocal chain. It became the saturation in ConsoleX3, beating out TapeHack for that purpose. And it's available standalone now, in the 'X filters' configuration where if the input drive is at 0.1 that's unity gain: this gives you ten times the gain if you want it, upwards of 18dB boost, and Weave can stand up to that pretty much no matter what kind of sound you have.
+
+Hope you like Weave :)
 
 ############ Weight is a very accurate sub-bass boost based on Holt.
 
