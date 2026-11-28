@@ -25,7 +25,7 @@ Distortion: Distortion, Edge, Dirt, Mackity, Density3, ZOutputStage, Density2, Z
 
 Dithers: Dark, PaulWide, PaulDither, TPDFWide, TPDFDither, NotJustAnotherDither, NotJustAnotherCD, Beam, TapeDither, SpatializeDither, VinylDither, DoublePaul, Ditherbox, BuildATPDF, NodeDither, StudioTan, DitherMeTimbers, DitherMeDiskers, RawTimbers, RawGlitters, NaturalizeDither, HighGlossDither, DitherFloat
 
-Dynamics: Dynamics3, Pressure6, Dynamics2, BeziComp, Pop3, Pop2, X2Buss, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide
+Dynamics: Dynamics3, Pressure6, Dynamics2, BeziComp, Pop3, Pop2, X2Buss, Pressure5, StoneFireComp, Dynamics, Pop, DigitalBlack, Logical4, VariMu, ButterComp2, curve, Overheads, Recurve, Pyewacket, BlockParty, SoftGate, Thunder, Compresaturator, DrumSlam, ButterComp, BrassRider, Point, Gatelope, PodcastDeluxe, Podcast, Swell, PurestSquish, Pressure4, Surge, SurgeTide, Meltdown
 
 Effects: TakeCare, RingModulator, Dubly3, Dubly2, GalacticVibe, CloudCoat, Disintegrate, Fracture2, Dubly, Pafnuty2, PitchNasty, Trianglizer, ShortBuss, GuitarConditioner, Aura, TremoSquare, Tremolo, GlitchShifter, Gringer, Exciter, Energy2, Energy, Facet, Fracture, PowerSag2, PowerSag, Preponderant, Nikola
 
@@ -4110,6 +4110,34 @@ Now, what if you took all the start points and all the end points, and made them
 
 Well, that’s Melt. It’s pretty freaky, when cranked way up. You can run a long extended delay, causing it to resemble a strange retro ambience effect, or you can tighten it right up so that you have more of a chorusy thing. It probably should always have a bunch of pitch shift depth, otherwise it’s a mite boring. You can include dry, or just crank up the wobbly weirdness: should be nice on pads and things, or anything that has to be more dark and diffuse and unpredictable.
 
+############ Meltdown is a tech demo of an insane limiter idea.
+
+This is an experiment. Do not use on real music or anything important. I'm not done making a proper one, but I wanted to put something out real quick after getting it to work, because it's a bit of a wild idea.
+
+Meltdown is a zero latency lookahead limiter.
+
+Repeat, Meltdown is a zero latency lookahead limiter. Really.
+
+What's the catch?
+
+The catch is that you can't control it, and this version has a sort of gnarly noise that gets involved. I'm pretty sure that'll be the first thing I fix, but I will NOT be able to fix the uncontrollability, but I'm going to start working with this and very likely related things right away, now that I've proved it works. So how can that even be remotely true, to have a zero latency lookahead limiter? Does this not cheat time itself?
+
+Not at all. It doesn't do anything mean to your DAW, either. As a plugin it's normal in every way. The trick here is that zero latency itself is a bit of a lie, and that there are limits to how well this can work, and having limits tends to make audio developers run away screaming rather than try something seriously unusual. For instance, I'm pretty sure you won't get any AI to come up with this, as it violates expectations too much.
+
+When your plugin processes something, it's given a buffer of samples. Few operate sample-by-sample. (VCV Rack does by necessity, and Meltdown will not operate properly in its VCV Rack form unless its internal buffer is set a lot higher than just a few samples.) Typically if you're going for low latency you're trying to force the DAW and interface buffers to be as small as possible, and this will interfere with Meltdown. On the other hand if you have a weak computer that can't play audio much, you might have it using very large buffers, suffering more latency by default, and Meltdown will tend to be more effective.
+
+Meltdown simply does its lookahead by doing a pre-scan of the same buffer it's going to process, marks the point where the highest sample will be, and then does another pass to process with its limiting. That's all. The code is tiny. It's a bit odd even so, because of a side-effect to how it interpolates gain: it's just doing a linear ramp down to the lowest gain to accomodate a peak. That means two things. Firstly, at full crank it is infinite gain on anything that isn't literal silence, just because it can. If it's at an insanely high gain, and then ramps down to not clip a peak, it's easy for stuff early in the buffer to still end up insanely loud, and so there's a clipping factor put in to catch those.
+
+Secondly, there's an issue with how it goes from loudest peak to loudest peak in each buffer. Remember, it can scan ahead to look for the loudest point, and it measures WHERE that is in the buffer. But what if it's just the first sample? Whoops. So that's a limitation. But beyond that, suppose you've got to that loudest point. It should ramp again, to wherever the next high point would be… but how? That next buffer doesn't exist yet. So once it reaches its highest peak, it then has to stay there to the end of the buffer (not the only possibility, but it has to go to something). There is no further data for it to consult. Another limitation.
+
+I can smooth it further, I can give it a response speed or let it release at a more sensible speed, I can put in a 'boost' control so it can operate like a regular limiter where you get to pump up the gain going into it. I can't work around those issues, though, because they're fundamental factors of how the idea even works. It'll never be able to reliably, flawlessly, do lookaheads while running zero latency.
+
+When I try other things, like a zero latency lookahead pop/proximity suppressor, I won't be able to make those always flawlessly work either. It's possible such a thing wouldn't work quite the same way twice, meaning you could end up running it until it catches all the pops, if it does. (same problem: prescan to see if there's massive zero-cross disparities, aggressively highpass only those buffers, done, with zero latency)
+
+But Meltdown is proof that you KIND of can look into the future (because there's almost always a buffer of some sort in a DAW), you just can't control it very well without tinkering with your DAW buffers. Now you can hear what that would be (in a worst-case, most radical and gratituous way) and figure out whether it'd be any use to you in a more manageable form.
+
+Or you can just take stuff and crank it infinitely into a zero latency limiter. Right now, if it pleases you. Have fun!
+
 ############ MidAmp is a clean amp sim meant to work like a loud Twin or something of that nature.
 
 MidAmp is another amp sim, this one going for a high-powered clean combo sound. You know, a Twin kind of sound. It’s got a wide range of EQ and can be rolled off real far, and it can be extra bright and spiky if you want that. I demonstrate it in the video on a Tele part, then unexpectedly to dirty up a thumping bass (which it does really well) and lastly on some very aggressive drums to make them even crazier.
@@ -6899,7 +6927,7 @@ Going slightly larger wasn't a challenge… but it unlocked some very interestin
 
 It's not surprising that it takes bad DAW pianos and makes them sound more physical. What I didn't expect was taking DI Fender Rhodes, a real one, and making that sound like a record. I think of DI Rhodes as already being an acceptable sound, even a great one, but the next thing you know it sounds realer, more like itself, solid.
 
-I tried already-miked amp tones. They turned floofier, peeled themselves off the speakers and picked up a texture that was like what I'd expect a miked amp's speaker to sound like. I could make it lose all definition, or bring it as much as I liked, just with the dry/wet control.
+I tried already-miked amp tones. They turned floofier, peeled themselves off the speakers and picked up a texture that was like what I'd expect a miked amp's speaker to sound like. I could make it lose all definition, or bring in as much as I liked, just with the dry/wet control.
 
 Tried it with PunchyDeluxe2 last week. By itself, all the super-highs came through. In conjunction with Cabs2, I got a sound that was as amp-like as anything I've ever made, including miking real amps. I feel certain that if I need to hunt down an EVH-like tone to test out a future Sunset Chamber sound, I'd be using this as part of the recipe.
 
